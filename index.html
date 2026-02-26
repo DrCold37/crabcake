@@ -571,3 +571,19 @@
       <a href="#">Teachers</a>
       <a href="privacy.html">Privacy</a>
       <a href="/cdn-cgi/l/email-protection#d5a5a7bca3b4b6ac95b6a7b4b7b6b4beb0fbbebcb1a6">Contact<
+
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('nav-menu');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      navMenu.classList.toggle('open');
+    });
+    navMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('open');
+        navMenu.classList.remove('open');
+      });
+    });
+  </script>
+</body>
