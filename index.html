@@ -137,11 +137,20 @@
       text-shadow: 4px 4px 0 var(--orange), 6px 6px 0 rgba(0,0,0,0.2);
     }
 
+    .hero-tagline {
+      font-family: 'Boogaloo', 'Arial Rounded MT Bold', cursive;
+      font-size: clamp(1rem, 2.2vw, 1.25rem);
+      color: var(--teal);
+      letter-spacing: 0.5px;
+      margin-bottom: 0.5rem;
+      animation: popIn 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.55s both;
+    }
+
     .hero-sub {
       font-size: clamp(1.1rem, 2.5vw, 1.4rem);
       font-weight: 700;
       color: rgba(255,255,255,0.85);
-      margin: 1.5rem auto 2.5rem;
+      margin: 0.8rem auto 2.5rem;
       max-width: 560px;
       line-height: 1.6;
       animation: popIn 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.6s both;
@@ -426,7 +435,6 @@
     <ul id="nav-menu">
       <li><a href="#games">Games</a></li>
       <li><a href="#categories">Categories</a></li>
-      <li><a href="#games" class="nav-cta">Play Free!</a></li>
     </ul>
   </nav>
 
@@ -440,9 +448,9 @@
     <span class="float-emoji">🌟</span>
 
     <div class="hero-content">
-      <div class="hero-badge">🎮 Free to Play · Ages 5+</div>
+      <div class="hero-badge">🎮 Free to Play</div>
       <h1>Learn, Play &<br><em>Splash Around!</em></h1>
-      <p class="hero-sub">Dive into a world of fun games and activities that make learning math, reading, science and more an underwater adventure — for kids ages 5 and up!</p>
+      <p class="hero-sub">Educational games designed for kids ages 5–10. Dive into a world of fun and activities that make learning math, reading, science and more an underwater adventure!</p>
       <div class="hero-buttons">
         <a href="#games" class="btn btn-primary">🎮 Start Playing!</a>
         <a href="#categories" class="btn btn-secondary">Explore Games</a>
@@ -514,7 +522,7 @@
           <h3>Witch's Brew Workshop</h3>
           <p>Mix magical potions, collect rare ingredients, and cast spells in this enchanting creative adventure!</p>
           <div class="game-tags">
-            <span class="tag tag-age">Ages 5+</span>
+            <span class="tag tag-age">Ages 5–10</span>
             <span class="tag tag-cat">Art & Music</span>
             <span class="tag tag-new">🆕 New</span>
           </div>
@@ -527,7 +535,7 @@
           <h3>Tube Sort</h3>
           <p>Sort the coloured liquids into matching tubes — a satisfying and tricky colour puzzle for sharp minds!</p>
           <div class="game-tags">
-            <span class="tag tag-age">Ages 5+</span>
+            <span class="tag tag-age">Ages 5–10</span>
             <span class="tag tag-cat">Puzzles</span>
             <span class="tag tag-new">🆕 New</span>
           </div>
@@ -567,14 +575,16 @@
   <!-- FOOTER -->
   <footer>
     <div class="logo"><span>🦀</span><span style="letter-spacing:0;word-spacing:0">cr<span style="color:var(--green)">A</span><span style="color:var(--orange)">B</span><span style="color:var(--purple)">C</span>ake</span></div>
-    <p>© 2026 Crabcake · Safe & fun learning for kids ages 5+</p>
+    <p>© 2026 Crabcake · Safe & fun learning for kids ages 5–10</p>
     <div class="footer-links">
       <a href="#">Parents</a>
       <a href="#">Teachers</a>
       <a href="privacy.html">Privacy</a>
-      <a href="/cdn-cgi/l/email-protection#d5a5a7bca3b4b6ac95b6a7b4b7b6b4beb0fbbebcb1a6">Contact<
+      <a href="/cdn-cgi/l/email-protection#b3c3c1dac5d2d0caf3d0c1d2d1d0d2d8d69dd8dad7c0">Contact</a>
+    </div>
+  </footer>
 
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     const hamburger = document.getElementById('hamburger');
     const navMenu = document.getElementById('nav-menu');
     hamburger.addEventListener('click', () => {
@@ -582,10 +592,4 @@
       navMenu.classList.toggle('open');
     });
     navMenu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        hamburger.classList.remove('open');
-        navMenu.classList.remove('open');
-      });
-    });
-  </script>
-</body>
+      link.addEventListen
