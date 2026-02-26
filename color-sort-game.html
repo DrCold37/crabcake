@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tube Sort</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap');
+
+  :root {
+    --bg: #0d0d14;
+    --border: #2a2a3a;
+    --text: #e8e8f0;
+    --muted: #666680;
+    --tube-w: 58px;
+    --tube-h: 200px;
+    --segment-h: 42px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    overflow: hidden;
+  }
+
+  #bg-canvas      { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+  #particle-canvas{ position: fixed; inset: 0; pointer-events: none; z-index: 50; }
+  body > *:not(canvas) { position: relative; z-index: 1; }
+
+  header { text-align: center; }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, #a29bfe, #4ecdc4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 0.7rem;
+    letter-spacing: 2.5px;
+    margin-top: 2px;
+  }
+
+  .top-bar { display: flex; align-items: center; gap: 20px; }
+
+  .level-badge {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, rgba(162,155,254,0.15), rgba(78,205,196,0.15));
+    border: 1px solid rgba(162,155,254,0.35);
+    color: #a29bfe;
+  }
+
+  .stats { display: flex; gap: 20px; align-items: center; }
+  .stat  { text-align: center; }
+
+  .stat-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--text);
+  }
+
+  .stat-label {
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .stat-sep { width: 1px; height: 28px; background: var(--border); }
+
+  .level-progress {
+    width: min(480px, 88vw);
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: visible;
+    position: relative;
+  }
+
+  .level-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #a29bfe, #4ecdc4);
+    border-radius: 2px;
+    transition: width 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+  }
+
+  .level-progress-fill::after {
+    content: '';
+    position: absolute;
+    right: -3px; top: -3px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #4ecdc4;
+    box-shadow: 0 0 8px #4ecdc4;
+  }
+
+  .game-area {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    align-items: flex-end;
+    max-width: min(780px, 98vw);
+    padding: 12px 16px;
+  }
+
+  /* ── Tube ── */
+  .tube-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  .tube-wrapper:hover:not(.done) { transform: translateY(-3px); }
+
+  .tube-container {
+    position: relative;
+    width: var(--tube-w);
+    height: var(--tube-h);
+  }
+
+  .tube-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+    border-radius: 0 0 28px 28px;
+    border: 2px solid var(--border);
+    border-top: none;
+    background: rgba(255,255,255,0.03);
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+
+  .tube-cap {
+    width: var(--tube-w);
+    height: 10px;
+    border: 2px solid var(--border);
+    border-bottom: none;
+    border-radius: 5px 5px 0 0;
+    background: rgba(255,255,255,0.05);
+    transition: border-color 0.3s;
+  }
+
+  /* Selected */
+  .tube-wrapper.selected .tube-inner {
+    border-color: #a29bfe;
+    box-shadow: 0 0 0 1px rgba(162,155,254,0.4), 0 0 24px rgba(162,155,254,0.35);
+  }
+  .tube-wrapper.selected .tube-cap { border-color: #a29bfe; }
+
+  /* .completing fires ONCE when a tube first completes */
+  .tube-wrapper.completing .tube-inner {
+    animation: tubeFlash 0.7s ease forwards;
+  }
+  .tube-wrapper.completing {
+    animation: tubeBounce 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+  .tube-wrapper.completing .tube-cap { border-color: #fff; }
+
+  @keyframes tubeFlash {
+    0%   { border-color: var(--border); box-shadow: none; }
+    25%  { border-color: #fff;    box-shadow: 0 0 0 2px #fff,    0 0 50px rgba(255,255,255,0.75); }
+    60%  { border-color: #4ecdc4; box-shadow: 0 0 0 2px #4ecdc4, 0 0 35px rgba(78,205,196,0.65); transform: scaleX(1.06); }
+    100% { border-color: #4ecdc4; box-shadow: 0 0 20px rgba(78,205,196,0.35); transform: scaleX(1); }
+  }
+
+  @keyframes tubeBounce {
+    0%   { transform: translateY(0); }
+    30%  { transform: translateY(-18px); }
+    55%  { transform: translateY(-5px); }
+    75%  { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+  }
+
+  /* .done = settled completed state, no re-triggering animations */
+  .tube-wrapper.done .tube-inner {
+    border-color: #4ecdc4;
+    box-shadow: 0 0 20px rgba(78,205,196,0.3);
+  }
+  .tube-wrapper.done .tube-cap { border-color: #4ecdc4; }
+  .tube-wrapper.done .segment  { animation: segGlow 2s ease-in-out infinite alternate; }
+
+  @keyframes segGlow {
+    from { filter: brightness(1)    saturate(1); }
+    to   { filter: brightness(1.18) saturate(1.35); }
+  }
+
+  /* Shake on invalid move */
+  .tube-wrapper.shake { animation: shake 0.35s ease; }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20%  { transform: translateX(-6px); }
+    40%  { transform: translateX( 6px); }
+    60%  { transform: translateX(-4px); }
+    80%  { transform: translateX( 4px); }
+  }
+
+  /* Segments */
+  .segment {
+    width: 100%;
+    height: var(--segment-h);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.2s;
+    position: relative;
+  }
+
+  .segment::after {
+    content: '';
+    position: absolute;
+    top: 2px; left: 6px; right: 6px;
+    height: 35%;
+    background: rgba(255,255,255,0.18);
+    border-radius: 0 0 3px 3px;
+    pointer-events: none;
+  }
+
+  .segment:last-child       { border-radius: 0 0 24px 24px; }
+  .segment:last-child::after{ border-radius: 0 0 16px 16px; }
+
+  .tube-wrapper.selected .top-segment {
+    transform: translateY(-14px);
+    filter: brightness(1.28) saturate(1.2);
+  }
+
+  /* Controls */
+  .controls { display: flex; gap: 10px; align-items: center; }
+
+  button {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    padding: 9px 18px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+    color: white;
+    border-color: transparent;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(108,92,231,0.45); }
+
+  .btn-ghost { background: transparent; color: var(--muted); }
+  .btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.3); }
+
+  /* Overlays */
+  .overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(13,13,20,0.94);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+    backdrop-filter: blur(12px);
+  }
+  .overlay.show { display: flex; }
+
+  .overlay-emoji { font-size: 2.8rem; animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+
+  .overlay-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 6vw, 3.2rem);
+    font-weight: 800;
+    animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.08s both;
+  }
+
+  .grad-level {
+    background: linear-gradient(135deg, #4ecdc4, #a29bfe);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .grad-win {
+    background: linear-gradient(135deg, #ffe66d, #fd79a8, #a29bfe);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+
+  .overlay-sub {
+    color: var(--muted);
+    font-size: 0.78rem;
+    letter-spacing: 2px;
+    animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.18s both;
+  }
+
+  .stars {
+    display: flex; gap: 8px; font-size: 1.5rem;
+    animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.12s both;
+  }
+
+  .star { opacity: 0.15; transform: scale(0.7); }
+  .star.earned { animation: starPop 0.45s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+
+  @keyframes starPop {
+    0%   { transform: scale(0) rotate(-30deg); opacity: 0; }
+    65%  { transform: scale(1.4) rotate(5deg); opacity: 1; }
+    100% { transform: scale(1)  rotate(0deg);  opacity: 1; }
+  }
+
+  .overlay-btns {
+    display: flex; gap: 12px;
+    animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.28s both;
+  }
+
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.7) translateY(16px); }
+    to   { opacity: 1; transform: scale(1)   translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+<canvas id="particle-canvas"></canvas>
+
+<header>
+  <h1>TUBE SORT</h1>
+  <p class="subtitle">POUR · SORT · ADVANCE</p>
+</header>
+
+<div class="top-bar">
+  <div class="level-badge" id="level-badge">LEVEL 1</div>
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-value" id="moves-val">0</div>
+      <div class="stat-label">Moves</div>
+    </div>
+    <div class="stat-sep"></div>
+    <div class="stat">
+      <div class="stat-value" id="complete-val">0/0</div>
+      <div class="stat-label">Done</div>
+    </div>
+  </div>
+</div>
+
+<div class="level-progress">
+  <div class="level-progress-fill" id="progress-fill" style="width:0%"></div>
+</div>
+
+<div class="game-area" id="game-area"></div>
+
+<div class="controls">
+  <button class="btn-ghost" onclick="undoMove()">↩ UNDO</button>
+  <button class="btn-ghost" onclick="restartLevel()">↺ RESTART</button>
+  <button class="btn-primary" onclick="skipLevel()">SKIP ›</button>
+</div>
+
+<!-- Level complete -->
+<div class="overlay" id="level-overlay">
+  <div class="overlay-emoji" id="level-emoji">🧪</div>
+  <div class="overlay-title grad-level" id="level-title">LEVEL 1 CLEAR!</div>
+  <div class="stars">
+    <span class="star" id="star1">⭐</span>
+    <span class="star" id="star2">⭐</span>
+    <span class="star" id="star3">⭐</span>
+  </div>
+  <div class="overlay-sub" id="level-sub"></div>
+  <div class="overlay-btns">
+    <button class="btn-ghost"    onclick="restartFromOverlay()">↺ RETRY</button>
+    <button class="btn-primary"  onclick="nextLevel()">NEXT LEVEL ›</button>
+  </div>
+</div>
+
+<!-- Final win -->
+<div class="overlay" id="win-overlay">
+  <div class="overlay-emoji">🏆</div>
+  <div class="overlay-title grad-win">ALL CLEAR!</div>
+  <div class="overlay-sub">You mastered all 15 levels!</div>
+  <div class="overlay-btns">
+    <button class="btn-primary" onclick="resetGame()">PLAY AGAIN</button>
+  </div>
+</div>
+
+<script>
+// ─── Distinct colour palette (10 well-separated hues) ─────────────────────────
+const COLOR_HEX = {
+  c1:  '#FF3B3B',   // vivid red
+  c2:  '#00C2A8',   // teal
+  c3:  '#FFD600',   // pure yellow
+  c4:  '#7B5CFF',   // purple
+  c5:  '#FF6AC1',   // hot pink
+  c6:  '#00C44F',   // green
+  c7:  '#FF8C00',   // orange
+  c8:  '#00AAFF',   // sky blue
+  c9:  '#FF4D8F',   // rose (distinct from hot pink)
+  c10: '#B8FF3A',   // lime
+};
+const ALL_COLORS = Object.keys(COLOR_HEX);
+
+// ─── Levels: [numColors, extraEmpty, label, emoji] ────────────────────────────
+const LEVELS = [
+  [3,  2, 'INTRO',   '🌱'],
+  [3,  2, 'EASY',    '🌱'],
+  [4,  2, 'EASY',    '🌱'],
+  [4,  2, 'EASY',    '🌿'],
+  [5,  2, 'MEDIUM',  '🌿'],
+  [5,  2, 'MEDIUM',  '🌿'],
+  [6,  2, 'MEDIUM',  '🔥'],
+  [6,  2, 'HARD',    '🔥'],
+  [7,  2, 'HARD',    '🔥'],
+  [7,  3, 'HARD',    '💀'],
+  [8,  2, 'EXPERT',  '💀'],
+  [8,  3, 'EXPERT',  '💀'],
+  [9,  2, 'MASTER',  '⚡'],
+  [9,  3, 'MASTER',  '⚡'],
+  [10, 2, 'EXTREME', '💎'],
+];
+
+const TUBE_CAPACITY = 4;
+
+let currentLevel  = 0;
+let tubes         = [];
+let selectedTube  = null;
+let moves         = 0;
+let history       = [];
+
+// Two separate sets:
+//   animatedComplete – tubes that have had their one-shot animation played
+//   settledComplete  – tubes in the quiet "done" glow state
+let animatedComplete = new Set();
+let settledComplete  = new Set();
+
+// ─── Canvas setup ─────────────────────────────────────────────────────────────
+const bgCanvas = document.getElementById('bg-canvas');
+const bgCtx    = bgCanvas.getContext('2d');
+const pCanvas  = document.getElementById('particle-canvas');
+const pCtx     = pCanvas.getContext('2d');
+
+function resizeCanvases() {
+  bgCanvas.width  = pCanvas.width  = window.innerWidth;
+  bgCanvas.height = pCanvas.height = window.innerHeight;
+}
+
+// ─── Animated background ──────────────────────────────────────────────────────
+let bgT = 0;
+function drawBg() {
+  bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+  const t  = bgT * 0.0004;
+  const x1 = bgCanvas.width  * (0.2 + 0.1  * Math.sin(t));
+  const y1 = bgCanvas.height * (0.2 + 0.1  * Math.cos(t * 1.3));
+  const x2 = bgCanvas.width  * (0.8 + 0.08 * Math.cos(t * 0.9));
+  const y2 = bgCanvas.height * (0.8 + 0.08 * Math.sin(t * 1.1));
+  const g1 = bgCtx.createRadialGradient(x1, y1, 0, x1, y1, bgCanvas.width * 0.5);
+  g1.addColorStop(0, 'rgba(162,155,254,0.07)'); g1.addColorStop(1, 'transparent');
+  const g2 = bgCtx.createRadialGradient(x2, y2, 0, x2, y2, bgCanvas.width * 0.5);
+  g2.addColorStop(0, 'rgba(78,205,196,0.07)');  g2.addColorStop(1, 'transparent');
+  bgCtx.fillStyle = g1; bgCtx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
+  bgCtx.fillStyle = g2; bgCtx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
+  bgT++;
+  requestAnimationFrame(drawBg);
+}
+
+// ─── Particle system ──────────────────────────────────────────────────────────
+let particles = [];
+
+function spawnTubeParticles(tubeEl, hexColor) {
+  const rect = tubeEl.getBoundingClientRect();
+  const cx   = rect.left + rect.width  / 2;
+  const cy   = rect.top  + rect.height / 2;
+
+  // Colour burst
+  for (let i = 0; i < 50; i++) {
+    const angle = (Math.PI * 2 * i / 50) + Math.random() * 0.3;
+    const spd   = 2.5 + Math.random() * 6;
+    particles.push({
+      x: cx, y: cy,
+      vx: Math.cos(angle) * spd, vy: Math.sin(angle) * spd - 2.5,
+      r: 3 + Math.random() * 5, alpha: 1, color: hexColor,
+      type: Math.random() > 0.45 ? 'circle' : 'star',
+      rot: Math.random() * Math.PI * 2, rotV: (Math.random() - 0.5) * 0.18,
+      life: 1, decay: 0.016 + Math.random() * 0.012,
+    });
+  }
+  // White sparkles
+  for (let i = 0; i < 26; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const spd   = 1 + Math.random() * 4;
+    particles.push({
+      x: cx + (Math.random() - 0.5) * rect.width  * 0.8,
+      y: cy + (Math.random() - 0.5) * rect.height * 0.6,
+      vx: Math.cos(angle) * spd, vy: Math.sin(angle) * spd - 1.5,
+      r: 1.5 + Math.random() * 3, alpha: 1, color: '#ffffff',
+      type: 'sparkle', rot: 0, rotV: 0,
+      life: 1, decay: 0.022 + Math.random() * 0.018,
+    });
+  }
+}
+
+function spawnFireworks(count = 6) {
+  const usedColors = ALL_COLORS.slice(0, getLevelConfig()[0]).map(k => COLOR_HEX[k]);
+  for (let b = 0; b < count; b++) {
+    setTimeout(() => {
+      const cx  = pCanvas.width  * (0.1 + Math.random() * 0.8);
+      const cy  = pCanvas.height * (0.05 + Math.random() * 0.45);
+      const col = usedColors[Math.floor(Math.random() * usedColors.length)];
+      for (let i = 0; i < 70; i++) {
+        const angle = Math.PI * 2 * i / 70;
+        const spd   = 3 + Math.random() * 7;
+        particles.push({
+          x: cx, y: cy,
+          vx: Math.cos(angle) * spd, vy: Math.sin(angle) * spd,
+          r: 2 + Math.random() * 4, alpha: 1, color: col,
+          type: i % 3 === 0 ? 'star' : 'circle',
+          rot: Math.random() * Math.PI * 2, rotV: (Math.random() - 0.5) * 0.15,
+          life: 1, decay: 0.01 + Math.random() * 0.009,
+        });
+      }
+    }, b * 220);
+  }
+}
+
+function drawStarShape(ctx, x, y, r, rot) {
+  ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.beginPath();
+  for (let i = 0; i < 5; i++) {
+    const a  = (i * 4 * Math.PI / 5) - Math.PI / 2;
+    const ai = a + (2 * Math.PI / 5);
+    i === 0 ? ctx.moveTo(Math.cos(a)*r, Math.sin(a)*r) : ctx.lineTo(Math.cos(a)*r, Math.sin(a)*r);
+    ctx.lineTo(Math.cos(ai)*r*0.42, Math.sin(ai)*r*0.42);
+  }
+  ctx.closePath(); ctx.fill(); ctx.restore();
+}
+
+function animateParticles() {
+  pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+  particles = particles.filter(p => p.life > 0);
+  for (const p of particles) {
+    p.x += p.vx; p.y += p.vy;
+    p.vy += 0.13; p.vx *= 0.985;
+    p.life -= p.decay;
+    p.rot  += p.rotV;
+    pCtx.globalAlpha = Math.max(0, p.life);
+    pCtx.fillStyle   = p.color;
+    if (p.type === 'circle') {
+      pCtx.beginPath(); pCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2); pCtx.fill();
+    } else if (p.type === 'star') {
+      drawStarShape(pCtx, p.x, p.y, p.r, p.rot);
+    } else {
+      pCtx.save(); pCtx.translate(p.x, p.y); pCtx.rotate(p.rot + Math.PI / 4);
+      pCtx.fillRect(-p.r * 0.35, -p.r, p.r * 0.7, p.r * 2); pCtx.restore();
+    }
+  }
+  pCtx.globalAlpha = 1;
+  requestAnimationFrame(animateParticles);
+}
+
+// ─── Game logic ───────────────────────────────────────────────────────────────
+function getLevelConfig() {
+  if (currentLevel < LEVELS.length) return LEVELS[currentLevel];
+  const extra = currentLevel - LEVELS.length;
+  return [Math.min(10, 8 + Math.floor(extra / 3)), 2, 'ENDLESS', '∞'];
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function buildLevel() {
+  const [numColors, extraEmpty] = getLevelConfig();
+  const colorKeys = ALL_COLORS.slice(0, numColors);
+  let pool = [];
+  colorKeys.forEach(c => { for (let i = 0; i < TUBE_CAPACITY; i++) pool.push(c); });
+  shuffle(pool);
+  tubes = [];
+  for (let i = 0; i < numColors; i++) {
+    tubes.push(pool.slice(i * TUBE_CAPACITY, (i + 1) * TUBE_CAPACITY));
+  }
+  for (let i = 0; i < extraEmpty; i++) tubes.push([]);
+  moves            = 0;
+  history          = [];
+  animatedComplete = new Set();
+  settledComplete  = new Set();
+  selectedTube     = null;
+}
+
+function newGame()      { buildLevel(); updateHeader(); render(); }
+function restartLevel() { buildLevel(); updateHeader(); render(); }
+
+function restartFromOverlay() {
+  document.getElementById('level-overlay').classList.remove('show');
+  restartLevel();
+}
+
+function skipLevel() {
+  currentLevel = Math.min(currentLevel + 1, LEVELS.length - 1 + 5);
+  newGame();
+}
+
+function nextLevel() {
+  document.getElementById('level-overlay').classList.remove('show');
+  currentLevel++;
+  if (currentLevel >= LEVELS.length) {
+    spawnFireworks(12);
+    document.getElementById('win-overlay').classList.add('show');
+    return;
+  }
+  newGame();
+}
+
+function resetGame() {
+  document.getElementById('win-overlay').classList.remove('show');
+  currentLevel = 0;
+  newGame();
+}
+
+function updateHeader() {
+  document.getElementById('level-badge').textContent = `LEVEL ${currentLevel + 1}`;
+  const prog = Math.min((currentLevel / (LEVELS.length - 1)) * 100, 100);
+  document.getElementById('progress-fill').style.width = prog + '%';
+}
+
+// ─── Render ───────────────────────────────────────────────────────────────────
+// KEY FIX: completed tubes get either .completing (plays once) or .done (settled glow).
+// .completing is only added if the tube ISN'T yet in animatedComplete;
+// after the animation duration we swap it for .done.
+// On subsequent renders the tube just gets .done — no re-triggered animation.
+function render() {
+  const area = document.getElementById('game-area');
+  area.innerHTML = '';
+
+  tubes.forEach((tube, i) => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'tube-wrapper';
+    wrapper.dataset.idx = i;
+
+    const complete = isTubeComplete(tube);
+
+    if (selectedTube === i) wrapper.classList.add('selected');
+
+    if (complete) {
+      if (!animatedComplete.has(i)) {
+        // First time this tube is seen as complete — play the one-shot animation
+        wrapper.classList.add('completing');
+        animatedComplete.add(i);
+        // After animation finishes, mark as settled
+        setTimeout(() => {
+          settledComplete.add(i);
+          const el = document.querySelector(`.tube-wrapper[data-idx="${i}"]`);
+          if (el) {
+            el.classList.remove('completing');
+            el.classList.add('done');
+          }
+        }, 700);
+      } else {
+        // Already animated — just show the quiet glow
+        wrapper.classList.add('done');
+      }
+    }
+
+    const cap = document.createElement('div');
+    cap.className = 'tube-cap';
+
+    const container = document.createElement('div');
+    container.className = 'tube-container';
+
+    const inner = document.createElement('div');
+    inner.className = 'tube-inner';
+
+    const segments = [...tube].reverse();
+    while (segments.length < TUBE_CAPACITY) segments.unshift(null);
+    const firstFilled = segments.findIndex(c => c !== null);
+
+    segments.forEach((color, idx) => {
+      const seg = document.createElement('div');
+      seg.className = 'segment';
+      if (idx === firstFilled) seg.classList.add('top-segment');
+      seg.style.background = color ? COLOR_HEX[color] : 'transparent';
+      inner.appendChild(seg);
+    });
+
+    container.appendChild(inner);
+    wrapper.appendChild(cap);
+    wrapper.appendChild(container);
+    wrapper.addEventListener('click', () => handleClick(i));
+    area.appendChild(wrapper);
+  });
+
+  updateStats();
+}
+
+// ─── Interaction ──────────────────────────────────────────────────────────────
+function handleClick(idx) {
+  // Ignore clicks on completed tubes entirely
+  if (isTubeComplete(tubes[idx])) return;
+
+  if (selectedTube === null) {
+    if (tubes[idx].length === 0) return;
+    selectedTube = idx;
+    render();
+    return;
+  }
+
+  if (selectedTube === idx) {
+    selectedTube = null;
+    render();
+    return;
+  }
+
+  if (canPour(selectedTube, idx)) {
+    history.push(JSON.parse(JSON.stringify(tubes)));
+    pour(selectedTube, idx);
+    moves++;
+
+    // Find newly completed tubes BEFORE render
+    const justCompleted = [];
+    tubes.forEach((t, i) => {
+      if (isTubeComplete(t) && !animatedComplete.has(i)) {
+        justCompleted.push(i);
+      }
+    });
+
+    selectedTube = null;
+    render();
+
+    // Fire particles only for newly completed tubes
+    justCompleted.forEach(i => {
+      const el = document.querySelector(`.tube-wrapper[data-idx="${i}"]`);
+      if (el) spawnTubeParticles(el, COLOR_HEX[tubes[i][0]]);
+    });
+
+    checkLevelComplete();
+  } else {
+    const el = document.querySelector(`.tube-wrapper[data-idx="${idx}"]`);
+    if (el) { el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); }
+    selectedTube = idx;
+    render();
+  }
+}
+
+function canPour(from, to) {
+  if (tubes[from].length === 0) return false;
+  if (isTubeComplete(tubes[from])) return false;
+  if (tubes[to].length >= TUBE_CAPACITY) return false;
+  if (tubes[to].length === 0) return true;
+  return tubes[from][tubes[from].length - 1] === tubes[to][tubes[to].length - 1];
+}
+
+function pour(from, to) {
+  const color = tubes[from][tubes[from].length - 1];
+  while (
+    tubes[from].length > 0 &&
+    tubes[from][tubes[from].length - 1] === color &&
+    tubes[to].length < TUBE_CAPACITY
+  ) { tubes[to].push(tubes[from].pop()); }
+}
+
+function isTubeComplete(tube) {
+  return tube.length === TUBE_CAPACITY && tube.every(c => c === tube[0]);
+}
+
+function checkLevelComplete() {
+  const [numColors] = getLevelConfig();
+  if (tubes.filter(t => isTubeComplete(t)).length === numColors) {
+    spawnFireworks(6);
+    setTimeout(showLevelComplete, 900);
+  }
+}
+
+function showLevelComplete() {
+  const [numColors,, label, emoji] = getLevelConfig();
+  const s3 = numColors * 3, s2 = numColors * 6;
+  const earned = moves <= s3 ? 3 : moves <= s2 ? 2 : 1;
+
+  document.getElementById('level-emoji').textContent = emoji || '🧪';
+  document.getElementById('level-title').textContent = `LEVEL ${currentLevel + 1} CLEAR!`;
+  document.getElementById('level-sub').textContent   = `${moves} moves · ${numColors} colours · ${label}`;
+
+  ['star1','star2','star3'].forEach((id, i) => {
+    const el = document.getElementById(id);
+    el.className = 'star';
+    if (i < earned) setTimeout(() => el.classList.add('earned'), 350 + i * 200);
+  });
+
+  document.getElementById('level-overlay').classList.add('show');
+}
+
+function undoMove() {
+  if (history.length === 0) return;
+  tubes = history.pop();
+  selectedTube = null;
+  moves = Math.max(0, moves - 1);
+  // Rebuild complete sets from current tube state
+  animatedComplete = new Set();
+  settledComplete  = new Set();
+  tubes.forEach((t, i) => {
+    if (isTubeComplete(t)) { animatedComplete.add(i); settledComplete.add(i); }
+  });
+  render();
+}
+
+function updateStats() {
+  const [numColors] = getLevelConfig();
+  document.getElementById('moves-val').textContent    = moves;
+  const done = tubes.filter(t => isTubeComplete(t)).length;
+  document.getElementById('complete-val').textContent = `${done}/${numColors}`;
+}
+
+// ─── Boot ─────────────────────────────────────────────────────────────────────
+window.addEventListener('resize', resizeCanvases);
+resizeCanvases();
+drawBg();
+animateParticles();
+newGame();
+</script>
+</body>
+</html>
