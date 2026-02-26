@@ -349,10 +349,59 @@
     .footer-links a { color: rgba(255,255,255,0.5); text-decoration:none; font-size:0.85rem; font-weight:700; }
     .footer-links a:hover { color: var(--teal); }
 
+    /* ── HAMBURGER BUTTON ── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 0.4rem;
+      background: none;
+      border: none;
+    }
+    .hamburger span {
+      display: block;
+      width: 26px;
+      height: 3px;
+      background: var(--white);
+      border-radius: 3px;
+      transition: all 0.3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
     /* ── RESPONSIVE ── */
     @media(max-width: 640px) {
-      nav { padding: 1rem 1.2rem; }
-      nav ul { display:none; }
+      nav {
+        padding: 1rem 1.2rem;
+        flex-wrap: wrap;
+        position: relative;
+      }
+      .hamburger { display: flex; }
+      nav ul {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        gap: 0;
+        background: #0F1D36;
+        border-top: 2px solid var(--teal);
+        margin-top: 0.8rem;
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      nav ul.open { display: flex; }
+      nav ul li a {
+        display: block;
+        padding: 0.9rem 1.4rem;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        font-size: 1rem;
+      }
+      nav ul li:last-child a { border-bottom: none; }
+      .nav-cta {
+        border-radius: 0 !important;
+        text-align: center;
+      }
       .stat { min-width: 140px; padding: 2rem 1rem; }
       footer { flex-direction:column; text-align:center; }
     }
@@ -371,10 +420,10 @@
   <!-- NAV -->
   <nav>
     <div class="logo"><span>🦀</span><span style="letter-spacing:0;word-spacing:0">cr<span style="color:var(--green)">A</span><span style="color:var(--orange)">B</span><span style="color:var(--purple)">C</span>ake</span></div>
-    <ul>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    <ul id="nav-menu">
       <li><a href="#games">Games</a></li>
       <li><a href="#categories">Categories</a></li>
-      <li><a href="privacy.html">Privacy</a></li>
       <li><a href="#games" class="nav-cta">Play Free!</a></li>
     </ul>
   </nav>
@@ -521,9 +570,4 @@
       <a href="#">Parents</a>
       <a href="#">Teachers</a>
       <a href="privacy.html">Privacy</a>
-      <a href="mailto:privacy@crabcake.kids">Contact</a>
-    </div>
-  </footer>
-
-</body>
-</html>
+      <a href="/cdn-cgi/l/email-protection#d5a5a7bca3b4b6ac95b6a7b4b7b6b4beb0fbbebcb1a6">Contact<
