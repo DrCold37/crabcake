@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+  <title>Maths Dive 🤿 | Crabcake</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@700;800;900&display=swap"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #0a1628;
+      --deep:   #0d2044;
+      --mid:    #0e3460;
+      --teal:   #00C9B1;
+      --teal2:  #00a896;
+      --sky:    #6ECBF5;
+      --yellow: #FFD93D;
+      --coral:  #FF5C5C;
+      --orange: #FF9040;
+      --green:  #4ECB71;
+      --purple: #A66CFF;
+      --white:  #ffffff;
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      background: var(--navy);
+      font-family: 'Nunito', sans-serif;
+      touch-action: none;
+    }
+
+    /* ── SCREENS ── */
+    .screen {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.4s, transform 0.4s;
+    }
+    .screen.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.97);
+    }
+
+    /* ── OCEAN BACKGROUND ── */
+    .ocean-bg {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(180deg,
+        #0a1628 0%,
+        #0d2a50 30%,
+        #0a3060 60%,
+        #063050 100%
+      );
+      overflow: hidden;
+      z-index: 0;
+    }
+    .ocean-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 800px 500px at 20% 60%, rgba(0,201,177,0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 600px 400px at 80% 30%, rgba(110,203,245,0.06) 0%, transparent 70%);
+    }
+
+    /* Floating ambient bubbles */
+    .amb-bubble {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.4), rgba(255,255,255,0.05));
+      border: 1px solid rgba(255,255,255,0.2);
+      animation: ambFloat linear infinite;
+      pointer-events: none;
+    }
+    @keyframes ambFloat {
+      0%   { transform: translateY(110vh) translateX(0); opacity: 0; }
+      10%  { opacity: 0.6; }
+      90%  { opacity: 0.4; }
+      100% { transform: translateY(-20px) translateX(30px); opacity: 0; }
+    }
+
+    /* Sea floor */
+    .sea-floor {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 80px;
+      background: linear-gradient(180deg, transparent, rgba(0,50,80,0.8));
+      z-index: 1;
+      pointer-events: none;
+    }
+    .sea-floor::after {
+      content: '🪸 🦞 🐚 🌿 🪸 🐚 🌿 🦀 🪸 🌿 🐚 🦞 🪸';
+      position: absolute;
+      bottom: 4px;
+      left: 0; right: 0;
+      text-align: center;
+      font-size: 1.4rem;
+      letter-spacing: 8px;
+      opacity: 0.7;
+    }
+
+    /* ── START SCREEN ── */
+    #startScreen {
+      z-index: 10;
+      gap: 0;
+      padding: 2rem;
+    }
+    .game-title {
+      font-family: 'Boogaloo', cursive;
+      font-size: clamp(2.8rem, 8vw, 5rem);
+      color: var(--yellow);
+      text-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+      text-align: center;
+      line-height: 1;
+      margin-bottom: 0.3rem;
+      animation: titleBob 3s ease-in-out infinite;
+    }
+    @keyframes titleBob {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .game-subtitle {
+      font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+      font-weight: 800;
+      color: var(--teal);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .diver-display {
+      font-size: 5rem;
+      margin-bottom: 1.5rem;
+      animation: diverBob 2s ease-in-out infinite;
+      filter: drop-shadow(0 8px 16px rgba(0,201,177,0.3));
+    }
+    @keyframes diverBob {
+      0%,100% { transform: translateY(0) rotate(-3deg); }
+      50% { transform: translateY(-12px) rotate(3deg); }
+    }
+
+    .age-select-label {
+      font-size: 1rem;
+      font-weight: 900;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .age-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+    .age-btn {
+      padding: 0.9rem 1.6rem;
+      border: 3px solid transparent;
+      border-radius: 16px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      background: rgba(255,255,255,0.06);
+      color: white;
+      min-width: 110px;
+    }
+    .age-btn .age-emoji { font-size: 1.6rem; }
+    .age-btn .age-label { font-size: 0.85rem; font-weight: 900; }
+    .age-btn .age-topic { font-size: 0.65rem; font-weight: 700; opacity: 0.7; text-align: center; }
+    .age-btn:hover { transform: translateY(-3px); background: rgba(255,255,255,0.12); }
+    .age-btn.selected { border-color: var(--teal); background: rgba(0,201,177,0.15); }
+    .age-btn[data-age="5"] { border-color: rgba(78,203,113,0.4); }
+    .age-btn[data-age="5"].selected { border-color: var(--green); background: rgba(78,203,113,0.2); }
+    .age-btn[data-age="7"] { border-color: rgba(255,217,61,0.4); }
+    .age-btn[data-age="7"].selected { border-color: var(--yellow); background: rgba(255,217,61,0.15); }
+    .age-btn[data-age="9"] { border-color: rgba(255,92,92,0.4); }
+    .age-btn[data-age="9"].selected { border-color: var(--coral); background: rgba(255,92,92,0.15); }
+
+    .start-btn {
+      padding: 1rem 3rem;
+      background: linear-gradient(135deg, var(--teal), var(--teal2));
+      color: var(--navy);
+      border: none;
+      border-radius: 50px;
+      font-family: 'Boogaloo', cursive;
+      font-size: 1.8rem;
+      cursor: pointer;
+      box-shadow: 0 6px 0 rgba(0,0,0,0.3), 0 8px 24px rgba(0,201,177,0.3);
+      transition: all 0.15s;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .start-btn.ready {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .start-btn.ready:hover { transform: translateY(-3px); box-shadow: 0 9px 0 rgba(0,0,0,0.3), 0 12px 28px rgba(0,201,177,0.4); }
+    .start-btn.ready:active { transform: translateY(2px); box-shadow: 0 4px 0 rgba(0,0,0,0.3); }
+
+    /* ── HUD ── */
+    #hud {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 20;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 1.5rem;
+      background: rgba(10,22,40,0.85);
+      backdrop-filter: blur(8px);
+      border-bottom: 2px solid rgba(0,201,177,0.3);
+    }
+    #hud.hidden { display: none; }
+
+    .hud-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1px;
+    }
+    .hud-label {
+      font-size: 0.55rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+    }
+    .hud-value {
+      font-family: 'Boogaloo', cursive;
+      font-size: 1.8rem;
+      color: var(--yellow);
+      line-height: 1;
+    }
+    #timerVal { color: var(--teal); }
+    #timerVal.urgent { color: var(--coral); animation: pulse 0.5s ease-in-out infinite; }
+    @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+
+    .hud-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      background: rgba(255,255,255,0.07);
+      border: 2px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      padding: 0.3rem 0.7rem;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, transform 0.15s;
+      text-decoration: none;
+    }
+    .hud-btn:hover { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.25); transform: translateY(-2px); }
+    .hud-btn:active { transform: translateY(0); }
+    .hud-btn-icon { font-size: 1.2rem; line-height: 1; }
+    .hud-btn-label { font-size: 0.5rem; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.45); }
+
+    .question-bar {
+      position: fixed;
+      top: 70px; left: 50%; transform: translateX(-50%);
+      z-index: 20;
+      background: rgba(10,22,40,0.9);
+      border: 2px solid rgba(0,201,177,0.4);
+      border-radius: 50px;
+      padding: 0.5rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      backdrop-filter: blur(8px);
+    }
+    .question-bar.hidden { display: none; }
+    .question-text {
+      font-family: 'Boogaloo', cursive;
+      font-size: clamp(1.2rem, 4vw, 1.8rem);
+      color: white;
+    }
+    .question-label {
+      font-size: 0.65rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+    }
+
+    /* ── GAME CANVAS ── */
+    #gameCanvas {
+      position: fixed;
+      inset: 0;
+      z-index: 5;
+      cursor: none;
+    }
+    #gameCanvas.hidden { display: none; }
+
+
+
+    /* ── FEEDBACK ANIMATIONS ── */
+    .feedback-pop {
+      position: fixed;
+      font-family: 'Boogaloo', cursive;
+      font-size: 2rem;
+      font-weight: 900;
+      pointer-events: none;
+      z-index: 30;
+      animation: feedbackAnim 0.8s ease-out forwards;
+    }
+    @keyframes feedbackAnim {
+      0%   { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-80px) scale(1.4); }
+    }
+
+    /* Confetti */
+    .confetti-piece {
+      position: fixed;
+      width: 10px; height: 10px;
+      border-radius: 2px;
+      pointer-events: none;
+      z-index: 35;
+      animation: confettiFall linear forwards;
+    }
+    @keyframes confettiFall {
+      0%   { opacity: 1; transform: translateY(0) rotate(0deg); }
+      100% { opacity: 0; transform: translateY(200px) rotate(720deg); }
+    }
+
+    /* ── END SCREEN ── */
+    #endScreen {
+      z-index: 10;
+      gap: 1rem;
+      padding: 2rem;
+    }
+    .end-title {
+      font-family: 'Boogaloo', cursive;
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      color: var(--yellow);
+      text-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    .end-score-box {
+      background: rgba(255,255,255,0.06);
+      border: 2px solid rgba(0,201,177,0.3);
+      border-radius: 24px;
+      padding: 1.5rem 3rem;
+      text-align: center;
+    }
+    .end-score-label {
+      font-size: 0.7rem;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 0.4rem;
+    }
+    .end-score-num {
+      font-family: 'Boogaloo', cursive;
+      font-size: 4rem;
+      color: var(--yellow);
+      line-height: 1;
+      text-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+    }
+    .end-score-sub {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.5);
+      margin-top: 0.3rem;
+    }
+    .end-rating {
+      font-size: 3rem;
+      text-align: center;
+    }
+    .end-message {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: rgba(255,255,255,0.8);
+      text-align: center;
+      max-width: 340px;
+    }
+    .end-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .end-btn {
+      padding: 0.8rem 2rem;
+      border: none;
+      border-radius: 50px;
+      font-family: 'Boogaloo', cursive;
+      font-size: 1.4rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.3);
+    }
+    .end-btn:hover { transform: translateY(-2px); }
+    .end-btn:active { transform: translateY(1px); box-shadow: 0 2px 0 rgba(0,0,0,0.3); }
+    .btn-play-again { background: var(--teal); color: var(--navy); }
+    .btn-change-age { background: rgba(255,255,255,0.1); color: white; border: 2px solid rgba(255,255,255,0.2); }
+    .btn-home {
+      background: rgba(255,255,255,0.1);
+      color: white;
+      border: 2px solid rgba(255,255,255,0.2);
+      text-decoration: none;
+      display: inline-flex; align-items: center;
+    }
+
+    /* ── COUNTDOWN ── */
+    #countdown {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(10,22,40,0.7);
+      backdrop-filter: blur(4px);
+    }
+    #countdown.hidden { display: none; }
+    .countdown-num {
+      font-family: 'Boogaloo', cursive;
+      font-size: 12rem;
+      color: var(--yellow);
+      text-shadow: 0 0 60px rgba(255,217,61,0.5);
+      animation: countPop 0.8s ease-out;
+    }
+    @keyframes countPop {
+      0%   { transform: scale(2); opacity: 0; }
+      40%  { transform: scale(0.9); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Back button */
+    .back-link {
+      position: fixed;
+      top: 1rem; left: 1rem;
+      z-index: 50;
+      color: rgba(255,255,255,0.4);
+      font-size: 0.8rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.2s;
+      display: none;
+    }
+    .back-link:hover { color: var(--teal); }
+  </style>
+</head>
+<body>
+
+  <!-- Ocean background (always visible) -->
+  <div class="ocean-bg" id="oceanBg"></div>
+  <div class="sea-floor"></div>
+  <a href="index.html" class="back-link" id="backLink">← Back</a>
+
+  <!-- START SCREEN -->
+  <div class="screen" id="startScreen">
+    <div class="diver-display">🤿</div>
+    <div class="game-title">Maths Dive!</div>
+    <div class="game-subtitle">Crabcake · Educational Games</div>
+
+    <div class="age-select-label">Choose your diver</div>
+    <div class="age-buttons">
+      <button class="age-btn" data-age="5" onclick="selectAge(5)">
+        <span class="age-emoji">🟢</span>
+        <span class="age-label">Ages 5 – 6</span>
+        <span class="age-topic">Counting &<br>Numbers</span>
+      </button>
+      <button class="age-btn" data-age="7" onclick="selectAge(7)">
+        <span class="age-emoji">🟡</span>
+        <span class="age-label">Ages 7 – 8</span>
+        <span class="age-topic">Addition &<br>Subtraction</span>
+      </button>
+      <button class="age-btn" data-age="9" onclick="selectAge(9)">
+        <span class="age-emoji">🔴</span>
+        <span class="age-label">Ages 9 – 10</span>
+        <span class="age-topic">Multiply &<br>Divide</span>
+      </button>
+    </div>
+
+    <button class="start-btn" id="startBtn" onclick="startCountdown()">🤿 Dive In!</button>
+  </div>
+
+  <!-- COUNTDOWN -->
+  <div id="countdown" class="hidden">
+    <div class="countdown-num" id="countdownNum">3</div>
+  </div>
+
+  <!-- HUD -->
+  <div id="hud" class="hidden">
+    <div class="hud-item">
+      <div class="hud-label">Score</div>
+      <div class="hud-value" id="scoreVal">0</div>
+    </div>
+    <button class="hud-btn" onclick="hudBack()" title="Level Select">
+      <span class="hud-btn-icon">↩️</span>
+      <span class="hud-btn-label">Levels</span>
+    </button>
+    <div class="hud-item">
+      <div class="hud-label">Streak 🔥</div>
+      <div class="hud-value" id="streakVal">0</div>
+    </div>
+    <a class="hud-btn" href="index.html#games" title="Home">
+      <span class="hud-btn-icon">🏠</span>
+      <span class="hud-btn-label">Home</span>
+    </a>
+    <div class="hud-item">
+      <div class="hud-label">Time</div>
+      <div class="hud-value" id="timerVal">60</div>
+    </div>
+  </div>
+
+  <!-- QUESTION BAR -->
+  <div id="questionBar" class="question-bar hidden">
+    <div>
+      <div class="question-label">Catch the answer to</div>
+      <div class="question-text" id="questionText">?</div>
+    </div>
+  </div>
+
+  <!-- GAME CANVAS -->
+  <canvas id="gameCanvas" class="hidden"></canvas>
+
+
+
+  <!-- END SCREEN -->
+  <div class="screen hidden" id="endScreen">
+    <div class="end-rating" id="endRating">⭐⭐⭐</div>
+    <div class="end-title" id="endTitle">Amazing Dive!</div>
+    <div class="end-score-box">
+      <div class="end-score-label">Your Score</div>
+      <div class="end-score-num" id="endScoreNum">0</div>
+      <div class="end-score-sub" id="endScoreSub">correct answers</div>
+    </div>
+    <div class="end-message" id="endMessage">Great job!</div>
+    <div class="end-buttons">
+      <button class="end-btn btn-play-again" onclick="playAgain()">🤿 Dive Again!</button>
+      <button class="end-btn btn-change-age" onclick="changeAge()">Change Level</button>
+      <a href="index.html" class="end-btn btn-home">🦀 Home</a>
+    </div>
+  </div>
+
+<script>
+// ── STATE ──
+let selectedAge = null;
+let score = 0;
+let streak = 0;
+let timeLeft = 60;
+let timerInterval = null;
+let gameRunning = false;
+let currentAnswer = null;
+let currentQuestion = '';
+let fallingObjects = [];
+let diver = { x: 0, y: 0, width: 60, height: 60, speed: 6, targetX: 0 };
+let canvas, ctx;
+let animFrame;
+let keys = { left: false, right: false };
+let difficulty = 1;
+let spawnRate = 120; // frames between spawns
+let frameCount = 0;
+let isMobile = false;
+let timerStarted = false;
+
+// Object types pool
+const objTypes = ['bubble', 'bubble', 'bubble', 'fish', 'chest', 'jellyfish'];
+const objEmojis = {
+  bubble:    ['🫧', '🔵', '⚪'],
+  fish:      ['🐠', '🐟', '🐡'],
+  chest:     ['💰', '📦', '🎁'],
+  jellyfish: ['🪼', '🫧', '🌊']
+};
+
+// ── AGE CONFIG ──
+const ageConfig = {
+  5: { time: 45,  speed: 0.9,  spawnRate: 100, maxObjs: 4,  label: 'Ages 5–6',  color: '#4ECB71', topic: 'Counting' },
+  7: { time: 60,  speed: 1.2,  spawnRate: 80,  maxObjs: 5,  label: 'Ages 7–8',  color: '#FFD93D', topic: 'Addition & Subtraction' },
+  9: { time: 75,  speed: 1.5,  spawnRate: 65,  maxObjs: 6,  label: 'Ages 9–10', color: '#FF5C5C', topic: 'Multiply & Divide' }
+};
+
+// ── QUESTION GENERATORS ──
+function generateQuestion() {
+  let q = '', ans = 0, wrongs = [];
+
+  if (selectedAge === 5) {
+    // Counting 1–10: show a number, catch it
+    ans = Math.floor(Math.random() * 10) + 1;
+    q = `Find the number  ${ans}`;
+    // Distractors
+    let pool = [];
+    for (let i = 1; i <= 10; i++) if (i !== ans) pool.push(i);
+    pool.sort(() => Math.random()-0.5);
+    wrongs = pool.slice(0, 4);
+  }
+  else if (selectedAge === 7) {
+    const d = Math.min(difficulty, 5);
+    if (Math.random() < 0.5) {
+      // Addition
+      let a = Math.floor(Math.random() * (5 * d)) + 1;
+      let b = Math.floor(Math.random() * (5 * d)) + 1;
+      ans = a + b;
+      q = `${a} + ${b} = ?`;
+    } else {
+      // Subtraction
+      let a = Math.floor(Math.random() * (5 * d)) + 5;
+      let b = Math.floor(Math.random() * a);
+      ans = a - b;
+      q = `${a} − ${b} = ?`;
+    }
+    wrongs = generateWrongs(ans, 4, 1, ans + 10);
+  }
+  else if (selectedAge === 9) {
+    const d = Math.min(difficulty, 4);
+    const type = Math.random();
+    if (type < 0.5) {
+      // Multiplication
+      let a = Math.floor(Math.random() * (3 * d)) + 2;
+      let b = Math.floor(Math.random() * 10) + 2;
+      ans = a * b;
+      q = `${a} × ${b} = ?`;
+    } else {
+      // Division
+      let b = Math.floor(Math.random() * 9) + 2;
+      let ans2 = Math.floor(Math.random() * 10) + 2;
+      let a = b * ans2;
+      ans = ans2;
+      q = `${a} ÷ ${b} = ?`;
+    }
+    wrongs = generateWrongs(ans, 4, 1, ans + 20);
+  }
+
+  currentAnswer = ans;
+  currentQuestion = q;
+  document.getElementById('questionText').textContent = q;
+  return { answer: ans, wrongs };
+}
+
+function generateWrongs(correct, count, min, max) {
+  let wrongs = new Set();
+  let attempts = 0;
+  while (wrongs.size < count && attempts < 100) {
+    let w = correct + (Math.random() < 0.5 ? 1 : -1) * (Math.floor(Math.random() * 5) + 1);
+    if (w !== correct && w >= min) wrongs.add(w);
+    attempts++;
+  }
+  return [...wrongs];
+}
+
+// ── AMBIENT BUBBLES ──
+function createAmbBubbles() {
+  const bg = document.getElementById('oceanBg');
+  for (let i = 0; i < 12; i++) {
+    const b = document.createElement('div');
+    b.className = 'amb-bubble';
+    const size = Math.random() * 20 + 6;
+    b.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${Math.random()*100}%;
+      animation-duration:${Math.random()*12+8}s;
+      animation-delay:${Math.random()*10}s;
+    `;
+    bg.appendChild(b);
+  }
+}
+
+// ── AGE SELECTION ──
+function selectAge(age) {
+  selectedAge = age;
+  document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelector(`.age-btn[data-age="${age}"]`).classList.add('selected');
+  document.getElementById('startBtn').classList.add('ready');
+}
+
+// ── COUNTDOWN ──
+function startCountdown() {
+  if (!selectedAge) return;
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('backLink').style.display = 'none';
+
+  const el = document.getElementById('countdown');
+  const numEl = document.getElementById('countdownNum');
+  el.classList.remove('hidden');
+
+  let count = 3;
+  numEl.textContent = count;
+
+  const tick = setInterval(() => {
+    count--;
+    if (count <= 0) {
+      clearInterval(tick);
+      numEl.textContent = '🤿';
+      setTimeout(() => {
+        el.classList.add('hidden');
+        startGame();
+      }, 600);
+    } else {
+      numEl.style.animation = 'none';
+      numEl.offsetHeight;
+      numEl.style.animation = 'countPop 0.8s ease-out';
+      numEl.textContent = count;
+    }
+  }, 900);
+}
+
+// ── GAME START ──
+function startGame() {
+  canvas = document.getElementById('gameCanvas');
+  ctx = canvas.getContext('2d');
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  const cfg = ageConfig[selectedAge];
+  timeLeft = cfg.time;
+  score = 0;
+  streak = 0;
+  difficulty = 1;
+  frameCount = 0;
+  spawnRate = cfg.spawnRate;
+  fallingObjects = [];
+  gameRunning = true;
+  timerStarted = false;
+
+  diver.x = canvas.width / 2;
+  diver.y = canvas.height - 180;
+  diver.targetX = diver.x;
+
+  // Detect mobile
+  isMobile = ('ontouchstart' in window) || window.innerWidth < 768;
+
+  updateHUD();
+  generateQuestion();
+
+  document.getElementById('hud').classList.remove('hidden');
+  document.getElementById('questionBar').classList.remove('hidden');
+  document.getElementById('gameCanvas').classList.remove('hidden');
+
+  // Mouse/tap movement
+  canvas.addEventListener('mousemove', onMouseMove);
+  canvas.addEventListener('touchmove', onTouchMove, { passive: false });
+  canvas.addEventListener('click', onCanvasClick);
+
+  // Keyboard
+  window.addEventListener('keydown', onKeyDown);
+  window.addEventListener('keyup', onKeyUp);
+
+  gameLoop();
+}
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  if (diver) {
+    diver.y = canvas.height - 180;
+  }
+}
+
+// ── INPUT ──
+function onMouseMove(e) {
+  const rect = canvas.getBoundingClientRect();
+  diver.targetX = e.clientX - rect.left;
+}
+function onTouchMove(e) {
+  e.preventDefault();
+  const rect = canvas.getBoundingClientRect();
+  diver.targetX = e.touches[0].clientX - rect.left;
+}
+function onCanvasClick(e) {
+  const rect = canvas.getBoundingClientRect();
+  diver.targetX = e.clientX - rect.left;
+}
+function onKeyDown(e) {
+  if (e.key === 'ArrowLeft')  keys.left  = true;
+  if (e.key === 'ArrowRight') keys.right = true;
+}
+function onKeyUp(e) {
+  if (e.key === 'ArrowLeft')  keys.left  = false;
+  if (e.key === 'ArrowRight') keys.right = false;
+}
+
+
+// ── SPAWNING ──
+function spawnObject() {
+  const cfg = ageConfig[selectedAge];
+  if (fallingObjects.length >= cfg.maxObjs + difficulty) return;
+
+  const { answer, wrongs } = generateQuestionValues();
+  // Decide if this object carries correct or wrong answer
+  const isCorrect = fallingObjects.filter(o => o.isCorrect).length === 0 && Math.random() < 0.6;
+  const value = isCorrect ? answer : wrongs[Math.floor(Math.random() * wrongs.length)];
+  const type = objTypes[Math.floor(Math.random() * objTypes.length)];
+  const emojis = objEmojis[type];
+  const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+
+  fallingObjects.push({
+    x: Math.random() * (canvas.width - 80) + 40,
+    y: -60,
+    value,
+    isCorrect,
+    type,
+    emoji,
+    speed: cfg.speed + Math.random() * 0.4 + (difficulty * 0.08),
+    size: selectedAge === 5 ? 64 : 54,
+    wobble: Math.random() * Math.PI * 2,
+    wobbleSpeed: (Math.random() - 0.5) * 0.04,
+    opacity: 1,
+    caught: false,
+    missed: false
+  });
+}
+
+function generateQuestionValues() {
+  // Return current answer and generate fresh wrongs
+  const wrongs = generateWrongs(currentAnswer, 5, 1, currentAnswer + 15);
+  return { answer: currentAnswer, wrongs };
+}
+
+// ── GAME LOOP ──
+function gameLoop() {
+  if (!gameRunning) return;
+  frameCount++;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Spawn
+  if (frameCount % Math.floor(spawnRate) === 0) {
+    spawnObject();
+    // Ensure at least one correct answer is always on screen
+    const hasCorrect = fallingObjects.some(o => o.isCorrect && !o.caught && !o.missed);
+    if (!hasCorrect && fallingObjects.length < ageConfig[selectedAge].maxObjs + difficulty) {
+      spawnCorrectObject();
+    }
+  }
+
+  // Move diver
+  if (keys.left)  diver.targetX -= 8;
+  if (keys.right) diver.targetX += 8;
+  diver.targetX = Math.max(40, Math.min(canvas.width - 40, diver.targetX));
+  diver.x += (diver.targetX - diver.x) * 0.15;
+
+  // Update & draw objects
+  fallingObjects = fallingObjects.filter(o => {
+    // Remove after flash completes
+    if (o.caught) {
+      if (o.flashGreen && Date.now() - o.flashGreen < 200) {
+        const wx = o.x + Math.sin(o.wobble) * 12;
+        drawObject(o, wx);
+        return true; // keep briefly to show flash
+      }
+      return false;
+    }
+    if (o.missed) return false;
+
+    o.y += o.speed;
+    o.wobble += o.wobbleSpeed;
+    const wx = o.x + Math.sin(o.wobble) * 12;
+
+    // Check catch
+    const dx = Math.abs(wx - diver.x);
+    const dy = Math.abs(o.y - diver.y);
+    if (dx < 45 && dy < 45) {
+      if (o.isCorrect) o.flashGreen = Date.now();
+      onCatch(o, wx, o.y);
+      o.caught = true;
+      if (o.isCorrect) {
+        drawObject(o, wx); // draw one last frame with green flash
+        return true;
+      }
+      return false;
+    }
+
+    // Off screen
+    if (o.y > canvas.height + 60) {
+      if (o.isCorrect) generateQuestion();
+      return false;
+    }
+
+    drawObject(o, wx);
+    return true;
+  });
+
+  // Draw diver
+  drawDiver();
+
+  animFrame = requestAnimationFrame(gameLoop);
+}
+
+function spawnCorrectObject() {
+  const cfg = ageConfig[selectedAge];
+  const type = objTypes[Math.floor(Math.random() * objTypes.length)];
+  const emojis = objEmojis[type];
+  const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+  fallingObjects.push({
+    x: Math.random() * (canvas.width - 80) + 40,
+    y: -60,
+    value: currentAnswer,
+    isCorrect: true,
+    type, emoji,
+    speed: cfg.speed + (difficulty * 0.1),
+    size: selectedAge === 5 ? 64 : 54,
+    wobble: Math.random() * Math.PI * 2,
+    wobbleSpeed: (Math.random() - 0.5) * 0.04,
+    opacity: 1,
+    caught: false,
+    missed: false
+  });
+}
+
+function drawObject(obj, wx) {
+  ctx.save();
+  ctx.globalAlpha = obj.opacity;
+
+  // Flash green briefly when correctly caught
+  const isFlashing = obj.flashGreen && (Date.now() - obj.flashGreen < 200);
+
+  // Circle background — identical for all items unless flashing green
+  const gradient = ctx.createRadialGradient(wx, obj.y, 0, wx, obj.y, obj.size / 2);
+  if (isFlashing) {
+    gradient.addColorStop(0, 'rgba(78,203,113,0.5)');
+    gradient.addColorStop(1, 'rgba(78,203,113,0.15)');
+    ctx.shadowColor = '#4ECB71';
+    ctx.shadowBlur = 24;
+  } else {
+    gradient.addColorStop(0, 'rgba(255,255,255,0.12)');
+    gradient.addColorStop(1, 'rgba(255,255,255,0.02)');
+  }
+  ctx.beginPath();
+  ctx.arc(wx, obj.y, obj.size / 2, 0, Math.PI * 2);
+  ctx.fillStyle = gradient;
+  ctx.fill();
+  ctx.strokeStyle = isFlashing ? 'rgba(78,203,113,0.8)' : 'rgba(255,255,255,0.15)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  ctx.shadowBlur = 0;
+
+  // Emoji
+  ctx.font = `${obj.size * 0.5}px serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(obj.emoji, wx, obj.y - obj.size * 0.12);
+
+  // Value — same colour for all
+  ctx.font = `900 ${obj.size * 0.32}px 'Boogaloo', cursive`;
+  ctx.fillStyle = isFlashing ? '#4ECB71' : 'rgba(255,255,255,0.85)';
+  ctx.shadowColor = 'rgba(0,0,0,0.5)';
+  ctx.shadowBlur = 4;
+  ctx.fillText(obj.value, wx, obj.y + obj.size * 0.22);
+
+  ctx.restore();
+}
+
+function drawDiver() {
+  ctx.save();
+  ctx.font = '52px serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  // Bubble trail
+  ctx.globalAlpha = 0.4;
+  ctx.font = '16px serif';
+  ctx.fillText('🫧', diver.x + Math.sin(frameCount * 0.1) * 8, diver.y - 40);
+  ctx.globalAlpha = 0.2;
+  ctx.fillText('🫧', diver.x + Math.sin(frameCount * 0.07) * 12 - 10, diver.y - 60);
+
+  ctx.globalAlpha = 1;
+  ctx.font = '52px serif';
+  // Slight swim animation
+  const swimBob = Math.sin(frameCount * 0.08) * 3;
+  ctx.translate(diver.x, diver.y + swimBob);
+
+  // Glow
+  ctx.shadowColor = 'rgba(0,201,177,0.6)';
+  ctx.shadowBlur = 20;
+  ctx.fillText('🤿', 0, 0);
+
+  ctx.restore();
+}
+
+// ── TIMER ──
+function startTimer() {
+  if (timerStarted) return;
+  timerStarted = true;
+  const cfg = ageConfig[selectedAge];
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    document.getElementById('timerVal').textContent = timeLeft;
+    if (timeLeft <= 10) document.getElementById('timerVal').classList.add('urgent');
+    if (timeLeft <= 0) endGame();
+    // Increase difficulty every 15 seconds
+    const elapsed = cfg.time - timeLeft;
+    difficulty = 1 + Math.floor(elapsed / 15);
+    spawnRate = Math.max(cfg.spawnRate - difficulty * 8, 30);
+  }, 1000);
+}
+
+// ── CATCH HANDLING ──
+function onCatch(obj, x, y) {
+  startTimer();
+  if (obj.isCorrect) {
+    score++;
+    streak++;
+    updateHUD();
+    if (streak > 0 && streak % 5 === 0) {
+      timeLeft += 10;
+      document.getElementById('timerVal').textContent = timeLeft;
+      showFeedback(x, y - 40, '🔥 +10s bonus!', '#FFD93D');
+      spawnConfetti(x, y);
+      flashScreen('#FFD93D');
+    } else if (streak > 0 && streak % 3 === 0) {
+      timeLeft += 5;
+      document.getElementById('timerVal').textContent = timeLeft;
+      showFeedback(x, y - 40, '⭐ +5s bonus!', '#4ECB71');
+      spawnConfetti(x, y);
+      flashScreen('#4ECB71');
+    } else {
+      showFeedback(x, y, '✓ +1', '#4ECB71');
+      flashScreen('#4ECB71');
+    }
+    playSound('correct');
+    generateQuestion();
+    if (streak % 5 === 0) fallingObjects = [];
+  } else {
+    streak = 0;
+    updateHUD();
+    showFeedback(x, y, '✗ Wrong!', '#FF5C5C');
+    playSound('wrong');
+    // Flash screen red briefly
+    flashScreen('#FF5C5C');
+  }
+}
+
+function updateHUD() {
+  document.getElementById('scoreVal').textContent = score;
+  document.getElementById('streakVal').textContent = streak;
+  document.getElementById('timerVal').textContent = timerStarted ? timeLeft : '▶';
+}
+
+function showFeedback(x, y, text, color) {
+  const el = document.createElement('div');
+  el.className = 'feedback-pop';
+  el.textContent = text;
+  el.style.cssText = `left:${x}px; top:${y}px; color:${color}; transform:translateX(-50%);`;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 800);
+}
+
+function spawnConfetti(x, y) {
+  const colors = ['#FFD93D','#00C9B1','#FF5C5C','#A66CFF','#4ECB71','#6ECBF5'];
+  for (let i = 0; i < 20; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    const angle = (Math.random() * Math.PI * 2);
+    const dist = Math.random() * 80 + 20;
+    el.style.cssText = `
+      left:${x + Math.cos(angle)*dist}px;
+      top:${y + Math.sin(angle)*dist - 60}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      width:${Math.random()*10+5}px;
+      height:${Math.random()*10+5}px;
+      border-radius:${Math.random() < 0.5 ? '50%' : '2px'};
+      animation-duration:${Math.random()*0.6+0.5}s;
+    `;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1100);
+  }
+}
+
+function flashScreen(color) {
+  const flash = document.createElement('div');
+  flash.style.cssText = `
+    position:fixed;inset:0;z-index:100;
+    background:${color};opacity:0.15;
+    pointer-events:none;
+    animation:flashAnim 0.3s ease-out forwards;
+  `;
+  const style = document.createElement('style');
+  style.textContent = '@keyframes flashAnim{0%{opacity:0.2}100%{opacity:0}}';
+  document.head.appendChild(style);
+  document.body.appendChild(flash);
+  setTimeout(() => { flash.remove(); style.remove(); }, 300);
+}
+
+// ── SOUNDS (Web Audio API) ──
+let audioCtx = null;
+function getAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+function playSound(type) {
+  try {
+    const ac = getAudio();
+    const osc = ac.createOscillator();
+    const gain = ac.createGain();
+    osc.connect(gain);
+    gain.connect(ac.destination);
+    if (type === 'correct') {
+      osc.frequency.setValueAtTime(523, ac.currentTime);
+      osc.frequency.setValueAtTime(659, ac.currentTime + 0.1);
+      osc.frequency.setValueAtTime(784, ac.currentTime + 0.2);
+      gain.gain.setValueAtTime(0.15, ac.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.4);
+      osc.start(ac.currentTime);
+      osc.stop(ac.currentTime + 0.4);
+    } else {
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(200, ac.currentTime);
+      osc.frequency.setValueAtTime(150, ac.currentTime + 0.1);
+      gain.gain.setValueAtTime(0.1, ac.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.25);
+      osc.start(ac.currentTime);
+      osc.stop(ac.currentTime + 0.25);
+    }
+  } catch(e) {}
+}
+
+// ── END GAME ──
+function endGame() {
+  gameRunning = false;
+  clearInterval(timerInterval);
+  cancelAnimationFrame(animFrame);
+  timeLeft = 0;
+
+  // Clean up
+  canvas.removeEventListener('mousemove', onMouseMove);
+  canvas.removeEventListener('touchmove', onTouchMove);
+  window.removeEventListener('keydown', onKeyDown);
+  window.removeEventListener('keyup', onKeyUp);
+
+  // Hide game elements
+  document.getElementById('hud').classList.add('hidden');
+  document.getElementById('questionBar').classList.add('hidden');
+  document.getElementById('gameCanvas').classList.add('hidden');
+
+  // Score evaluation
+  let rating, title, message;
+  const cfg = ageConfig[selectedAge];
+  const pct = score / (cfg.time / 5); // rough max
+
+  if (score === 0) {
+    rating = '🌊'; title = 'Keep Diving!';
+    message = "Don't give up — every diver starts somewhere! Try again!";
+  } else if (score < 5) {
+    rating = '⭐'; title = 'Nice Try!';
+    message = 'Good effort! Keep practising and you\'ll catch more next time!';
+  } else if (score < 10) {
+    rating = '⭐⭐'; title = 'Great Dive!';
+    message = 'You\'re getting better! Can you beat your score next time?';
+  } else if (score < 15) {
+    rating = '⭐⭐⭐'; title = 'Amazing Diver!';
+    message = 'Wow, you\'re a maths superstar! The ocean is yours! 🌊';
+  } else {
+    rating = '🏆✨'; title = 'LEGENDARY!';
+    message = 'Unbelievable score! You\'re the greatest maths diver ever! 🤿🦀';
+    spawnConfetti(window.innerWidth/2, window.innerHeight/2);
+    setTimeout(() => spawnConfetti(window.innerWidth/3, window.innerHeight/3), 300);
+    setTimeout(() => spawnConfetti(window.innerWidth*0.7, window.innerHeight*0.4), 600);
+  }
+
+  document.getElementById('endRating').textContent = rating;
+  document.getElementById('endTitle').textContent = title;
+  document.getElementById('endScoreNum').textContent = score;
+  document.getElementById('endScoreSub').textContent = `correct ${cfg.label} answers`;
+  document.getElementById('endMessage').textContent = message;
+
+  document.getElementById('endScreen').classList.remove('hidden');
+  document.getElementById('backLink').style.display = 'block';
+}
+
+function playAgain() {
+  document.getElementById('endScreen').classList.add('hidden');
+  document.getElementById('backLink').style.display = 'none';
+  fallingObjects = [];
+  startCountdown();
+}
+
+function hudBack() {
+  gameRunning = false;
+  clearInterval(timerInterval);
+  cancelAnimationFrame(animFrame);
+  canvas.removeEventListener('mousemove', onMouseMove);
+  canvas.removeEventListener('touchmove', onTouchMove);
+  window.removeEventListener('keydown', onKeyDown);
+  window.removeEventListener('keyup', onKeyUp);
+  document.getElementById('hud').classList.add('hidden');
+  document.getElementById('questionBar').classList.add('hidden');
+  document.getElementById('gameCanvas').classList.add('hidden');
+  fallingObjects = [];
+  changeAge();
+}
+
+function changeAge() {
+  document.getElementById('endScreen').classList.add('hidden');
+  document.getElementById('startScreen').classList.remove('hidden');
+  document.getElementById('backLink').style.display = 'none';
+  document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('startBtn').classList.remove('ready');
+  selectedAge = null;
+  fallingObjects = [];
+}
+
+// ── INIT ──
+createAmbBubbles();
+document.getElementById('backLink').style.display = 'block';
+</script>
+</body>
+</html>

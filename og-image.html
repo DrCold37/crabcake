@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=1200"/>
+  <title>Crabcake OG Image</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@700;900&display=swap"/>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      width: 1200px;
+      height: 630px;
+      overflow: hidden;
+      font-family: 'Nunito', Arial, sans-serif;
+      background: #1A2B4A;
+    }
+
+    .canvas {
+      width: 1200px;
+      height: 630px;
+      position: relative;
+      background: linear-gradient(135deg, #0d1c36 0%, #1A2B4A 50%, #162238 100%);
+      overflow: hidden;
+    }
+
+    /* Radial glows */
+    .canvas::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 700px 400px at 60% 50%, rgba(0,201,177,0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 400px 300px at 10% 80%, rgba(255,92,92,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 300px 200px at 90% 10%, rgba(166,108,255,0.1) 0%, transparent 60%);
+    }
+
+    /* Bubble decorations */
+    .bubble {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.12;
+    }
+    .b1 { width:180px; height:180px; background:#FFD93D; top:-60px; left:-40px; }
+    .b2 { width:100px; height:100px; background:#00C9B1; top:40px; right:80px; }
+    .b3 { width:220px; height:220px; background:#FF5C5C; bottom:-80px; right:-60px; }
+    .b4 { width:80px;  height:80px;  background:#A66CFF; bottom:60px; left:180px; }
+    .b5 { width:60px;  height:60px;  background:#4ECB71; top:200px; right:320px; }
+    .b6 { width:130px; height:130px; background:#6ECBF5; bottom:-20px; left:350px; }
+
+    /* Wave at bottom */
+    .wave {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+    }
+
+    /* Left side — logo + tagline */
+    .left {
+      position: absolute;
+      left: 80px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .logo-circle {
+      width: 110px;
+      height: 110px;
+      background: linear-gradient(135deg, #FFD93D, #FF9040);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 68px;
+      padding-top: 10px;
+      box-shadow: 0 6px 0 #d4700a, 0 10px 30px rgba(255,144,64,0.45);
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+    }
+
+    .logo-name {
+      font-family: 'Boogaloo', cursive;
+      font-size: 100px;
+      color: #FFD93D;
+      text-shadow: 3px 3px 0 rgba(255,255,255,0.25);
+      letter-spacing: 1px;
+    }
+    .logo-name .la { color: #4ECB71; }
+    .logo-name .lb { color: #FF9040; }
+    .logo-name .lc { color: #A66CFF; }
+
+    .logo-sub-text {
+      font-family: 'Nunito', Arial, sans-serif;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #00C9B1;
+      margin-top: 4px;
+    }
+
+    .tagline {
+      font-family: 'Nunito', Arial, sans-serif;
+      font-size: 28px;
+      font-weight: 900;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.45;
+      max-width: 520px;
+    }
+
+    .tagline span {
+      color: #00C9B1;
+    }
+
+    /* Badge */
+    .badge {
+      display: inline-block;
+      background: #00C9B1;
+      color: #1A2B4A;
+      font-family: 'Nunito', Arial, sans-serif;
+      font-weight: 900;
+      font-size: 20px;
+      padding: 8px 24px;
+      border-radius: 50px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+
+    /* Right side — floating emojis */
+    .right {
+      position: absolute;
+      right: 80px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .emoji-tile {
+      width: 130px;
+      height: 130px;
+      background: rgba(255,255,255,0.06);
+      border: 2px solid rgba(255,255,255,0.1);
+      border-radius: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 56px;
+    }
+
+    .emoji-tile:nth-child(1) { border-color: rgba(0,201,177,0.4); background: rgba(0,201,177,0.08); }
+    .emoji-tile:nth-child(2) { border-color: rgba(255,92,92,0.4);  background: rgba(255,92,92,0.08);  }
+    .emoji-tile:nth-child(3) { border-color: rgba(255,217,61,0.4); background: rgba(255,217,61,0.08); }
+    .emoji-tile:nth-child(4) { border-color: rgba(166,108,255,0.4);background: rgba(166,108,255,0.08);}
+
+    /* Divider line */
+    .divider {
+      position: absolute;
+      left: 50%;
+      top: 15%;
+      height: 70%;
+      width: 2px;
+      background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.08), transparent);
+      z-index: 1;
+    }
+
+    /* URL strip at bottom */
+    .url-strip {
+      position: absolute;
+      bottom: 28px;
+      left: 80px;
+      z-index: 3;
+      font-family: 'Nunito', Arial, sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+  <div class="canvas">
+
+    <!-- Bubbles -->
+    <div class="bubble b1"></div>
+    <div class="bubble b2"></div>
+    <div class="bubble b3"></div>
+    <div class="bubble b4"></div>
+    <div class="bubble b5"></div>
+    <div class="bubble b6"></div>
+
+    <!-- Wave -->
+    <div class="wave">
+      <svg viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" width="1200" height="120">
+        <path d="M0,60 C300,110 900,10 1200,60 L1200,120 L0,120 Z" fill="rgba(0,201,177,0.06)"/>
+        <path d="M0,80 C400,30 800,100 1200,50 L1200,120 L0,120 Z" fill="rgba(0,201,177,0.04)"/>
+      </svg>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- LEFT -->
+    <div class="left">
+      <div class="badge">Free to Play · Ages 5–10</div>
+      <div class="logo">
+        <div class="logo-circle">🦀</div>
+        <div class="logo-text">
+          <div class="logo-name">Cr<span class="la">a</span><span class="lb">b</span><span class="lc">c</span>ake</div>
+          <div class="logo-sub-text">Fun Games for Kids</div>
+        </div>
+      </div>
+      <div class="tagline">
+        <span>Educational games</span> designed<br/>
+        for kids ages 5–10.<br/>
+        Fun, free &amp; safe to play!
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right">
+      <div class="emoji-tile">🔢</div>
+      <div class="emoji-tile">📖</div>
+      <div class="emoji-tile">🔬</div>
+      <div class="emoji-tile">🧩</div>
+    </div>
+
+    <!-- URL -->
+    <div class="url-strip">crabcake.kids</div>
+
+  </div>
+</body>
+</html>
