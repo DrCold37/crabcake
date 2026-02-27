@@ -642,6 +642,12 @@ function generateQuestion() {
   currentAnswer = ans;
   currentQuestion = q;
   document.getElementById('questionText').textContent = q;
+
+  // Update all objects already on screen to reflect the new answer
+  fallingObjects.forEach(o => {
+    o.isCorrect = (o.value === ans);
+  });
+
   return { answer: ans, wrongs };
 }
 
