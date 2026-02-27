@@ -542,10 +542,10 @@
     <h2 class="section-title" style="color:var(--yellow)">🗂️ What Do You Want to Learn?</h2>
     <p class="section-sub">Pick a world to explore — every game teaches something amazing!</p>
     <div class="categories-grid">
-      <div class="cat-card" style="--accent:var(--teal)" onclick="window.open('maths-dive.html','_blank')" style="cursor:pointer;">
+      <div class="cat-card" style="--accent:var(--teal);cursor:pointer;" onclick="window.open('maths-dive.html','_blank')">
         <span class="cat-emoji">🔢</span>
         <div class="cat-label">Math</div>
-        <div class="cat-count">Coming Soon</div>
+        <div class="cat-count">1 Game</div>
       </div>
       <div class="cat-card" style="--accent:var(--coral)" onclick="alert('Reading games coming soon! 📖')">
         <span class="cat-emoji">📖</span>
@@ -669,11 +669,11 @@
       <a href="#">Parents</a>
       <a href="#">Teachers</a>
       <a href="privacy.html">Privacy</a>
-      <a href="/cdn-cgi/l/email-protection#b9c9cbd0cfd8dac0f9dacbd8dbdad8d2dc97d2d0ddca">Contact</a>
+      <a href="mailto:privacy@crabcake.kids">Contact</a>
     </div>
   </footer>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  <script>
     const hamburger = document.getElementById('hamburger');
     const navMenu = document.getElementById('nav-menu');
     let isOpen = false;
@@ -689,4 +689,12 @@
     navMenu.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => {
         isOpen = false;
-        requestAnimationFrame(() =
+        requestAnimationFrame(() => {
+          hamburger.classList.remove('open');
+          navMenu.classList.remove('open');
+        });
+      });
+    });
+  </script>
+</body>
+</html>
