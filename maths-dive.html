@@ -46,7 +46,9 @@
     .screen.hidden {
       opacity: 0;
       pointer-events: none;
+      touch-action: none;
       transform: scale(0.97);
+      display: none;
     }
 
     /* ── OCEAN BACKGROUND ── */
@@ -299,13 +301,8 @@
     }
 
     /* ── GAME CANVAS ── */
-    #gameCanvas {
-      position: fixed;
-      inset: 0;
-      z-index: 5;
-      cursor: none;
-    }
-    #gameCanvas.hidden { display: none; }
+    #gameCanvas { position: fixed; inset: 0; z-index: 5; cursor: none; pointer-events: none; }
+    #gameCanvas.active { pointer-events: all; }
 
 
 
@@ -687,6 +684,7 @@ function selectAge(age) {
 // ── COUNTDOWN ──
 function startCountdown() {
   if (!selectedAge) return;
+  if (gameRunning) return; // prevent re-triggering while game is active
   document.getElementById('startScreen').classList.add('hidden');
   document.getElementById('backLink').style.display = 'none';
 
@@ -717,6 +715,7 @@ function startCountdown() {
 
 // ── GAME START ──
 function startGame() {
+  if (gameRunning) return; // safety guard
   canvas = document.getElementById('gameCanvas');
   ctx = canvas.getContext('2d');
   resizeCanvas();
@@ -746,6 +745,7 @@ function startGame() {
   document.getElementById('hud').classList.remove('hidden');
   document.getElementById('questionBar').classList.remove('hidden');
   document.getElementById('gameCanvas').classList.remove('hidden');
+  document.getElementById('gameCanvas').classList.add('active');
 
   // Mouse/tap movement
   canvas.addEventListener('mousemove', onMouseMove);
@@ -1136,6 +1136,7 @@ function endGame() {
   // Clean up
   canvas.removeEventListener('mousemove', onMouseMove);
   canvas.removeEventListener('touchmove', onTouchMove);
+  canvas.removeEventListener('click', onCanvasClick);
   window.removeEventListener('keydown', onKeyDown);
   window.removeEventListener('keyup', onKeyUp);
 
@@ -1143,6 +1144,7 @@ function endGame() {
   document.getElementById('hud').classList.add('hidden');
   document.getElementById('questionBar').classList.add('hidden');
   document.getElementById('gameCanvas').classList.add('hidden');
+  document.getElementById('gameCanvas').classList.remove('active');
 
   // Score evaluation
   let rating, title, message;
@@ -1192,11 +1194,13 @@ function hudBack() {
   cancelAnimationFrame(animFrame);
   canvas.removeEventListener('mousemove', onMouseMove);
   canvas.removeEventListener('touchmove', onTouchMove);
+  canvas.removeEventListener('click', onCanvasClick);
   window.removeEventListener('keydown', onKeyDown);
   window.removeEventListener('keyup', onKeyUp);
   document.getElementById('hud').classList.add('hidden');
   document.getElementById('questionBar').classList.add('hidden');
   document.getElementById('gameCanvas').classList.add('hidden');
+  document.getElementById('gameCanvas').classList.remove('active');
   fallingObjects = [];
   changeAge();
 }
