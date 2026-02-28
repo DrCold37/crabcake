@@ -588,6 +588,9 @@ const ageConfig = {
   9: { time: 75,  speed: 1.5,  spawnRate: 65,  maxObjs: 6,  label: 'Ages 9–10', color: '#FF5C5C', topic: 'Multiply & Divide' }
 };
 
+// ── HELPERS ──
+function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
 // ── QUESTION GENERATORS ──
 function generateQuestion() {
   let q = '', ans = 0, wrongs = [];
@@ -596,45 +599,74 @@ function generateQuestion() {
     // Counting 1–10: show a number, catch it
     ans = Math.floor(Math.random() * 10) + 1;
     q = `Find the number  ${ans}`;
-    // Distractors
     let pool = [];
     for (let i = 1; i <= 10; i++) if (i !== ans) pool.push(i);
     pool.sort(() => Math.random()-0.5);
     wrongs = pool.slice(0, 4);
   }
   else if (selectedAge === 7) {
-    const d = Math.min(difficulty, 5);
-    if (Math.random() < 0.5) {
-      // Addition
-      let a = Math.floor(Math.random() * (5 * d)) + 1;
-      let b = Math.floor(Math.random() * (5 * d)) + 1;
+    // Stage 1 (d=1): addition only, numbers 1–5  → answers up to 10
+    // Stage 2 (d=2): addition only, numbers 1–9  → answers up to 18
+    // Stage 3 (d=3): add & subtract, within 20
+    // Stage 4 (d=4+): add & subtract, within 40
+    const d = Math.min(difficulty, 4);
+    const doSub = d >= 3 && Math.random() < 0.45;
+
+    if (!doSub) {
+      let a, b;
+      if      (d === 1) { a = rand(1,5);  b = rand(1,5);  }
+      else if (d === 2) { a = rand(1,9);  b = rand(1,9);  }
+      else if (d === 3) { a = rand(2,12); b = rand(1,8);  }
+      else              { a = rand(5,20); b = rand(1,15); }
       ans = a + b;
       q = `${a} + ${b} = ?`;
     } else {
-      // Subtraction
-      let a = Math.floor(Math.random() * (5 * d)) + 5;
-      let b = Math.floor(Math.random() * a);
+      let a, b;
+      if (d === 3) { a = rand(10,20); b = rand(1,9);  }
+      else         { a = rand(15,40); b = rand(1,20); }
       ans = a - b;
       q = `${a} − ${b} = ?`;
     }
-    wrongs = generateWrongs(ans, 4, 1, ans + 10);
+    wrongs = generateWrongs(ans, 4, 0, ans + 12);
   }
   else if (selectedAge === 9) {
+    // Stage 1 (d=1): ×2, ×5, ×10 only — the 3 easiest tables
+    // Stage 2 (d=2): ×2, ×3, ×4, ×5 — build up tables
+    // Stage 3 (d=3): ×2–×9, introduce division by 2, 5, 10
+    // Stage 4 (d=4+): all tables + full division
     const d = Math.min(difficulty, 4);
-    const type = Math.random();
-    if (type < 0.5) {
-      // Multiplication
-      let a = Math.floor(Math.random() * (3 * d)) + 2;
-      let b = Math.floor(Math.random() * 10) + 2;
+    const doDiv = d >= 3 && Math.random() < (d === 3 ? 0.3 : 0.45);
+
+    if (!doDiv) {
+      let a, b;
+      if (d === 1) {
+        const easy = [2, 5, 10];
+        a = easy[Math.floor(Math.random() * easy.length)];
+        b = rand(1, 10);
+      } else if (d === 2) {
+        a = rand(2, 5);
+        b = rand(1, 10);
+      } else if (d === 3) {
+        a = rand(2, 7);
+        b = rand(1, 10);
+      } else {
+        a = rand(2, 9);
+        b = rand(2, 12);
+      }
       ans = a * b;
       q = `${a} × ${b} = ?`;
     } else {
-      // Division
-      let b = Math.floor(Math.random() * 9) + 2;
-      let ans2 = Math.floor(Math.random() * 10) + 2;
-      let a = b * ans2;
-      ans = ans2;
-      q = `${a} ÷ ${b} = ?`;
+      let divisor, quotient;
+      if (d === 3) {
+        const easy = [2, 5, 10];
+        divisor  = easy[Math.floor(Math.random() * easy.length)];
+        quotient = rand(1, 10);
+      } else {
+        divisor  = rand(2, 9);
+        quotient = rand(2, 12);
+      }
+      ans = quotient;
+      q = `${divisor * quotient} ÷ ${divisor} = ?`;
     }
     wrongs = generateWrongs(ans, 4, 1, ans + 20);
   }
@@ -1146,6 +1178,10 @@ function endGame() {
   window.removeEventListener('keydown', onKeyDown);
   window.removeEventListener('keyup', onKeyUp);
 
+  // Clear all game objects and canvas
+  fallingObjects = [];
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
   // Hide game elements
   document.getElementById('hud').classList.add('hidden');
   document.getElementById('questionBar').classList.add('hidden');
@@ -1203,6 +1239,8 @@ function hudBack() {
   canvas.removeEventListener('click', onCanvasClick);
   window.removeEventListener('keydown', onKeyDown);
   window.removeEventListener('keyup', onKeyUp);
+  fallingObjects = [];
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   document.getElementById('hud').classList.add('hidden');
   document.getElementById('questionBar').classList.add('hidden');
   document.getElementById('gameCanvas').classList.add('hidden');
