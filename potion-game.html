@@ -373,6 +373,7 @@ tr.me td{background:rgba(180,79,255,.1);border-left:2px solid var(--bright);}
 .confirm-no:hover{border-color:#aaa;color:#fff;}
 .new-game-btn{background:transparent;border:1px solid rgba(180,79,255,.5);border-radius:12px;padding:5px 14px;font-family:'Bubblegum Sans',cursive;color:#b44fff;cursor:pointer;font-size:.78rem;transition:all .2s;margin-top:6px;}
 .new-game-btn:hover{background:rgba(180,79,255,.15);border-color:var(--bright);}
+.hud-btn{margin-top:0;align-self:center;}
 /* ── FEEDBACK STRIP ── */
 .feedback-strip{margin-top:16px;padding:12px 16px;background:rgba(180,79,255,.06);border:1px solid rgba(180,79,255,.2);border-radius:14px;text-align:center;}
 .feedback-text{font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:10px;}
@@ -500,19 +501,15 @@ tr.me td{background:rgba(180,79,255,.1);border-left:2px solid var(--bright);}
 <div class="wrap">
   <header>
     <h1>🧙‍♀️ Witch's Brew Workshop</h1>
-    <p class="subtitle">Discover as many potions as you can — 10 tries, then game over!</p>
     <div class="hud">
       <div class="hb"><span class="hl">⭐ Score</span><span class="hv" id="h-score">0</span></div>
       <div class="hb streak-hb" id="h-streak-b"><span class="hl">🔥 Streak</span><span class="hv" id="h-streak">×1</span></div>
       <div class="hb tries-hb" id="h-tries-b"><span class="hl">🧪 Tries Left</span><span class="hv" id="h-tries">10</span></div>
-      <div class="hb"><span class="hl">📖 Found</span><span class="hv" id="h-found">0/55</span></div>
+      <button class="new-game-btn hud-btn" id="new-game-btn">🔄 New Game</button>
+      <a href="index.html" class="new-game-btn hud-btn" style="text-decoration:none;">🦀 Home</a>
     </div>
     <div class="xpbar"><div class="xpfill" id="xpfill" style="width:0%"></div></div>
     <p class="hint">1st try = max speed bonus · consecutive finds = streak multiplier up to ×4</p>
-    <div style="display:flex;gap:8px;justify-content:center;margin-top:6px;">
-      <button class="new-game-btn" id="new-game-btn">🔄 New Game</button>
-      <a href="index.html" class="new-game-btn" style="text-decoration:none;">🦀 Home</a>
-    </div>
   </header>
 
   <div class="main">
@@ -559,7 +556,7 @@ tr.me td{background:rgba(180,79,255,.1);border-left:2px solid var(--bright);}
 
     <!-- Spell Book -->
     <div class="panel">
-      <div class="ptitle">📖 Spell Book</div>
+      <div class="ptitle">📖 Spell Book <span id="sb-found" style="font-family:'Bubblegum Sans',cursive;font-size:.85rem;color:#888;font-weight:normal;vertical-align:middle;margin-left:4px;">0/55</span></div>
       <div class="bfilter" id="bfilter">
         <button class="fbtn on" data-f="all">All</button>
         <button class="fbtn" data-f="common" style="color:var(--c-common)">Common</button>
@@ -625,8 +622,8 @@ tr.me td{background:rgba(180,79,255,.1);border-left:2px solid var(--bright);}
     <div class="feedback-strip">
       <p class="feedback-text">💌 Found a bug or have a game idea?</p>
       <div class="feedback-btns">
-        <a class="feedback-btn" href="mailto:hello@crabcake.kids?subject=Bug%20Report%20%E2%80%93%20Witch%27s%20Brew&body=Hi!%20I%20found%20a%20bug%20in%20Witch%27s%20Brew%3A%0A%0A" onclick="showClaim('bug')">🐛 Report a Bug</a>
-        <a class="feedback-btn" href="mailto:hello@crabcake.kids?subject=Game%20Idea%20for%20Crabcake!&body=Hi!%20I%20have%20an%20idea%20for%20a%20new%20game%3A%0A%0A" onclick="showClaim('idea')">💡 Suggest a Game</a>
+        <a class="feedback-btn" href="/cdn-cgi/l/email-protection#e088858c8c8fa08392818283818b85ce8b898493df9395828a858394dda29587c5d2d0b285908f9294c5d2d0c5a5d2c5d8d0c5d9d3c5d2d0b789948388c5d2d793c5d2d0a2928597c6828f8499dda889c1c5d2d0a9c5d2d0868f958e84c5d2d081c5d2d0829587c5d2d0898ec5d2d0b789948388c5d2d793c5d2d0a2928597c5d3a1c5d0a1c5d0a1" onclick="showClaim('bug')">🐛 Report a Bug</a>
+        <a class="feedback-btn" href="/cdn-cgi/l/email-protection#59313c353536193a2b383b3a38323c7732303d2a662a2c3b333c3a2d641e38343c7c6b69103d3c387c6b693f362b7c6b691a2b383b3a38323c787f3b363d20641130787c6b69107c6b6931382f3c7c6b6938377c6b69303d3c387c6b693f362b7c6b69387c6b69373c2e7c6b693e38343c7c6a187c69187c6918" onclick="showClaim('idea')">💡 Suggest a Game</a>
       </div>
       <div class="feedback-claim" id="feedback-claim-bug">
         <button class="feedback-claim-btn" onclick="claimFeedbackBadge('bug')">✅ I sent it! Claim my 🐛 Bug Hunter badge</button>
@@ -650,7 +647,7 @@ tr.me td{background:rgba(180,79,255,.1);border-left:2px solid var(--bright);}
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══════════════════════════════════════════════
 // DATA
 // ═══════════════════════════════════════════════
@@ -785,6 +782,7 @@ const store=(()=>{
 // GAME STATE
 // ═══════════════════════════════════════════════
 let sel=[];           // current selected ingredients
+let brewedInGame=new Set(); // potions brewed in this game session (no re-brewing)
 let discovered=new Set(JSON.parse(store.getItem('disc3')||'[]'));
 let score=0, streak=0, bestStreak=0, triesLeft=10, triesOnPotion=0;
 let gameActive=true, curFilter='all', lbTabName='score', lastLbIdx=-1;
@@ -862,7 +860,6 @@ function renderBook(){
     d.className='rc '+(disc?'disc '+r.r:'unk');
     d.innerHTML=`<span class="rtag ${r.r}">${cfg.em} ${cfg.label}</span>`+
       `<div class="rname">${disc?r.n:'??? Unknown Potion'}${disc?' <span style="color:var(--green);font-size:.65rem">✓</span>':''}</div>`+
-      `<div class="rings">${r.i.map(id=>disc?ING.find(x=>x.id===id).em:'❓').join('')}</div>`+
       `<div class="rhint">${disc?'+'+cfg.base+' base pts':'Needs 3 ingredients'}</div>`;
     list.appendChild(d);
   });
@@ -875,7 +872,7 @@ function updateHud(){
   document.getElementById('h-score').textContent=score.toLocaleString();
   document.getElementById('h-streak').textContent='×'+Math.min(4,1+streak*.5).toFixed(1).replace('.0','');
   document.getElementById('h-tries').textContent=triesLeft;
-  document.getElementById('h-found').textContent=discovered.size+'/55';
+  document.getElementById('sb-found').textContent=discovered.size+'/55';
   document.getElementById('h-streak-b').classList.toggle('on',streak>=1);
   document.getElementById('h-tries-b').classList.toggle('danger',triesLeft<=5);
   document.getElementById('xpfill').style.width=((discovered.size%5)/5*100)+'%';
@@ -1105,6 +1102,24 @@ function brew(){
   if(!gameActive) return;
   if(sel.length<3) return;
 
+  // Check if this combo was already brewed this game
+  const sortedCheck=[...sel].sort();
+  const comboKeyCheck='combo:'+sortedCheck.join(',');
+  const alreadyBrewed=brewedInGame.has(comboKeyCheck)||GAME_RCP.find(r=>{
+    const s=[...r.i].sort();
+    return s.length===sortedCheck.length&&s.every((v,i)=>v===sortedCheck[i])&&brewedInGame.has(r.id);
+  });
+  if(alreadyBrewed){
+    // Shake cauldron and show a message
+    shakeCauldron();
+    const btn=document.getElementById('brew-btn');
+    const orig=btn.textContent;
+    btn.textContent='⚗️ Already brewed!';
+    btn.disabled=true;
+    setTimeout(()=>{btn.textContent=orig;btn.disabled=sel.length<3;},1800);
+    return;
+  }
+
   // Lock inputs during sequence
   document.getElementById('brew-btn').disabled=true;
 
@@ -1115,6 +1130,7 @@ function brew(){
   const sorted=[...sel].sort();
   const matched=GAME_RCP.find(r=>{const s=[...r.i].sort();return s.length===sorted.length&&s.every((v,i)=>v===sorted[i]);});
   const snap=[...sel];
+  const comboKey='combo:'+sorted.join(','); // key for tracking brewed combos this game
   const cRect=document.getElementById('cw').getBoundingClientRect();
   const cx=cRect.left+cRect.width/2, cy=cRect.top+cRect.height/2;
 
@@ -1195,6 +1211,7 @@ function brew(){
   // ── PHASE 6 (3.1s): show result modal ───────────────────────────────────
   setTimeout(()=>{
     // Unlock inputs
+    brewedInGame.add(comboKey); // mark this combo as used this game
     showResult(matched, snap);
   }, 3100);
 }
@@ -1214,10 +1231,11 @@ function showResult(recipe,snap){
     document.getElementById('res-name').style.color='#ff3333';
     document.getElementById('res-rar').innerHTML='<span style="color:#ff6666">💥 Wrong combo!</span>';
     document.getElementById('res-fx').textContent=m.fx;
-    document.getElementById('res-sci').innerHTML='<strong>🔬 Tip:</strong> Mystery brews reset your streak!';
+    document.getElementById('res-sci').innerHTML='<strong>🔬 Tip:</strong> Mystery brews reset your streak — and this combo won\'t work again this game!';
     document.getElementById('res-strip').style.background='linear-gradient(90deg,'+snap.map(id=>ING.find(x=>x.id===id).col).join(',')+')'
   } else {
     discovered.add(recipe.id);
+    brewedInGame.add(recipe.id);
     store.setItem('disc3',JSON.stringify([...discovered]));
     const cfg=RARITY[recipe.r];
     document.getElementById('res-em').textContent=recipe.em;
@@ -1299,7 +1317,7 @@ function endGame(){
 
 function resetGame(){
   sel=[];score=0;streak=0;bestStreak=0;triesLeft=10;triesOnPotion=0;
-  gameActive=true;lastLbIdx=-1;
+  gameActive=true;lastLbIdx=-1;brewedInGame=new Set();
   // Discovered recipes persist across games — saved in localStorage
   GAME_RCP=buildGameRecipes();
   document.getElementById('confirm-ovl').classList.remove('show');
