@@ -154,6 +154,7 @@ h1{font-family:'Creepster',cursive;font-size:clamp(2rem,6vw,3.5rem);color:var(--
 .rname{color:var(--yellow);font-size:.86rem;}
 .rings{font-size:.95rem;margin-top:2px;letter-spacing:1px;}
 .rhint{color:#777;font-size:.68rem;margin-top:2px;}
+.rfx{color:#bba0dd;font-size:.72rem;margin-top:4px;font-style:italic;line-height:1.35;}
 .bfilter{display:flex;gap:5px;margin-bottom:8px;flex-wrap:wrap;}
 .fbtn{background:transparent;border:1px solid #444;border-radius:10px;padding:3px 9px;font-family:'Bubblegum Sans',cursive;color:#888;cursor:pointer;font-size:.7rem;transition:all .2s;}
 .fbtn.on{border-color:var(--bright);color:var(--bright);background:rgba(180,79,255,.15);}
@@ -502,6 +503,7 @@ tr.me td{background:rgba(180,79,255,.1);border-left:2px solid var(--bright);}
   <header>
     <h1>🧙‍♀️ Witch's Brew Workshop</h1>
     <div class="hud">
+      <div data-avatar-hud style="margin-right:4px"></div>
       <div class="hb"><span class="hl">⭐ Score</span><span class="hv" id="h-score">0</span></div>
       <div class="hb streak-hb" id="h-streak-b"><span class="hl">🔥 Streak</span><span class="hv" id="h-streak">×1</span></div>
       <div class="hb tries-hb" id="h-tries-b"><span class="hl">🧪 Tries Left</span><span class="hv" id="h-tries">10</span></div>
@@ -540,8 +542,8 @@ tr.me td{background:rgba(180,79,255,.1);border-left:2px solid var(--bright);}
         </svg>
         <div class="brew-glow" id="brew-glow" style="background:rgba(57,255,20,.3);"></div>
       </div>
-      <!-- Flames sit under the cauldron via negative margin -->
-      <div class="flame-row" style="margin-top:-12px;">
+      <!-- Flames overlap the bottom of the cauldron -->
+      <div class="flame-row" style="margin-top:-52px;">
         <div class="flame"></div><div class="flame"></div><div class="flame"></div>
         <div class="flame"></div><div class="flame"></div>
       </div>
@@ -860,6 +862,7 @@ function renderBook(){
     d.className='rc '+(disc?'disc '+r.r:'unk');
     d.innerHTML=`<span class="rtag ${r.r}">${cfg.em} ${cfg.label}</span>`+
       `<div class="rname">${disc?r.n:'??? Unknown Potion'}${disc?' <span style="color:var(--green);font-size:.65rem">✓</span>':''}</div>`+
+      (disc?`<div class="rfx">${r.fx}</div>`:'')+
       `<div class="rhint">${disc?'+'+cfg.base+' base pts':'Needs 3 ingredients'}</div>`;
     list.appendChild(d);
   });
@@ -1770,5 +1773,6 @@ function init(){
 init();
 </script>
 
+<script src="avatar-hud.js"></script>
 </body>
 </html>
