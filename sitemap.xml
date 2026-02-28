@@ -1,46 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
+  <!-- Homepage -->
   <url>
     <loc>https://crabcake.kids/</loc>
-    <lastmod>2026-02-26</lastmod>
+    <lastmod>2026-02-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
 
+  <!-- Privacy Policy -->
   <url>
     <loc>https://crabcake.kids/privacy.html</loc>
-    <lastmod>2026-02-26</lastmod>
+    <lastmod>2026-02-28</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.4</priority>
   </url>
 
-  <url>
-    <loc>https://crabcake.kids/sentence-builder.html</loc>
-    <lastmod>2026-02-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
+  <!-- Math Dive -->
   <url>
     <loc>https://crabcake.kids/maths-dive.html</loc>
-    <lastmod>2026-02-27</lastmod>
+    <lastmod>2026-02-28</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
 
+  <!-- Jungle Words -->
+  <url>
+    <loc>https://crabcake.kids/sentence-builder.html</loc>
+    <lastmod>2026-02-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Witch's Brew Workshop -->
   <url>
     <loc>https://crabcake.kids/potion-game.html</loc>
-    <lastmod>2026-02-26</lastmod>
+    <lastmod>2026-02-28</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
 
+  <!-- Tube Sort -->
   <url>
     <loc>https://crabcake.kids/color-sort-game.html</loc>
-    <lastmod>2026-02-26</lastmod>
+    <lastmod>2026-02-28</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
 
 </urlset>

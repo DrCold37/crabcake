@@ -249,9 +249,43 @@
     }
     .footer-links a:hover { color: var(--teal); }
 
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 0.4rem;
+      background: none;
+      border: none;
+    }
+    .hamburger span {
+      display: block;
+      width: 26px;
+      height: 3px;
+      background: var(--white);
+      border-radius: 3px;
+      transition: all 0.3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
     @media(max-width: 640px) {
-      nav { padding: 1rem 1.2rem; }
-      nav ul { display: none; }
+      nav { padding: 1rem 1.2rem; flex-wrap: wrap; position: relative; }
+      .hamburger { display: flex; }
+      nav ul {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        gap: 0;
+        background: #0F1D36;
+        border-top: 2px solid var(--teal);
+        margin-top: 0.8rem;
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      nav ul.open { display: flex; }
+      nav ul li a { display: block; padding: 0.9rem 1.4rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
       .content { padding: 2rem 1.2rem 4rem; }
       .policy-section { padding: 1.5rem; }
       footer { flex-direction: column; text-align: center; }
@@ -269,9 +303,13 @@
         <div class="logo-sub">The Fun Way to Learn</div>
       </div>
     </a>
-    <ul>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    <ul id="nav-menu">
+      <li><a href="index.html#my-badges">Achievements</a></li>
       <li><a href="index.html#games">Games</a></li>
-      <li><a href="index.html#categories">Categories</a></li>
+      <li><a href="index.html#categories">Subjects</a></li>
+      <li><a href="privacy.html">Privacy</a></li>
+      <li><a href="mailto:hello@crabcake.kids">Contact Us</a></li>
     </ul>
   </nav>
 
@@ -348,7 +386,7 @@
     <div class="contact-box">
       <h3>📬 Questions or Concerns?</h3>
       <p>If you have any questions about this Privacy Policy or your child's privacy on Crabcake, please contact us at:<br/><br/>
-      <a href="/cdn-cgi/l/email-protection#a2d2d0cbd4c3c1dbe2c1d0c3c0c1c3c9c78cc9cbc6d1"><span class="__cf_email__" data-cfemail="83f3f1eaf5e2e0fac3e0f1e2e1e0e2e8e6ade8eae7f0">[email&#160;protected]</span></a></p>
+      <a href="mailto:hello@crabcake.kids">hello@crabcake.kids</a></p>
       <p style="margin-top:0.8rem; font-size:0.85rem; opacity:0.7;">We aim to respond to all privacy inquiries within 5 business days.</p>
     </div>
 
@@ -365,4 +403,29 @@
         <div class="logo-sub">The Fun Way to Learn</div>
       </div>
     </a>
-    <p>© 2026 Crabcake · Safe & fun lear
+    <p>© 2026 Crabcake · Safe & fun learning for kids ages 5–10</p>
+  </footer>
+
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('nav-menu');
+    let isOpen = false;
+    hamburger.addEventListener('click', () => {
+      isOpen = !isOpen;
+      requestAnimationFrame(() => {
+        hamburger.classList.toggle('open', isOpen);
+        navMenu.classList.toggle('open', isOpen);
+      });
+    });
+    navMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        isOpen = false;
+        requestAnimationFrame(() => {
+          hamburger.classList.remove('open');
+          navMenu.classList.remove('open');
+        });
+      });
+    });
+  </script>
+</body>
+</html>

@@ -106,10 +106,25 @@ h1{font-family:'Creepster',cursive;font-size:clamp(2rem,6vw,3.5rem);color:var(--
 @keyframes ctilt{0%,100%{transform:rotate(0) scale(1)}15%{transform:rotate(-7deg) scale(1.04)}30%{transform:rotate(7deg) scale(1.06)}55%{transform:rotate(-4deg) scale(1.03)}75%{transform:rotate(3deg) scale(1.01)}}
 .ctilt{animation:ctilt .9s ease;}
 
-/* In-cauldron display */
-.added{background:rgba(0,0,0,.4);border:1px solid rgba(180,79,255,.4);border-radius:12px;padding:9px;width:100%;min-height:56px;text-align:center;}
-.added-lbl{color:#888;font-size:.68rem;}
-.added-ems{font-size:1.4rem;letter-spacing:3px;margin-top:3px;min-height:26px;}
+/* Cauldron ingredient slots */
+.cauldron-slots{display:flex;gap:10px;justify-content:center;align-items:center;margin-bottom:6px;min-height:64px;}
+.cslot{width:54px;height:54px;border-radius:50%;border:2px dashed rgba(180,79,255,.35);background:rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;font-size:1.8rem;transition:all .3s cubic-bezier(.34,1.56,.64,1);position:relative;}
+.cslot.filled{border-color:var(--green);background:rgba(57,255,20,.12);box-shadow:0 0 12px rgba(57,255,20,.3);transform:scale(1.08);}
+.cslot.filled .cslot-em{animation:slotPop .35s cubic-bezier(.34,1.56,.64,1);}
+@keyframes slotPop{0%{transform:scale(0) rotate(-30deg)}70%{transform:scale(1.2) rotate(5deg)}100%{transform:scale(1) rotate(0)}}
+.cslot-em{display:block;line-height:1;}
+.cslot.empty-slot::after{content:'?';color:rgba(180,79,255,.4);font-size:1.4rem;font-family:'Creepster',cursive;}
+/* Brew swirl — ingredients dissolve into cauldron */
+.brew-swirl{position:fixed;pointer-events:none;z-index:200;font-size:1.9rem;will-change:transform,opacity;}
+@keyframes swirlIn{
+  0%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0deg);}
+  60%{opacity:.8;transform:translate(-50%,-50%) scale(.6) rotate(270deg);}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(0) rotate(540deg);}
+}
+@keyframes dissolve{
+  0%{opacity:1;filter:blur(0);}
+  100%{opacity:0;filter:blur(8px) brightness(3);}
+}
 
 /* BUTTONS — outside cw, no z-index conflicts */
 .brew-btn{background:linear-gradient(135deg,#6a0dad,#b44fff);border:none;border-radius:22px;padding:13px 24px;font-family:'Creepster',cursive;font-size:1.35rem;color:#fff;cursor:pointer;transition:all .2s;box-shadow:0 0 20px rgba(180,79,255,.5);width:100%;}
@@ -370,6 +385,7 @@ tr.me td{background:rgba(180,79,255,.1);border-left:2px solid var(--bright);}
 .feedback-claim-btn:hover{transform:scale(1.06);box-shadow:0 4px 16px rgba(255,215,0,.4);}
 .feedback-claim-btn:disabled{opacity:.5;cursor:default;transform:none;background:#555;}
 </style>
+<style>
 .badge-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:linear-gradient(135deg,#0d0a1a,#1a0d2e);border:2px solid #ffd700;border-radius:20px;padding:14px 22px;display:flex;align-items:center;gap:14px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.5),0 0 24px rgba(255,215,0,.3);transition:transform .5s cubic-bezier(.34,1.56,.64,1),opacity .4s;opacity:0;pointer-events:none;max-width:340px;}
 .badge-toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
 .badge-toast-em{font-size:2.4rem;flex-shrink:0;filter:drop-shadow(0 0 8px rgba(255,215,0,.8));animation:badgePop .6s cubic-bezier(.34,1.56,.64,1);}
@@ -532,10 +548,11 @@ tr.me td{background:rgba(180,79,255,.1);border-left:2px solid var(--bright);}
         <div class="flame"></div><div class="flame"></div><div class="flame"></div>
         <div class="flame"></div><div class="flame"></div>
       </div>
-      <!-- These are OUTSIDE .cw so nothing in .cw can block them -->
-      <div class="added">
-        <div class="added-lbl">In the cauldron:</div>
-        <div class="added-ems" id="added-ems">—</div>
+      <!-- Ingredient slots above brew button -->
+      <div class="cauldron-slots" id="cauldron-slots">
+        <div class="cslot empty-slot" id="cslot-0"><span class="cslot-em"></span></div>
+        <div class="cslot empty-slot" id="cslot-1"><span class="cslot-em"></span></div>
+        <div class="cslot empty-slot" id="cslot-2"><span class="cslot-em"></span></div>
       </div>
       <button class="brew-btn" id="brew-btn" disabled>🔮 BREW IT!</button>
     </div>
@@ -874,7 +891,7 @@ function addIng(id){
     sel=sel.filter(x=>x!==id);
     const btn=document.querySelector(`.ibtn[data-id="${id}"]`);
     if(btn) btn.classList.remove('sel');
-    document.getElementById('added-ems').textContent=sel.map(i=>ING.find(x=>x.id===i).em).join(' ')||'—';
+    updateCauldronSlots();
     document.getElementById('brew-btn').disabled=sel.length<3;
     updateLiquid();updateGlow();
     playSound('clear');
@@ -891,8 +908,8 @@ function addIng(id){
   addBub(ing.col);addBub(ing.col);addBub(ing.col);
   updateLiquid();
   updateGlow();
-  // Update display
-  document.getElementById('added-ems').textContent=sel.map(i=>ING.find(x=>x.id===i).em).join(' ')||'—';
+  // Update slot display
+  updateCauldronSlots();
   document.getElementById('brew-btn').disabled = sel.length < 3;
 }
 
@@ -901,11 +918,95 @@ function addIng(id){
 // ═══════════════════════════════════════════════
 function clearCauldron(){
   sel=[];
-  document.getElementById('added-ems').textContent='—';
+  updateCauldronSlots();
   document.getElementById('brew-btn').disabled=true;
   updateLiquid();
   updateGlow();
   renderIng();
+}
+
+// ═══════════════════════════════════════════════
+// CAULDRON SLOTS
+// ═══════════════════════════════════════════════
+function updateCauldronSlots(){
+  for(let i=0;i<3;i++){
+    const slot=document.getElementById('cslot-'+i);
+    if(!slot) continue;
+    const ingId=sel[i];
+    const emEl=slot.querySelector('.cslot-em');
+    if(ingId){
+      const ing=ING.find(x=>x.id===ingId);
+      // force reflow to retrigger animation
+      emEl.textContent='';
+      slot.classList.remove('filled','empty-slot');
+      void slot.offsetWidth;
+      emEl.textContent=ing.em;
+      slot.classList.add('filled');
+      slot.style.borderColor=ing.col;
+      slot.style.background=ing.col+'22';
+      slot.style.boxShadow=`0 0 14px ${ing.col}66`;
+    } else {
+      emEl.textContent='';
+      slot.classList.remove('filled');
+      slot.classList.add('empty-slot');
+      slot.style.borderColor='';
+      slot.style.background='';
+      slot.style.boxShadow='';
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════
+// BREW SWIRL EFFECT
+// ═══════════════════════════════════════════════
+function brewSwirlEffect(onDone){
+  const {x:cx,y:cy}=cwCenter();
+  const slots=document.querySelectorAll('.cslot.filled');
+  let count=slots.length;
+  if(count===0){onDone&&onDone();return;}
+  slots.forEach((slot,i)=>{
+    const r=slot.getBoundingClientRect();
+    const startX=r.left+r.width/2;
+    const startY=r.top+r.height/2;
+    const em=slot.querySelector('.cslot-em').textContent;
+    const el=document.createElement('div');
+    el.className='brew-swirl';
+    el.textContent=em;
+    el.style.cssText=`left:${startX}px;top:${startY}px;`;
+    document.body.appendChild(el);
+    const delay=i*120;
+    setTimeout(()=>{
+      // Animate toward cauldron center with swirl
+      const duration=600;
+      const startTime=performance.now();
+      function frame(now){
+        const t=Math.min((now-startTime)/duration,1);
+        const ease=t<0.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+        const curX=startX+(cx-startX)*ease;
+        const curY=startY+(cy-startY)*ease;
+        const rot=t*540;
+        const scale=1-t*0.9;
+        const opacity=t>0.7?1-(t-0.7)/0.3:1;
+        el.style.left=curX+'px';
+        el.style.top=curY+'px';
+        el.style.transform=`translate(-50%,-50%) scale(${scale}) rotate(${rot}deg)`;
+        el.style.opacity=opacity;
+        if(t<1){requestAnimationFrame(frame);}
+        else{
+          el.remove();
+          count--;
+          // Spawn dissolve flash at cauldron
+          const flash=document.createElement('div');
+          flash.style.cssText=`position:fixed;left:${cx}px;top:${cy}px;font-size:1.6rem;transform:translate(-50%,-50%);pointer-events:none;z-index:201;animation:dissolve .5s forwards;`;
+          flash.textContent=em;
+          document.body.appendChild(flash);
+          setTimeout(()=>flash.remove(),500);
+          if(count===0&&onDone)setTimeout(onDone,200);
+        }
+      }
+      requestAnimationFrame(frame);
+    },delay);
+  });
 }
 
 // ═══════════════════════════════════════════════
@@ -1592,8 +1693,20 @@ function init(){
 
   // Brew button
   document.getElementById('brew-btn').addEventListener('click',()=>{
+    if(sel.length<3) return;
+    document.getElementById('brew-btn').disabled=true;
     playSound('brew');
-    brew();
+    brewSwirlEffect(()=>{
+      updateCauldronSlots(); // slots clear visually
+      brew();
+    });
+    // Clear slots visually mid-swirl
+    setTimeout(()=>{
+      for(let i=0;i<3;i++){
+        const s=document.getElementById('cslot-'+i);
+        if(s){s.classList.remove('filled','empty-slot');s.classList.add('empty-slot');s.querySelector('.cslot-em').textContent='';}
+      }
+    },300);
   });
 
   // Close result — cancel auto-close when manually dismissed
