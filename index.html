@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Crabcake – Fun Educational Games for Kids Ages 5–10</title>
+
+  <!-- Primary SEO -->
+  <meta name="description" content="Crabcake offers free educational browser games for kids ages 5–10. Dive into math, reading, science, puzzles and more — safe, fun, and always free to play!"/>
+  <meta name="keywords" content="free kids games, educational games for kids, games for 5 year olds, games for 10 year olds, learning games, kids browser games, safe kids games, math games kids, reading games kids, science games kids"/>
+  <meta name="author" content="Crabcake"/>
+  <meta name="robots" content="index, follow"/>
+  <link rel="canonical" href="https://crabcake.kids/"/>
+
+  <!-- Open Graph (Facebook / WhatsApp / social sharing) -->
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://crabcake.kids/"/>
+  <meta property="og:title" content="Crabcake – Fun Educational Games for Kids Ages 5–10"/>
+  <meta property="og:description" content="Free educational browser games for kids ages 5–10. Math, reading, science, puzzles and more — safe, fun, and always free!"/>
+  <meta property="og:image" content="https://crabcake.kids/og-image.png"/>
+  <meta property="og:site_name" content="Crabcake"/>
+  <meta property="og:locale" content="en_US"/>
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:url" content="https://crabcake.kids/"/>
+  <meta name="twitter:title" content="Crabcake – Fun Educational Games for Kids Ages 5–10"/>
+  <meta name="twitter:description" content="Free educational browser games for kids ages 5–10. Math, reading, science, puzzles and more — safe, fun, and always free!"/>
+  <meta name="twitter:image" content="https://crabcake.kids/og-image.png"/>
+  <!-- Preconnect to speed up font loading -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <!-- Load fonts asynchronously to prevent render blocking -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@400;600;700;800;900&display=swap"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@400;600;700;800;900&display=swap" media="print" onload="this.media='all'"/>
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@400;600;700;800;900&display=swap"/></noscript>
+  <!-- Vercel Analytics -->
+  <script defer src="/_vercel/insights/script.js"></script>
+  <style>
+    :root {
+      --coral:    #FF5C5C;
+      --yellow:   #FFD93D;
+      --teal:     #00C9B1;
+      --navy:     #1A2B4A;
+      --sky:      #6ECBF5;
+      --sand:     #FFF4D6;
+      --purple:   #A66CFF;
+      --green:    #4ECB71;
+      --orange:   #FF9040;
+      --white:    #FFFFFF;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Nunito', 'Arial Rounded MT Bold', Arial, sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      overflow-x: hidden;
+      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E🦀%3C/text%3E%3C/svg%3E") 8 8, auto;
+    }
+
+    /* ── BUBBLES BACKGROUND ── */
+    .bubbles {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+    }
+    .bubble {
+      position: absolute; bottom: -80px; border-radius: 50%;
+      opacity: 0.15; animation: rise linear infinite;
+    }
+    .bubble:nth-child(1)  { width:40px;height:40px; left:5%;  background:var(--yellow); animation-duration:9s;  animation-delay:0s;  }
+    .bubble:nth-child(2)  { width:20px;height:20px; left:12%; background:var(--teal);   animation-duration:7s;  animation-delay:1s;  }
+    .bubble:nth-child(3)  { width:55px;height:55px; left:22%; background:var(--coral);  animation-duration:11s; animation-delay:2s;  }
+    .bubble:nth-child(4)  { width:30px;height:30px; left:35%; background:var(--sky);    animation-duration:8s;  animation-delay:0.5s;}
+    .bubble:nth-child(5)  { width:45px;height:45px; left:48%; background:var(--purple); animation-duration:10s; animation-delay:3s;  }
+    .bubble:nth-child(6)  { width:25px;height:25px; left:58%; background:var(--green);  animation-duration:6s;  animation-delay:1.5s;}
+    .bubble:nth-child(7)  { width:60px;height:60px; left:68%; background:var(--yellow); animation-duration:12s; animation-delay:2.5s;}
+    .bubble:nth-child(8)  { width:35px;height:35px; left:78%; background:var(--coral);  animation-duration:9s;  animation-delay:4s;  }
+    .bubble:nth-child(9)  { width:20px;height:20px; left:88%; background:var(--teal);   animation-duration:7s;  animation-delay:0.8s;}
+    .bubble:nth-child(10) { width:50px;height:50px; left:95%; background:var(--sky);    animation-duration:10s; animation-delay:3.5s;}
+
+    @keyframes rise {
+      0%   { transform: translateY(0) scale(1);   opacity: 0.15; }
+      50%  { transform: translateY(-50vh) scale(1.1); opacity: 0.2; }
+      100% { transform: translateY(-110vh) scale(0.8); opacity: 0; }
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: rgba(15,29,54,0.97);
+      backdrop-filter: blur(8px);
+      border-bottom: 3px solid var(--teal);
+    }
+    .logo {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none;
+    }
+    .logo-circle {
+      width: 52px; height: 52px;
+      background: linear-gradient(135deg, #FFD93D, #FF9040);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.1rem;
+      padding-top: 5px;
+      box-shadow: 0 4px 0 #d4700a, 0 6px 16px rgba(255,144,64,0.35);
+      flex-shrink: 0;
+    }
+    .logo-text { display: flex; flex-direction: column; line-height: 1; }
+    .logo-name {
+      font-family: 'Boogaloo', 'Arial Rounded MT Bold', cursive;
+      font-size: 2rem;
+      color: var(--yellow);
+      text-shadow: 2px 2px 0 rgba(255,255,255,0.25);
+      letter-spacing: 0.5px;
+    }
+    .logo-name .la { color: var(--green); }
+    .logo-name .lb { color: var(--orange); }
+    .logo-name .lc { color: var(--purple); }
+    .logo-sub {
+      font-size: 0.6rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-top: 1px;
+    }
+    .logo-footer .logo-name {
+      font-size: 1.6rem;
+    }
+    nav ul { list-style: none; display: flex; gap: 2rem; }
+    nav ul li a {
+      color: var(--white); text-decoration: none;
+      font-weight: 800; font-size: 1rem;
+      transition: color 0.2s;
+    }
+    nav ul li a:hover { color: var(--yellow); }
+    .nav-cta {
+      background: var(--coral); color: var(--white) !important;
+      padding: 0.5rem 1.4rem; border-radius: 50px;
+      transition: background 0.2s, transform 0.2s !important;
+    }
+    .nav-cta:hover { background: var(--orange) !important; transform: scale(1.05); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; z-index: 1;
+      min-height: 92vh;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 4rem 2rem 2rem;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 70% at 50% 40%, rgba(0,201,177,0.18) 0%, transparent 70%),
+                  radial-gradient(ellipse 60% 50% at 80% 80%, rgba(255,92,92,0.12) 0%, transparent 60%);
+    }
+    .hero-content { position: relative; z-index: 2; max-width: 820px; }
+
+    .hero-badge {
+      display: inline-block;
+      background: var(--teal); color: var(--navy);
+      font-weight: 900; font-size: 0.85rem;
+      padding: 0.35rem 1.2rem; border-radius: 50px;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      animation: popIn 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.2s both;
+    }
+
+    .hero h1 {
+      font-family: 'Boogaloo', 'Arial Rounded MT Bold', cursive;
+      font-size: clamp(3.5rem, 9vw, 7rem);
+      line-height: 1.05;
+      color: var(--white);
+      text-shadow: 4px 4px 0 var(--navy), 6px 6px 0 rgba(0,0,0,0.2);
+      animation: popIn 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.4s both;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--yellow);
+      text-shadow: 4px 4px 0 var(--orange), 6px 6px 0 rgba(0,0,0,0.2);
+    }
+
+    .hero-tagline {
+      font-family: 'Boogaloo', 'Arial Rounded MT Bold', cursive;
+      font-size: clamp(1rem, 2.2vw, 1.25rem);
+      color: var(--teal);
+      letter-spacing: 0.5px;
+      margin-bottom: 0.5rem;
+      animation: popIn 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.55s both;
+    }
+
+    .hero-sub {
+      font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+      font-weight: 700;
+      color: rgba(255,255,255,0.85);
+      margin: 0.8rem auto 2.5rem;
+      max-width: 560px;
+      line-height: 1.6;
+      animation: popIn 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.6s both;
+    }
+
+    .hero-buttons {
+      display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+      animation: popIn 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.8s both;
+    }
+    .btn {
+      font-family: 'Nunito', 'Arial Rounded MT Bold', Arial, sans-serif;
+      font-weight: 900; font-size: 1.1rem;
+      padding: 0.9rem 2.4rem; border-radius: 60px;
+      border: none; cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      text-decoration: none; display: inline-block;
+    }
+    .btn:hover { transform: translateY(-3px) scale(1.04); }
+    .btn-primary {
+      background: var(--yellow); color: var(--navy);
+      box-shadow: 0 6px 0 var(--orange), 0 8px 20px rgba(255,217,61,0.4);
+    }
+    .btn-primary:hover { box-shadow: 0 3px 0 var(--orange), 0 8px 30px rgba(255,217,61,0.5); }
+    .btn-secondary {
+      background: transparent; color: var(--white);
+      border: 3px solid rgba(255,255,255,0.5);
+    }
+    .btn-secondary:hover { border-color: var(--teal); color: var(--teal); }
+
+    /* floating crabs & stars */
+    .float-emoji {
+      position: absolute; font-size: 3rem;
+      animation: float 4s ease-in-out infinite;
+      pointer-events: none; user-select: none;
+    }
+    .float-emoji:nth-child(1) { top: 12%; left: 6%;  animation-delay: 0s;   font-size:3.5rem; }
+    .float-emoji:nth-child(2) { top: 20%; right: 7%; animation-delay: 0.8s; font-size:2.5rem; }
+    .float-emoji:nth-child(3) { bottom:18%; left:8%;  animation-delay: 1.4s; font-size:2rem;   }
+    .float-emoji:nth-child(4) { bottom:22%; right:6%; animation-delay: 0.4s; font-size:3rem;   }
+    .float-emoji:nth-child(5) { top:45%; left:2%;     animation-delay: 2s;   font-size:2.2rem; }
+    .float-emoji:nth-child(6) { top:38%; right:2%;    animation-delay: 1s;   font-size:2.8rem; }
+
+    @keyframes float {
+      0%,100% { transform: translateY(0) rotate(-5deg); }
+      50%      { transform: translateY(-18px) rotate(5deg); }
+    }
+    @keyframes popIn {
+      from { opacity:0; transform: scale(0.7) translateY(20px); }
+      to   { opacity:1; transform: scale(1) translateY(0); }
+    }
+
+    .hero-notice {
+      margin-top: 1.8rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.6);
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
+      animation: popIn 0.7s cubic-bezier(0.34,1.56,0.64,1) 1s both;
+    }
+
+    /* ── WAVE DIVIDER ── */
+    .wave { display:block; width:100%; overflow:hidden; line-height:0; }
+    .wave svg { display:block; width:100%; }
+
+    /* ── SECTION SHARED ── */
+    section {
+      position: relative; z-index: 1;
+      padding: 5rem 2rem;
+    }
+    .section-title {
+      font-family: 'Boogaloo', 'Arial Rounded MT Bold', cursive;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+    .section-sub {
+      text-align: center;
+      color: rgba(255,255,255,0.7);
+      font-size: 1.05rem;
+      margin-bottom: 3rem;
+      font-weight: 600;
+    }
+
+    /* ── CATEGORIES ── */
+    #categories { background: #0F1D36; }
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      max-width: 800px; margin: 0 auto;
+    }
+    @media(max-width: 640px) {
+      .categories-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    }
+    .cat-card {
+      background: rgba(255,255,255,0.06);
+      border: 2px solid rgba(255,255,255,0.1);
+      border-radius: 24px;
+      padding: 2rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s, background 0.2s;
+      position: relative; overflow: hidden;
+    }
+    .cat-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: var(--accent); opacity: 0;
+      transition: opacity 0.2s; border-radius: 22px;
+    }
+    .cat-card:hover { transform: translateY(-8px) scale(1.03); border-color: var(--accent); }
+    .cat-card:hover::before { opacity: 0.12; }
+    .cat-emoji { font-size: 3rem; display: block; margin-bottom: 0.8rem; }
+    .cat-label {
+      font-family: 'Boogaloo', 'Arial Rounded MT Bold', cursive;
+      font-size: 1.3rem; color: var(--white);
+    }
+    .cat-count { font-size: 0.8rem; color: rgba(255,255,255,0.5); font-weight: 700; margin-top: 0.3rem; }
+
+    /* ── FEATURED GAMES ── */
+    #games { background: #162238; }
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem; max-width: 1100px; margin: 0 auto;
+    }
+    .game-card {
+      border-radius: 28px; overflow: hidden;
+      background: rgba(255,255,255,0.05);
+      border: 2px solid rgba(255,255,255,0.08);
+      transition: transform 0.25s, box-shadow 0.25s;
+      cursor: pointer;
+    }
+    .game-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    }
+    .game-thumb {
+      height: 160px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 5rem;
+      position: relative; overflow: hidden;
+    }
+    .game-thumb::after {
+      content: '▶ Play Now';
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.55);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Boogaloo', 'Arial Rounded MT Bold', cursive;
+      font-size: 1.5rem; color: var(--white);
+      opacity: 0; transition: opacity 0.2s;
+    }
+    .game-card:hover .game-thumb::after { opacity: 1; }
+    .game-info { padding: 1.2rem 1.4rem 1.6rem; }
+    .game-info h3 {
+      font-family: 'Boogaloo', 'Arial Rounded MT Bold', cursive;
+      font-size: 1.4rem; margin-bottom: 0.4rem;
+    }
+    .game-info p { font-size: 0.9rem; color: rgba(255,255,255,0.65); line-height: 1.5; }
+    .game-tags { display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.8rem; }
+    .tag {
+      font-size: 0.75rem; font-weight: 800;
+      padding: 0.2rem 0.7rem; border-radius: 50px;
+    }
+    .tag-age  { background: rgba(166,108,255,0.25); color: var(--purple); }
+    .tag-cat  { background: rgba(0,201,177,0.2);    color: var(--teal);   }
+    .tag-new  { background: rgba(255,92,92,0.2);    color: var(--coral);  }
+
+    /* ── STATS BANNER ── */
+    .stats {
+      background: var(--teal);
+      display: flex; justify-content: center;
+      flex-wrap: wrap; gap: 0; padding: 0;
+    }
+    .stat {
+      flex: 1; min-width: 180px;
+      padding: 2.5rem 2rem; text-align: center;
+      border-right: 2px solid rgba(26,43,74,0.15);
+    }
+    .stat:last-child { border-right: none; }
+    .stat-num {
+      font-family: 'Boogaloo', 'Arial Rounded MT Bold', cursive;
+      font-size: 3rem; color: var(--navy); line-height: 1;
+    }
+    .stat-label { font-size: 0.9rem; font-weight: 800; color: var(--navy); opacity: 0.7; margin-top: 0.3rem; }
+
+    /* ── CTA ── */
+    .cta-section {
+      background: linear-gradient(135deg, var(--coral) 0%, var(--orange) 100%);
+      text-align: center; padding: 2.5rem 2rem;
+    }
+    .cta-section h2 {
+      font-family: 'Boogaloo', 'Arial Rounded MT Bold', cursive;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      color: var(--white);
+      text-shadow: 3px 3px 0 rgba(0,0,0,0.15);
+      margin-bottom: 0.5rem;
+    }
+    .cta-section p {
+      font-size: 1.15rem; font-weight: 700;
+      color: rgba(255,255,255,0.9); margin-bottom: 0;
+    }
+    .btn-white {
+      background: var(--white); color: var(--coral);
+      box-shadow: 0 6px 0 rgba(0,0,0,0.15);
+    }
+    .btn-white:hover { background: var(--yellow); color: var(--navy); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #0A1525;
+      padding: 2.5rem 3rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+      border-top: 3px solid rgba(255,255,255,0.06);
+    }
+    footer .logo { font-size: 1.8rem; }
+    footer p { color: rgba(255,255,255,0.4); font-size: 0.85rem; }
+    .footer-links { display:flex; gap:1.5rem; }
+    .footer-links a { color: rgba(255,255,255,0.5); text-decoration:none; font-size:0.85rem; font-weight:700; }
+    .footer-links a:hover { color: var(--teal); }
+
+    /* ── HAMBURGER BUTTON ── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 0.5rem;
+      background: none;
+      border: none;
+      z-index: 1001;
+    }
+    .hamburger span {
+      display: block;
+      width: 26px;
+      height: 3px;
+      background: var(--white);
+      border-radius: 3px;
+      transition: all 0.3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width: 640px) {
+      nav {
+        padding: 1rem 1.2rem;
+        flex-wrap: nowrap;
+        position: sticky;
+      }
+      .hamburger { display: flex; }
+      nav ul {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        width: 100%;
+        gap: 0;
+        background: #0F1D36;
+        border-top: 2px solid var(--teal);
+        border-bottom: 2px solid var(--teal);
+        z-index: 999;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      }
+      nav ul.open { display: flex; }
+      nav ul li a {
+        display: block;
+        padding: 1rem 1.4rem;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        font-size: 1rem;
+        color: var(--white);
+        text-decoration: none;
+        font-weight: 700;
+      }
+      nav ul li a:hover { background: rgba(0,201,177,0.1); color: var(--teal); }
+      nav ul li:last-child a { border-bottom: none; }
+      footer { flex-direction:column; text-align:center; }
+    }
+  /* ── SEASONAL ADVENTURES ── */
+  .seasonal-section { padding: 56px 24px 48px; max-width: 960px; margin: 0 auto; }
+  .seasonal-heading { font-size: clamp(1.6rem,4vw,2.2rem); font-weight: 800; color: #fff; text-align: center; margin-bottom: 6px; }
+  .seasonal-sub { text-align: center; color: rgba(255,255,255,.5); font-size: .9rem; margin-bottom: 36px; }
+  .seasonal-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 18px; }
+  .season-card { border-radius: 22px; padding: 24px 18px 20px; text-align: center; position: relative; overflow: hidden; cursor: default; transition: transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s; border: 1px solid rgba(255,255,255,.08); }
+  .season-card:hover { transform: translateY(-6px) rotate(.6deg); }
+  .season-card-bg { position: absolute; inset: 0; z-index: 0; }
+  .season-card > * { position: relative; z-index: 1; }
+  /* Spring */
+  .season-spring { background: linear-gradient(145deg,#2d1a3e,#1a2e1a); box-shadow: 0 8px 32px rgba(255,150,200,.12); }
+  .season-spring:hover { box-shadow: 0 16px 48px rgba(255,150,200,.22); }
+  .season-spring .season-accent { color: #ff9dd4; }
+  .season-spring .coming-soon-pill { background: rgba(255,157,212,.15); border-color: rgba(255,157,212,.4); color: #ff9dd4; }
+  /* Summer */
+  .season-summer { background: linear-gradient(145deg,#2e1f00,#002e2e); box-shadow: 0 8px 32px rgba(255,210,0,.1); }
+  .season-summer:hover { box-shadow: 0 16px 48px rgba(255,210,0,.2); }
+  .season-summer .season-accent { color: #ffd700; }
+  .season-summer .coming-soon-pill { background: rgba(255,215,0,.12); border-color: rgba(255,215,0,.4); color: #ffd700; }
+  /* Autumn */
+  .season-autumn { background: linear-gradient(145deg,#2e1400,#1a0e00); box-shadow: 0 8px 32px rgba(255,120,20,.1); }
+  .season-autumn:hover { box-shadow: 0 16px 48px rgba(255,120,20,.22); }
+  .season-autumn .season-accent { color: #ff8c2a; }
+  .season-autumn .coming-soon-pill { background: rgba(255,140,42,.12); border-color: rgba(255,140,42,.4); color: #ff8c2a; }
+  /* Winter */
+  .season-winter { background: linear-gradient(145deg,#001a2e,#0a0a2a); box-shadow: 0 8px 32px rgba(160,210,255,.1); }
+  .season-winter:hover { box-shadow: 0 16px 48px rgba(160,210,255,.2); }
+  .season-winter .season-accent { color: #a0d4ff; }
+  .season-winter .coming-soon-pill { background: rgba(160,212,255,.1); border-color: rgba(160,212,255,.35); color: #a0d4ff; }
+  /* Shared card elements */
+  .season-emoji { font-size: 3rem; display: block; margin-bottom: 10px; filter: drop-shadow(0 4px 12px rgba(255,255,255,.2)); animation: seasonFloat 3s ease-in-out infinite alternate; }
+  @keyframes seasonFloat { from { transform: translateY(0) rotate(-3deg); } to { transform: translateY(-6px) rotate(3deg); } }
+  .season-label { font-size: .65rem; text-transform: uppercase; letter-spacing: 3px; font-weight: 700; margin-bottom: 6px; opacity: .6; }
+  .season-name { font-size: 1.05rem; font-weight: 800; color: #fff; line-height: 1.3; margin-bottom: 6px; min-height: 2.6rem; display: flex; align-items: center; justify-content: center; }
+  .season-tagline { font-size: .7rem; color: rgba(255,255,255,.45); margin-bottom: 16px; min-height: 2rem; line-height: 1.4; }
+  .coming-soon-pill { display: inline-flex; align-items: center; gap: 5px; font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; padding: 5px 12px; border-radius: 20px; border: 1px solid; background: rgba(255,255,255,.06); animation: pillShimmer 2.5s ease-in-out infinite alternate; }
+  @keyframes pillShimmer { from { opacity: .7; } to { opacity: 1; } }
+  /* Floating particles */
+  .season-particles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+  .sp { position: absolute; font-size: .9rem; opacity: 0; animation: spFloat linear infinite; }
+  @keyframes spFloat { 0% { opacity: 0; transform: translateY(110%) rotate(0deg); } 15% { opacity: .7; } 85% { opacity: .6; } 100% { opacity: 0; transform: translateY(-20%) rotate(360deg); } }
+  @media(max-width:700px) { .seasonal-grid { grid-template-columns: 1fr 1fr; } }
+  @media(max-width:420px) { .seasonal-grid { grid-template-columns: 1fr; } .season-card { padding: 20px 16px 18px; } }
+
+  /* ── BADGES SECTION ── */
+  .badges-section { padding: 48px 24px; max-width: 960px; margin: 0 auto; }
+  .badges-section-heading { font-size: clamp(1.6rem,4vw,2.2rem); font-weight: 800; color: #fff; text-align: center; margin-bottom: 6px; }
+  .badges-section-sub { text-align: center; color: rgba(255,255,255,.5); font-size: .9rem; margin-bottom: 32px; }
+  .badges-game-group { margin-bottom: 28px; }
+  .badges-game-label { font-size: .7rem; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,.4); margin-bottom: 12px; font-weight: 700; }
+  .badges-grid { display: flex; flex-wrap: wrap; gap: 14px; }
+  .badge-item { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 72px; cursor: default; }
+  .badge-item-coin { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.9rem; position: relative; transition: transform .2s; }
+  .badge-item-coin:hover { transform: scale(1.08); }
+  .badge-item.earned .badge-item-coin { border: 3px solid #ffd700; background: radial-gradient(circle at 35% 30%, #fff9e6, #ffd700 60%, #b8860b); box-shadow: 0 0 16px rgba(255,215,0,.5), inset 0 2px 4px rgba(255,255,255,.4); animation: hpCoinShimmer 2.5s ease-in-out infinite alternate; }
+  @keyframes hpCoinShimmer { from{box-shadow:0 0 8px rgba(255,215,0,.3)} to{box-shadow:0 0 22px rgba(255,215,0,.8),0 0 36px rgba(255,215,0,.3)} }
+  .badge-item.locked .badge-item-coin { border: 3px solid rgba(255,255,255,.12); background: rgba(255,255,255,.04); filter: grayscale(1); opacity: .4; }
+  .badge-item.locked .badge-item-coin::after { content: '🔒'; position: absolute; font-size: .9rem; bottom: -2px; right: -2px; }
+  .badge-item-name { font-size: .58rem; color: rgba(255,255,255,.7); text-align: center; line-height: 1.3; font-weight: 600; }
+  .badge-item.locked .badge-item-name { color: rgba(255,255,255,.25); }
+  .badge-item-date { font-size: .52rem; color: #ffd700; }
+  .badge-item.locked .badge-item-date { display: none; }
+  .badges-empty-msg { text-align: center; color: rgba(255,255,255,.3); font-size: .9rem; padding: 20px; }
+  .badge-tooltip { position: relative; }
+  .badge-tooltip:hover::before { content: attr(data-tip); position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: rgba(0,0,0,.85); color: #fff; font-size: .65rem; white-space: nowrap; padding: 5px 10px; border-radius: 8px; pointer-events: none; z-index: 10; border: 1px solid rgba(255,215,0,.3); }
+  .badge-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:linear-gradient(135deg,#0a1628,#1a2a4a);border:2px solid #ffd700;border-radius:20px;padding:14px 22px;display:flex;align-items:center;gap:14px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.5),0 0 24px rgba(255,215,0,.3);transition:transform .5s cubic-bezier(.34,1.56,.64,1),opacity .4s;opacity:0;pointer-events:none;max-width:340px;}
+  .badge-toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+  </style>
+</head>
+<body>
+
+  <!-- Floating bubbles -->
+  <div class="bubbles">
+    <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+    <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+    <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+    <div class="bubble"></div>
+  </div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo">
+      <div class="logo-circle">🦀</div>
+      <div class="logo-text">
+        <div class="logo-name">Cr<span class="la">a</span><span class="lb">b</span><span class="lc">c</span>ake</div>
+        <div class="logo-sub">The Fun Way to Learn</div>
+      </div>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    <ul id="nav-menu">
+      <li><a href="#my-badges">Achievements</a></li>
+      <li><a href="#games">Games</a></li>
+      <li><a href="#categories">Categories</a></li>
+      <li><a href="privacy.html">Privacy</a></li>
+      <li><a id="nav-contact" href="#">Contact Us</a></li>
+      <li><a href="avatar.html" class="nav-cta" style="background:var(--teal);color:var(--navy);padding:8px 16px;border-radius:20px;font-weight:800;">🧒 My Avatar</a></li>
+    </ul>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <span class="float-emoji">🦀</span>
+    <span class="float-emoji">⭐</span>
+    <span class="float-emoji">🐠</span>
+    <span class="float-emoji">🌊</span>
+    <span class="float-emoji">🐙</span>
+    <span class="float-emoji">🌟</span>
+
+    <div class="hero-content">
+      <div class="hero-badge">Free to Play · 100% Kid Safe</div>
+      <h1>Learn, Play &<br><em>Splash Around!</em></h1>
+      <p class="hero-sub">Explore educational games designed for kids ages 5–10. Dive into a world of fun activities that make learning math, reading, science and more an adventure!</p>
+      <div class="hero-buttons">
+        <a href="#games" class="btn btn-primary">🎮 Start Playing!</a>
+        <a href="avatar.html" class="btn btn-secondary">🧒 Make My Avatar</a>
+      </div>
+      <p class="hero-notice">⚠️ Please be aware that this website is currently under construction. We're excited to announce that loads of fun activities, games, and more will be coming soon!</p>
+    </div>
+  </section>
+
+  <!-- Wave -->
+  <div class="wave">
+    <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" fill="#0F1D36"/>
+    </svg>
+  </div>
+
+  <!-- CATEGORIES -->
+  <section id="categories">
+    <h2 class="section-title" style="color:var(--yellow)">🗂️ What Do You Want to Learn?</h2>
+    <p class="section-sub">Pick a category to explore — every game teaches something amazing!</p>
+    <div class="categories-grid">
+      <div class="cat-card" style="--accent:var(--teal);cursor:pointer;" onclick="document.getElementById('games').scrollIntoView({behavior:'smooth'})">
+        <span class="cat-emoji">🔢</span>
+        <div class="cat-label">Math</div>
+        <div class="cat-count">1 Game</div>
+      </div>
+      <div class="cat-card" style="--accent:var(--coral);cursor:pointer;" onclick="document.getElementById('games').scrollIntoView({behavior:'smooth'})">
+        <span class="cat-emoji">📖</span>
+        <div class="cat-label">Reading</div>
+        <div class="cat-count">1 Game</div>
+      </div>
+      <div class="cat-card" style="--accent:var(--green)" onclick="alert('Science games coming soon! 🔬')">
+        <span class="cat-emoji">🔬</span>
+        <div class="cat-label">Science</div>
+        <div class="cat-count">Coming Soon</div>
+      </div>
+      <div class="cat-card" style="--accent:var(--sky)" onclick="alert('Geography games coming soon! 🌍')">
+        <span class="cat-emoji">🌍</span>
+        <div class="cat-label">Geography</div>
+        <div class="cat-count">Coming Soon</div>
+      </div>
+      <div class="cat-card" style="--accent:var(--purple)" onclick="document.getElementById('games').scrollIntoView({behavior:'smooth'})">
+        <span class="cat-emoji">🎨</span>
+        <div class="cat-label">Art & Music</div>
+        <div class="cat-count">1 Game</div>
+      </div>
+      <div class="cat-card" style="--accent:var(--orange)" onclick="document.getElementById('games').scrollIntoView({behavior:'smooth'})">
+        <span class="cat-emoji">🧩</span>
+        <div class="cat-label">Puzzles</div>
+        <div class="cat-count">1 Game</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Wave -->
+  <div class="wave">
+    <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,40 C360,0 1080,80 1440,40 L1440,80 L0,80 Z" fill="#162238"/>
+    </svg>
+  </div>
+
+  <!-- FEATURED GAMES -->
+  <section id="games">
+    <h2 class="section-title" style="color:var(--teal)">🌟 Featured Games</h2>
+    <p class="section-sub">Play our games now — more exciting adventures coming soon!</p>
+    <div class="games-grid" style="max-width:1200px;">
+
+      <div class="game-card" onclick="window.open('maths-dive.html','_blank')" style="cursor:pointer;">
+        <div class="game-thumb" style="background:linear-gradient(135deg,#0a3060,#0d2044)">🤿</div>
+        <div class="game-info">
+          <h3>Math Dive</h3>
+          <p>Dive into the ocean and catch the correct answers before time runs out! Three levels for ages 5–6, 7–8 and 9–10.</p>
+          <div class="game-tags">
+            <span class="tag tag-age">Ages 5–10</span>
+            <span class="tag tag-cat">Maths</span>
+            <span class="tag tag-new">🆕 New</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-card" onclick="window.open('sentence-builder.html','_blank')" style="cursor:pointer;">
+        <div class="game-thumb" style="background:linear-gradient(135deg,#0d2818,#1a4a2e)">🦁</div>
+        <div class="game-info">
+          <h3>Jungle Words</h3>
+          <p>Tap the words in the right order to build sentences in this wild jungle adventure! Three levels for ages 5–10.</p>
+          <div class="game-tags">
+            <span class="tag tag-age">Ages 5–10</span>
+            <span class="tag tag-cat">Reading</span>
+            <span class="tag tag-new">🆕 New</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-card" onclick="window.open('potion-game.html','_blank')" style="cursor:pointer;">
+        <div class="game-thumb" style="background:linear-gradient(135deg,#2a0a4a,#160d26)">🧙‍♀️</div>
+        <div class="game-info">
+          <h3>Witch's Brew Workshop</h3>
+          <p>Mix magical potions, collect rare ingredients, and cast spells in this enchanting creative adventure!</p>
+          <div class="game-tags">
+            <span class="tag tag-age">Ages 5–10</span>
+            <span class="tag tag-cat">Art & Music</span>
+            <span class="tag tag-new">🆕 New</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-card" onclick="window.open('color-sort-game.html','_blank')" style="cursor:pointer;">
+        <div class="game-thumb" style="background:linear-gradient(135deg,#1a2a3e,#0d1826)">🎨</div>
+        <div class="game-info">
+          <h3>Tube Sort</h3>
+          <p>Sort the coloured liquids into matching tubes — a satisfying and tricky colour puzzle for sharp minds!</p>
+          <div class="game-tags">
+            <span class="tag tag-age">Ages 5–10</span>
+            <span class="tag tag-cat">Puzzles</span>
+            <span class="tag tag-new">🆕 New</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- STATS -->
+
+  <!-- SEASONAL ADVENTURES -->
+  <section class="seasonal-section">
+    <h2 class="seasonal-heading">🌍 Seasonal Adventures</h2>
+    <p class="seasonal-sub">Brand new games arriving with every season — stay tuned!</p>
+    <div class="seasonal-grid">
+
+      <!-- SPRING -->
+      <div class="season-card season-spring">
+        <div class="season-particles" id="sp-spring"></div>
+        <span class="season-emoji">🌸</span>
+        <div class="season-label season-accent">Spring</div>
+        <div class="season-name">Petal Pals</div>
+        <div class="season-tagline">Help flowers bloom by solving nature puzzles!</div>
+        <div class="coming-soon-pill">🌱 Coming Soon</div>
+      </div>
+
+      <!-- SUMMER -->
+      <div class="season-card season-summer">
+        <div class="season-particles" id="sp-summer"></div>
+        <span class="season-emoji">☀️</span>
+        <div class="season-label season-accent">Summer</div>
+        <div class="season-name">Sunshine Splash</div>
+        <div class="season-tagline">Race to catch the waves in this sun-soaked adventure!</div>
+        <div class="coming-soon-pill">☀️ Coming Soon</div>
+      </div>
+
+      <!-- AUTUMN -->
+      <div class="season-card season-autumn">
+        <div class="season-particles" id="sp-autumn"></div>
+        <span class="season-emoji">🍂</span>
+        <div class="season-label season-accent">Autumn</div>
+        <div class="season-name">Harvest Hunt</div>
+        <div class="season-tagline">Collect falling leaves and hidden acorns before winter!</div>
+        <div class="coming-soon-pill">🍁 Coming Soon</div>
+      </div>
+
+      <!-- WINTER -->
+      <div class="season-card season-winter">
+        <div class="season-particles" id="sp-winter"></div>
+        <span class="season-emoji">❄️</span>
+        <div class="season-label season-accent">Winter</div>
+        <div class="season-name">Frostbite Puzzles</div>
+        <div class="season-tagline">Crack icy brain teasers in a magical snowy world!</div>
+        <div class="coming-soon-pill">⛄ Coming Soon</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- MY BADGES -->
+  <section class="badges-section" id="my-badges">
+    <h2 class="badges-section-heading">🏆 My Badges</h2>
+    <p class="badges-section-sub">Earn badges by playing games — they save to this device automatically!</p>
+    <div id="badgesContent">
+      <div class="badges-empty-msg">No badges yet — play a game to earn your first one! 🎮</div>
+    </div>
+  </section>
+
+  <!-- FEEDBACK -->
+  <section style="padding:0 24px 48px;max-width:600px;margin:0 auto;text-align:center;">
+    <div style="padding:18px 20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:16px;">
+      <p style="font-size:.9rem;color:rgba(255,255,255,.55);margin-bottom:12px;">💌 Found a bug or have an idea for a new game?</p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <a id="feedback-bug" onclick="hpShowClaim('bug')" style="font-size:.8rem;padding:9px 18px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:rgba(255,255,255,.75);text-decoration:none;transition:all .2s;cursor:pointer;">🐛 Report a Bug</a>
+        <a id="feedback-idea" onclick="hpShowClaim('idea')" style="font-size:.8rem;padding:9px 18px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:rgba(255,255,255,.75);text-decoration:none;transition:all .2s;cursor:pointer;">💡 Suggest a Game</a>
+      </div>
+      <div id="hp-claim-bug" style="display:none;margin-top:12px;">
+        <button onclick="hpClaimBadge('bug')" style="font-size:.8rem;padding:9px 20px;border-radius:20px;border:none;background:linear-gradient(135deg,#ffd700,#ff8800);color:#1a0a2e;font-weight:bold;cursor:pointer;animation:hpClaimPop .4s cubic-bezier(.34,1.56,.64,1);">✅ I sent it! Claim my 🐛 Bug Hunter badge</button>
+      </div>
+      <div id="hp-claim-idea" style="display:none;margin-top:12px;">
+        <button onclick="hpClaimBadge('idea')" style="font-size:.8rem;padding:9px 20px;border-radius:20px;border:none;background:linear-gradient(135deg,#ffd700,#ff8800);color:#1a0a2e;font-weight:bold;cursor:pointer;animation:hpClaimPop .4s cubic-bezier(.34,1.56,.64,1);">✅ I sent it! Claim my 💡 Big Ideas badge</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <h2>Ready to Dive In? 🦀</h2>
+    <p>Join other kids already playing and learning on Crabcake every day!</p>
+  </section>
+
+  </main>
+
+
+
+
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="logo logo-footer">
+      <div class="logo-circle">🦀</div>
+      <div class="logo-text">
+        <div class="logo-name">Cr<span class="la">a</span><span class="lb">b</span><span class="lc">c</span>ake</div>
+        <div class="logo-sub">The Fun Way to Learn</div>
+      </div>
+    </div>
+    <p>© 2026 Crabcake · Safe & fun learning for kids ages 5–10</p>
+  </footer>
+
+  <script>
+    var hamburger = document.getElementById('hamburger');
+    var navMenu = document.getElementById('nav-menu');
+    var menuOpen = false;
+
+    hamburger.addEventListener('click', function() {
+      menuOpen = !menuOpen;
+      hamburger.classList.toggle('open', menuOpen);
+      navMenu.classList.toggle('open', menuOpen);
+    });
+
+    navMenu.querySelectorAll('a').forEach(function(link) {
+      link.addEventListener('click', function() {
+        menuOpen = false;
+        hamburger.classList.remove('open');
+        navMenu.classList.remove('open');
+      });
+    });
+
+    // ═══════════════════════════════════════════════
+    // HOMEPAGE BADGE RENDERER
+    // ═══════════════════════════════════════════════
+    const BADGE_DEF={
+      md_first:{game:'mathdive',em:'🤿',name:'First Dive',desc:'Complete your first Math Dive game',hint:'Play any Math Dive game'},
+      md_sharp:{game:'mathdive',em:'⭐',name:'Sharp Shooter',desc:'Score 10+ correct answers in one game',hint:'Score 10+ in Math Dive'},
+      md_fire:{game:'mathdive',em:'🔥',name:'On Fire',desc:'Reach a 5× streak in Math Dive',hint:'Get 5 correct in a row'},
+      md_speed:{game:'mathdive',em:'⚡',name:'Speed Demon',desc:'Score 15+ correct answers in one game',hint:'Score 15+ in Math Dive'},
+      md_legend:{game:'mathdive',em:'🏆',name:'Legendary Diver',desc:'Score 20+ correct answers in one game',hint:'Score 20+ in Math Dive'},
+      md_times:{game:'mathdive',em:'🧮',name:'Times Master',desc:'Complete a game on the Ages 9–10 level',hint:'Finish a 9–10 age game'},
+      jw_first:{game:'junglewords',em:'🦁',name:'First Words',desc:'Complete your first Jungle Words game',hint:'Play Jungle Words'},
+      jw_builder:{game:'junglewords',em:'📝',name:'Sentence Builder',desc:'Build 5+ correct sentences in one game',hint:'Get 5+ sentences right'},
+      jw_wizard:{game:'junglewords',em:'🌟',name:'Word Wizard',desc:'Finish a game without losing a life',hint:'Keep all 3 lives'},
+      jw_elite:{game:'junglewords',em:'🏅',name:'Explorer Elite',desc:'Score 8/8 sentences in one game',hint:'Perfect score in Jungle Words'},
+      wb_first:{game:'witchbrew',em:'🧙‍♀️',name:'Apprentice Witch',desc:"Brew your first successful potion",hint:"Discover any potion"},
+      wb_rare:{game:'witchbrew',em:'🔵',name:'Rare Find',desc:'Discover a Rare potion',hint:"Brew a Rare potion"},
+      wb_epic:{game:'witchbrew',em:'🟣',name:'Epic Brewer',desc:'Discover an Epic potion',hint:"Brew an Epic potion"},
+      wb_legend:{game:'witchbrew',em:'🟠',name:'Legendary!',desc:'Discover a Legendary potion',hint:"Brew a Legendary potion"},
+      wb_collect:{game:'witchbrew',em:'📖',name:'Spell Collector',desc:'Discover 10 or more potions total',hint:"Find 10+ potions"},
+      wb_streak:{game:'witchbrew',em:'🔥',name:'On A Roll',desc:'Achieve a 3× brew streak',hint:"3 potions in a row"},
+      ts_first:{game:'tubesort',em:'🧪',name:'First Sort',desc:'Complete Level 1 of Tube Sort',hint:"Finish Level 1"},
+      ts_perfect:{game:'tubesort',em:'💎',name:'Perfectionist',desc:'Complete a level earning 3 stars',hint:"Earn 3 stars on any level"},
+      ts_speed:{game:'tubesort',em:'⚡',name:'Speed Sorter',desc:'Complete Level 5 or beyond',hint:"Reach Level 5"},
+      ts_master:{game:'tubesort',em:'👑',name:'Tube Master',desc:'Reach Level 10 in Tube Sort',hint:"Make it to Level 10"},
+      cg_fan:{game:'crabcake',em:'🦀',name:'Crabcake Fan',desc:'Play all 4 Crabcake games at least once',hint:"Try all 4 games"},
+      cg_allround:{game:'crabcake',em:'🌟',name:'All-Rounder',desc:'Earn at least one badge in every game',hint:"Badge in all 4 games"},
+      cg_dedicated:{game:'crabcake',em:'🎮',name:'Dedicated',desc:'Play 10 games total across all games',hint:"Play 10 total games"},
+      cg_bughunter:{game:'crabcake',em:'🐛',name:'Bug Hunter',desc:'Reported a bug to help improve Crabcake',hint:"Report a bug via email"},
+      cg_bigideas:{game:'crabcake',em:'💡',name:'Big Ideas',desc:'Suggested a new game idea for Crabcake',hint:"Suggest a game via email"},
+    };
+    const GAME_LABELS={mathdive:'🤿 Math Dive',junglewords:'🦁 Jungle Words',witchbrew:'🧙‍♀️ Witch\'s Brew',tubesort:'🧪 Tube Sort',crabcake:'🦀 Crabcake'};
+    const BADGE_KEY='crabcake_badges_v1';
+
+    function renderHomeBadges(){
+      let earned={};
+      try{earned=JSON.parse(localStorage.getItem(BADGE_KEY)||'{}');}catch{}
+      const content=document.getElementById('badgesContent');
+      if(!content)return;
+      const earnedIds=Object.keys(earned);
+      if(!earnedIds.length){
+        content.innerHTML='<div class="badges-empty-msg">No badges yet — play a game to earn your first one! 🎮</div>';
+        return;
+      }
+      const groups={};
+      Object.keys(BADGE_DEF).forEach(id=>{
+        const b=BADGE_DEF[id];
+        if(!groups[b.game])groups[b.game]=['mathdive','junglewords','witchbrew','tubesort','crabcake'].includes(b.game)?groups[b.game]=[]:[],groups[b.game]=[];
+        groups[b.game].push(id);
+      });
+      // Build in fixed game order
+      const order=['mathdive','junglewords','witchbrew','tubesort','crabcake'];
+      let html='';
+      order.forEach(game=>{
+        const ids=Object.keys(BADGE_DEF).filter(id=>BADGE_DEF[id].game===game);
+        const hasAny=ids.some(id=>earned[id]);
+        if(!hasAny)return;
+        html+=`<div class="badges-game-group"><div class="badges-game-label">${GAME_LABELS[game]||game}</div><div class="badges-grid">`;
+        ids.forEach(id=>{
+          const b=BADGE_DEF[id];
+          const isEarned=!!earned[id];
+          const dateStr=isEarned&&earned[id].date?`<div class="badge-item-date">${earned[id].date}</div>`:'';
+          const tip=isEarned?b.desc:b.hint;
+          html+=`<div class="badge-item ${isEarned?'earned':'locked'} badge-tooltip" data-tip="${tip}">
+            <div class="badge-item-coin">${isEarned?b.em:'❓'}</div>
+            <div class="badge-item-name">${b.name}</div>
+            ${dateStr}
+          </div>`;
+        });
+        html+='</div></div>';
+      });
+      content.innerHTML=html||'<div class="badges-empty-msg">No badges yet — play a game to earn your first one! 🎮</div>';
+    }
+
+    // ── Seasonal card particles ──
+    const seasonParticles = {
+      'sp-spring': ['🌸','🌼','🌿','💮','🦋'],
+      'sp-summer': ['✨','🌟','💛','🌊','🐚'],
+      'sp-autumn': ['🍂','🍁','🌰','🍄','🌾'],
+      'sp-winter': ['❄️','⛄','🌨️','💙','✨'],
+    };
+    Object.entries(seasonParticles).forEach(([id, ems]) => {
+      const container = document.getElementById(id);
+      if (!container) return;
+      for (let i = 0; i < 6; i++) {
+        const el = document.createElement('div');
+        el.className = 'sp';
+        el.textContent = ems[i % ems.length];
+        el.style.cssText = `left:${10 + Math.random()*80}%;animation-duration:${4+Math.random()*4}s;animation-delay:${Math.random()*4}s;font-size:${0.7+Math.random()*.6}rem;`;
+        container.appendChild(el);
+      }
+    });
+
+    renderHomeBadges();
+
+    // ── Homepage feedback badge claim ──
+    const HP_BADGE_KEY = 'crabcake_badges_v1';
+    function _hpAward(id) {
+      try {
+        const d = JSON.parse(localStorage.getItem(HP_BADGE_KEY)||'{}');
+        if (d[id]) return false;
+        d[id] = { earned: true, date: new Date().toLocaleDateString() };
+        localStorage.setItem(HP_BADGE_KEY, JSON.stringify(d));
+        return true;
+      } catch { return false; }
+    }
+    function hpShowClaim(type) {
+      setTimeout(() => {
+        const el = document.getElementById('hp-claim-' + type);
+        if (el) el.style.display = 'block';
+      }, 800);
+    }
+    function hpClaimBadge(type) {
+      const id = type === 'bug' ? 'cg_bughunter' : 'cg_bigideas';
+      const b = BADGE_DEF[id];
+      const btn = document.querySelector('#hp-claim-' + type + ' button');
+      if (_hpAward(id)) {
+        let t = document.createElement('div');
+        t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#0a1628,#1a2a4a);border:2px solid #ffd700;border-radius:20px;padding:14px 22px;display:flex;align-items:center;gap:14px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.5);color:#fff;font-size:.9rem;max-width:340px;';
+        t.innerHTML = '<span style="font-size:2rem">' + b.em + '</span><div><div style="font-size:.6rem;text-transform:uppercase;letter-spacing:2px;color:#ffd700;font-weight:bold;">🏆 Badge Unlocked!</div><div style="font-weight:bold">' + b.name + '</div><div style="font-size:.72rem;color:#a0c0ff">' + b.desc + '</div></div>';
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 4000);
+        if (btn) { btn.textContent = '🏆 Badge earned!'; btn.disabled = true; btn.style.opacity = '.5'; btn.style.cursor = 'default'; }
+        renderHomeBadges();
+      } else {
+        if (btn) { btn.textContent = '✅ Already earned!'; btn.disabled = true; btn.style.opacity = '.5'; btn.style.cursor = 'default'; }
+      }
+    }
+
+    // ── Build email links at runtime so Cloudflare can't obfuscate them ──
+    (function() {
+      var e = 'hello' + '\u0040' + 'crabcake.kids';
+      var contact = document.getElementById('nav-contact');
+      if (contact) contact.href = 'mailto:' + e;
+      var bug = document.getElementById('feedback-bug');
+      if (bug) bug.href = 'mailto:' + e + '?subject=Bug%20Report&body=Hi!%20I%20found%20a%20bug%3A%0A%0A';
+      var idea = document.getElementById('feedback-idea');
+      if (idea) idea.href = 'mailto:' + e + '?subject=Game%20Idea%20for%20Crabcake!&body=Hi!%20I%20have%20an%20idea%20for%20a%20new%20game%3A%0A%0A';
+    })();
+
+  </script>
+  <style>@keyframes hpClaimPop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}</style>
+</body>
+</html>
