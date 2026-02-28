@@ -478,6 +478,29 @@
       .stat { min-width: 140px; padding: 2rem 1rem; }
       footer { flex-direction:column; text-align:center; }
     }
+  /* ── BADGES SECTION ── */
+  .badges-section { padding: 48px 24px; max-width: 960px; margin: 0 auto; }
+  .badges-section-heading { font-size: clamp(1.6rem,4vw,2.2rem); font-weight: 800; color: #fff; text-align: center; margin-bottom: 6px; }
+  .badges-section-sub { text-align: center; color: rgba(255,255,255,.5); font-size: .9rem; margin-bottom: 32px; }
+  .badges-game-group { margin-bottom: 28px; }
+  .badges-game-label { font-size: .7rem; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,.4); margin-bottom: 12px; font-weight: 700; }
+  .badges-grid { display: flex; flex-wrap: wrap; gap: 14px; }
+  .badge-item { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 72px; cursor: default; }
+  .badge-item-coin { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.9rem; position: relative; transition: transform .2s; }
+  .badge-item-coin:hover { transform: scale(1.08); }
+  .badge-item.earned .badge-item-coin { border: 3px solid #ffd700; background: radial-gradient(circle at 35% 30%, #fff9e6, #ffd700 60%, #b8860b); box-shadow: 0 0 16px rgba(255,215,0,.5), inset 0 2px 4px rgba(255,255,255,.4); animation: hpCoinShimmer 2.5s ease-in-out infinite alternate; }
+  @keyframes hpCoinShimmer { from{box-shadow:0 0 8px rgba(255,215,0,.3)} to{box-shadow:0 0 22px rgba(255,215,0,.8),0 0 36px rgba(255,215,0,.3)} }
+  .badge-item.locked .badge-item-coin { border: 3px solid rgba(255,255,255,.12); background: rgba(255,255,255,.04); filter: grayscale(1); opacity: .4; }
+  .badge-item.locked .badge-item-coin::after { content: '🔒'; position: absolute; font-size: .9rem; bottom: -2px; right: -2px; }
+  .badge-item-name { font-size: .58rem; color: rgba(255,255,255,.7); text-align: center; line-height: 1.3; font-weight: 600; }
+  .badge-item.locked .badge-item-name { color: rgba(255,255,255,.25); }
+  .badge-item-date { font-size: .52rem; color: #ffd700; }
+  .badge-item.locked .badge-item-date { display: none; }
+  .badges-empty-msg { text-align: center; color: rgba(255,255,255,.3); font-size: .9rem; padding: 20px; }
+  .badge-tooltip { position: relative; }
+  .badge-tooltip:hover::before { content: attr(data-tip); position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: rgba(0,0,0,.85); color: #fff; font-size: .65rem; white-space: nowrap; padding: 5px 10px; border-radius: 8px; pointer-events: none; z-index: 10; border: 1px solid rgba(255,215,0,.3); }
+  .badge-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:linear-gradient(135deg,#0a1628,#1a2a4a);border:2px solid #ffd700;border-radius:20px;padding:14px 22px;display:flex;align-items:center;gap:14px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.5),0 0 24px rgba(255,215,0,.3);transition:transform .5s cubic-bezier(.34,1.56,.64,1),opacity .4s;opacity:0;pointer-events:none;max-width:340px;}
+  .badge-toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
   </style>
 </head>
 <body>
@@ -659,6 +682,32 @@
     </div>
   </div>
 
+  <!-- MY BADGES -->
+  <section class="badges-section" id="my-badges">
+    <h2 class="badges-section-heading">🏆 My Badges</h2>
+    <p class="badges-section-sub">Earn badges by playing games — they save to this device automatically!</p>
+    <div id="badgesContent">
+      <div class="badges-empty-msg">No badges yet — play a game to earn your first one! 🎮</div>
+    </div>
+  </section>
+
+  <!-- FEEDBACK -->
+  <section style="padding:0 24px 48px;max-width:600px;margin:0 auto;text-align:center;">
+    <div style="padding:18px 20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:16px;">
+      <p style="font-size:.9rem;color:rgba(255,255,255,.55);margin-bottom:12px;">💌 Found a bug or have an idea for a new game?</p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <a href="mailto:hello@crabcake.kids?subject=Bug%20Report&body=Hi!%20I%20found%20a%20bug%3A%0A%0A" onclick="hpShowClaim('bug')" style="font-size:.8rem;padding:9px 18px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:rgba(255,255,255,.75);text-decoration:none;transition:all .2s;">🐛 Report a Bug</a>
+        <a href="mailto:hello@crabcake.kids?subject=Game%20Idea%20for%20Crabcake!&body=Hi!%20I%20have%20an%20idea%20for%20a%20new%20game%3A%0A%0A" onclick="hpShowClaim('idea')" style="font-size:.8rem;padding:9px 18px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:rgba(255,255,255,.75);text-decoration:none;transition:all .2s;">💡 Suggest a Game</a>
+      </div>
+      <div id="hp-claim-bug" style="display:none;margin-top:12px;">
+        <button onclick="hpClaimBadge('bug')" style="font-size:.8rem;padding:9px 20px;border-radius:20px;border:none;background:linear-gradient(135deg,#ffd700,#ff8800);color:#1a0a2e;font-weight:bold;cursor:pointer;animation:hpClaimPop .4s cubic-bezier(.34,1.56,.64,1);">✅ I sent it! Claim my 🐛 Bug Hunter badge</button>
+      </div>
+      <div id="hp-claim-idea" style="display:none;margin-top:12px;">
+        <button onclick="hpClaimBadge('idea')" style="font-size:.8rem;padding:9px 20px;border-radius:20px;border:none;background:linear-gradient(135deg,#ffd700,#ff8800);color:#1a0a2e;font-weight:bold;cursor:pointer;animation:hpClaimPop .4s cubic-bezier(.34,1.56,.64,1);">✅ I sent it! Claim my 💡 Big Ideas badge</button>
+      </div>
+    </div>
+  </section>
+
   <!-- CTA -->
   <section class="cta-section">
     <h2>Ready to Dive In? 🦀</h2>
@@ -705,4 +754,123 @@
     navMenu.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => {
         isOpen = false;
-        requestAnimationFrame(() =
+        requestAnimationFrame(() => {
+          hamburger.classList.toggle('open', isOpen);
+          navMenu.classList.toggle('open', isOpen);
+        });
+      });
+    });
+
+    // ═══════════════════════════════════════════════
+    // HOMEPAGE BADGE RENDERER
+    // ═══════════════════════════════════════════════
+    const BADGE_DEF={
+      md_first:{game:'mathdive',em:'🤿',name:'First Dive',desc:'Complete your first Math Dive game',hint:'Play any Math Dive game'},
+      md_sharp:{game:'mathdive',em:'⭐',name:'Sharp Shooter',desc:'Score 10+ correct answers in one game',hint:'Score 10+ in Math Dive'},
+      md_fire:{game:'mathdive',em:'🔥',name:'On Fire',desc:'Reach a 5× streak in Math Dive',hint:'Get 5 correct in a row'},
+      md_speed:{game:'mathdive',em:'⚡',name:'Speed Demon',desc:'Score 15+ correct answers in one game',hint:'Score 15+ in Math Dive'},
+      md_legend:{game:'mathdive',em:'🏆',name:'Legendary Diver',desc:'Score 20+ correct answers in one game',hint:'Score 20+ in Math Dive'},
+      md_times:{game:'mathdive',em:'🧮',name:'Times Master',desc:'Complete a game on the Ages 9–10 level',hint:'Finish a 9–10 age game'},
+      jw_first:{game:'junglewords',em:'🦁',name:'First Words',desc:'Complete your first Jungle Words game',hint:'Play Jungle Words'},
+      jw_builder:{game:'junglewords',em:'📝',name:'Sentence Builder',desc:'Build 5+ correct sentences in one game',hint:'Get 5+ sentences right'},
+      jw_wizard:{game:'junglewords',em:'🌟',name:'Word Wizard',desc:'Finish a game without losing a life',hint:'Keep all 3 lives'},
+      jw_elite:{game:'junglewords',em:'🏅',name:'Explorer Elite',desc:'Score 8/8 sentences in one game',hint:'Perfect score in Jungle Words'},
+      wb_first:{game:'witchbrew',em:'🧙‍♀️',name:'Apprentice Witch',desc:"Brew your first successful potion",hint:"Discover any potion"},
+      wb_rare:{game:'witchbrew',em:'🔵',name:'Rare Find',desc:'Discover a Rare potion',hint:"Brew a Rare potion"},
+      wb_epic:{game:'witchbrew',em:'🟣',name:'Epic Brewer',desc:'Discover an Epic potion',hint:"Brew an Epic potion"},
+      wb_legend:{game:'witchbrew',em:'🟠',name:'Legendary!',desc:'Discover a Legendary potion',hint:"Brew a Legendary potion"},
+      wb_collect:{game:'witchbrew',em:'📖',name:'Spell Collector',desc:'Discover 10 or more potions total',hint:"Find 10+ potions"},
+      wb_streak:{game:'witchbrew',em:'🔥',name:'On A Roll',desc:'Achieve a 3× brew streak',hint:"3 potions in a row"},
+      ts_first:{game:'tubesort',em:'🧪',name:'First Sort',desc:'Complete Level 1 of Tube Sort',hint:"Finish Level 1"},
+      ts_perfect:{game:'tubesort',em:'💎',name:'Perfectionist',desc:'Complete a level earning 3 stars',hint:"Earn 3 stars on any level"},
+      ts_speed:{game:'tubesort',em:'⚡',name:'Speed Sorter',desc:'Complete Level 5 or beyond',hint:"Reach Level 5"},
+      ts_master:{game:'tubesort',em:'👑',name:'Tube Master',desc:'Reach Level 10 in Tube Sort',hint:"Make it to Level 10"},
+      cg_fan:{game:'crabcake',em:'🦀',name:'Crabcake Fan',desc:'Play all 4 Crabcake games at least once',hint:"Try all 4 games"},
+      cg_allround:{game:'crabcake',em:'🌟',name:'All-Rounder',desc:'Earn at least one badge in every game',hint:"Badge in all 4 games"},
+      cg_dedicated:{game:'crabcake',em:'🎮',name:'Dedicated',desc:'Play 10 games total across all games',hint:"Play 10 total games"},
+      cg_bughunter:{game:'crabcake',em:'🐛',name:'Bug Hunter',desc:'Reported a bug to help improve Crabcake',hint:"Report a bug via email"},
+      cg_bigideas:{game:'crabcake',em:'💡',name:'Big Ideas',desc:'Suggested a new game idea for Crabcake',hint:"Suggest a game via email"},
+    };
+    const GAME_LABELS={mathdive:'🤿 Math Dive',junglewords:'🦁 Jungle Words',witchbrew:'🧙‍♀️ Witch\'s Brew',tubesort:'🧪 Tube Sort',crabcake:'🦀 Crabcake'};
+    const BADGE_KEY='crabcake_badges_v1';
+
+    function renderHomeBadges(){
+      let earned={};
+      try{earned=JSON.parse(localStorage.getItem(BADGE_KEY)||'{}');}catch{}
+      const content=document.getElementById('badgesContent');
+      if(!content)return;
+      const earnedIds=Object.keys(earned);
+      if(!earnedIds.length){
+        content.innerHTML='<div class="badges-empty-msg">No badges yet — play a game to earn your first one! 🎮</div>';
+        return;
+      }
+      const groups={};
+      Object.keys(BADGE_DEF).forEach(id=>{
+        const b=BADGE_DEF[id];
+        if(!groups[b.game])groups[b.game]=['mathdive','junglewords','witchbrew','tubesort','crabcake'].includes(b.game)?groups[b.game]=[]:[],groups[b.game]=[];
+        groups[b.game].push(id);
+      });
+      // Build in fixed game order
+      const order=['mathdive','junglewords','witchbrew','tubesort','crabcake'];
+      let html='';
+      order.forEach(game=>{
+        const ids=Object.keys(BADGE_DEF).filter(id=>BADGE_DEF[id].game===game);
+        const hasAny=ids.some(id=>earned[id]);
+        if(!hasAny)return;
+        html+=`<div class="badges-game-group"><div class="badges-game-label">${GAME_LABELS[game]||game}</div><div class="badges-grid">`;
+        ids.forEach(id=>{
+          const b=BADGE_DEF[id];
+          const isEarned=!!earned[id];
+          const dateStr=isEarned&&earned[id].date?`<div class="badge-item-date">${earned[id].date}</div>`:'';
+          const tip=isEarned?b.desc:b.hint;
+          html+=`<div class="badge-item ${isEarned?'earned':'locked'} badge-tooltip" data-tip="${tip}">
+            <div class="badge-item-coin">${isEarned?b.em:'❓'}</div>
+            <div class="badge-item-name">${b.name}</div>
+            ${dateStr}
+          </div>`;
+        });
+        html+='</div></div>';
+      });
+      content.innerHTML=html||'<div class="badges-empty-msg">No badges yet — play a game to earn your first one! 🎮</div>';
+    }
+
+    renderHomeBadges();
+
+    // ── Homepage feedback badge claim ──
+    const HP_BADGE_KEY = 'crabcake_badges_v1';
+    function _hpAward(id) {
+      try {
+        const d = JSON.parse(localStorage.getItem(HP_BADGE_KEY)||'{}');
+        if (d[id]) return false;
+        d[id] = { earned: true, date: new Date().toLocaleDateString() };
+        localStorage.setItem(HP_BADGE_KEY, JSON.stringify(d));
+        return true;
+      } catch { return false; }
+    }
+    function hpShowClaim(type) {
+      setTimeout(() => {
+        const el = document.getElementById('hp-claim-' + type);
+        if (el) el.style.display = 'block';
+      }, 800);
+    }
+    function hpClaimBadge(type) {
+      const id = type === 'bug' ? 'cg_bughunter' : 'cg_bigideas';
+      const b = BADGE_DEF[id];
+      const btn = document.querySelector(`#hp-claim-${type} button`);
+      if (_hpAward(id)) {
+        // Show a quick toast
+        let t = document.createElement('div');
+        t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(0);background:linear-gradient(135deg,#0a1628,#1a2a4a);border:2px solid #ffd700;border-radius:20px;padding:14px 22px;display:flex;align-items:center;gap:14px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.5);color:#fff;font-size:.9rem;max-width:340px;';
+        t.innerHTML = `<span style="font-size:2rem">${b.em}</span><div><div style="font-size:.6rem;text-transform:uppercase;letter-spacing:2px;color:#ffd700;font-weight:bold;">🏆 Badge Unlocked!</div><div style="font-weight:bold">${b.name}</div><div style="font-size:.72rem;color:#a0c0ff">${b.desc}</div></div>`;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 4000);
+        if (btn) { btn.textContent = '🏆 Badge earned!'; btn.disabled = true; btn.style.opacity = '.5'; btn.style.cursor = 'default'; }
+        renderHomeBadges();
+      } else {
+        if (btn) { btn.textContent = '✅ Already earned!'; btn.disabled = true; btn.style.opacity = '.5'; btn.style.cursor = 'default'; }
+      }
+    }
+  </script>
+  <style>@keyframes hpClaimPop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}</style>
+</body>
+</html>

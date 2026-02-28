@@ -358,6 +358,34 @@ tr.me td{background:rgba(180,79,255,.1);border-left:2px solid var(--bright);}
 .confirm-no:hover{border-color:#aaa;color:#fff;}
 .new-game-btn{background:transparent;border:1px solid rgba(180,79,255,.5);border-radius:12px;padding:5px 14px;font-family:'Bubblegum Sans',cursive;color:#b44fff;cursor:pointer;font-size:.78rem;transition:all .2s;margin-top:6px;}
 .new-game-btn:hover{background:rgba(180,79,255,.15);border-color:var(--bright);}
+/* ── FEEDBACK STRIP ── */
+.feedback-strip{margin-top:16px;padding:12px 16px;background:rgba(180,79,255,.06);border:1px solid rgba(180,79,255,.2);border-radius:14px;text-align:center;}
+.feedback-text{font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:10px;}
+.feedback-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.feedback-btn{font-size:.7rem;padding:7px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:rgba(255,255,255,.65);text-decoration:none;transition:all .2s;white-space:nowrap;font-family:'Bubblegum Sans',cursive;}
+.feedback-btn:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.4);color:#fff;}
+.feedback-claim{display:none;margin-top:10px;}
+.feedback-claim-btn{font-family:'Bubblegum Sans',cursive;font-size:.72rem;padding:8px 18px;border-radius:20px;border:none;background:linear-gradient(135deg,#ffd700,#ff8800);color:#1a0a2e;font-weight:bold;cursor:pointer;transition:all .2s;animation:claimPop .4s cubic-bezier(.34,1.56,.64,1);}
+@keyframes claimPop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.feedback-claim-btn:hover{transform:scale(1.06);box-shadow:0 4px 16px rgba(255,215,0,.4);}
+.feedback-claim-btn:disabled{opacity:.5;cursor:default;transform:none;background:#555;}
+</style>
+.badge-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:linear-gradient(135deg,#0d0a1a,#1a0d2e);border:2px solid #ffd700;border-radius:20px;padding:14px 22px;display:flex;align-items:center;gap:14px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.5),0 0 24px rgba(255,215,0,.3);transition:transform .5s cubic-bezier(.34,1.56,.64,1),opacity .4s;opacity:0;pointer-events:none;max-width:340px;}
+.badge-toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+.badge-toast-em{font-size:2.4rem;flex-shrink:0;filter:drop-shadow(0 0 8px rgba(255,215,0,.8));animation:badgePop .6s cubic-bezier(.34,1.56,.64,1);}
+@keyframes badgePop{0%{transform:scale(0) rotate(-20deg)}60%{transform:scale(1.3) rotate(5deg)}100%{transform:scale(1) rotate(0)}}
+.badge-toast-text{display:flex;flex-direction:column;gap:2px;}
+.badge-toast-label{font-size:.62rem;text-transform:uppercase;letter-spacing:2px;color:#ffd700;font-weight:bold;}
+.badge-toast-name{font-size:1.05rem;color:#fff;font-weight:bold;}
+.badge-toast-desc{font-size:.72rem;color:#e0b0ff;}
+.badges-earned-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:14px 0 4px;}
+.badge-coin{display:flex;flex-direction:column;align-items:center;gap:4px;position:relative;}
+.badge-coin-em{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.8rem;border:3px solid #ffd700;background:radial-gradient(circle at 35% 30%,#fff9e6,#ffd700 60%,#b8860b);box-shadow:0 0 16px rgba(255,215,0,.5),inset 0 2px 4px rgba(255,255,255,.4);animation:coinShimmer 2s ease-in-out infinite alternate;}
+@keyframes coinShimmer{from{box-shadow:0 0 10px rgba(255,215,0,.4)}to{box-shadow:0 0 24px rgba(255,215,0,.8),0 0 40px rgba(255,215,0,.3)}}
+.badge-coin-name{font-size:.6rem;color:#ffd700;text-align:center;max-width:60px;line-height:1.2;}
+.badge-coin.new-badge .badge-coin-em::after{content:'NEW!';position:absolute;top:-6px;right:-6px;background:#ff4444;color:#fff;font-size:.45rem;font-weight:bold;padding:2px 5px;border-radius:6px;letter-spacing:.5px;}
+.badges-section-title{font-size:.75rem;text-transform:uppercase;letter-spacing:2px;color:#e0b0ff;text-align:center;margin-bottom:8px;}
+.go-badges-wrap{margin:10px 0;padding:12px;background:rgba(180,79,255,.07);border:1px solid rgba(180,79,255,.25);border-radius:14px;}
 </style>
 </head>
 <body>
@@ -571,8 +599,25 @@ tr.me td{background:rgba(180,79,255,.1);border-left:2px solid var(--bright);}
     <label style="font-size:.85rem;color:#aaa;">Enter your witch name:</label>
     <input class="name-in" type="text" id="player-name" maxlength="20" placeholder="SpookyWitch42">
     <button class="save-btn" id="save-btn">🏆 Save to Leaderboard!</button>
+    <div class="go-badges-wrap" id="goBadgesWrap" style="display:none">
+      <div class="badges-section-title">🏆 Badges Earned!</div>
+      <div class="badges-earned-row" id="goBadgesRow"></div>
+    </div>
     <button class="again-btn" id="again-btn">🔄 Play Again</button>
     <a href="index.html" class="again-btn" style="text-decoration:none;display:block;text-align:center;margin-top:8px;background:linear-gradient(135deg,#1a0d2e,#2a1050);border:2px solid rgba(180,79,255,.5);">🦀 Home</a>
+    <div class="feedback-strip">
+      <p class="feedback-text">💌 Found a bug or have a game idea?</p>
+      <div class="feedback-btns">
+        <a class="feedback-btn" href="mailto:hello@crabcake.kids?subject=Bug%20Report%20%E2%80%93%20Witch%27s%20Brew&body=Hi!%20I%20found%20a%20bug%20in%20Witch%27s%20Brew%3A%0A%0A" onclick="showClaim('bug')">🐛 Report a Bug</a>
+        <a class="feedback-btn" href="mailto:hello@crabcake.kids?subject=Game%20Idea%20for%20Crabcake!&body=Hi!%20I%20have%20an%20idea%20for%20a%20new%20game%3A%0A%0A" onclick="showClaim('idea')">💡 Suggest a Game</a>
+      </div>
+      <div class="feedback-claim" id="feedback-claim-bug">
+        <button class="feedback-claim-btn" onclick="claimFeedbackBadge('bug')">✅ I sent it! Claim my 🐛 Bug Hunter badge</button>
+      </div>
+      <div class="feedback-claim" id="feedback-claim-idea">
+        <button class="feedback-claim-btn" onclick="claimFeedbackBadge('idea')">✅ I sent it! Claim my 💡 Big Ideas badge</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1085,6 +1130,7 @@ function showResult(recipe,snap){
       const pts=calcPts(recipe.r,triesOnPotion);
       streak++; if(streak>bestStreak)bestStreak=streak;
       score+=pts.total; updateHud();
+      _wbCheckMidGame(recipe);
       const ml=pts.mult===1?'×1 (start a streak!)':'×'+pts.mult+' ('+streak+' in a row! 🔥)';
       const tl=triesOnPotion===1?'1st try! 🎯':triesOnPotion+' tries';
       document.getElementById('res-pts').innerHTML=
@@ -1147,6 +1193,7 @@ function endGame(){
   document.getElementById('go-legendary').textContent=rc.legendary;
   document.getElementById('gameover-ovl').classList.add('show');
   playSound('gameover');
+  awardWitchBrewEndBadges();
 }
 
 function resetGame(){
@@ -1411,6 +1458,125 @@ function cancelResAutoClose(){
 // ═══════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════
+// ═══════════════════════════════════════════════
+// BADGE ENGINE
+// ═══════════════════════════════════════════════
+const BADGE_DEF={
+  md_first:{game:'mathdive',em:'🤿',name:'First Dive',desc:'Complete your first Math Dive game'},
+  md_sharp:{game:'mathdive',em:'⭐',name:'Sharp Shooter',desc:'Score 10+ correct answers in one game'},
+  md_fire:{game:'mathdive',em:'🔥',name:'On Fire',desc:'Reach a 5× streak in Math Dive'},
+  md_speed:{game:'mathdive',em:'⚡',name:'Speed Demon',desc:'Score 15+ correct answers in one game'},
+  md_legend:{game:'mathdive',em:'🏆',name:'Legendary Diver',desc:'Score 20+ correct answers in one game'},
+  md_times:{game:'mathdive',em:'🧮',name:'Times Master',desc:'Complete a game on the Ages 9–10 level'},
+  jw_first:{game:'junglewords',em:'🦁',name:'First Words',desc:'Complete your first Jungle Words game'},
+  jw_builder:{game:'junglewords',em:'📝',name:'Sentence Builder',desc:'Build 5+ correct sentences in one game'},
+  jw_wizard:{game:'junglewords',em:'🌟',name:'Word Wizard',desc:'Finish a game without losing a life'},
+  jw_elite:{game:'junglewords',em:'🏅',name:'Explorer Elite',desc:'Score 8/8 sentences in one game'},
+  wb_first:{game:'witchbrew',em:'🧙‍♀️',name:'Apprentice Witch',desc:'Brew your first successful potion'},
+  wb_rare:{game:'witchbrew',em:'🔵',name:'Rare Find',desc:'Discover a Rare potion'},
+  wb_epic:{game:'witchbrew',em:'🟣',name:'Epic Brewer',desc:'Discover an Epic potion'},
+  wb_legend:{game:'witchbrew',em:'🟠',name:'Legendary!',desc:'Discover a Legendary potion'},
+  wb_collect:{game:'witchbrew',em:'📖',name:'Spell Collector',desc:'Discover 10 or more potions total'},
+  wb_streak:{game:'witchbrew',em:'🔥',name:'On A Roll',desc:'Achieve a 3× brew streak'},
+  ts_first:{game:'tubesort',em:'🧪',name:'First Sort',desc:'Complete Level 1 of Tube Sort'},
+  ts_perfect:{game:'tubesort',em:'💎',name:'Perfectionist',desc:'Complete a level earning 3 stars'},
+  ts_speed:{game:'tubesort',em:'⚡',name:'Speed Sorter',desc:'Complete Level 5 or beyond'},
+  ts_master:{game:'tubesort',em:'👑',name:'Tube Master',desc:'Reach Level 10 in Tube Sort'},
+  cg_fan:{game:'crabcake',em:'🦀',name:'Crabcake Fan',desc:'Play all 4 Crabcake games at least once'},
+  cg_allround:{game:'crabcake',em:'🌟',name:'All-Rounder',desc:'Earn at least one badge in every game'},
+  cg_dedicated:{game:'crabcake',em:'🎮',name:'Dedicated',desc:'Play 10 games total across all games'},
+  cg_bughunter:{game:'crabcake',em:'🐛',name:'Bug Hunter',desc:'Reported a bug to help improve Crabcake'},
+  cg_bigideas:{game:'crabcake',em:'💡',name:'Big Ideas',desc:'Suggested a new game idea for Crabcake'},
+};
+const BADGE_KEY='crabcake_badges_v1';
+const PLAYS_KEY='crabcake_plays_v1';
+function _lb(){try{return JSON.parse(localStorage.getItem(BADGE_KEY)||'{}');}catch{return{};}}
+function _sb(d){try{localStorage.setItem(BADGE_KEY,JSON.stringify(d));}catch{}}
+function _lp(){try{return JSON.parse(localStorage.getItem(PLAYS_KEY)||'{}');}catch{return{};}}
+function _sp(d){try{localStorage.setItem(PLAYS_KEY,JSON.stringify(d));}catch{}}
+function _award(id){const d=_lb();if(d[id])return false;d[id]={earned:true,date:new Date().toLocaleDateString()};_sb(d);return true;}
+function _incPlays(game){const p=_lp();p[game]=(p[game]||0)+1;p._total=(p._total||0)+1;_sp(p);return p;}
+let _tq=[],_tb=false;
+function _toast(id){_tq.push(id);if(!_tb)_nxt();}
+function _nxt(){
+  if(!_tq.length){_tb=false;return;}_tb=true;
+  const id=_tq.shift();const b=BADGE_DEF[id];if(!b){_nxt();return;}
+  let t=document.getElementById('_bgt');
+  if(!t){t=document.createElement('div');t.id='_bgt';t.className='badge-toast';
+    t.innerHTML='<div class="badge-toast-em" id="_bge"></div><div class="badge-toast-text"><div class="badge-toast-label">🏆 Badge Unlocked!</div><div class="badge-toast-name" id="_bgn"></div><div class="badge-toast-desc" id="_bgd"></div></div>';
+    document.body.appendChild(t);}
+  document.getElementById('_bge').textContent=b.em;
+  document.getElementById('_bgn').textContent=b.name;
+  document.getElementById('_bgd').textContent=b.desc;
+  t.classList.add('show');
+  setTimeout(()=>{t.classList.remove('show');setTimeout(_nxt,500);},3500);
+}
+function _crossCheck(ne){
+  const p=_lp();
+  const games=['mathdive','junglewords','witchbrew','tubesort'];
+  if(!_lb().cg_fan&&games.every(g=>(p[g]||0)>=1)){if(_award('cg_fan'))ne.push('cg_fan');}
+  const d=_lb();
+  const gm={mathdive:false,junglewords:false,witchbrew:false,tubesort:false};
+  Object.keys(BADGE_DEF).forEach(id=>{const b=BADGE_DEF[id];if(b.game!=='crabcake'&&d[id])gm[b.game]=true;});
+  if(!d.cg_allround&&Object.values(gm).every(Boolean)){if(_award('cg_allround'))ne.push('cg_allround');}
+  const d2=_lb();
+  if(!d2.cg_dedicated&&(p._total||0)>=10){if(_award('cg_dedicated'))ne.push('cg_dedicated');}
+}
+function _renderEndBadges(ne){
+  const wrap=document.getElementById('goBadgesWrap');
+  const row=document.getElementById('goBadgesRow');
+  if(!wrap||!row)return;
+  const all=Object.keys(_lb());
+  if(!all.length&&!ne.length){wrap.style.display='none';return;}
+  wrap.style.display='';
+  const title=wrap.querySelector('.badges-section-title');
+  if(title)title.textContent=ne.length?`🏆 Badge${ne.length>1?'s':''} Earned This Game!`:'🏆 Your Badges';
+  const show=ne.length?ne:all.slice(0,6);
+  row.innerHTML=show.map(id=>{const b=BADGE_DEF[id];if(!b)return'';
+    return`<div class="badge-coin${ne.includes(id)?' new-badge':''}" title="${b.desc}"><div class="badge-coin-em">${b.em}</div><div class="badge-coin-name">${b.name}</div></div>`;
+  }).join('');
+}
+
+// ── Witch's Brew: award badges inline (during play) + at end ──
+let _wbGameBadges = [];
+function _wbCheckMidGame(recipe) {
+  // Called on each successful brew
+  const ne = [];
+  if (_award('wb_first')) ne.push('wb_first');
+  if (recipe.r === 'rare' && _award('wb_rare')) ne.push('wb_rare');
+  if (recipe.r === 'epic' && _award('wb_epic')) ne.push('wb_epic');
+  if (recipe.r === 'legendary' && _award('wb_legend')) ne.push('wb_legend');
+  if (discovered.size >= 10 && _award('wb_collect')) ne.push('wb_collect');
+  if (streak >= 3 && _award('wb_streak')) ne.push('wb_streak');
+  ne.forEach(id => { _toast(id); _wbGameBadges.push(id); });
+}
+function awardWitchBrewEndBadges() {
+  const ne = [...new Set(_wbGameBadges)];
+  _incPlays('witchbrew');
+  _crossCheck(ne);
+  ne.forEach(id => { if(!_wbGameBadges.includes(id)) _toast(id); });
+  setTimeout(() => _renderEndBadges(ne), 600);
+  _wbGameBadges = [];
+}
+
+// ── Feedback badge claim ──
+function showClaim(type) {
+  setTimeout(() => {
+    const el = document.getElementById('feedback-claim-' + type);
+    if (el) el.style.display = 'block';
+  }, 800);
+}
+function claimFeedbackBadge(type) {
+  const id = type === 'bug' ? 'cg_bughunter' : 'cg_bigideas';
+  const btn = document.querySelector(`#feedback-claim-${type} .feedback-claim-btn`);
+  if (_award(id)) {
+    _toast(id);
+    if (btn) { btn.textContent = '🏆 Badge earned!'; btn.disabled = true; }
+  } else {
+    if (btn) { btn.textContent = '✅ Already earned!'; btn.disabled = true; }
+  }
+}
+
 function init(){
   renderIng();
   renderBook();
