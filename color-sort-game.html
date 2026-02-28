@@ -370,9 +370,10 @@
 <div class="game-area" id="game-area"></div>
 
 <div class="controls">
-  <button class="btn-ghost" onclick="undoMove()">↩ UNDO</button>
+  <button class="btn-ghost" onclick="prevLevel()">‹ PREV</button>
   <button class="btn-ghost" onclick="restartLevel()">↺ RESTART</button>
-  <button class="btn-primary" onclick="skipLevel()">SKIP ›</button>
+  <button class="btn-ghost" onclick="goHome()">🦀 HOME</button>
+  <button class="btn-primary" onclick="skipLevel()">NEXT ›</button>
 </div>
 
 <!-- Level complete -->
@@ -387,6 +388,7 @@
   <div class="overlay-sub" id="level-sub"></div>
   <div class="overlay-btns">
     <button class="btn-ghost"    onclick="restartFromOverlay()">↺ RETRY</button>
+    <button class="btn-ghost"    onclick="prevLevelFromOverlay()">‹ PREV</button>
     <button class="btn-primary"  onclick="nextLevel()">NEXT LEVEL ›</button>
   </div>
 </div>
@@ -523,19 +525,19 @@ function spawnFireworks(count = 6) {
       const cx  = pCanvas.width  * (0.1 + Math.random() * 0.8);
       const cy  = pCanvas.height * (0.05 + Math.random() * 0.45);
       const col = usedColors[Math.floor(Math.random() * usedColors.length)];
-      for (let i = 0; i < 70; i++) {
-        const angle = Math.PI * 2 * i / 70;
-        const spd   = 3 + Math.random() * 7;
+      for (let i = 0; i < 90; i++) {
+        const angle = Math.PI * 2 * i / 90;
+        const spd   = 3 + Math.random() * 8;
         particles.push({
           x: cx, y: cy,
           vx: Math.cos(angle) * spd, vy: Math.sin(angle) * spd,
-          r: 2 + Math.random() * 4, alpha: 1, color: col,
+          r: 2.5 + Math.random() * 5, alpha: 1, color: col,
           type: i % 3 === 0 ? 'star' : 'circle',
           rot: Math.random() * Math.PI * 2, rotV: (Math.random() - 0.5) * 0.15,
-          life: 1, decay: 0.01 + Math.random() * 0.009,
+          life: 1, decay: 0.004 + Math.random() * 0.004, // much slower decay = longer display
         });
       }
-    }, b * 220);
+    }, b * 300); // more time between bursts
   }
 }
 
@@ -719,6 +721,7 @@ function handleClick(idx) {
   if (selectedTube === null) {
     if (tubes[idx].length === 0) return;
     selectedTube = idx;
+    playSound('select');
     render();
     return;
   }
@@ -733,6 +736,15 @@ function handleClick(idx) {
     history.push(JSON.parse(JSON.stringify(tubes)));
     pour(selectedTube, idx);
     moves++;
+    playSound('pour');
+
+    // Smoke and bubble effects on the destination tube
+    const destEl = document.querySelector(`.tube-wrapper[data-idx="${idx}"]`);
+    if (destEl) {
+      const destColor = COLOR_HEX[tubes[idx][tubes[idx].length - 1]] || '#ffffff';
+      spawnSmoke(destEl, destColor);
+      spawnBubbles(destEl, destColor);
+    }
 
     // Find newly completed tubes BEFORE render
     const justCompleted = [];
@@ -745,16 +757,20 @@ function handleClick(idx) {
     selectedTube = null;
     render();
 
-    // Fire particles only for newly completed tubes
+    // Fire particles and sound only for newly completed tubes
     justCompleted.forEach(i => {
       const el = document.querySelector(`.tube-wrapper[data-idx="${i}"]`);
-      if (el) spawnTubeParticles(el, COLOR_HEX[tubes[i][0]]);
+      if (el) {
+        spawnTubeParticles(el, COLOR_HEX[tubes[i][0]]);
+        playSound('complete');
+      }
     });
 
     checkLevelComplete();
   } else {
     const el = document.querySelector(`.tube-wrapper[data-idx="${idx}"]`);
     if (el) { el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); }
+    playSound('invalid');
     selectedTube = idx;
     render();
   }
@@ -764,8 +780,7 @@ function canPour(from, to) {
   if (tubes[from].length === 0) return false;
   if (isTubeComplete(tubes[from])) return false;
   if (tubes[to].length >= TUBE_CAPACITY) return false;
-  if (tubes[to].length === 0) return true;
-  return tubes[from][tubes[from].length - 1] === tubes[to][tubes[to].length - 1];
+  return true; // can pour into any tube with space
 }
 
 function pour(from, to) {
@@ -784,8 +799,9 @@ function isTubeComplete(tube) {
 function checkLevelComplete() {
   const [numColors] = getLevelConfig();
   if (tubes.filter(t => isTubeComplete(t)).length === numColors) {
-    spawnFireworks(6);
-    setTimeout(showLevelComplete, 900);
+    spawnFireworks(10);
+    playSound('levelcomplete');
+    setTimeout(showLevelComplete, 1200);
   }
 }
 
@@ -807,18 +823,19 @@ function showLevelComplete() {
   document.getElementById('level-overlay').classList.add('show');
 }
 
-function undoMove() {
-  if (history.length === 0) return;
-  tubes = history.pop();
-  selectedTube = null;
-  moves = Math.max(0, moves - 1);
-  // Rebuild complete sets from current tube state
-  animatedComplete = new Set();
-  settledComplete  = new Set();
-  tubes.forEach((t, i) => {
-    if (isTubeComplete(t)) { animatedComplete.add(i); settledComplete.add(i); }
-  });
-  render();
+function prevLevel() {
+  if (currentLevel <= 0) return;
+  currentLevel--;
+  newGame();
+}
+
+function prevLevelFromOverlay() {
+  document.getElementById('level-overlay').classList.remove('show');
+  prevLevel();
+}
+
+function goHome() {
+  window.location.href = 'index.html#games';
 }
 
 function updateStats() {
@@ -827,6 +844,169 @@ function updateStats() {
   const done = tubes.filter(t => isTubeComplete(t)).length;
   document.getElementById('complete-val').textContent = `${done}/${numColors}`;
 }
+
+// ─── Sound Effects ────────────────────────────────────────────────────────────
+let audioCtx = null;
+function getAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+function playSound(type) {
+  try {
+    const ac = getAudio();
+    const osc = ac.createOscillator();
+    const gain = ac.createGain();
+    osc.connect(gain); gain.connect(ac.destination);
+    if (type === 'pour') {
+      // Liquid pour — descending bubbling tone
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(520, ac.currentTime);
+      osc.frequency.linearRampToValueAtTime(340, ac.currentTime + 0.25);
+      gain.gain.setValueAtTime(0.12, ac.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.3);
+      osc.start(ac.currentTime); osc.stop(ac.currentTime + 0.3);
+      // Add bubble blips on top
+      for (let i = 0; i < 3; i++) {
+        const b = ac.createOscillator();
+        const bg = ac.createGain();
+        b.connect(bg); bg.connect(ac.destination);
+        b.type = 'sine';
+        b.frequency.setValueAtTime(600 + Math.random()*300, ac.currentTime + i*0.07);
+        bg.gain.setValueAtTime(0.06, ac.currentTime + i*0.07);
+        bg.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + i*0.07 + 0.08);
+        b.start(ac.currentTime + i*0.07); b.stop(ac.currentTime + i*0.07 + 0.08);
+      }
+    } else if (type === 'select') {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(440, ac.currentTime);
+      gain.gain.setValueAtTime(0.08, ac.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.12);
+      osc.start(ac.currentTime); osc.stop(ac.currentTime + 0.12);
+    } else if (type === 'complete') {
+      // Tube complete — happy ascending chord
+      [523, 659, 784, 1047].forEach((freq, i) => {
+        const o = ac.createOscillator(); const g = ac.createGain();
+        o.connect(g); g.connect(ac.destination);
+        o.type = 'sine'; o.frequency.setValueAtTime(freq, ac.currentTime + i*0.1);
+        g.gain.setValueAtTime(0.12, ac.currentTime + i*0.1);
+        g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + i*0.1 + 0.35);
+        o.start(ac.currentTime + i*0.1); o.stop(ac.currentTime + i*0.1 + 0.35);
+      });
+    } else if (type === 'levelcomplete') {
+      // Level complete — fanfare
+      [523, 659, 784, 659, 1047].forEach((freq, i) => {
+        const o = ac.createOscillator(); const g = ac.createGain();
+        o.connect(g); g.connect(ac.destination);
+        o.type = 'triangle'; o.frequency.setValueAtTime(freq, ac.currentTime + i*0.14);
+        g.gain.setValueAtTime(0.15, ac.currentTime + i*0.14);
+        g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + i*0.14 + 0.4);
+        o.start(ac.currentTime + i*0.14); o.stop(ac.currentTime + i*0.14 + 0.4);
+      });
+    } else if (type === 'invalid') {
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(220, ac.currentTime);
+      osc.frequency.linearRampToValueAtTime(160, ac.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.09, ac.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.18);
+      osc.start(ac.currentTime); osc.stop(ac.currentTime + 0.18);
+    }
+  } catch(e) {}
+}
+
+// ─── Smoke & Bubble Effects ───────────────────────────────────────────────────
+let smokeParticles = [];
+
+function spawnSmoke(tubeEl, hexColor) {
+  const rect = tubeEl.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + 10;
+  // Smoke puffs
+  for (let i = 0; i < 6; i++) {
+    smokeParticles.push({
+      x: cx + (Math.random()-0.5) * 20,
+      y: cy,
+      vx: (Math.random()-0.5) * 1.2,
+      vy: -(Math.random() * 1.5 + 0.5),
+      r: 8 + Math.random() * 12,
+      alpha: 0.35,
+      color: hexColor,
+      life: 1,
+      decay: 0.02 + Math.random() * 0.015,
+      grow: 1.04,
+    });
+  }
+}
+
+function spawnBubbles(tubeEl, hexColor) {
+  const rect = tubeEl.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height * 0.6;
+  for (let i = 0; i < 8; i++) {
+    smokeParticles.push({
+      x: cx + (Math.random()-0.5) * (rect.width * 0.6),
+      y: cy + Math.random() * 20,
+      vx: (Math.random()-0.5) * 0.8,
+      vy: -(Math.random() * 2 + 1),
+      r: 3 + Math.random() * 5,
+      alpha: 0.6,
+      color: '#ffffff',
+      life: 1,
+      decay: 0.025 + Math.random() * 0.02,
+      grow: 1.01,
+      isBubble: true,
+    });
+  }
+}
+
+// Second canvas layer for smoke/bubbles
+const smokeCanvas = document.createElement('canvas');
+smokeCanvas.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:45;';
+document.body.appendChild(smokeCanvas);
+const sCtx = smokeCanvas.getContext('2d');
+
+function resizeSmokeCanvas() {
+  smokeCanvas.width = window.innerWidth;
+  smokeCanvas.height = window.innerHeight;
+}
+resizeSmokeCanvas();
+window.addEventListener('resize', resizeSmokeCanvas);
+
+function animateSmoke() {
+  sCtx.clearRect(0, 0, smokeCanvas.width, smokeCanvas.height);
+  smokeParticles = smokeParticles.filter(p => p.life > 0);
+  for (const p of smokeParticles) {
+    p.x += p.vx; p.y += p.vy;
+    p.vx *= 0.98;
+    p.r *= p.grow;
+    p.life -= p.decay;
+    sCtx.globalAlpha = Math.max(0, p.life * p.alpha);
+    if (p.isBubble) {
+      sCtx.strokeStyle = p.color;
+      sCtx.lineWidth = 1.5;
+      sCtx.beginPath();
+      sCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      sCtx.stroke();
+      // Highlight
+      sCtx.globalAlpha = Math.max(0, p.life * p.alpha * 0.4);
+      sCtx.fillStyle = '#ffffff';
+      sCtx.beginPath();
+      sCtx.arc(p.x - p.r * 0.3, p.y - p.r * 0.3, p.r * 0.3, 0, Math.PI * 2);
+      sCtx.fill();
+    } else {
+      // Smoke puff
+      const grad = sCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+      grad.addColorStop(0, p.color + '60');
+      grad.addColorStop(1, 'transparent');
+      sCtx.fillStyle = grad;
+      sCtx.beginPath();
+      sCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      sCtx.fill();
+    }
+  }
+  sCtx.globalAlpha = 1;
+  requestAnimationFrame(animateSmoke);
+}
+animateSmoke();
 
 // ─── Boot ─────────────────────────────────────────────────────────────────────
 window.addEventListener('resize', resizeCanvases);
