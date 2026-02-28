@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
-  <title>Maths Dive 🤿 | Crabcake</title>
+  <title>Math Dive 🤿 | Crabcake</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@700;800;900&display=swap"/>
@@ -467,7 +467,7 @@
   <!-- START SCREEN -->
   <div class="screen" id="startScreen">
     <div class="diver-display">🤿</div>
-    <div class="game-title">Maths Dive!</div>
+    <div class="game-title">Math Dive!</div>
     <div class="game-subtitle">Crabcake · Educational Games</div>
 
     <div class="age-select-label">Choose your diver</div>
@@ -562,7 +562,7 @@ let gameRunning = false;
 let currentAnswer = null;
 let currentQuestion = '';
 let fallingObjects = [];
-let diver = { x: 0, y: 0, width: 60, height: 60, speed: 6, targetX: 0 };
+let diver = { x: 0, y: 0, width: 60, height: 60, speed: 6, targetX: 0, targetY: 0 };
 let canvas, ctx;
 let animFrame;
 let keys = { left: false, right: false };
@@ -773,6 +773,7 @@ function startGame() {
   diver.x = canvas.width / 2;
   diver.y = canvas.height - 180;
   diver.targetX = diver.x;
+  diver.targetY = diver.y;
 
   // Detect mobile
   isMobile = ('ontouchstart' in window) || window.innerWidth < 768;
@@ -802,6 +803,7 @@ function resizeCanvas() {
   canvas.height = window.innerHeight;
   if (diver) {
     diver.y = canvas.height - 180;
+    diver.targetY = diver.y;
   }
 }
 
@@ -809,15 +811,18 @@ function resizeCanvas() {
 function onMouseMove(e) {
   const rect = canvas.getBoundingClientRect();
   diver.targetX = e.clientX - rect.left;
+  diver.targetY = e.clientY - rect.top;
 }
 function onTouchMove(e) {
   e.preventDefault();
   const rect = canvas.getBoundingClientRect();
   diver.targetX = e.touches[0].clientX - rect.left;
+  diver.targetY = e.touches[0].clientY - rect.top;
 }
 function onCanvasClick(e) {
   const rect = canvas.getBoundingClientRect();
   diver.targetX = e.clientX - rect.left;
+  diver.targetY = e.clientY - rect.top;
 }
 function onKeyDown(e) {
   if (e.key === 'ArrowLeft')  keys.left  = true;
@@ -885,8 +890,12 @@ function gameLoop() {
   // Move diver
   if (keys.left)  diver.targetX -= 8;
   if (keys.right) diver.targetX += 8;
+  const HUD_H = 70;   // below HUD
+  const FLOOR = 70;   // above sea floor decorations
   diver.targetX = Math.max(40, Math.min(canvas.width - 40, diver.targetX));
+  diver.targetY = Math.max(HUD_H + 40, Math.min(canvas.height - FLOOR - 20, diver.targetY));
   diver.x += (diver.targetX - diver.x) * 0.15;
+  diver.y += (diver.targetY - diver.y) * 0.15;
 
   // Update & draw objects
   fallingObjects = fallingObjects.filter(o => {
@@ -1072,11 +1081,12 @@ function onCatch(obj, x, y) {
     if (streak % 5 === 0) fallingObjects = [];
   } else {
     streak = 0;
+    timeLeft = Math.max(0, timeLeft - 2);
     updateHUD();
-    showFeedback(x, y, '✗ Wrong!', '#FF5C5C');
+    showFeedback(x, y, '✗ -2s', '#FF5C5C');
     playSound('wrong');
-    // Flash screen red briefly
     flashScreen('#FF5C5C');
+    if (timeLeft <= 0) endGame();
   }
 }
 
@@ -1207,7 +1217,7 @@ function endGame() {
     message = 'Wow, you\'re a maths superstar! The ocean is yours! 🌊';
   } else {
     rating = '🏆✨'; title = 'LEGENDARY!';
-    message = 'Unbelievable score! You\'re the greatest maths diver ever! 🤿🦀';
+    message = 'Unbelievable score! You\'re the greatest math diver ever! 🤿🦀';
     spawnConfetti(window.innerWidth/2, window.innerHeight/2);
     setTimeout(() => spawnConfetti(window.innerWidth/3, window.innerHeight/3), 300);
     setTimeout(() => spawnConfetti(window.innerWidth*0.7, window.innerHeight*0.4), 600);
