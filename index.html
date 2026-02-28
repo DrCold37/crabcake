@@ -547,10 +547,10 @@
         <div class="cat-label">Math</div>
         <div class="cat-count">1 Game</div>
       </div>
-      <div class="cat-card" style="--accent:var(--coral)" onclick="alert('Reading games coming soon! 📖')">
+      <div class="cat-card" style="--accent:var(--coral);cursor:pointer;" onclick="document.getElementById('games').scrollIntoView({behavior:'smooth'})">
         <span class="cat-emoji">📖</span>
         <div class="cat-label">Reading</div>
-        <div class="cat-count">Coming Soon</div>
+        <div class="cat-count">1 Game</div>
       </div>
       <div class="cat-card" style="--accent:var(--green)" onclick="alert('Science games coming soon! 🔬')">
         <span class="cat-emoji">🔬</span>
@@ -601,6 +601,19 @@
         </div>
       </div>
 
+      <div class="game-card" onclick="window.open('sentence-builder.html','_blank')" style="cursor:pointer;">
+        <div class="game-thumb" style="background:linear-gradient(135deg,#0d2818,#1a4a2e)">🦁</div>
+        <div class="game-info">
+          <h3>Jungle Words</h3>
+          <p>Tap the words in the right order to build sentences in this wild jungle adventure! Three levels for ages 5–10.</p>
+          <div class="game-tags">
+            <span class="tag tag-age">Ages 5–10</span>
+            <span class="tag tag-cat">Reading</span>
+            <span class="tag tag-new">🆕 New</span>
+          </div>
+        </div>
+      </div>
+
       <div class="game-card" onclick="window.open('potion-game.html','_blank')" style="cursor:pointer;">
         <div class="game-thumb" style="background:linear-gradient(135deg,#2a0a4a,#160d26)">🧙‍♀️</div>
         <div class="game-info">
@@ -633,7 +646,7 @@
   <!-- STATS -->
   <div class="stats">
     <div class="stat">
-      <div class="stat-num">3</div>
+      <div class="stat-num">4</div>
       <div class="stat-label">Fun Games</div>
     </div>
     <div class="stat">
@@ -657,6 +670,7 @@
 
 
 
+
   <!-- FOOTER -->
   <footer>
     <div class="logo logo-footer">
@@ -671,11 +685,11 @@
       <a href="#">Parents</a>
       <a href="#">Teachers</a>
       <a href="privacy.html">Privacy</a>
-      <a href="/cdn-cgi/l/email-protection#0b7b79627d6a68724b68796a69686a606e2560626f78">Contact</a>
+      <a href="mailto:privacy@crabcake.kids">Contact</a>
     </div>
   </footer>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  <script>
     const hamburger = document.getElementById('hamburger');
     const navMenu = document.getElementById('nav-menu');
     let isOpen = false;
@@ -691,4 +705,12 @@
     navMenu.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => {
         isOpen = false;
-        requestAnimationFrame(() =
+        requestAnimationFrame(() => {
+          hamburger.classList.remove('open');
+          navMenu.classList.remove('open');
+        });
+      });
+    });
+  </script>
+</body>
+</html>
