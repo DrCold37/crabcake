@@ -309,7 +309,7 @@
       <li><a href="index.html#games">Games</a></li>
       <li><a href="index.html#categories">Subjects</a></li>
       <li><a href="privacy.html">Privacy</a></li>
-      <li><a href="mailto:hello@crabcake.kids">Contact Us</a></li>
+      <li><a id="nav-contact" href="#">Contact Us</a></li>
     </ul>
   </nav>
 
@@ -386,7 +386,7 @@
     <div class="contact-box">
       <h3>📬 Questions or Concerns?</h3>
       <p>If you have any questions about this Privacy Policy or your child's privacy on Crabcake, please contact us at:<br/><br/>
-      <a href="mailto:hello@crabcake.kids">hello@crabcake.kids</a></p>
+      <a id="privacy-contact-email" href="#">hello&#64;crabcake.kids</a></p>
       <p style="margin-top:0.8rem; font-size:0.85rem; opacity:0.7;">We aim to respond to all privacy inquiries within 5 business days.</p>
     </div>
 
@@ -407,23 +407,29 @@
   </footer>
 
   <script>
-    const hamburger = document.getElementById('hamburger');
-    const navMenu = document.getElementById('nav-menu');
-    let isOpen = false;
-    hamburger.addEventListener('click', () => {
+    // ── Build email links at runtime so Cloudflare can't obfuscate them ──
+    (function() {
+      var e = 'hello' + '\u0040' + 'crabcake.kids';
+      var nc = document.getElementById('nav-contact');
+      if (nc) nc.href = 'mailto:' + e;
+      var pc = document.getElementById('privacy-contact-email');
+      if (pc) { pc.href = 'mailto:privacy' + '\u0040' + 'crabcake.kids'; pc.textContent = 'privacy' + '\u0040' + 'crabcake.kids'; }
+    })();
+
+    // ── Burger menu ──
+    var hamburger = document.getElementById('hamburger');
+    var navMenu = document.getElementById('nav-menu');
+    var isOpen = false;
+    hamburger.addEventListener('click', function() {
       isOpen = !isOpen;
-      requestAnimationFrame(() => {
-        hamburger.classList.toggle('open', isOpen);
-        navMenu.classList.toggle('open', isOpen);
-      });
+      hamburger.classList.toggle('open', isOpen);
+      navMenu.classList.toggle('open', isOpen);
     });
-    navMenu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
+    navMenu.querySelectorAll('a').forEach(function(link) {
+      link.addEventListener('click', function() {
         isOpen = false;
-        requestAnimationFrame(() => {
-          hamburger.classList.remove('open');
-          navMenu.classList.remove('open');
-        });
+        hamburger.classList.remove('open');
+        navMenu.classList.remove('open');
       });
     });
   </script>

@@ -89,10 +89,14 @@
 
     /* ── NAV ── */
     nav {
-      position: relative; z-index: 10;
-      display: flex; align-items: center; justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       padding: 1.2rem 3rem;
-      background: rgba(26,43,74,0.85);
+      background: rgba(15,29,54,0.97);
       backdrop-filter: blur(8px);
       border-bottom: 3px solid var(--teal);
     }
@@ -431,9 +435,10 @@
       flex-direction: column;
       gap: 5px;
       cursor: pointer;
-      padding: 0.4rem;
+      padding: 0.5rem;
       background: none;
       border: none;
+      z-index: 1001;
     }
     .hamburger span {
       display: block;
@@ -451,34 +456,37 @@
     @media(max-width: 640px) {
       nav {
         padding: 1rem 1.2rem;
-        flex-wrap: wrap;
-        position: relative;
+        flex-wrap: nowrap;
+        position: sticky;
       }
       .hamburger { display: flex; }
       nav ul {
         display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
         flex-direction: column;
         width: 100%;
         gap: 0;
         background: #0F1D36;
         border-top: 2px solid var(--teal);
-        margin-top: 0.8rem;
-        border-radius: 12px;
-        overflow: hidden;
+        border-bottom: 2px solid var(--teal);
+        z-index: 999;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.5);
       }
       nav ul.open { display: flex; }
       nav ul li a {
         display: block;
-        padding: 0.9rem 1.4rem;
-        border-bottom: 1px solid rgba(255,255,255,0.06);
+        padding: 1rem 1.4rem;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
         font-size: 1rem;
+        color: var(--white);
+        text-decoration: none;
+        font-weight: 700;
       }
+      nav ul li a:hover { background: rgba(0,201,177,0.1); color: var(--teal); }
       nav ul li:last-child a { border-bottom: none; }
-      .nav-cta {
-        border-radius: 0 !important;
-        text-align: center;
-      }
-      .stat { min-width: 140px; padding: 2rem 1rem; }
       footer { flex-direction:column; text-align:center; }
     }
   /* ── SEASONAL ADVENTURES ── */
@@ -575,7 +583,7 @@
       <li><a href="#games">Games</a></li>
       <li><a href="#categories">Subjects</a></li>
       <li><a href="privacy.html">Privacy</a></li>
-      <li><a href="mailto:hello@crabcake.kids">Contact Us</a></li>
+      <li><a id="nav-contact" href="#">Contact Us</a></li>
     </ul>
   </nav>
 
@@ -781,8 +789,8 @@
     <div style="padding:18px 20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:16px;">
       <p style="font-size:.9rem;color:rgba(255,255,255,.55);margin-bottom:12px;">💌 Found a bug or have an idea for a new game?</p>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-        <a href="mailto:hello@crabcake.kids?subject=Bug%20Report&body=Hi!%20I%20found%20a%20bug%3A%0A%0A" onclick="hpShowClaim('bug')" style="font-size:.8rem;padding:9px 18px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:rgba(255,255,255,.75);text-decoration:none;transition:all .2s;">🐛 Report a Bug</a>
-        <a href="mailto:hello@crabcake.kids?subject=Game%20Idea%20for%20Crabcake!&body=Hi!%20I%20have%20an%20idea%20for%20a%20new%20game%3A%0A%0A" onclick="hpShowClaim('idea')" style="font-size:.8rem;padding:9px 18px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:rgba(255,255,255,.75);text-decoration:none;transition:all .2s;">💡 Suggest a Game</a>
+        <a id="feedback-bug" onclick="hpShowClaim('bug')" style="font-size:.8rem;padding:9px 18px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:rgba(255,255,255,.75);text-decoration:none;transition:all .2s;cursor:pointer;">🐛 Report a Bug</a>
+        <a id="feedback-idea" onclick="hpShowClaim('idea')" style="font-size:.8rem;padding:9px 18px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:rgba(255,255,255,.75);text-decoration:none;transition:all .2s;cursor:pointer;">💡 Suggest a Game</a>
       </div>
       <div id="hp-claim-bug" style="display:none;margin-top:12px;">
         <button onclick="hpClaimBadge('bug')" style="font-size:.8rem;padding:9px 20px;border-radius:20px;border:none;background:linear-gradient(135deg,#ffd700,#ff8800);color:#1a0a2e;font-weight:bold;cursor:pointer;animation:hpClaimPop .4s cubic-bezier(.34,1.56,.64,1);">✅ I sent it! Claim my 🐛 Bug Hunter badge</button>
@@ -818,25 +826,21 @@
   </footer>
 
   <script>
-    const hamburger = document.getElementById('hamburger');
-    const navMenu = document.getElementById('nav-menu');
-    let isOpen = false;
+    var hamburger = document.getElementById('hamburger');
+    var navMenu = document.getElementById('nav-menu');
+    var menuOpen = false;
 
-    hamburger.addEventListener('click', () => {
-      isOpen = !isOpen;
-      requestAnimationFrame(() => {
-        hamburger.classList.toggle('open', isOpen);
-        navMenu.classList.toggle('open', isOpen);
-      });
+    hamburger.addEventListener('click', function() {
+      menuOpen = !menuOpen;
+      hamburger.classList.toggle('open', menuOpen);
+      navMenu.classList.toggle('open', menuOpen);
     });
 
-    navMenu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        isOpen = false;
-        requestAnimationFrame(() => {
-          hamburger.classList.toggle('open', isOpen);
-          navMenu.classList.toggle('open', isOpen);
-        });
+    navMenu.querySelectorAll('a').forEach(function(link) {
+      link.addEventListener('click', function() {
+        menuOpen = false;
+        hamburger.classList.remove('open');
+        navMenu.classList.remove('open');
       });
     });
 
@@ -954,9 +958,32 @@
     function hpClaimBadge(type) {
       const id = type === 'bug' ? 'cg_bughunter' : 'cg_bigideas';
       const b = BADGE_DEF[id];
-      const btn = document.querySelector(`#hp-claim-${type} button`);
+      const btn = document.querySelector('#hp-claim-' + type + ' button');
       if (_hpAward(id)) {
-        // Show a quick toast
         let t = document.createElement('div');
-        t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(0);background:linear-gradient(135deg,#0a1628,#1a2a4a);border:2px solid #ffd700;border-radius:20px;padding:14px 22px;display:flex;align-items:center;gap:14px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.5);color:#fff;font-size:.9rem;max-width:340px;';
-        t.innerHTML = `<span style="font-size:2rem">${b.em}</span><div><div style="font-size:.6rem;text-transform:uppercase;letter-spacing:2px;color:#ffd700;font-weight:bold;">🏆 Badge Unlocked!</div><div styl
+        t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#0a1628,#1a2a4a);border:2px solid #ffd700;border-radius:20px;padding:14px 22px;display:flex;align-items:center;gap:14px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.5);color:#fff;font-size:.9rem;max-width:340px;';
+        t.innerHTML = '<span style="font-size:2rem">' + b.em + '</span><div><div style="font-size:.6rem;text-transform:uppercase;letter-spacing:2px;color:#ffd700;font-weight:bold;">🏆 Badge Unlocked!</div><div style="font-weight:bold">' + b.name + '</div><div style="font-size:.72rem;color:#a0c0ff">' + b.desc + '</div></div>';
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 4000);
+        if (btn) { btn.textContent = '🏆 Badge earned!'; btn.disabled = true; btn.style.opacity = '.5'; btn.style.cursor = 'default'; }
+        renderHomeBadges();
+      } else {
+        if (btn) { btn.textContent = '✅ Already earned!'; btn.disabled = true; btn.style.opacity = '.5'; btn.style.cursor = 'default'; }
+      }
+    }
+
+    // ── Build email links at runtime so Cloudflare can't obfuscate them ──
+    (function() {
+      var e = 'hello' + '\u0040' + 'crabcake.kids';
+      var contact = document.getElementById('nav-contact');
+      if (contact) contact.href = 'mailto:' + e;
+      var bug = document.getElementById('feedback-bug');
+      if (bug) bug.href = 'mailto:' + e + '?subject=Bug%20Report&body=Hi!%20I%20found%20a%20bug%3A%0A%0A';
+      var idea = document.getElementById('feedback-idea');
+      if (idea) idea.href = 'mailto:' + e + '?subject=Game%20Idea%20for%20Crabcake!&body=Hi!%20I%20have%20an%20idea%20for%20a%20new%20game%3A%0A%0A';
+    })();
+
+  </script>
+  <style>@keyframes hpClaimPop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}</style>
+</body>
+</html>
