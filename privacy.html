@@ -63,16 +63,7 @@
       display: flex; align-items: center; gap: 10px;
       text-decoration: none;
     }
-    .logo-circle {
-      width: 52px; height: 52px;
-      background: linear-gradient(135deg, #FFD93D, #FF9040);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 2.1rem;
-      padding-top: 5px;
-      box-shadow: 0 4px 0 #d4700a, 0 6px 16px rgba(255,144,64,0.35);
-      flex-shrink: 0;
-    }
+    .logo-crab { font-size:2.6rem; line-height:1; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
     .logo-text { display: flex; flex-direction: column; line-height: 1; }
     .logo-name {
       font-family: 'Boogaloo', 'Arial Rounded MT Bold', cursive;
@@ -84,15 +75,12 @@
     .logo-name .la { color: #4ECB71; }
     .logo-name .lb { color: #FF9040; }
     .logo-name .lc { color: #A66CFF; }
-    .logo-sub {
-      font-size: 0.6rem;
-      font-weight: 900;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--teal);
-      margin-top: 1px;
-    }
-    .logo-footer .logo-name { font-size: 1.6rem; }
+    .logo-sub { font-size:0.62rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:rgba(255,255,255,0.5); margin-top:3px; }
+    .logo-footer .logo-name .base { color:#ffffff; }
+    .logo-name .la   { color:#FF6B6B; text-shadow:2px 2px 4px rgba(255,255,255,0.5); }
+    .logo-name .lb   { color:#FFD93D; text-shadow:2px 2px 4px rgba(255,255,255,0.5); }
+    .logo-name .lc   { color:#4ECB71; text-shadow:2px 2px 4px rgba(255,255,255,0.5); }
+    .logo-name { font-family:'Nunito','Arial Rounded MT Bold',sans-serif; font-size:2rem; font-weight:800; letter-spacing:-0.5px; }
     nav ul { list-style: none; display: flex; gap: 2rem; }
     nav ul li a {
       color: var(--white); text-decoration: none;
@@ -118,7 +106,7 @@
       font-family: 'Boogaloo', 'Arial Rounded MT Bold', cursive;
       font-size: clamp(2.5rem, 6vw, 4rem);
       color: var(--yellow);
-      text-shadow: 3px 3px 0 var(--coral);
+      text-shadow: none;
       margin-bottom: 0.8rem;
     }
     .page-hero p {
@@ -297,9 +285,9 @@
   <!-- NAV -->
   <nav>
     <a href="index.html" class="logo">
-      <div class="logo-circle">🦀</div>
+      <div class="logo-crab">🦀</div>
       <div class="logo-text">
-        <div class="logo-name">Cr<span class="la">a</span><span class="lb">b</span><span class="lc">c</span>ake</div>
+        <div class="logo-name"><span class="base">Cr</span><span class="la">a</span><span class="lb">b</span><span class="lc">c</span><span class="base">ake</span></div>
         <div class="logo-sub">The Fun Way to Learn</div>
       </div>
     </a>
@@ -398,9 +386,9 @@
   <!-- FOOTER -->
   <footer>
     <a href="index.html" class="logo logo-footer">
-      <div class="logo-circle">🦀</div>
+      <div class="logo-crab">🦀</div>
       <div class="logo-text">
-        <div class="logo-name">Cr<span class="la">a</span><span class="lb">b</span><span class="lc">c</span>ake</div>
+        <div class="logo-name"><span class="base">Cr</span><span class="la">a</span><span class="lb">b</span><span class="lc">c</span><span class="base">ake</span></div>
         <div class="logo-sub">The Fun Way to Learn</div>
       </div>
     </a>

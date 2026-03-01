@@ -31,9 +31,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <!-- Load fonts asynchronously to prevent render blocking -->
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@400;600;700;800;900&display=swap"/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@400;600;700;800;900&display=swap" media="print" onload="this.media='all'"/>
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@400;600;700;800;900&display=swap"/></noscript>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" media="print" onload="this.media='all'"/>
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap"/></noscript>
   <!-- Vercel Analytics -->
   <script defer src="/_vercel/insights/script.js"></script>
   <style>
@@ -104,38 +104,17 @@
       display: flex; align-items: center; gap: 10px;
       text-decoration: none;
     }
-    .logo-circle {
-      width: 52px; height: 52px;
-      background: linear-gradient(135deg, #FFD93D, #FF9040);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 2.1rem;
-      padding-top: 5px;
-      box-shadow: 0 4px 0 #d4700a, 0 6px 16px rgba(255,144,64,0.35);
-      flex-shrink: 0;
-    }
-    .logo-text { display: flex; flex-direction: column; line-height: 1; }
-    .logo-name {
-      font-family: 'Boogaloo', 'Arial Rounded MT Bold', cursive;
-      font-size: 2rem;
-      color: var(--yellow);
-      text-shadow: 2px 2px 0 rgba(255,255,255,0.25);
-      letter-spacing: 0.5px;
-    }
-    .logo-name .la { color: var(--green); }
-    .logo-name .lb { color: var(--orange); }
-    .logo-name .lc { color: var(--purple); }
-    .logo-sub {
-      font-size: 0.6rem;
-      font-weight: 900;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--teal);
-      margin-top: 1px;
-    }
-    .logo-footer .logo-name {
-      font-size: 1.6rem;
-    }
+    .logo { display:flex; align-items:center; gap:.75rem; text-decoration:none; }
+    .logo-crab { font-size:2.6rem; line-height:1; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+    .logo-text { display:flex; flex-direction:column; line-height:1; }
+    .logo-name { font-family:'Nunito','Arial Rounded MT Bold',sans-serif; font-size:2rem; font-weight:800; letter-spacing:-0.5px; }
+    .logo-name .base { color:#ffffff; }
+    .logo-name .la   { color:#FF6B6B; text-shadow:2px 2px 4px rgba(255,255,255,0.5); }
+    .logo-name .lb   { color:#FFD93D; text-shadow:2px 2px 4px rgba(255,255,255,0.5); }
+    .logo-name .lc   { color:#4ECB71; text-shadow:2px 2px 4px rgba(255,255,255,0.5); }
+    .logo-sub { font-size:0.62rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:rgba(255,255,255,0.5); margin-top:3px; }
+    .logo-footer .logo-crab { font-size:2rem; }
+    .logo-footer .logo-name { font-size:1.6rem; }
     nav ul { list-style: none; display: flex; gap: 2rem; }
     nav ul li a {
       color: var(--white); text-decoration: none;
@@ -178,7 +157,7 @@
     }
 
     .hero h1 {
-      font-family: 'Boogaloo', 'Arial Rounded MT Bold', cursive;
+      font-family: 'Arial Rounded MT Bold', cursive;
       font-size: clamp(3.5rem, 9vw, 7rem);
       line-height: 1.05;
       color: var(--white);
@@ -192,7 +171,7 @@
     }
 
     .hero-tagline {
-      font-family: 'Boogaloo', 'Arial Rounded MT Bold', cursive;
+      font-family: 'Arial Rounded MT Bold', cursive;
       font-size: clamp(1rem, 2.2vw, 1.25rem);
       color: var(--teal);
       letter-spacing: 0.5px;
@@ -278,7 +257,7 @@
       padding: 5rem 2rem;
     }
     .section-title {
-      font-family: 'Boogaloo', 'Arial Rounded MT Bold', cursive;
+      font-family: 'Arial Rounded MT Bold', cursive;
       font-size: clamp(2rem, 5vw, 3.2rem);
       text-align: center;
       margin-bottom: 0.5rem;
@@ -299,7 +278,7 @@
       gap: 1.5rem;
       max-width: 800px; margin: 0 auto;
     }
-    @media(max-width: 640px) {
+    @media(max-width: 1020px) {
       .categories-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
     }
     .cat-card {
@@ -321,7 +300,7 @@
     .cat-card:hover::before { opacity: 0.12; }
     .cat-emoji { font-size: 3rem; display: block; margin-bottom: 0.8rem; }
     .cat-label {
-      font-family: 'Boogaloo', 'Arial Rounded MT Bold', cursive;
+      font-family: 'Arial Rounded MT Bold', cursive;
       font-size: 1.3rem; color: var(--white);
     }
     .cat-count { font-size: 0.8rem; color: rgba(255,255,255,0.5); font-weight: 700; margin-top: 0.3rem; }
@@ -355,14 +334,14 @@
       position: absolute; inset: 0;
       background: rgba(0,0,0,0.55);
       display: flex; align-items: center; justify-content: center;
-      font-family: 'Boogaloo', 'Arial Rounded MT Bold', cursive;
+      font-family: 'Arial Rounded MT Bold', cursive;
       font-size: 1.5rem; color: var(--white);
       opacity: 0; transition: opacity 0.2s;
     }
     .game-card:hover .game-thumb::after { opacity: 1; }
     .game-info { padding: 1.2rem 1.4rem 1.6rem; }
     .game-info h3 {
-      font-family: 'Boogaloo', 'Arial Rounded MT Bold', cursive;
+      font-family: 'Arial Rounded MT Bold', cursive;
       font-size: 1.4rem; margin-bottom: 0.4rem;
     }
     .game-info p { font-size: 0.9rem; color: rgba(255,255,255,0.65); line-height: 1.5; }
@@ -388,7 +367,7 @@
     }
     .stat:last-child { border-right: none; }
     .stat-num {
-      font-family: 'Boogaloo', 'Arial Rounded MT Bold', cursive;
+      font-family: 'Arial Rounded MT Bold', cursive;
       font-size: 3rem; color: var(--navy); line-height: 1;
     }
     .stat-label { font-size: 0.9rem; font-weight: 800; color: var(--navy); opacity: 0.7; margin-top: 0.3rem; }
@@ -399,7 +378,7 @@
       text-align: center; padding: 2.5rem 2rem;
     }
     .cta-section h2 {
-      font-family: 'Boogaloo', 'Arial Rounded MT Bold', cursive;
+      font-family: 'Arial Rounded MT Bold', cursive;
       font-size: clamp(2.5rem, 6vw, 4rem);
       color: var(--white);
       text-shadow: 3px 3px 0 rgba(0,0,0,0.15);
@@ -453,7 +432,7 @@
     .hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
     /* ── RESPONSIVE ── */
-    @media(max-width: 640px) {
+    @media(max-width: 1020px) {
       nav {
         padding: 1rem 1.2rem;
         flex-wrap: nowrap;
@@ -571,9 +550,9 @@
   <!-- NAV -->
   <nav>
     <div class="logo">
-      <div class="logo-circle">🦀</div>
+      <div class="logo-crab">🦀</div>
       <div class="logo-text">
-        <div class="logo-name">Cr<span class="la">a</span><span class="lb">b</span><span class="lc">c</span>ake</div>
+        <div class="logo-name"><span class="base">Cr</span><span class="la">a</span><span class="lb">b</span><span class="lc">c</span><span class="base">ake</span></div>
         <div class="logo-sub">The Fun Way to Learn</div>
       </div>
     </div>
@@ -586,7 +565,7 @@
       <li><a href="privacy.html">Privacy</a></li>
       <li><a id="nav-contact" href="#">Contact Us</a></li>
     </ul>
-    <div id="nav-avatar-hud" style="margin-left:.5rem;display:none;"></div>
+    <div id="nav-avatar-hud" style="margin-left:.5rem;display:none;flex-shrink:0;"></div>
   </nav>
 
   <!-- MAIN CONTENT -->
@@ -607,17 +586,13 @@
       <p class="hero-sub">Explore educational games designed for kids ages 5–10. Dive into a world of fun activities that make learning math, reading, science and more an adventure!</p>
       <div class="hero-buttons">
         <a href="#games" class="btn btn-primary">🎮 Start Playing!</a>
-        <a href="#categories" class="btn btn-secondary">Explore Games</a>
       </div>
       <p class="hero-notice">⚠️ Please be aware that this website is currently under construction. We're excited to announce that loads of fun activities, games, and more will be coming soon!</p>
-      <!-- AVATAR CREW WIDGET (shown if avatar is saved) -->
+
+      <!-- AVATAR CREW WIDGET -->
       <div id="hero-crew-widget" style="display:none;margin-top:1.5rem;">
-        <a href="avatar.html" style="display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,.07);border:1.5px solid rgba(0,201,177,.3);border-radius:16px;padding:.6rem 1rem .6rem .6rem;text-decoration:none;transition:all .2s;" id="hero-crew-link">
-          <div id="hero-crew-avatar" style="display:flex;align-items:center;gap:6px;"></div>
-          <div>
-            <div style="font-family:Fredoka One,cursive;font-size:.9rem;color:#00C9B1;">Your Crew</div>
-            <div style="font-size:.7rem;color:rgba(255,255,255,.5);">Tap to customise →</div>
-          </div>
+        <a href="avatar.html" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;">
+          <div id="hero-crew-avatar" style="display:flex;align-items:center;gap:8px;"></div>
         </a>
       </div>
     </div>
@@ -828,9 +803,9 @@
   <!-- FOOTER -->
   <footer>
     <div class="logo logo-footer">
-      <div class="logo-circle">🦀</div>
+      <div class="logo-crab">🦀</div>
       <div class="logo-text">
-        <div class="logo-name">Cr<span class="la">a</span><span class="lb">b</span><span class="lc">c</span>ake</div>
+        <div class="logo-name"><span class="base">Cr</span><span class="la">a</span><span class="lb">b</span><span class="lc">c</span><span class="base">ake</span></div>
         <div class="logo-sub">The Fun Way to Learn</div>
       </div>
     </div>
@@ -996,25 +971,22 @@
     })();
 
   </script>
+  <style>@keyframes hpClaimPop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}</style>
   <script src="crabcake-avatar.js"></script>
   <script>
-    // Avatar HUD injection for index
     document.addEventListener("DOMContentLoaded", function(){
       var state = CrabcakeAvatar.load();
-      // Nav HUD (only if customised from default)
       var navHud = document.getElementById("nav-avatar-hud");
-      if(navHud) { CrabcakeAvatar.injectHUD(navHud, {size:36, showPet:true}); navHud.style.display="inline-flex"; }
-      // Hero crew widget
+      if(navHud){ CrabcakeAvatar.injectHUD(navHud, {size:52, showPet:true}); navHud.style.display="inline-flex"; }
       var heroWidget = document.getElementById("hero-crew-widget");
       var heroAvEl   = document.getElementById("hero-crew-avatar");
-      if(heroAvEl && heroWidget) {
-        heroAvEl.innerHTML = CrabcakeAvatar.buildHeadSVG(state, 46);
-        var pb = CrabcakeAvatar.buildPetBadge(state, 32);
+      if(heroAvEl && heroWidget){
+        heroAvEl.innerHTML = CrabcakeAvatar.buildHeadSVG(state, 72);
+        var pb = CrabcakeAvatar.buildPetBadge(state, 56);
         if(pb) heroAvEl.insertAdjacentHTML("beforeend", pb);
         heroWidget.style.display = "block";
       }
     });
   </script>
-  <style>@keyframes hpClaimPop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}</style>
 </body>
 </html>

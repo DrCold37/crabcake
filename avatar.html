@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Your Avatar — Crabcake Kids</title>
 <meta name="description" content="Customise your avatar and choose your pet on Crabcake Kids!">
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
   :root {
@@ -28,23 +28,36 @@
     border-bottom:2px solid rgba(0,201,177,.25);
   }
   .logo { display:flex; align-items:center; gap:.75rem; text-decoration:none; }
-  .logo-circle { font-size:1.8rem; width:44px; height:44px; background:linear-gradient(135deg,#FFD93D,#FF6B35); border-radius:50%; display:flex; align-items:center; justify-content:center; }
-  .logo-name { font-family:'Fredoka One',cursive; font-size:1.4rem; color:#fff; }
-  .logo-name .la{color:#FF6B6B;} .logo-name .lb{color:#FFD93D;} .logo-name .lc{color:#00C9B1;}
-  .logo-sub { font-size:.65rem; color:rgba(255,255,255,.55); text-transform:uppercase; letter-spacing:1px; }
-  nav ul { list-style:none; display:flex; gap:1.5rem; align-items:center; }
-  nav ul li a { color:rgba(255,255,255,.8); text-decoration:none; font-weight:700; font-size:.9rem; padding:.4rem .7rem; border-radius:8px; transition:all .2s; }
-  nav ul li a:hover, nav ul li a.active { color:var(--teal); background:rgba(0,201,177,.1); }
+  .logo { display:flex; align-items:center; gap:.75rem; text-decoration:none; }
+  .logo-crab { font-size:2.6rem; line-height:1; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+  .logo-text { display:flex; flex-direction:column; line-height:1; }
+  .logo-name { font-family:'Nunito','Arial Rounded MT Bold',sans-serif; font-size:2rem; font-weight:800; letter-spacing:-0.5px; }
+  .logo-name .base { color:#ffffff; }
+  .logo-name .la   { color:#FF6B6B; text-shadow:2px 2px 4px rgba(255,255,255,0.5); }
+  .logo-name .lb   { color:#FFD93D; text-shadow:2px 2px 4px rgba(255,255,255,0.5); }
+  .logo-name .lc   { color:#4ECB71; text-shadow:2px 2px 4px rgba(255,255,255,0.5); }
+  .logo-sub { font-size:0.62rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:rgba(255,255,255,0.5); margin-top:3px; }
+  nav ul { list-style:none; display:flex; gap:2rem; align-items:center; }
+  nav ul li a { color:#fff; text-decoration:none; font-weight:800; font-size:1rem; transition:color .2s; }
+  nav ul li a:hover, nav ul li a.active { color:var(--yellow); }
   .hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:4px; }
   .hamburger span { display:block; width:24px; height:3px; background:#fff; border-radius:2px; transition:all .3s; }
   .hamburger.open span:nth-child(1){transform:translateY(8px) rotate(45deg);}
   .hamburger.open span:nth-child(2){opacity:0;}
   .hamburger.open span:nth-child(3){transform:translateY(-8px) rotate(-45deg);}
-  @media(max-width:768px){
-    .hamburger{display:flex;}
-    nav ul { display:none; flex-direction:column; position:absolute; top:100%; left:0; right:0; background:rgba(26,43,74,.98); padding:1rem; gap:.3rem; border-bottom:2px solid rgba(0,201,177,.2); }
+  @media(max-width:1020px){
+    nav { padding:1rem 1.2rem; flex-wrap:nowrap; position:sticky; }
+    .hamburger { display:flex; }
+    nav ul {
+      display:none; flex-direction:column; position:absolute; top:100%; left:0; right:0;
+      width:100%; gap:0; background:#0F1D36;
+      border-top:2px solid var(--teal); border-bottom:2px solid var(--teal);
+      z-index:999; box-shadow:0 8px 24px rgba(0,0,0,.5);
+    }
     nav ul.open { display:flex; }
-    nav ul li a { display:block; padding:.8rem 1.2rem; border-radius:10px; font-size:1rem; }
+    nav ul li a { display:block; padding:1rem 1.4rem; border-bottom:1px solid rgba(255,255,255,.08); font-size:1rem; color:#fff; font-weight:700; }
+    nav ul li a:hover { background:rgba(0,201,177,.1); color:var(--teal); }
+    nav ul li:last-child a { border-bottom:none; }
   }
 
   /* ─── PAGE LAYOUT ─── */
@@ -175,11 +188,11 @@
 <!-- NAV -->
 <nav>
   <a href="index.html" class="logo">
-    <div class="logo-circle">🦀</div>
-    <div>
-      <div class="logo-name">Cr<span class="la">a</span><span class="lb">b</span><span class="lc">c</span>ake</div>
-      <div class="logo-sub">The Fun Way to Learn</div>
-    </div>
+    <div class="logo-crab">🦀</div>
+      <div class="logo-text">
+        <div class="logo-name"><span class="base">Cr</span><span class="la">a</span><span class="lb">b</span><span class="lc">c</span><span class="base">ake</span></div>
+        <div class="logo-sub">The Fun Way to Learn</div>
+      </div>
   </a>
   <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
   <ul id="nav-menu">
@@ -982,5 +995,12 @@ document.addEventListener('DOMContentLoaded', ()=>{
 });
 </script>
 
+<script src="crabcake-avatar.js"></script>
+<script>
+  (function(){
+    var navHud = document.getElementById("nav-avatar-hud");
+    if(navHud){ CrabcakeAvatar.injectHUD(navHud, {size:52, showPet:true}); navHud.style.display="inline-flex"; }
+  })();
+</script>
 </body>
 </html>
