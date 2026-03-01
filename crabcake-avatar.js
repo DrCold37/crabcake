@@ -85,7 +85,7 @@ const CrabcakeAvatar = (function(){
       </defs>
       <circle cx="44" cy="44" r="42" fill="rgba(0,0,0,.3)"/>
       <circle cx="44" cy="44" r="40" fill="${tc}"/>
-      <g clip-path="url(#${id}_cl)">
+      <g clip-path="url(#${id}_cl)" transform="translate(0, 6)">
         <circle cx="44" cy="44" r="22" fill="url(#${id}_sk)"/>
         ${hairSVG}
         <circle cx="44" cy="44" r="20" fill="url(#${id}_sk)"/>
