@@ -904,11 +904,11 @@ function renderPreview(state) {
   if(pet.id === 'none' || !pet.svg) {
     petWrap.style.opacity = '0.3';
     petEl.innerHTML = '';
-    petName.textContent = 'No pet';
+    if(petName) petName.textContent = 'No pet';
   } else {
     petWrap.style.opacity = '1';
     petEl.innerHTML = pet.svg;
-    petName.textContent = pet.label;
+    if(petName) petName.textContent = pet.label;
   }
 }
 
