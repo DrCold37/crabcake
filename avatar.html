@@ -11,6 +11,7 @@
   :root {
     --navy:   #1A2B4A;
     --teal:   #00C9B1;
+    --white:  #ffffff;
     --yellow: #FFD93D;
     --orange: #FF6B35;
     --purple: #7B5EA7;
@@ -1083,7 +1084,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   (function(){
     var navHud = document.getElementById("nav-avatar-hud");
     if(navHud && typeof CrabcakeAvatar !== 'undefined'){
-      CrabcakeAvatar.injectHUD(navHud, {size:52, showPet:true}); navHud.style.cssText="display:inline-flex;position:absolute;left:50%;transform:translateX(-50%);flex-shrink:0;";
+      CrabcakeAvatar.injectHUD(navHud, {size:52, showPet:true}); navHud.style.cssText="display:inline-flex;position:absolute;left:50%;transform:translateX(-50%);flex-shrink:0;pointer-events:none;z-index:50;"; navHud.querySelector("a").style.pointerEvents="auto";
     }
   })();
 </script>
