@@ -72,14 +72,11 @@
     backdrop-filter: blur(10px);
   }
   #crewBarInner {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: .6rem 1.5rem;
+    padding: 0;
     display: flex;
     align-items: center;
-    gap: 1.5rem;
   }
-  #crewBarPreview { flex-shrink: 0; }
+  #crewBarPreview { flex: 1; width: 100%; }
   #crewStage {
     display: flex;
     align-items: flex-end;
@@ -129,10 +126,10 @@
   }
   .preview-avatar-wrap { display:flex; flex-direction:column; align-items:center; gap:.5rem; }
   .preview-avatar-wrap svg { filter:drop-shadow(0 8px 16px rgba(0,0,0,.4)); }
-  .preview-name { font-family:'Fredoka One',cursive; font-size:.85rem; color:rgba(255,255,255,.6); }
+  .preview-name { font-family:'Fredoka One',cursive; font-size:.85rem; color:#000; font-weight:700; text-shadow:0 1px 3px rgba(255,255,255,.6); }
   .preview-pet-wrap { display:flex; flex-direction:column; align-items:center; gap:.3rem; margin-bottom:10px; }
   .preview-pet-wrap svg { filter:drop-shadow(0 4px 8px rgba(0,0,0,.4)); }
-  .preview-pet-name { font-size:.7rem; color:rgba(255,255,255,.5); }
+  .preview-pet-name { font-size:.7rem; color:#000; font-weight:700; text-shadow:0 1px 3px rgba(255,255,255,.6); }
 
   .save-btn {
     display:block; width:100%; padding:.9rem;
@@ -219,24 +216,25 @@
   .privacy-note strong { color:var(--teal); }
 
   /* ─── CREW PREVIEW ─── */
-  #crewBarInner { justify-content: center; }
-  #crewBarPreview { display:flex; align-items:center; justify-content:center; }
+  #crewBarPreview { display:flex; align-items:center; justify-content:center; width:100%; }
   .preview-stage {
     position: relative;
     overflow: hidden;
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    border-radius: 16px;
+    width: 100%;
+    min-height: 220px;
+    border-radius: 0;
+    padding: 1rem 0 .5rem;
   }
   .preview-stage-bg {
     position: absolute;
     inset: 0;
     background-image: url('park-bg.jpg');
     background-size: cover;
-    background-position: center bottom;
+    background-position: center center;
     opacity: 0.75;
-    border-radius: 16px;
     z-index: 0;
   }
   .preview-stage > *:not(.preview-stage-bg) { position: relative; z-index: 1; }
@@ -269,7 +267,7 @@
 <div id="crewBar">
   <div id="crewBarInner">
     <div id="crewBarPreview">
-      <div class="preview-stage" id="crewStage" style="position:relative;">
+      <div class="preview-stage" id="crewStage">
         <div class="preview-stage-bg" aria-hidden="true"></div>
         <div class="preview-avatar-wrap">
           <svg id="previewAvatar" width="88" height="192" viewBox="0 0 88 192"></svg>
