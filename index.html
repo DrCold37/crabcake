@@ -100,6 +100,13 @@
       backdrop-filter: blur(8px);
       border-bottom: 3px solid var(--teal);
     }
+    #nav-avatar-hud {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      display: none;
+      flex-shrink: 0;
+    }
     .logo {
       display: flex; align-items: center; gap: 10px;
       text-decoration: none;
@@ -562,7 +569,7 @@
       <li><a href="privacy.html">Privacy</a></li>
       <li><a id="nav-contact" href="#">Contact Us</a></li>
     </ul>
-    <div id="nav-avatar-hud" data-hud-size="52" style="margin-left:.5rem;display:none;flex-shrink:0;"></div>
+    <div id="nav-avatar-hud" data-hud-size="52"></div>
     <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
   </nav>
 
@@ -984,7 +991,7 @@
     document.addEventListener("DOMContentLoaded", function(){
       var state = CrabcakeAvatar.load();
       var navHud = document.getElementById("nav-avatar-hud");
-      if(navHud){ CrabcakeAvatar.injectHUD(navHud, {size:52, showPet:true}); navHud.style.display="inline-flex"; }
+      if(navHud){ CrabcakeAvatar.injectHUD(navHud, {size:52, showPet:true}); navHud.style.cssText="display:inline-flex;position:absolute;left:50%;transform:translateX(-50%);flex-shrink:0;"; }
 
     });
   </script>
