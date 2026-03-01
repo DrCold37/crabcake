@@ -75,7 +75,7 @@ const CrabcakeAvatar = (function(){
     else if(state.avatarId==='b2') hairSVG = `<circle cx="44" cy="18" r="16" fill="${hairCol}"/><circle cx="30" cy="22" r="13" fill="${hairCol}"/><circle cx="58" cy="22" r="13" fill="${hairCol}"/>`;
     else if(state.avatarId==='b3') hairSVG = `<ellipse cx="44" cy="21" rx="22" ry="12" fill="${hairCol}"/><rect x="22" y="21" width="44" height="18" rx="5" fill="${hairCol}"/>`;
 
-    return `<svg width="${size}" height="${size}" viewBox="0 5 88 88" xmlns="http://www.w3.org/2000/svg">
+    return `<svg width="${size}" height="${size}" viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <radialGradient id="${id}_sk" cx="50%" cy="40%" r="65%">
           <stop offset="0%" stop-color="${sc}"/>
@@ -85,7 +85,7 @@ const CrabcakeAvatar = (function(){
       </defs>
       <circle cx="44" cy="44" r="42" fill="rgba(0,0,0,.3)"/>
       <circle cx="44" cy="44" r="40" fill="${tc}"/>
-      <g clip-path="url(#${id}_cl)" transform="translate(0,8)">
+      <g clip-path="url(#${id}_cl)" transform="translate(0,11)">
         <circle cx="44" cy="44" r="22" fill="url(#${id}_sk)"/>
         ${hairSVG}
         <circle cx="44" cy="44" r="20" fill="url(#${id}_sk)"/>
