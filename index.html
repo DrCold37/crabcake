@@ -115,7 +115,7 @@
     .logo-sub { font-size:0.62rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:rgba(255,255,255,0.5); margin-top:3px; }
     .logo-footer .logo-crab { font-size:2rem; }
     .logo-footer .logo-name { font-size:1.6rem; }
-    nav ul { list-style: none; display: flex; gap: 2rem; }
+    nav ul { list-style: none; display: none; gap: 2rem; }
     nav ul li a {
       color: var(--white); text-decoration: none;
       font-weight: 800; font-size: 1rem;
@@ -410,7 +410,7 @@
 
     /* ── HAMBURGER BUTTON ── */
     .hamburger {
-      display: none;
+      display: flex;
       flex-direction: column;
       gap: 5px;
       cursor: pointer;
@@ -418,6 +418,7 @@
       background: none;
       border: none;
       z-index: 1001;
+      flex-shrink: 0;
     }
     .hamburger span {
       display: block;
@@ -438,7 +439,6 @@
         flex-wrap: nowrap;
         position: sticky;
       }
-      .hamburger { display: flex; }
       nav ul {
         display: none;
         position: absolute;
@@ -556,7 +556,6 @@
         <div class="logo-sub">The Fun Way to Learn</div>
       </div>
     </a>
-    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
     <ul id="nav-menu">
       <li><a href="#my-badges">Achievements</a></li>
       <li><a href="#games">Games</a></li>
@@ -566,6 +565,7 @@
       <li><a id="nav-contact" href="#">Contact Us</a></li>
     </ul>
     <div id="nav-avatar-hud" data-hud-size="52" style="margin-left:.5rem;display:none;flex-shrink:0;"></div>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
   </nav>
 
   <!-- MAIN CONTENT -->
