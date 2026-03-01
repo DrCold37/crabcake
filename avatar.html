@@ -47,7 +47,7 @@
   .hamburger.open span:nth-child(3){transform:translateY(-8px) rotate(-45deg);}
   @media(max-width:1020px){
     nav { padding:1rem 1.2rem; flex-wrap:nowrap; position:sticky; }
-    #nav-avatar-hud { display:none !important; }
+    #nav-avatar-hud { display:none !important; flex-shrink:0; }
     .hamburger { display:flex; }
     nav ul {
       display:none; flex-direction:column; position:absolute; top:100%; left:0; right:0;
@@ -1001,10 +1001,13 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 <script src="crabcake-avatar.js"></script>
 <script>
-  document.addEventListener("DOMContentLoaded", function(){
+  (function(){
     var navHud = document.getElementById("nav-avatar-hud");
-    if(navHud){ CrabcakeAvatar.injectHUD(navHud, {size:52, showPet:true}); navHud.style.display="inline-flex"; }
-  });
+    if(navHud && typeof CrabcakeAvatar !== 'undefined'){
+      CrabcakeAvatar.injectHUD(navHud, {size:52, showPet:true});
+      navHud.style.display = "inline-flex";
+    }
+  })();
 </script>
 </body>
 </html>
