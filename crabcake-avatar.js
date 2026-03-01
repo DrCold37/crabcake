@@ -17,7 +17,8 @@ const CrabcakeAvatar = (function(){
     grey:'#95a5a6',white:'#ecf0f1'
   };
 
-  // Each hair style split into bg (drawn behind face) and fg (drawn in front of face)
+  // Hair split into bg (behind face) and fg (in front of face)
+  // All coordinates match avatar.html exactly (88x88 head space, face at cy=44)
   const HAIR = {
     g1: {
       bg: `<ellipse cx="44" cy="22" rx="22" ry="11" fill="#7b4a1e"/>
@@ -97,14 +98,14 @@ const CrabcakeAvatar = (function(){
     },
   };
 
-  // Full pet SVGs
+  // Pet SVGs — each pet has UNIQUE gradient IDs baked in (no collisions)
   const PET_SVG = {
     none: '',
     golden: `
-      <defs><radialGradient id="PG" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#e8b060"/><stop offset="100%" stop-color="#c88030"/></radialGradient></defs>
+      <defs><radialGradient id="__PID__" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#e8b060"/><stop offset="100%" stop-color="#c88030"/></radialGradient></defs>
       <ellipse cx="26" cy="58" rx="18" ry="30" fill="#a06020" transform="rotate(-12 26 58)"/>
       <ellipse cx="104" cy="58" rx="18" ry="30" fill="#a06020" transform="rotate(12 104 58)"/>
-      <ellipse cx="65" cy="55" rx="40" ry="38" fill="url(#PG)"/>
+      <ellipse cx="65" cy="55" rx="40" ry="38" fill="url(#__PID__)"/>
       <ellipse cx="65" cy="72" rx="22" ry="16" fill="#f0d090"/>
       <ellipse cx="65" cy="65" rx="10" ry="7" fill="#2c1810"/>
       <ellipse cx="62" cy="63" rx="3.5" ry="2.5" fill="white" opacity=".4"/>
@@ -122,13 +123,13 @@ const CrabcakeAvatar = (function(){
       <circle cx="65" cy="92" r="6" fill="#f1c40f"/><circle cx="65" cy="92" r="3" fill="#d4a000"/>`,
     husky: `
       <defs>
-        <radialGradient id="PH" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#5a6a7a"/><stop offset="100%" stop-color="#3a4a5a"/></radialGradient>
-        <radialGradient id="PHi" cx="50%" cy="50%" r="60%"><stop offset="0%" stop-color="#e8e8e8"/><stop offset="100%" stop-color="#c8c8c8"/></radialGradient>
+        <radialGradient id="__PID__a" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#5a6a7a"/><stop offset="100%" stop-color="#3a4a5a"/></radialGradient>
+        <radialGradient id="__PID__b" cx="50%" cy="50%" r="60%"><stop offset="0%" stop-color="#e8e8e8"/><stop offset="100%" stop-color="#c8c8c8"/></radialGradient>
       </defs>
       <polygon points="28,38 18,8 46,28" fill="#3a4a5a"/><polygon points="102,38 112,8 84,28" fill="#3a4a5a"/>
       <polygon points="30,34 22,12 44,28" fill="#ffbbcc"/><polygon points="100,34 108,12 86,28" fill="#ffbbcc"/>
-      <ellipse cx="65" cy="58" rx="42" ry="40" fill="url(#PH)"/>
-      <ellipse cx="65" cy="65" rx="30" ry="32" fill="url(#PHi)"/>
+      <ellipse cx="65" cy="58" rx="42" ry="40" fill="url(#__PID__a)"/>
+      <ellipse cx="65" cy="65" rx="30" ry="32" fill="url(#__PID__b)"/>
       <ellipse cx="50" cy="42" rx="14" ry="10" fill="#3a4a5a"/><ellipse cx="80" cy="42" rx="14" ry="10" fill="#3a4a5a"/>
       <ellipse cx="65" cy="74" rx="18" ry="13" fill="#d8d8d8"/>
       <ellipse cx="65" cy="67" rx="9" ry="6.5" fill="#1a1a2e"/>
@@ -141,12 +142,12 @@ const CrabcakeAvatar = (function(){
       <path d="M 26 88 Q 65 100 104 88" stroke="#1abc9c" stroke-width="8" fill="none" stroke-linecap="round"/>
       <circle cx="65" cy="95" r="6" fill="#f1c40f"/><circle cx="65" cy="95" r="3" fill="#d4a000"/>`,
     beagle: `
-      <defs><radialGradient id="PB" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#f5deb3"/><stop offset="100%" stop-color="#deb887"/></radialGradient></defs>
+      <defs><radialGradient id="__PID__" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#f5deb3"/><stop offset="100%" stop-color="#deb887"/></radialGradient></defs>
       <ellipse cx="22" cy="68" rx="18" ry="36" fill="#8b4513" transform="rotate(-5 22 68)"/>
       <ellipse cx="108" cy="68" rx="18" ry="36" fill="#8b4513" transform="rotate(5 108 68)"/>
-      <ellipse cx="65" cy="55" rx="38" ry="36" fill="url(#PB)"/>
+      <ellipse cx="65" cy="55" rx="38" ry="36" fill="url(#__PID__)"/>
       <ellipse cx="65" cy="36" rx="26" ry="16" fill="#8b4513"/>
-      <ellipse cx="65" cy="55" rx="35" ry="32" fill="url(#PB)"/>
+      <ellipse cx="65" cy="55" rx="35" ry="32" fill="url(#__PID__)"/>
       <ellipse cx="65" cy="42" rx="8" ry="14" fill="#fffaf0"/>
       <ellipse cx="65" cy="71" rx="20" ry="14" fill="#f0e8d0"/>
       <ellipse cx="65" cy="64" rx="11" ry="8" fill="#1a1a2e"/>
@@ -159,10 +160,10 @@ const CrabcakeAvatar = (function(){
       <path d="M 30 84 Q 65 94 100 84" stroke="#27ae60" stroke-width="8" fill="none" stroke-linecap="round"/>
       <circle cx="65" cy="91" r="6" fill="#f1c40f"/><circle cx="65" cy="91" r="3" fill="#d4a000"/>`,
     tabby: `
-      <defs><radialGradient id="PT" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#e88030"/><stop offset="100%" stop-color="#c05010"/></radialGradient></defs>
+      <defs><radialGradient id="__PID__" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#e88030"/><stop offset="100%" stop-color="#c05010"/></radialGradient></defs>
       <polygon points="28,36 14,6 48,26" fill="#c05010"/><polygon points="102,36 116,6 82,26" fill="#c05010"/>
       <polygon points="30,32 18,10 46,26" fill="#ffbbcc"/><polygon points="100,32 112,10 84,26" fill="#ffbbcc"/>
-      <circle cx="65" cy="62" r="44" fill="url(#PT)"/>
+      <circle cx="65" cy="62" r="44" fill="url(#__PID__)"/>
       <ellipse cx="65" cy="74" rx="22" ry="16" fill="#f4d0a0"/>
       <polygon points="65,67 59,74 71,74" fill="#ffaacc"/>
       <path d="M 58 76 Q 65 82 72 76" stroke="#c0694a" stroke-width="1.8" fill="none" stroke-linecap="round"/>
@@ -177,12 +178,12 @@ const CrabcakeAvatar = (function(){
       <path d="M 24 92 Q 65 104 106 92" stroke="#e74c3c" stroke-width="8" fill="none" stroke-linecap="round"/>
       <circle cx="65" cy="100" r="6" fill="#f1c40f"/><circle cx="65" cy="100" r="3" fill="#d4a000"/>`,
     greyfold: `
-      <defs><radialGradient id="PGF" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#9ab0c0"/><stop offset="100%" stop-color="#708090"/></radialGradient></defs>
+      <defs><radialGradient id="__PID__" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#9ab0c0"/><stop offset="100%" stop-color="#708090"/></radialGradient></defs>
       <ellipse cx="36" cy="28" rx="16" ry="10" fill="#607080" transform="rotate(15 36 28)"/>
       <ellipse cx="94" cy="28" rx="16" ry="10" fill="#607080" transform="rotate(-15 94 28)"/>
       <ellipse cx="36" cy="28" rx="10" ry="6" fill="#ffbbcc" opacity=".8" transform="rotate(15 36 28)"/>
       <ellipse cx="94" cy="28" rx="10" ry="6" fill="#ffbbcc" opacity=".8" transform="rotate(-15 94 28)"/>
-      <circle cx="65" cy="64" r="46" fill="url(#PGF)"/>
+      <circle cx="65" cy="64" r="46" fill="url(#__PID__)"/>
       <ellipse cx="65" cy="76" rx="20" ry="14" fill="#d0dce8"/>
       <polygon points="65,69 59,76 71,76" fill="#ffaacc"/>
       <path d="M 58 78 Q 65 84 72 78" stroke="#8090a0" stroke-width="1.8" fill="none" stroke-linecap="round"/>
@@ -197,10 +198,10 @@ const CrabcakeAvatar = (function(){
       <path d="M 22 94 Q 65 106 108 94" stroke="#9b59b6" stroke-width="8" fill="none" stroke-linecap="round"/>
       <circle cx="65" cy="102" r="6" fill="#f1c40f"/><circle cx="65" cy="102" r="3" fill="#d4a000"/>`,
     blackcat: `
-      <defs><radialGradient id="PBC" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#2a2a3a"/><stop offset="100%" stop-color="#111120"/></radialGradient></defs>
+      <defs><radialGradient id="__PID__" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#2a2a3a"/><stop offset="100%" stop-color="#111120"/></radialGradient></defs>
       <polygon points="26,38 12,6 46,26" fill="#111120"/><polygon points="104,38 118,6 84,26" fill="#111120"/>
       <polygon points="28,34 16,10 44,26" fill="#553366"/><polygon points="102,34 114,10 86,26" fill="#553366"/>
-      <circle cx="65" cy="62" r="44" fill="url(#PBC)"/>
+      <circle cx="65" cy="62" r="44" fill="url(#__PID__)"/>
       <ellipse cx="55" cy="40" rx="20" ry="10" fill="#333344" opacity=".6"/>
       <ellipse cx="65" cy="74" rx="20" ry="14" fill="#2a2a44"/>
       <polygon points="65,66 59,73 71,73" fill="#ffaacc"/>
@@ -227,7 +228,7 @@ const CrabcakeAvatar = (function(){
     const [sc,sh] = SKINS[state.skin] || SKINS[0];
     const isGirl  = !['b1','b2','b3'].includes(state.avatarId);
     const tc      = TOP_COLOURS[state.top] || '#1abc9c';
-    const id      = 'hud_' + Math.random().toString(36).slice(2,6);
+    const id      = 'hud_' + Math.random().toString(36).slice(2,8);
     const eyeCol  = state.skin >= 4 ? '#4a2c00' : '#2eaa88';
     const hair    = HAIR[state.avatarId] || HAIR['b1'];
 
@@ -243,7 +244,13 @@ const CrabcakeAvatar = (function(){
       <path d="M 47.5 36 Q 52 31.5 56.5 36" stroke="#8B6000" stroke-width="1.8" fill="none" stroke-linecap="round"/>
     `;
 
-    // Draw order: bg hair → face circle → fg hair → eyes/features
+    // LAYER ORDER:
+    // 1. hair.bg  (behind face — base hair mass)
+    // 2. face circle (skin, r=18 cy=44 — smaller than full avatar to reveal hair above)
+    // 3. ear circles
+    // 4. hair.fg  (in front of face — overlay hair, fringe, cap)
+    // 5. eyes, mouth, cheeks
+    // translate(0,5) shifts everything slightly down so hair sits in upper portion of icon
     return `<svg width="${size}" height="${size}" viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <radialGradient id="${id}_sk" cx="50%" cy="40%" r="65%">
@@ -254,24 +261,24 @@ const CrabcakeAvatar = (function(){
       </defs>
       <circle cx="44" cy="44" r="42" fill="rgba(0,0,0,.3)"/>
       <circle cx="44" cy="44" r="40" fill="${tc}"/>
-      <g clip-path="url(#${id}_cl)" transform="translate(0,11)">
+      <g clip-path="url(#${id}_cl)" transform="translate(0,5)">
         ${hair.bg}
-        <circle cx="44" cy="44" r="22" fill="url(#${id}_sk)"/>
-        <circle cx="20" cy="46" r="5.5" fill="url(#${id}_sk)"/>
-        <circle cx="68" cy="46" r="5.5" fill="url(#${id}_sk)"/>
+        <circle cx="44" cy="44" r="18" fill="url(#${id}_sk)"/>
+        <circle cx="22" cy="46" r="5" fill="url(#${id}_sk)"/>
+        <circle cx="66" cy="46" r="5" fill="url(#${id}_sk)"/>
         ${hair.fg}
-        <ellipse cx="35" cy="44" rx="4" ry="4.2" fill="white"/>
-        <ellipse cx="51" cy="44" rx="4" ry="4.2" fill="white"/>
-        <circle cx="35" cy="45" r="2.9" fill="${eyeCol}"/>
-        <circle cx="51" cy="45" r="2.9" fill="${eyeCol}"/>
-        <circle cx="35" cy="45" r="1.6" fill="#1a1a2e"/>
-        <circle cx="51" cy="45" r="1.6" fill="#1a1a2e"/>
-        <circle cx="36" cy="43.8" r="1" fill="white"/>
-        <circle cx="52" cy="43.8" r="1" fill="white"/>
+        <ellipse cx="35" cy="43" rx="3.8" ry="4" fill="white"/>
+        <ellipse cx="51" cy="43" rx="3.8" ry="4" fill="white"/>
+        <circle cx="35" cy="44" r="2.7" fill="${eyeCol}"/>
+        <circle cx="51" cy="44" r="2.7" fill="${eyeCol}"/>
+        <circle cx="35" cy="44" r="1.5" fill="#1a1a2e"/>
+        <circle cx="51" cy="44" r="1.5" fill="#1a1a2e"/>
+        <circle cx="36" cy="42.8" r="0.9" fill="white"/>
+        <circle cx="52" cy="42.8" r="0.9" fill="white"/>
         ${lashes}
-        <path d="M 39 58 Q 44 63 49 58" stroke="#c0694a" stroke-width="1.7" fill="none" stroke-linecap="round"/>
-        <circle cx="26" cy="51" r="7" fill="#ff9090" opacity=".35"/>
-        <circle cx="62" cy="51" r="7" fill="#ff9090" opacity=".35"/>
+        <path d="M 39 55 Q 44 59 49 55" stroke="#c0694a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <circle cx="28" cy="49" r="6" fill="#ff9090" opacity=".35"/>
+        <circle cx="60" cy="49" r="6" fill="#ff9090" opacity=".35"/>
       </g>
     </svg>`;
   }
@@ -279,16 +286,9 @@ const CrabcakeAvatar = (function(){
   function buildPetSVG(state, size=40) {
     let svg = PET_SVG[state.petId];
     if(!svg) return '';
-    const uid = Math.random().toString(36).slice(2,6);
-    // Make all gradient IDs unique per render
-    svg = svg
-      .replace(/id="PG"/g,  `id="PG${uid}"`)  .replace(/url\(#PG\)/g,  `url(#PG${uid})`)
-      .replace(/id="PH"/g,  `id="PH${uid}"`)  .replace(/url\(#PH\)/g,  `url(#PH${uid})`)
-      .replace(/id="PHi"/g, `id="PHi${uid}"`) .replace(/url\(#PHi\)/g, `url(#PHi${uid})`)
-      .replace(/id="PB"/g,  `id="PB${uid}"`)  .replace(/url\(#PB\)/g,  `url(#PB${uid})`)
-      .replace(/id="PT"/g,  `id="PT${uid}"`)  .replace(/url\(#PT\)/g,  `url(#PT${uid})`)
-      .replace(/id="PGF"/g, `id="PGF${uid}"`) .replace(/url\(#PGF\)/g, `url(#PGF${uid})`)
-      .replace(/id="PBC"/g, `id="PBC${uid}"`) .replace(/url\(#PBC\)/g, `url(#PBC${uid})`);
+    // Replace the __PID__ placeholder with a unique ID per render
+    const uid = 'p' + Math.random().toString(36).slice(2,8);
+    svg = svg.replace(/__PID__/g, uid);
     return `<svg width="${size}" height="${size}" viewBox="0 0 130 130"
       style="border-radius:50%;border:2px solid rgba(255,255,255,.3);box-shadow:0 2px 8px rgba(0,0,0,.4);"
       xmlns="http://www.w3.org/2000/svg">${svg}</svg>`;
@@ -312,11 +312,9 @@ const CrabcakeAvatar = (function(){
 
   function refreshHUD() {
     document.querySelectorAll('[id$="-avatar-hud"]').forEach(el => {
-      if(el.offsetParent !== null || el.style.display !== 'none') {
-        const size = parseInt(el.dataset.hudSize) || 52;
-        injectHUD(el, {size, showPet:true});
-        el.style.display = 'inline-flex';
-      }
+      const size = parseInt(el.dataset.hudSize) || 52;
+      injectHUD(el, {size, showPet:true});
+      el.style.display = 'inline-flex';
     });
   }
 
