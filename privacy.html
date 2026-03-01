@@ -46,7 +46,7 @@
 
     body {
       font-family: 'Nunito', 'Arial Rounded MT Bold', Arial, sans-serif;
-      background: var(--navy);
+      background: #1A2B4A;
       color: var(--white);
       min-height: 100vh;
     }
@@ -59,28 +59,17 @@
       border-bottom: 3px solid var(--teal);
       position: sticky; top: 0; z-index: 10;
     }
-    .logo {
-      display: flex; align-items: center; gap: 10px;
-      text-decoration: none;
-    }
+    .logo { display:flex; align-items:center; gap:.75rem; text-decoration:none; }
     .logo-crab { font-size:2.6rem; line-height:1; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
-    .logo-text { display: flex; flex-direction: column; line-height: 1; }
-    .logo-name {
-      font-family: 'Boogaloo', 'Arial Rounded MT Bold', cursive;
-      font-size: 2rem;
-      color: var(--yellow);
-      text-shadow: 2px 2px 0 rgba(255,255,255,0.25);
-      letter-spacing: 0.5px;
-    }
-    .logo-name .la { color: #4ECB71; }
-    .logo-name .lb { color: #FF9040; }
-    .logo-name .lc { color: #A66CFF; }
-    .logo-sub { font-size:0.62rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:rgba(255,255,255,0.5); margin-top:3px; }
-    .logo-footer .logo-name .base { color:#ffffff; }
+    .logo-text { display:flex; flex-direction:column; line-height:1; }
+    .logo-name { font-family:'Nunito','Arial Rounded MT Bold',sans-serif; font-size:2rem; font-weight:800; letter-spacing:-0.5px; }
+    .logo-name .base { color:#ffffff; }
     .logo-name .la   { color:#FF6B6B; text-shadow:2px 2px 4px rgba(255,255,255,0.5); }
     .logo-name .lb   { color:#FFD93D; text-shadow:2px 2px 4px rgba(255,255,255,0.5); }
     .logo-name .lc   { color:#4ECB71; text-shadow:2px 2px 4px rgba(255,255,255,0.5); }
-    .logo-name { font-family:'Nunito','Arial Rounded MT Bold',sans-serif; font-size:2rem; font-weight:800; letter-spacing:-0.5px; }
+    .logo-sub { font-size:0.62rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:rgba(255,255,255,0.5); margin-top:3px; }
+    .logo-footer .logo-crab { font-size:2rem; }
+    .logo-footer .logo-name { font-size:1.6rem; }
     nav ul { list-style: none; display: flex; gap: 2rem; }
     nav ul li a {
       color: var(--white); text-decoration: none;
@@ -297,9 +286,10 @@
       <li><a href="index.html#games">Games</a></li>
       <li><a href="index.html#categories">Categories</a></li>
       <li><a href="avatar.html">My Avatar</a></li>
-      <li><a href="privacy.html">Privacy</a></li>
-      <li><a id="nav-contact" href="#">Contact Us</a></li>
+      <li><a href="privacy.html" class="active">Privacy</a></li>
+      <li><a href="index.html#contact">Contact Us</a></li>
     </ul>
+    <div id="nav-avatar-hud" data-hud-size="52" style="margin-left:.5rem;display:none;flex-shrink:0;"></div>
   </nav>
 
   <main>
@@ -422,5 +412,15 @@
       });
     });
   </script>
+<script src="crabcake-avatar.js?v=2"></script>
+<script>
+  (function(){
+    var navHud = document.getElementById("nav-avatar-hud");
+    if(navHud && typeof CrabcakeAvatar !== "undefined"){
+      CrabcakeAvatar.injectHUD(navHud, {size:52, showPet:true});
+      navHud.style.display = "inline-flex";
+    }
+  })();
+</script>
 </body>
 </html>
