@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+  <title>Kitchen Lab 🧪 | Crabcake</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@700;800;900&display=swap"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:     #0d1b2a;
+      --deep:   #0a1520;
+      --teal:   #00C9B1;
+      --teal2:  #00a896;
+      --yellow: #FFD93D;
+      --coral:  #FF5C5C;
+      --orange: #FF9040;
+      --green:  #4ECB71;
+      --purple: #A66CFF;
+      --sky:    #6ECBF5;
+      --white:  #ffffff;
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      font-family: 'Nunito', sans-serif;
+      touch-action: manipulation;
+    }
+
+    /* ── LAB BACKGROUND ── */
+    .lab-bg {
+      position: fixed; inset: 0; z-index: 0; overflow: hidden;
+      background: linear-gradient(180deg, #060e1a 0%, #0d1b2a 40%, #091a2a 80%, #06121e 100%);
+    }
+    .lab-bg::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 700px 400px at 15% 60%, rgba(0,201,177,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 500px 350px at 85% 30%, rgba(166,108,255,0.06) 0%, transparent 70%);
+    }
+
+    .amb-bub {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, rgba(0,201,177,0.35), rgba(0,201,177,0.04));
+      border: 1px solid rgba(0,201,177,0.2);
+      animation: ambBub linear infinite;
+      pointer-events: none;
+    }
+    @keyframes ambBub {
+      0%   { transform: translateY(110vh); opacity: 0; }
+      10%  { opacity: 0.5; }
+      90%  { opacity: 0.3; }
+      100% { transform: translateY(-30px) translateX(20px); opacity: 0; }
+    }
+
+    .lab-floor {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      height: 68px; z-index: 1; pointer-events: none;
+      background: linear-gradient(180deg, transparent, rgba(6,14,26,0.95));
+    }
+    .lab-floor::after {
+      content: '🔬 🧫 🧲 ⚗️ 🔭 🧫 🧲 ⚗️ 🔬 🧲 🧫 ⚗️ 🔭 🔬';
+      position: absolute; bottom: 4px; left: 0; right: 0;
+      text-align: center; font-size: 1.3rem; letter-spacing: 7px; opacity: 0.55;
+    }
+
+    /* ── SCREENS ── */
+    .screen {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 10; padding: 1.5rem;
+      transition: opacity 0.35s, transform 0.35s;
+    }
+    .screen.hidden { opacity: 0; pointer-events: none; transform: scale(0.97); display: none; }
+
+    /* ── START SCREEN ── */
+    #startScreen { gap: 0; }
+
+    .game-title {
+      font-family: 'Boogaloo', cursive;
+      font-size: clamp(2.8rem, 8vw, 5rem);
+      color: var(--teal);
+      text-shadow: 3px 3px 0 rgba(0,0,0,0.3), 0 0 40px rgba(0,201,177,0.35);
+      text-align: center; line-height: 1;
+      margin-bottom: 0.3rem;
+      animation: titleBob 3s ease-in-out infinite;
+    }
+    @keyframes titleBob {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-8px); }
+    }
+    .game-subtitle {
+      font-size: clamp(0.85rem, 2.5vw, 1rem);
+      font-weight: 900; color: var(--yellow);
+      letter-spacing: 2px; text-transform: uppercase;
+      text-align: center; margin-bottom: 2rem;
+    }
+    .lab-icon-display {
+      font-size: 4.5rem; margin-bottom: 1.2rem;
+      animation: labBob 2.2s ease-in-out infinite;
+      filter: drop-shadow(0 6px 16px rgba(0,201,177,0.35));
+    }
+    @keyframes labBob {
+      0%,100% { transform: translateY(0) rotate(-4deg); }
+      50%      { transform: translateY(-10px) rotate(4deg); }
+    }
+
+    .age-select-label {
+      font-size: 0.85rem; font-weight: 900;
+      color: rgba(255,255,255,0.52); letter-spacing: 2px;
+      text-transform: uppercase; margin-bottom: 0.9rem; text-align: center;
+    }
+    .age-buttons {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      justify-content: center; margin-bottom: 1.8rem;
+    }
+    .age-btn {
+      padding: 0.85rem 1.4rem; border: 3px solid transparent;
+      border-radius: 16px;
+      font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 0.95rem;
+      cursor: pointer; transition: all 0.2s;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      background: rgba(255,255,255,0.06); color: white; min-width: 110px;
+    }
+    .age-btn .age-emoji  { font-size: 1.5rem; }
+    .age-btn .age-label  { font-size: 0.82rem; font-weight: 900; }
+    .age-btn .age-topic  { font-size: 0.62rem; font-weight: 700; opacity: 0.65; text-align: center; }
+    .age-btn:hover { transform: translateY(-3px); background: rgba(255,255,255,0.12); }
+    .age-btn[data-age="5"]        { border-color: rgba(78,203,113,0.4); }
+    .age-btn[data-age="5"].selected { border-color: var(--green); background: rgba(78,203,113,0.18); }
+    .age-btn[data-age="7"]        { border-color: rgba(255,217,61,0.4); }
+    .age-btn[data-age="7"].selected { border-color: var(--yellow); background: rgba(255,217,61,0.15); }
+    .age-btn[data-age="9"]        { border-color: rgba(255,92,92,0.4); }
+    .age-btn[data-age="9"].selected { border-color: var(--coral); background: rgba(255,92,92,0.15); }
+
+    .start-btn {
+      padding: 0.9rem 3rem;
+      background: linear-gradient(135deg, var(--teal), var(--teal2));
+      color: var(--bg); border: none; border-radius: 50px;
+      font-family: 'Boogaloo', cursive; font-size: 1.7rem;
+      cursor: pointer;
+      box-shadow: 0 6px 0 rgba(0,0,0,0.3), 0 8px 24px rgba(0,201,177,0.3);
+      transition: all 0.15s; opacity: 0.4; pointer-events: none;
+    }
+    .start-btn.ready { opacity: 1; pointer-events: all; }
+    .start-btn.ready:hover  { transform: translateY(-3px); box-shadow: 0 9px 0 rgba(0,0,0,0.3), 0 12px 28px rgba(0,201,177,0.45); }
+    .start-btn.ready:active { transform: translateY(2px);  box-shadow: 0 4px 0 rgba(0,0,0,0.3); }
+
+    /* ── HUD ── */
+    #hud {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.7rem 1.4rem;
+      background: rgba(6,14,26,0.9); backdrop-filter: blur(8px);
+      border-bottom: 2px solid rgba(0,201,177,0.3);
+    }
+    #hud.hidden { display: none; }
+    .hud-item { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+    .hud-label { font-size: 0.52rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.38); }
+    .hud-value { font-family: 'Boogaloo', cursive; font-size: 1.6rem; color: var(--yellow); line-height: 1; }
+    .hud-btn {
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+      background: rgba(255,255,255,0.07); border: 2px solid rgba(255,255,255,0.12);
+      border-radius: 12px; padding: 0.3rem 0.7rem;
+      cursor: pointer; transition: all 0.15s; text-decoration: none;
+    }
+    .hud-btn:hover { background: rgba(255,255,255,0.14); transform: translateY(-2px); }
+    .hud-btn-icon  { font-size: 1.1rem; line-height: 1; }
+    .hud-btn-label { font-size: 0.48rem; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+
+    /* ── GAME SCREEN ── */
+    #gameScreen {
+      z-index: 5; flex-direction: column;
+      justify-content: flex-start; padding-top: 76px; gap: 0;
+      overflow-y: auto; padding-bottom: 80px;
+    }
+
+    .question-prompt {
+      font-family: 'Boogaloo', cursive;
+      font-size: clamp(1.1rem, 3.5vw, 1.55rem);
+      color: white; text-align: center;
+      margin-bottom: 0.7rem; padding: 0 1rem;
+      min-height: 2rem;
+    }
+    .question-prompt .highlight { color: var(--teal); }
+
+    /* Mixing area */
+    .mixing-area {
+      display: flex; align-items: center;
+      justify-content: center; gap: 0.8rem;
+      margin-bottom: 0.7rem; flex-wrap: wrap;
+    }
+    .beaker-wrap { display: flex; flex-direction: column; align-items: center; }
+    .beaker-label { font-size: 0.6rem; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.38); margin-bottom: 4px; }
+    .beaker-svg { filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4)); }
+    .math-sign { font-family: 'Boogaloo', cursive; font-size: 2.2rem; color: rgba(255,255,255,0.45); }
+
+    #resultDisplay {
+      font-size: 3.2rem; width: 76px; height: 76px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 16px; background: rgba(255,255,255,0.04);
+      border: 2px dashed rgba(255,255,255,0.15); transition: all 0.3s;
+    }
+    #resultDisplay.correct {
+      background: rgba(78,203,113,0.2); border-color: var(--green);
+      border-style: solid; animation: resultPop 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    #resultDisplay.wrong {
+      background: rgba(255,92,92,0.15); border-color: var(--coral);
+      border-style: solid; animation: resultShake 0.4s ease;
+    }
+    @keyframes resultPop   { 0% { transform: scale(0.6); } 60% { transform: scale(1.15); } 100% { transform: scale(1); } }
+    @keyframes resultShake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+    .result-label { font-size: 0.6rem; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.32); margin-top: 4px; }
+
+    /* Progress dots */
+    .progress-dots { display: flex; gap: 6px; justify-content: center; margin-bottom: 0.6rem; }
+    .pdot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.14); transition: all 0.3s; }
+    .pdot.done      { background: var(--green);  box-shadow: 0 0 6px rgba(78,203,113,0.55); }
+    .pdot.wrong-dot { background: var(--coral); }
+    .pdot.active    { background: var(--teal); box-shadow: 0 0 6px rgba(0,201,177,0.6); animation: dotPulse 1s ease-in-out infinite; }
+    @keyframes dotPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.3); } }
+
+    .shelf-label { font-size: 0.68rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.36); text-align: center; margin-bottom: 0.5rem; }
+
+    .answer-area {
+      display: flex; gap: 0.6rem; flex-wrap: wrap;
+      justify-content: center; max-width: 520px; margin: 0 auto;
+    }
+    .answer-btn {
+      padding: 0.6rem 1.1rem; border: 2.5px solid rgba(255,255,255,0.18);
+      border-radius: 50px; font-family: 'Nunito', sans-serif;
+      font-weight: 900; font-size: 0.87rem; cursor: pointer;
+      transition: all 0.18s; background: rgba(255,255,255,0.07); color: white;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .answer-btn .ans-emoji { font-size: 1.05rem; }
+    .answer-btn:hover:not(:disabled)  { transform: translateY(-2px); background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.38); }
+    .answer-btn:active:not(:disabled) { transform: translateY(0); }
+    .answer-btn.correct-ans { border-color: var(--green); background: rgba(78,203,113,0.2); color: var(--green); animation: resultPop 0.35s ease; }
+    .answer-btn.wrong-ans   { border-color: var(--coral); background: rgba(255,92,92,0.15); color: var(--coral); }
+    .answer-btn:disabled    { cursor: not-allowed; }
+
+    #funFact {
+      background: rgba(0,201,177,0.09); border: 1.5px solid rgba(0,201,177,0.28);
+      border-radius: 14px; padding: 0.55rem 1.1rem;
+      max-width: 460px; margin: 0.5rem auto 0;
+      text-align: center; font-size: 0.8rem; font-weight: 800;
+      color: rgba(255,255,255,0.78); line-height: 1.4;
+      opacity: 0; transition: opacity 0.4s;
+    }
+    #funFact.visible { opacity: 1; }
+    #funFact .fact-label { font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; color: var(--teal); margin-bottom: 3px; }
+
+    #nextBtn {
+      padding: 0.6rem 2rem;
+      background: linear-gradient(135deg, var(--teal), var(--teal2));
+      color: var(--bg); border: none; border-radius: 50px;
+      font-family: 'Boogaloo', cursive; font-size: 1.35rem;
+      cursor: pointer; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 6px 20px rgba(0,201,177,0.3);
+      transition: all 0.15s; margin-top: 0.55rem; display: none;
+    }
+    #nextBtn:hover  { transform: translateY(-2px); }
+    #nextBtn:active { transform: translateY(1px); }
+
+    /* Feedback */
+    .feedback-pop {
+      position: fixed; font-family: 'Boogaloo', cursive;
+      font-size: 2rem; pointer-events: none; z-index: 30;
+      animation: feedbackAnim 0.8s ease-out forwards;
+    }
+    @keyframes feedbackAnim {
+      0%   { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-80px) scale(1.5); }
+    }
+    .confetti-piece {
+      position: fixed; width: 10px; height: 10px;
+      border-radius: 2px; pointer-events: none; z-index: 35;
+      animation: confettiFall linear forwards;
+    }
+    @keyframes confettiFall {
+      0%   { opacity: 1; transform: translateY(0) rotate(0deg); }
+      100% { opacity: 0; transform: translateY(200px) rotate(720deg); }
+    }
+    .steam-particle {
+      position: absolute; width: 6px; height: 6px;
+      border-radius: 50%; background: rgba(200,230,255,0.55);
+      pointer-events: none; animation: steamRise linear forwards;
+    }
+    @keyframes steamRise {
+      0%   { opacity: 0.8; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-50px) scale(2.5); }
+    }
+
+    /* ── COUNTDOWN ── */
+    #countdown {
+      position: fixed; inset: 0; z-index: 40;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(6,14,26,0.75); backdrop-filter: blur(4px);
+    }
+    #countdown.hidden { display: none; }
+    .countdown-num {
+      font-family: 'Boogaloo', cursive;
+      font-size: 11rem; color: var(--yellow);
+      text-shadow: 0 0 60px rgba(255,217,61,0.5);
+      animation: countPop 0.8s ease-out;
+    }
+    @keyframes countPop {
+      0%   { transform: scale(2.2); opacity: 0; }
+      40%  { transform: scale(0.9); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* ── END SCREEN ── */
+    #endScreen { gap: 1rem; z-index: 10; padding: 2rem; }
+    .end-title {
+      font-family: 'Boogaloo', cursive;
+      font-size: clamp(2rem, 6vw, 3.5rem); color: var(--yellow);
+      text-shadow: 3px 3px 0 rgba(0,0,0,0.3); text-align: center;
+    }
+    .end-score-box {
+      background: rgba(255,255,255,0.06); border: 2px solid rgba(0,201,177,0.3);
+      border-radius: 24px; padding: 1.4rem 3rem; text-align: center;
+    }
+    .end-score-label { font-size: 0.68rem; font-weight: 900; letter-spacing: 3px; text-transform: uppercase; color: var(--teal); margin-bottom: 0.4rem; }
+    .end-score-num { font-family: 'Boogaloo', cursive; font-size: 4rem; color: var(--yellow); line-height: 1; text-shadow: 3px 3px 0 rgba(0,0,0,0.2); }
+    .end-score-sub { font-size: 0.82rem; font-weight: 700; color: rgba(255,255,255,0.45); margin-top: 0.3rem; }
+    .end-rating  { font-size: 2.8rem; text-align: center; }
+    .end-message { font-size: 1rem; font-weight: 800; color: rgba(255,255,255,0.78); text-align: center; max-width: 340px; }
+    .end-buttons { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+    .end-btn {
+      padding: 0.75rem 1.8rem; border: none; border-radius: 50px;
+      font-family: 'Boogaloo', cursive; font-size: 1.3rem;
+      cursor: pointer; transition: all 0.15s; box-shadow: 0 4px 0 rgba(0,0,0,0.3);
+    }
+    .end-btn:hover  { transform: translateY(-2px); }
+    .end-btn:active { transform: translateY(1px); box-shadow: 0 2px 0 rgba(0,0,0,0.3); }
+    .btn-play-again { background: var(--teal); color: var(--bg); }
+    .btn-change-age { background: rgba(255,255,255,0.1); color: white; border: 2px solid rgba(255,255,255,0.2); }
+    .btn-home       { background: rgba(255,255,255,0.1); color: white; border: 2px solid rgba(255,255,255,0.2); text-decoration: none; display: inline-flex; align-items: center; }
+
+    .back-link {
+      position: fixed; top: 1rem; left: 1rem; z-index: 50;
+      color: rgba(255,255,255,0.35); font-size: 0.75rem; font-weight: 900;
+      letter-spacing: 1px; text-transform: uppercase; text-decoration: none;
+      display: flex; align-items: center; gap: 4px; transition: color 0.2s;
+    }
+    .back-link:hover { color: rgba(255,255,255,0.7); }
+
+    /* Badges */
+    .badges-section-title { font-size: 0.75rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: var(--yellow); text-align: center; margin-bottom: 0.5rem; }
+    .end-badges-row { display: flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center; }
+    .badge-coin {
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      background: rgba(255,255,255,0.07); border: 2px solid rgba(255,255,255,0.15);
+      border-radius: 14px; padding: 0.5rem 0.7rem; min-width: 65px; text-align: center;
+    }
+    .badge-coin.new-badge { border-color: var(--yellow); background: rgba(255,217,61,0.12); animation: newBadgePop 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+    @keyframes newBadgePop { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+    .badge-coin-em   { font-size: 1.6rem; }
+    .badge-coin-name { font-size: 0.6rem; font-weight: 900; color: rgba(255,255,255,0.7); }
+
+    .badge-toast {
+      position: fixed; bottom: -120px; left: 50%; transform: translateX(-50%);
+      z-index: 100; background: rgba(6,14,26,0.96); border: 2px solid var(--yellow);
+      border-radius: 20px; padding: 0.9rem 1.5rem;
+      display: flex; align-items: center; gap: 1rem;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5); transition: bottom 0.5s cubic-bezier(0.34,1.56,0.64,1);
+      min-width: 260px;
+    }
+    .badge-toast.show    { bottom: 2rem; }
+    .badge-toast-em      { font-size: 2.5rem; }
+    .badge-toast-label   { font-size: 0.6rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: var(--yellow); }
+    .badge-toast-name    { font-family: 'Boogaloo', cursive; font-size: 1.3rem; color: white; }
+    .badge-toast-desc    { font-size: 0.72rem; font-weight: 700; color: rgba(255,255,255,0.5); }
+    /* ── FEEDBACK STRIP ── */
+    .feedback-strip{margin-top:18px;padding:12px 16px;background:rgba(0,201,177,.06);border:1px solid rgba(0,201,177,.18);border-radius:14px;text-align:center;}
+    .feedback-text{font-size:.78rem;color:rgba(255,255,255,.55);margin-bottom:10px;}
+    .feedback-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+    .feedback-btn{font-size:.7rem;padding:7px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:rgba(255,255,255,.7);text-decoration:none;transition:all .2s;white-space:nowrap;}
+    .feedback-btn:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.4);color:#fff;}
+    .feedback-claim{display:none;margin-top:10px;}
+    .feedback-claim-btn{font-size:.72rem;padding:8px 18px;border-radius:20px;border:none;background:linear-gradient(135deg,#ffd700,#ff8800);color:#0a1020;font-weight:bold;cursor:pointer;transition:all .2s;animation:claimPop .4s cubic-bezier(.34,1.56,.64,1);}
+    @keyframes claimPop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+    .feedback-claim-btn:hover{transform:scale(1.06);box-shadow:0 4px 16px rgba(255,215,0,.4);}
+    .feedback-claim-btn:disabled{opacity:.5;cursor:default;transform:none;background:#555;}
+  </style>
+</head>
+<body>
+
+<div class="lab-bg"></div>
+<div class="lab-floor"></div>
+
+<a href="index.html" class="back-link" id="backLink" style="display:none;">← Home</a>
+
+<!-- ══════════════ START SCREEN ══════════════ -->
+<div class="screen" id="startScreen">
+  <div class="lab-icon-display">🧪</div>
+  <div class="game-title">Kitchen Lab</div>
+  <div class="game-subtitle">Mix, React &amp; Discover!</div>
+
+  <div class="age-select-label">Choose your level</div>
+  <div class="age-buttons">
+    <button class="age-btn" data-age="5" onclick="selectAge(5)">
+      <span class="age-emoji">🌱</span>
+      <span class="age-label">Ages 5–6</span>
+      <span class="age-topic">States of Matter</span>
+    </button>
+    <button class="age-btn" data-age="7" onclick="selectAge(7)">
+      <span class="age-emoji">⚗️</span>
+      <span class="age-label">Ages 7–8</span>
+      <span class="age-topic">Mixing &amp; Reactions</span>
+    </button>
+    <button class="age-btn" data-age="9" onclick="selectAge(9)">
+      <span class="age-emoji">🔬</span>
+      <span class="age-label">Ages 9–10</span>
+      <span class="age-topic">Chemical Changes</span>
+    </button>
+  </div>
+  <button class="start-btn" id="startBtn" onclick="startCountdown()">Let's Experiment! 🧪</button>
+</div>
+
+<!-- ══════════════ HUD ══════════════ -->
+<div id="hud" class="hidden">
+  <div class="hud-item">
+    <div class="hud-label">Score</div>
+    <div class="hud-value" id="scoreVal">0</div>
+  </div>
+  <button class="hud-btn" onclick="hudBack()">
+    <div class="hud-btn-icon">↩️</div>
+    <div class="hud-btn-label">Levels</div>
+  </button>
+  <div class="hud-item">
+    <div class="hud-label">Lives</div>
+    <div class="hud-value" id="livesVal">❤️❤️❤️</div>
+  </div>
+  <button class="hud-btn" onclick="hudBack()">
+    <div class="hud-btn-icon">🏠</div>
+    <div class="hud-btn-label">Home</div>
+  </button>
+  <div class="hud-item">
+    <div class="hud-label">Level</div>
+    <div class="hud-value" id="levelVal">5-6</div>
+  </div>
+</div>
+
+<!-- ══════════════ GAME SCREEN ══════════════ -->
+<div class="screen hidden" id="gameScreen">
+  <div class="question-prompt" id="questionPrompt">What happens when you mix these?</div>
+
+  <div class="mixing-area">
+    <!-- Ingredient A -->
+    <div class="beaker-wrap">
+      <div class="beaker-label">Ingredient A</div>
+      <svg class="beaker-svg" width="68" height="86" viewBox="0 0 68 86">
+        <defs><clipPath id="fcA"><rect x="8" y="18" width="52" height="58" rx="3"/></clipPath></defs>
+        <rect x="8" y="16" width="52" height="60" rx="6" fill="rgba(255,255,255,0.055)" stroke="rgba(255,255,255,0.22)" stroke-width="2"/>
+        <rect id="fluidA" x="9" y="38" width="50" height="37" clip-path="url(#fcA)" fill="#6ECBF5" opacity="0.72"/>
+        <rect x="12" y="20" width="5" height="28" rx="2.5" fill="rgba(255,255,255,0.13)"/>
+        <rect x="48" y="8" width="16" height="9" rx="3.5" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
+        <text id="beakerAText" x="34" y="84" text-anchor="middle" fill="rgba(255,255,255,0.65)" font-family="Nunito,sans-serif" font-weight="900" font-size="10.5">—</text>
+      </svg>
+    </div>
+
+    <div class="math-sign">+</div>
+
+    <!-- Ingredient B -->
+    <div class="beaker-wrap">
+      <div class="beaker-label">Ingredient B</div>
+      <svg class="beaker-svg" width="68" height="86" viewBox="0 0 68 86">
+        <defs><clipPath id="fcB"><rect x="8" y="18" width="52" height="58" rx="3"/></clipPath></defs>
+        <rect x="8" y="16" width="52" height="60" rx="6" fill="rgba(255,255,255,0.055)" stroke="rgba(255,255,255,0.22)" stroke-width="2"/>
+        <rect id="fluidB" x="9" y="38" width="50" height="37" clip-path="url(#fcB)" fill="#FF9040" opacity="0.72"/>
+        <rect x="12" y="20" width="5" height="28" rx="2.5" fill="rgba(255,255,255,0.13)"/>
+        <rect x="48" y="8" width="16" height="9" rx="3.5" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
+        <text id="beakerBText" x="34" y="84" text-anchor="middle" fill="rgba(255,255,255,0.65)" font-family="Nunito,sans-serif" font-weight="900" font-size="10.5">—</text>
+      </svg>
+    </div>
+
+    <div class="math-sign">=</div>
+
+    <div class="beaker-wrap">
+      <div class="beaker-label">Result</div>
+      <div id="resultDisplay">❓</div>
+      <div class="result-label">What happens?</div>
+    </div>
+  </div>
+
+  <div class="progress-dots" id="progressDots"></div>
+
+  <div class="shelf-label">Pick the correct result!</div>
+  <div class="answer-area" id="answerArea"></div>
+
+  <div id="funFact">
+    <div class="fact-label">🔬 Science Fact</div>
+    <span id="funFactText"></span>
+  </div>
+
+  <button id="nextBtn" onclick="nextQuestion()">Next ➡️</button>
+</div>
+
+<!-- ══════════════ COUNTDOWN ══════════════ -->
+<div id="countdown" class="hidden">
+  <div class="countdown-num" id="countdownNum">3</div>
+</div>
+
+<!-- ══════════════ END SCREEN ══════════════ -->
+<div class="screen hidden" id="endScreen">
+  <div class="end-rating"    id="endRating">⭐⭐⭐</div>
+  <div class="end-title"     id="endTitle">Brilliant Scientist!</div>
+  <div class="end-score-box">
+    <div class="end-score-label">Your Score</div>
+    <div class="end-score-num" id="endScoreNum">0</div>
+    <div class="end-score-sub" id="endScoreSub">correct experiments</div>
+  </div>
+  <div class="end-message" id="endMessage"></div>
+  <div id="endBadgesWrap" style="display:none;text-align:center;">
+    <div class="badges-section-title">🏆 Badges Earned!</div>
+    <div class="end-badges-row" id="endBadgesRow"></div>
+  </div>
+  <div class="end-buttons">
+    <button class="end-btn btn-play-again" onclick="playAgain()">🔄 Try Again</button>
+    <button class="end-btn btn-change-age" onclick="changeAge()">🔢 Change Level</button>
+    <a href="index.html" class="end-btn btn-home">🏠 Home</a>
+    <div class="feedback-strip">
+      <p class="feedback-text">💌 Found a bug or have a game idea?</p>
+      <div class="feedback-btns">
+        <a class="feedback-btn" href="/cdn-cgi/l/email-protection#0e666b6262614e6d7c6f6c6d6f656b2065676a7d317d7b6c646b6d7a334c7b692b3c3e5c6b7e617c7a2b3c3e2b4b3c2b363e2b373d2b3c3e436f7a662b3c3e4a67786b286c616a773346672f2b3c3e472b3c3e68617b606a2b3c3e6f2b3c3e6c7b692b3c3e67602b3c3e436f7a662b3c3e4a67786b2b3d4f2b3e4f2b3e4f" onclick="showClaim('bug')">🐛 Report a Bug</a>
+        <a class="feedback-btn" href="/cdn-cgi/l/email-protection#d6beb3babab996b5a4b7b4b5b7bdb3f8bdbfb2a5e9a5a3b4bcb3b5a2eb91b7bbb3f3e4e69fb2b3b7f3e4e6b0b9a4f3e4e695a4b7b4b5b7bdb3f7f0b4b9b2afeb9ebff7f3e4e69ff3e4e6beb7a0b3f3e4e6b7b8f3e4e6bfb2b3b7f3e4e6b0b9a4f3e4e6b7f3e4e6b8b3a1f3e4e6b1b7bbb3f3e597f3e697f3e697" onclick="showClaim('idea')">💡 Suggest a Game</a>
+      </div>
+      <div class="feedback-claim" id="feedback-claim-bug">
+        <button class="feedback-claim-btn" onclick="claimFeedbackBadge('bug')">✅ I sent it! Claim my 🐛 Bug Hunter badge</button>
+      </div>
+      <div class="feedback-claim" id="feedback-claim-idea">
+        <button class="feedback-claim-btn" onclick="claimFeedbackBadge('idea')">✅ I sent it! Claim my 💡 Big Ideas badge</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// QUESTION DATA
+// ══════════════════════════════════════════════
+const LEVELS = {
+  5: {
+    label:'Ages 5–6', topic:'States of Matter',
+    questions:[
+      { prompt:'You put <span class="highlight">water</span> in the freezer. What does it become?',
+        ingA:{name:'Water',color:'#6ECBF5'}, ingB:{name:'Freezer',color:'#aef0ff'},
+        answers:[{e:'🧊',l:'Ice (solid)',c:true},{e:'💨',l:'Steam',c:false},{e:'🌊',l:'Bigger wave',c:false},{e:'🍫',l:'Chocolate',c:false}],
+        result:'🧊', fact:'When water gets very cold its molecules slow down and lock together — making solid ice! This is called freezing.' },
+      { prompt:'You <span class="highlight">heat water</span> in a kettle. What floats out?',
+        ingA:{name:'Water',color:'#6ECBF5'}, ingB:{name:'Heat',color:'#FF6B35'},
+        answers:[{e:'💨',l:'Steam (gas)',c:true},{e:'🧊',l:'Ice cubes',c:false},{e:'🪨',l:'Rocks',c:false},{e:'🍎',l:'Apples',c:false}],
+        result:'💨', fact:'Heating water turns it into steam — a gas! Water molecules move so fast they escape into the air. This is called evaporation.' },
+      { prompt:'You melt <span class="highlight">ice</span> in the sun. What do you get?',
+        ingA:{name:'Ice',color:'#aef0ff'}, ingB:{name:'Sunlight',color:'#FFD93D'},
+        answers:[{e:'💧',l:'Liquid water',c:true},{e:'💨',l:'Nothing!',c:false},{e:'❄️',l:'More snow',c:false},{e:'🧁',l:'A cupcake',c:false}],
+        result:'💧', fact:'Heat from the sun causes ice molecules to speed up and spread apart — turning from solid to liquid. This is called melting!' },
+      { prompt:'What state of matter is <span class="highlight">a rock</span>?',
+        ingA:{name:'Rock',color:'#9E9E9E'}, ingB:{name:'Think!',color:'#A66CFF'},
+        answers:[{e:'⬛',l:'Solid',c:true},{e:'💧',l:'Liquid',c:false},{e:'💨',l:'Gas',c:false},{e:'🔥',l:'Fire',c:false}],
+        result:'⬛', fact:'A rock is a solid! Solids have a definite shape — the molecules are packed tightly together and don\'t move much.' },
+      { prompt:'You mix <span class="highlight">flour + water</span> to make dough. It becomes:',
+        ingA:{name:'Flour',color:'#F5E6C8'}, ingB:{name:'Water',color:'#6ECBF5'},
+        answers:[{e:'🫓',l:'Soft dough',c:true},{e:'🍪',l:'Baked cookie',c:false},{e:'🍵',l:'Tea',c:false},{e:'💨',l:'Gas puff',c:false}],
+        result:'🫓', fact:'Mixing flour and water makes sticky dough. No chemical change happened — you can still get the flour and water back. It\'s a physical mixture!' },
+      { prompt:'Air inside a balloon is what kind of matter?',
+        ingA:{name:'Balloon',color:'#FF6B6B'}, ingB:{name:'Air',color:'#B0E0FF'},
+        answers:[{e:'💨',l:'Gas',c:true},{e:'💧',l:'Liquid',c:false},{e:'⬛',l:'Solid',c:false},{e:'🔥',l:'Plasma',c:false}],
+        result:'💨', fact:'Air is a gas! Gas molecules spread out to fill any container — that\'s why air fills the whole balloon!' },
+      { prompt:'What happens to chocolate left in the sun?',
+        ingA:{name:'Chocolate',color:'#7B4A1E'}, ingB:{name:'Sunlight',color:'#FFD93D'},
+        answers:[{e:'🍯',l:'Melts to liquid',c:true},{e:'🧊',l:'Freezes',c:false},{e:'💨',l:'Disappears',c:false},{e:'🍎',l:'Becomes fruit',c:false}],
+        result:'🍯', fact:'Chocolate melts into a liquid when heated. It melts at about 37°C — the same as your body temperature!' },
+      { prompt:'You mix <span class="highlight">salt + water</span>. The salt seems to vanish — it:',
+        ingA:{name:'Salt',color:'#FFFFFF'}, ingB:{name:'Water',color:'#6ECBF5'},
+        answers:[{e:'🌊',l:'Dissolves',c:true},{e:'💥',l:'Explodes!',c:false},{e:'🧊',l:'Makes ice',c:false},{e:'🍕',l:'Makes pizza',c:false}],
+        result:'🌊', fact:'Salt dissolves in water — its tiny particles spread out evenly. The salt is still there, you just can\'t see it!' },
+      { prompt:'What is <span class="highlight">orange juice</span>?',
+        ingA:{name:'Orange Juice',color:'#FF9040'}, ingB:{name:'Think!',color:'#A66CFF'},
+        answers:[{e:'💧',l:'Liquid',c:true},{e:'⬛',l:'Solid',c:false},{e:'💨',l:'Gas',c:false},{e:'🔥',l:'Plasma',c:false}],
+        result:'💧', fact:'Orange juice is a liquid! Liquids flow and take the shape of their container, but they have a fixed volume.' },
+      { prompt:'You cool <span class="highlight">steam</span> down. It becomes:',
+        ingA:{name:'Steam',color:'#B0E0FF'}, ingB:{name:'Cold air',color:'#aef0ff'},
+        answers:[{e:'💧',l:'Water droplets',c:true},{e:'🧊',l:'Ice instantly',c:false},{e:'🔥',l:'Fire',c:false},{e:'⬛',l:'Metal',c:false}],
+        result:'💧', fact:'Cooling steam turns it back into liquid water — this is called condensation. You see it on a cold glass on a warm day!' },
+    ]
+  },
+  7: {
+    label:'Ages 7–8', topic:'Mixing & Reactions',
+    questions:[
+      { prompt:'Baking soda + <span class="highlight">vinegar</span>. What happens?',
+        ingA:{name:'Baking Soda',color:'#FFFFFF'}, ingB:{name:'Vinegar',color:'#E8E050'},
+        answers:[{e:'🫧',l:'Fizzing bubbles!',c:true},{e:'🧊',l:'Freezes solid',c:false},{e:'🔥',l:'Catches fire',c:false},{e:'🌈',l:'Makes a rainbow',c:false}],
+        result:'🫧', fact:'This is a chemical reaction! Baking soda (base) reacts with vinegar (acid) to produce carbon dioxide gas — those are the bubbles!' },
+      { prompt:'Sugar + water makes a:',
+        ingA:{name:'Sugar',color:'#FFD93D'}, ingB:{name:'Water',color:'#6ECBF5'},
+        answers:[{e:'🥤',l:'Solution',c:true},{e:'💥',l:'Explosion',c:false},{e:'🧪',l:'New element',c:false},{e:'🪨',l:'Rock',c:false}],
+        result:'🥤', fact:'Mixing sugar and water creates a solution — one substance dissolves into another. You can get the sugar back by evaporating the water!' },
+      { prompt:'You leave <span class="highlight">iron</span> outside in rain. It becomes:',
+        ingA:{name:'Iron',color:'#9E9E9E'}, ingB:{name:'Rain + Oxygen',color:'#6ECBF5'},
+        answers:[{e:'🟤',l:'Rusty!',c:true},{e:'✨',l:'Shinier',c:false},{e:'🧊',l:'Frozen',c:false},{e:'🟡',l:'Golden',c:false}],
+        result:'🟤', fact:'Rust is a chemical reaction between iron, oxygen and water. The iron changes permanently into iron oxide — it can\'t be undone!' },
+      { prompt:'Oil + water — what do they do?',
+        ingA:{name:'Oil',color:'#FFD93D'}, ingB:{name:'Water',color:'#6ECBF5'},
+        answers:[{e:'🔀',l:'Stay separate',c:true},{e:'🌀',l:'Dissolve together',c:false},{e:'💥',l:'Explode',c:false},{e:'🧊',l:'Freeze',c:false}],
+        result:'🔀', fact:'Oil and water don\'t mix! Water molecules attract each other and push oil away. Oil is less dense so it always floats on top!' },
+      { prompt:'You burn <span class="highlight">wood</span> in a campfire. What is this?',
+        ingA:{name:'Wood',color:'#795548'}, ingB:{name:'Fire',color:'#FF6B35'},
+        answers:[{e:'⚗️',l:'Chemical change',c:true},{e:'🔄',l:'Physical change',c:false},{e:'💧',l:'Dissolving',c:false},{e:'🧊',l:'Freezing',c:false}],
+        result:'⚗️', fact:'Burning wood is a chemical change — it makes ash, smoke and heat. You can\'t turn ash back into wood! Chemical changes are usually permanent.' },
+      { prompt:'Food colouring + water — the colour:',
+        ingA:{name:'Food Colouring',color:'#FF6B6B'}, ingB:{name:'Water',color:'#6ECBF5'},
+        answers:[{e:'🌊',l:'Spreads evenly',c:true},{e:'⬆️',l:'Stays on top',c:false},{e:'💥',l:'Causes reaction',c:false},{e:'⬇️',l:'Sinks only',c:false}],
+        result:'🌊', fact:'Food colouring spreads by diffusion — molecules move from high to low concentration until evenly mixed. No stirring needed!' },
+      { prompt:'Mixing <span class="highlight">red + yellow paint</span> makes:',
+        ingA:{name:'Red Paint',color:'#FF5C5C'}, ingB:{name:'Yellow Paint',color:'#FFD93D'},
+        answers:[{e:'🟠',l:'Orange',c:true},{e:'🟢',l:'Green',c:false},{e:'🟣',l:'Purple',c:false},{e:'⬛',l:'Black',c:false}],
+        result:'🟠', fact:'Red + yellow = orange! Paint uses pigments — each absorbs certain light colours and the combined effect creates orange!' },
+      { prompt:'You cut an <span class="highlight">apple</span> in half. Is this physical or chemical?',
+        ingA:{name:'Apple',color:'#FF5C5C'}, ingB:{name:'Knife',color:'#9E9E9E'},
+        answers:[{e:'✂️',l:'Physical change',c:true},{e:'⚗️',l:'Chemical change',c:false},{e:'💥',l:'Nuclear reaction',c:false},{e:'🌀',l:'Dissolving',c:false}],
+        result:'✂️', fact:'Cutting is a physical change — the apple is still apple, just in two pieces! Physical changes don\'t change what the substance IS.' },
+      { prompt:'<span class="highlight">Milk</span> goes sour in the sun. This is:',
+        ingA:{name:'Milk',color:'#FFFFFF'}, ingB:{name:'Sun + Bacteria',color:'#FFD93D'},
+        answers:[{e:'⚗️',l:'Chemical change',c:true},{e:'✂️',l:'Physical change',c:false},{e:'🌀',l:'Dissolving',c:false},{e:'🧊',l:'Freezing',c:false}],
+        result:'⚗️', fact:'Milk going sour is a chemical change caused by bacteria making lactic acid. It becomes a different substance — sour milk can\'t be reversed!' },
+      { prompt:'Sand + water — what is this mixture called?',
+        ingA:{name:'Sand',color:'#F5E6C8'}, ingB:{name:'Water',color:'#6ECBF5'},
+        answers:[{e:'🌫️',l:'A suspension',c:true},{e:'🥤',l:'A solution',c:false},{e:'⚗️',l:'A reaction',c:false},{e:'💎',l:'A compound',c:false}],
+        result:'🌫️', fact:'Sand and water make a suspension — the sand doesn\'t dissolve, it just floats around. Wait long enough and the sand sinks to the bottom!' },
+    ]
+  },
+  9: {
+    label:'Ages 9–10', topic:'Chemical Changes',
+    questions:[
+      { prompt:'Acid + Base reaction always produces:',
+        ingA:{name:'Acid (pH<7)',color:'#E8E050'}, ingB:{name:'Base (pH>7)',color:'#6ECBF5'},
+        answers:[{e:'💧',l:'Salt + water',c:true},{e:'💨',l:'Only gas',c:false},{e:'🔥',l:'Fire',c:false},{e:'❄️',l:'Ice',c:false}],
+        result:'💧', fact:'Neutralisation of acid + base always produces a salt and water. E.g. HCl + NaOH → NaCl (table salt) + H₂O!' },
+      { prompt:'Photosynthesis: CO₂ + H₂O + sunlight →',
+        ingA:{name:'CO₂ + Sunlight',color:'#FFD93D'}, ingB:{name:'Water (H₂O)',color:'#6ECBF5'},
+        answers:[{e:'🍬',l:'Glucose + O₂',c:true},{e:'🔥',l:'Heat + fire',c:false},{e:'🧊',l:'Ice crystals',c:false},{e:'⚙️',l:'Metal compounds',c:false}],
+        result:'🍬', fact:'Photosynthesis: 6CO₂ + 6H₂O + light → C₆H₁₂O₆ + 6O₂. Plants make glucose and release oxygen — the oxygen we breathe!' },
+      { prompt:'An endothermic reaction:',
+        ingA:{name:'Reactants',color:'#A66CFF'}, ingB:{name:'Energy flow',color:'#9E9E9E'},
+        answers:[{e:'🥶',l:'Absorbs heat energy',c:true},{e:'🔥',l:'Releases heat',c:false},{e:'💥',l:'Always explodes',c:false},{e:'🌀',l:'Creates new element',c:false}],
+        result:'🥶', fact:'Endothermic reactions absorb energy — the mixture gets colder! Dissolving ammonium nitrate in water is endothermic (used in cold packs).' },
+      { prompt:'Electrolysis splits water (H₂O) into:',
+        ingA:{name:'Water (H₂O)',color:'#6ECBF5'}, ingB:{name:'Electricity',color:'#FFD93D'},
+        answers:[{e:'💨',l:'Hydrogen + Oxygen',c:true},{e:'🧂',l:'Salt only',c:false},{e:'🔥',l:'Fire + carbon',c:false},{e:'🪨',l:'Rock + steam',c:false}],
+        result:'💨', fact:'Electrolysis: electricity breaks water into H₂ at the negative electrode and O₂ at the positive electrode. 2H₂O → 2H₂ + O₂' },
+      { prompt:'Combustion requires oxygen + fuel + what?',
+        ingA:{name:'Fuel',color:'#FF9040'}, ingB:{name:'Oxygen',color:'#B0E0FF'},
+        answers:[{e:'🔥',l:'Heat (ignition)',c:true},{e:'💧',l:'Water',c:false},{e:'🧂',l:'Salt',c:false},{e:'🌙',l:'Darkness',c:false}],
+        result:'🔥', fact:'The fire triangle: fuel + oxygen + heat. Remove any one side and fire stops! CO₂ extinguishers work by displacing oxygen with CO₂.' },
+      { prompt:'A catalyst in a chemical reaction:',
+        ingA:{name:'Reaction',color:'#4ECB71'}, ingB:{name:'Catalyst',color:'#FFD93D'},
+        answers:[{e:'⚡',l:'Speeds it up (unchanged)',c:true},{e:'🔥',l:'Is consumed',c:false},{e:'🌀',l:'Reverses it',c:false},{e:'💀',l:'Stops it completely',c:false}],
+        result:'⚡', fact:'A catalyst speeds up a reaction but is NOT used up! Enzymes are biological catalysts — your stomach uses them to digest food faster!' },
+      { prompt:'Rusting iron gains mass because it absorbs:',
+        ingA:{name:'Iron (Fe)',color:'#9E9E9E'}, ingB:{name:'Water + Air',color:'#6ECBF5'},
+        answers:[{e:'💨',l:'Oxygen (O₂)',c:true},{e:'🌿',l:'CO₂',c:false},{e:'💡',l:'Light energy',c:false},{e:'🧂',l:'Salt particles',c:false}],
+        result:'💨', fact:'Rust = iron oxide (Fe₂O₃). 4Fe + 3O₂ → 2Fe₂O₃. Because oxygen atoms are added, the rusted iron weighs MORE than the original iron!' },
+      { prompt:'pH of a neutral solution is:',
+        ingA:{name:'Solution',color:'#4ECB71'}, ingB:{name:'pH Scale',color:'#A66CFF'},
+        answers:[{e:'7️⃣',l:'pH 7 (neutral)',c:true},{e:'1️⃣',l:'pH 1 (most acidic)',c:false},{e:'🔟',l:'pH 14 (most basic)',c:false},{e:'0️⃣',l:'pH 0',c:false}],
+        result:'7️⃣', fact:'pH 7 = neutral (pure water). Below 7 = acidic (lemon juice is pH 2). Above 7 = alkaline (bleach is pH 12). Each pH step is 10× stronger!' },
+      { prompt:'Exothermic reactions release:',
+        ingA:{name:'Chemical bonds',color:'#FF9040'}, ingB:{name:'...break',color:'#9E9E9E'},
+        answers:[{e:'🔥',l:'Heat energy outward',c:true},{e:'🥶',l:'Cold / absorb heat',c:false},{e:'☢️',l:'Radiation only',c:false},{e:'💡',l:'Only light',c:false}],
+        result:'🔥', fact:'Exothermic reactions release energy as heat. Combustion, respiration and hand warmers are all exothermic. Products have less energy than reactants.' },
+      { prompt:'Conservation of mass means total mass in a reaction:',
+        ingA:{name:'Reactants',color:'#A66CFF'}, ingB:{name:'Products',color:'#4ECB71'},
+        answers:[{e:'⚖️',l:'Stays the same',c:true},{e:'📈',l:'Always increases',c:false},{e:'📉',l:'Always decreases',c:false},{e:'❓',l:'Is unpredictable',c:false}],
+        result:'⚖️', fact:'The Law of Conservation of Mass (Lavoisier, 1789): atoms are rearranged but never created or destroyed. Total mass before = total mass after!' },
+    ]
+  }
+};
+
+// ══════════════════════════════════════════════
+// GAME STATE
+// ══════════════════════════════════════════════
+let selectedAge = null;
+let questions   = [];
+let currentQ    = 0;
+let score       = 0;
+let lives       = 3;
+let answered    = false;
+
+// ══════════════════════════════════════════════
+// AMBIENT BUBBLES
+// ══════════════════════════════════════════════
+(function(){
+  for(let i=0;i<12;i++){
+    const b=document.createElement('div');
+    b.className='amb-bub';
+    const s=Math.random()*18+6;
+    b.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;animation-duration:${Math.random()*14+10}s;animation-delay:${Math.random()*-20}s;`;
+    document.querySelector('.lab-bg').appendChild(b);
+  }
+})();
+
+// ══════════════════════════════════════════════
+// AGE SELECTION
+// ══════════════════════════════════════════════
+function selectAge(age){
+  selectedAge = age;
+  document.querySelectorAll('.age-btn').forEach(b=>b.classList.toggle('selected',+b.dataset.age===age));
+  document.getElementById('startBtn').classList.add('ready');
+}
+
+// ══════════════════════════════════════════════
+// COUNTDOWN
+// ══════════════════════════════════════════════
+function startCountdown(){
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('backLink').style.display='none';
+  const cd=document.getElementById('countdown');
+  const num=document.getElementById('countdownNum');
+  cd.classList.remove('hidden');
+  let n=3; num.textContent=n;
+  const iv=setInterval(()=>{
+    n--;
+    if(n<=0){
+      clearInterval(iv); num.textContent='🧪';
+      setTimeout(()=>{ cd.classList.add('hidden'); initGame(); },700);
+    } else {
+      num.textContent=n;
+      num.style.animation='none'; num.offsetWidth; num.style.animation='countPop 0.8s ease-out';
+    }
+  },900);
+}
+
+// ══════════════════════════════════════════════
+// INIT GAME
+// ══════════════════════════════════════════════
+function initGame(){
+  const cfg=LEVELS[selectedAge];
+  questions=shuffle([...cfg.questions]);
+  currentQ=0; score=0; lives=3; answered=false;
+
+  document.getElementById('hud').classList.remove('hidden');
+  document.getElementById('gameScreen').classList.remove('hidden');
+  updateHUD(); buildProgressDots(); showQuestion();
+}
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+// ══════════════════════════════════════════════
+// HUD
+// ══════════════════════════════════════════════
+function updateHUD(){
+  document.getElementById('scoreVal').textContent=score;
+  document.getElementById('levelVal').textContent=selectedAge===5?'5-6':selectedAge===7?'7-8':'9-10';
+  const h=lives<=0?'💔':'❤️'.repeat(lives)+'🖤'.repeat(3-lives);
+  document.getElementById('livesVal').textContent=h;
+}
+
+// ══════════════════════════════════════════════
+// PROGRESS DOTS
+// ══════════════════════════════════════════════
+function buildProgressDots(){
+  const w=document.getElementById('progressDots'); w.innerHTML='';
+  for(let i=0;i<questions.length;i++){
+    const d=document.createElement('div');
+    d.className='pdot'; if(i===0) d.classList.add('active');
+    w.appendChild(d);
+  }
+}
+function updateProgressDot(idx,state){
+  const dots=document.querySelectorAll('.pdot');
+  if(dots[idx]){ dots[idx].classList.remove('active','done','wrong-dot'); dots[idx].classList.add(state); }
+  if(dots[idx+1]) dots[idx+1].classList.add('active');
+}
+
+// ══════════════════════════════════════════════
+// SHOW QUESTION
+// ══════════════════════════════════════════════
+function showQuestion(){
+  if(currentQ>=questions.length||lives<=0){ endGame(); return; }
+  answered=false;
+  const q=questions[currentQ];
+
+  document.getElementById('questionPrompt').innerHTML=q.prompt;
+
+  // Beaker labels & colours
+  const aName=q.ingA.name; const bName=q.ingB.name;
+  document.getElementById('beakerAText').textContent=aName.length>9?aName.substring(0,9):aName;
+  document.getElementById('beakerBText').textContent=bName.length>9?bName.substring(0,9):bName;
+  document.getElementById('fluidA').setAttribute('fill',q.ingA.color);
+  document.getElementById('fluidB').setAttribute('fill',q.ingB.color);
+
+  // Reset result
+  const rd=document.getElementById('resultDisplay');
+  rd.textContent='❓'; rd.className='';
+
+  // Hide fact & next
+  document.getElementById('funFact').classList.remove('visible');
+  document.getElementById('nextBtn').style.display='none';
+
+  // Build answers
+  const area=document.getElementById('answerArea'); area.innerHTML='';
+  shuffle([...q.answers]).forEach(ans=>{
+    const btn=document.createElement('button');
+    btn.className='answer-btn';
+    btn.innerHTML=`<span class="ans-emoji">${ans.e}</span> ${ans.l}`;
+    btn.onclick=()=>checkAnswer(ans.c,btn,q);
+    area.appendChild(btn);
+  });
+}
+
+// ══════════════════════════════════════════════
+// CHECK ANSWER
+// ══════════════════════════════════════════════
+function checkAnswer(isCorrect,clickedBtn,q){
+  if(answered) return;
+  answered=true;
+
+  document.querySelectorAll('.answer-btn').forEach(b=>b.disabled=true);
+
+  // Highlight correct answer
+  document.querySelectorAll('.answer-btn').forEach(b=>{
+    const matchAns=q.answers.find(a=>b.innerHTML.includes(a.l));
+    if(matchAns&&matchAns.c) b.classList.add('correct-ans');
+  });
+  if(!isCorrect) clickedBtn.classList.add('wrong-ans');
+
+  const rd=document.getElementById('resultDisplay');
+  rd.textContent=q.result; rd.className=isCorrect?'correct':'wrong';
+  spawnSteam(rd);
+
+  if(isCorrect){
+    score++; updateHUD();
+    updateProgressDot(currentQ,'done');
+    feedbackPop('✅ Correct!','#4ECB71');
+    spawnConfetti(window.innerWidth/2,window.innerHeight/2);
+  } else {
+    lives--; updateHUD();
+    updateProgressDot(currentQ,'wrong-dot');
+    feedbackPop('❌ Not quite!','#FF5C5C');
+    if(lives<=0){ setTimeout(endGame,1500); return; }
+  }
+
+  document.getElementById('funFactText').textContent=q.fact;
+  setTimeout(()=>document.getElementById('funFact').classList.add('visible'),300);
+
+  const nb=document.getElementById('nextBtn');
+  nb.style.display='block';
+  nb.textContent=(currentQ+1>=questions.length)?'🏁 See Results!':'Next ➡️';
+
+  currentQ++;
+}
+
+function nextQuestion(){
+  document.getElementById('funFact').classList.remove('visible');
+  if(currentQ>=questions.length||lives<=0){ endGame(); } else { showQuestion(); }
+}
+
+// ══════════════════════════════════════════════
+// VISUAL FX
+// ══════════════════════════════════════════════
+function feedbackPop(text,color){
+  const el=document.createElement('div');
+  el.className='feedback-pop';
+  el.textContent=text;
+  el.style.cssText=`left:${window.innerWidth/2-60}px;top:${window.innerHeight*0.38}px;color:${color};`;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),900);
+}
+
+function spawnConfetti(x,y){
+  const cols=['#FFD93D','#4ECB71','#FF5C5C','#6ECBF5','#A66CFF','#FF9040'];
+  for(let i=0;i<18;i++){
+    const c=document.createElement('div');
+    c.className='confetti-piece';
+    c.style.cssText=`left:${x+Math.random()*80-40}px;top:${y}px;background:${cols[i%cols.length]};animation-duration:${0.6+Math.random()*0.8}s;`;
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),1600);
+  }
+}
+
+function spawnSteam(el){
+  const r=el.getBoundingClientRect();
+  for(let i=0;i<5;i++){
+    const s=document.createElement('div');
+    s.className='steam-particle';
+    s.style.cssText=`left:${r.left+Math.random()*r.width}px;top:${r.top}px;animation-duration:${0.6+Math.random()*0.5}s;animation-delay:${Math.random()*0.3}s;`;
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),1200);
+  }
+}
+
+// ══════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════
+function hudBack(){
+  document.getElementById('hud').classList.add('hidden');
+  document.getElementById('gameScreen').classList.add('hidden');
+  document.getElementById('endScreen').classList.add('hidden');
+  document.getElementById('backLink').style.display='none';
+  changeAge();
+}
+
+function changeAge(){
+  document.getElementById('endScreen').classList.add('hidden');
+  document.getElementById('hud').classList.add('hidden');
+  document.getElementById('gameScreen').classList.add('hidden');
+  document.getElementById('backLink').style.display='none';
+  document.getElementById('startScreen').classList.remove('hidden');
+  document.querySelectorAll('.age-btn').forEach(b=>b.classList.remove('selected'));
+  document.getElementById('startBtn').classList.remove('ready');
+  selectedAge=null;
+}
+
+function playAgain(){
+  document.getElementById('endScreen').classList.add('hidden');
+  startCountdown();
+}
+
+// ══════════════════════════════════════════════
+// END GAME
+// ══════════════════════════════════════════════
+function endGame(){
+  document.getElementById('hud').classList.add('hidden');
+  document.getElementById('gameScreen').classList.add('hidden');
+
+  const total=questions.length; const pct=score/total;
+  let rating,title,message;
+  if(score===0){
+    rating='🌱';title='Keep Experimenting!';message="Every scientist makes mistakes! Try again and you'll crack it.";
+  } else if(pct<0.4){
+    rating='⭐';title='Nice Try, Scientist!';message="Good effort in the lab! Keep practising and you'll master those reactions!";
+  } else if(pct<0.7){
+    rating='⭐⭐';title='Good Experiment!';message="You're getting the hang of science! Can you score even higher next time?";
+  } else if(pct<1.0){
+    rating='⭐⭐⭐';title='Brilliant Scientist!';message='Amazing work in the lab! You really know your science! 🔬';
+  } else {
+    rating='🏆✨';title='PERFECT EXPERIMENT!';message='A flawless score! You\'re a science genius! 🧪🌟';
+    spawnConfetti(window.innerWidth/2,window.innerHeight/2);
+    setTimeout(()=>spawnConfetti(window.innerWidth/3,window.innerHeight/3),300);
+    setTimeout(()=>spawnConfetti(window.innerWidth*0.7,window.innerHeight*0.4),600);
+  }
+
+  document.getElementById('endRating').textContent=rating;
+  document.getElementById('endTitle').textContent=title;
+  document.getElementById('endScoreNum').textContent=score;
+  document.getElementById('endScoreSub').textContent=`out of ${total} experiments correct`;
+  document.getElementById('endMessage').textContent=message;
+  document.getElementById('endScreen').classList.remove('hidden');
+  document.getElementById('backLink').style.display='block';
+
+  awardKitchenLabBadges(score,selectedAge,total);
+}
+
+// ══════════════════════════════════════════════
+// BADGE ENGINE
+// ══════════════════════════════════════════════
+const BADGE_DEF={
+  kl_first:  {game:'kitchenlab',em:'🧪',name:'First Experiment',desc:'Complete your first Kitchen Lab game'},
+  kl_sharp:  {game:'kitchenlab',em:'⭐',name:'Sharp Scientist',desc:'Score 6+ correct in one game'},
+  kl_perfect:{game:'kitchenlab',em:'🏆',name:'Perfect Lab',desc:'Score 10/10 in Kitchen Lab'},
+  kl_chem:   {game:'kitchenlab',em:'⚗️',name:'Chemist',desc:'Complete the Ages 9–10 level'},
+  kl_noerror:{game:'kitchenlab',em:'💎',name:'No Mistakes',desc:'Finish without losing a life'},
+  kl_curious:{game:'kitchenlab',em:'🔬',name:'Curious Mind',desc:'Play Kitchen Lab 3 times'},
+  md_first:  {game:'mathdive',em:'🤿',name:'First Dive',desc:'Complete your first Math Dive game'},
+  jw_first:  {game:'junglewords',em:'🦁',name:'First Words',desc:'Complete your first Jungle Words game'},
+  wb_first:  {game:'witchbrew',em:'🧙‍♀️',name:'Apprentice Witch',desc:'Brew your first successful potion'},
+  ts_first:  {game:'tubesort',em:'🧪',name:'First Sort',desc:'Complete Level 1 of Tube Sort'},
+  cg_fan:    {game:'crabcake',em:'🦀',name:'Crabcake Fan',desc:'Play all Crabcake games at least once'},
+  cg_dedicated:{game:'crabcake',em:'🎮',name:'Dedicated',desc:'Play 10 games total across all games'},
+};
+const BADGE_KEY='crabcake_badges_v1';
+const PLAYS_KEY='crabcake_plays_v1';
+function _lb(){try{return JSON.parse(localStorage.getItem(BADGE_KEY)||'{}');}catch{return{};}}
+function _sb(d){try{localStorage.setItem(BADGE_KEY,JSON.stringify(d));}catch{}}
+function _lp(){try{return JSON.parse(localStorage.getItem(PLAYS_KEY)||'{}');}catch{return{};}}
+function _sp(d){try{localStorage.setItem(PLAYS_KEY,JSON.stringify(d));}catch{}}
+function _award(id){const d=_lb();if(d[id])return false;d[id]={earned:true,date:new Date().toLocaleDateString()};_sb(d);return true;}
+function _incPlays(game){const p=_lp();p[game]=(p[game]||0)+1;p._total=(p._total||0)+1;_sp(p);return p;}
+let _tq=[],_tb=false;
+function _toast(id){_tq.push(id);if(!_tb)_nxt();}
+function _nxt(){
+  if(!_tq.length){_tb=false;return;}_tb=true;
+  const id=_tq.shift();const b=BADGE_DEF[id];if(!b){_nxt();return;}
+  let t=document.getElementById('_bgt');
+  if(!t){t=document.createElement('div');t.id='_bgt';t.className='badge-toast';
+    t.innerHTML='<div class="badge-toast-em" id="_bge"></div><div class="badge-toast-text"><div class="badge-toast-label">🏆 Badge Unlocked!</div><div class="badge-toast-name" id="_bgn"></div><div class="badge-toast-desc" id="_bgd"></div></div>';
+    document.body.appendChild(t);}
+  document.getElementById('_bge').textContent=b.em;
+  document.getElementById('_bgn').textContent=b.name;
+  document.getElementById('_bgd').textContent=b.desc;
+  t.classList.add('show');
+  setTimeout(()=>{t.classList.remove('show');setTimeout(_nxt,500);},3500);
+}
+function awardKitchenLabBadges(sc,age,total){
+  const ne=[];
+  const plays=_incPlays('kitchenlab');
+  if(_award('kl_first')) ne.push('kl_first');
+  if(sc>=6&&_award('kl_sharp')) ne.push('kl_sharp');
+  if(sc===total&&_award('kl_perfect')) ne.push('kl_perfect');
+  if(age===9&&_award('kl_chem')) ne.push('kl_chem');
+  if(lives===3&&_award('kl_noerror')) ne.push('kl_noerror');
+  if((plays['kitchenlab']||0)>=3&&_award('kl_curious')) ne.push('kl_curious');
+  const p=_lp();
+  const games=['mathdive','junglewords','witchbrew','tubesort','kitchenlab'];
+  if(!_lb().cg_fan&&games.every(g=>(p[g]||0)>=1)){if(_award('cg_fan'))ne.push('cg_fan');}
+  if(!_lb().cg_dedicated&&(p._total||0)>=10){if(_award('cg_dedicated'))ne.push('cg_dedicated');}
+  ne.forEach(id=>_toast(id));
+  _renderEndBadges(ne);
+}
+function _renderEndBadges(ne){
+  const wrap=document.getElementById('endBadgesWrap');
+  const row=document.getElementById('endBadgesRow');
+  if(!wrap||!row)return;
+  const all=Object.keys(_lb());
+  if(!all.length&&!ne.length){wrap.style.display='none';return;}
+  wrap.style.display='';
+  const title=wrap.querySelector('.badges-section-title');
+  if(title)title.textContent=ne.length?`🏆 Badge${ne.length>1?'s':''} Earned This Game!`:'🏆 Your Badges';
+  const show=ne.length?ne:all.slice(0,6);
+  row.innerHTML=show.map(id=>{const b=BADGE_DEF[id];if(!b)return'';
+    return`<div class="badge-coin${ne.includes(id)?' new-badge':''}" title="${b.desc}"><div class="badge-coin-em">${b.em}</div><div class="badge-coin-name">${b.name}</div></div>`;
+  }).join('');
+}
+
+document.getElementById('backLink').style.display='block';
+
+function showClaim(type) {
+  setTimeout(() => {
+    const el = document.getElementById('feedback-claim-' + type);
+    if (el) el.style.display = 'block';
+  }, 800);
+}
+function claimFeedbackBadge(type) {
+  const id = type === 'bug' ? 'cg_bughunter' : 'cg_bigideas';
+  const btn = document.querySelector(`#feedback-claim-${type} .feedback-claim-btn`);
+  if (_award(id)) {
+    _toast(id);
+    if (btn) { btn.textContent = '🏆 Badge earned!'; btn.disabled = true; }
+  } else {
+    if (btn) { btn.textContent = '✅ Already earned!'; btn.disabled = true; }
+  }
+}
+</script>
+</body>
+</html>
