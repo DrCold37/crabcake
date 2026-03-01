@@ -582,9 +582,11 @@
       <li><a href="#my-badges">Achievements</a></li>
       <li><a href="#games">Games</a></li>
       <li><a href="#categories">Categories</a></li>
+      <li><a href="avatar.html">My Avatar</a></li>
       <li><a href="privacy.html">Privacy</a></li>
       <li><a id="nav-contact" href="#">Contact Us</a></li>
     </ul>
+    <div id="nav-avatar-hud" style="margin-left:.5rem;display:none;"></div>
   </nav>
 
   <!-- MAIN CONTENT -->
@@ -608,6 +610,16 @@
         <a href="#categories" class="btn btn-secondary">Explore Games</a>
       </div>
       <p class="hero-notice">⚠️ Please be aware that this website is currently under construction. We're excited to announce that loads of fun activities, games, and more will be coming soon!</p>
+      <!-- AVATAR CREW WIDGET (shown if avatar is saved) -->
+      <div id="hero-crew-widget" style="display:none;margin-top:1.5rem;">
+        <a href="avatar.html" style="display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,.07);border:1.5px solid rgba(0,201,177,.3);border-radius:16px;padding:.6rem 1rem .6rem .6rem;text-decoration:none;transition:all .2s;" id="hero-crew-link">
+          <div id="hero-crew-avatar" style="display:flex;align-items:center;gap:6px;"></div>
+          <div>
+            <div style="font-family:Fredoka One,cursive;font-size:.9rem;color:#00C9B1;">Your Crew</div>
+            <div style="font-size:.7rem;color:rgba(255,255,255,.5);">Tap to customise →</div>
+          </div>
+        </a>
+      </div>
     </div>
   </section>
 
@@ -983,6 +995,25 @@
       if (idea) idea.href = 'mailto:' + e + '?subject=Game%20Idea%20for%20Crabcake!&body=Hi!%20I%20have%20an%20idea%20for%20a%20new%20game%3A%0A%0A';
     })();
 
+  </script>
+  <script src="crabcake-avatar.js"></script>
+  <script>
+    // Avatar HUD injection for index
+    document.addEventListener("DOMContentLoaded", function(){
+      var state = CrabcakeAvatar.load();
+      // Nav HUD (only if customised from default)
+      var navHud = document.getElementById("nav-avatar-hud");
+      if(navHud) { CrabcakeAvatar.injectHUD(navHud, {size:36, showPet:true}); navHud.style.display="inline-flex"; }
+      // Hero crew widget
+      var heroWidget = document.getElementById("hero-crew-widget");
+      var heroAvEl   = document.getElementById("hero-crew-avatar");
+      if(heroAvEl && heroWidget) {
+        heroAvEl.innerHTML = CrabcakeAvatar.buildHeadSVG(state, 46);
+        var pb = CrabcakeAvatar.buildPetBadge(state, 32);
+        if(pb) heroAvEl.insertAdjacentHTML("beforeend", pb);
+        heroWidget.style.display = "block";
+      }
+    });
   </script>
   <style>@keyframes hpClaimPop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}</style>
 </body>

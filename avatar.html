@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Avatar — Crabcake Kids</title>
+<meta name="description" content="Customise your avatar and choose your pet on Crabcake Kids!">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --navy:   #1A2B4A;
+    --teal:   #00C9B1;
+    --yellow: #FFD93D;
+    --orange: #FF6B35;
+    --purple: #7B5EA7;
+    --coral:  #FF6B6B;
+  }
+  body { background:var(--navy); font-family:'Nunito',sans-serif; color:#fff; min-height:100vh; }
+
+  /* ─── NAV ─── */
+  nav {
+    position:sticky; top:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:1rem 2rem;
+    background:rgba(26,43,74,.97);
+    backdrop-filter:blur(8px);
+    border-bottom:2px solid rgba(0,201,177,.25);
+  }
+  .logo { display:flex; align-items:center; gap:.75rem; text-decoration:none; }
+  .logo-circle { font-size:1.8rem; width:44px; height:44px; background:linear-gradient(135deg,#FFD93D,#FF6B35); border-radius:50%; display:flex; align-items:center; justify-content:center; }
+  .logo-name { font-family:'Fredoka One',cursive; font-size:1.4rem; color:#fff; }
+  .logo-name .la{color:#FF6B6B;} .logo-name .lb{color:#FFD93D;} .logo-name .lc{color:#00C9B1;}
+  .logo-sub { font-size:.65rem; color:rgba(255,255,255,.55); text-transform:uppercase; letter-spacing:1px; }
+  nav ul { list-style:none; display:flex; gap:1.5rem; align-items:center; }
+  nav ul li a { color:rgba(255,255,255,.8); text-decoration:none; font-weight:700; font-size:.9rem; padding:.4rem .7rem; border-radius:8px; transition:all .2s; }
+  nav ul li a:hover, nav ul li a.active { color:var(--teal); background:rgba(0,201,177,.1); }
+  .hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:4px; }
+  .hamburger span { display:block; width:24px; height:3px; background:#fff; border-radius:2px; transition:all .3s; }
+  .hamburger.open span:nth-child(1){transform:translateY(8px) rotate(45deg);}
+  .hamburger.open span:nth-child(2){opacity:0;}
+  .hamburger.open span:nth-child(3){transform:translateY(-8px) rotate(-45deg);}
+  @media(max-width:768px){
+    .hamburger{display:flex;}
+    nav ul { display:none; flex-direction:column; position:absolute; top:100%; left:0; right:0; background:rgba(26,43,74,.98); padding:1rem; gap:.3rem; border-bottom:2px solid rgba(0,201,177,.2); }
+    nav ul.open { display:flex; }
+    nav ul li a { display:block; padding:.8rem 1.2rem; border-radius:10px; font-size:1rem; }
+  }
+
+  /* ─── PAGE LAYOUT ─── */
+  .page-wrap { max-width:1100px; margin:0 auto; padding:2rem 1.5rem 4rem; }
+  h1 { font-family:'Fredoka One',cursive; font-size:2.2rem; text-align:center; color:var(--yellow); margin-bottom:.3rem; }
+  .page-subtitle { text-align:center; color:rgba(255,255,255,.6); font-size:.9rem; margin-bottom:2rem; }
+
+  /* ─── MAIN GRID ─── */
+  .customiser-grid {
+    display:grid;
+    grid-template-columns:1fr 340px;
+    gap:2rem;
+    align-items:start;
+  }
+  @media(max-width:900px){ .customiser-grid { grid-template-columns:1fr; } }
+
+  /* ─── PREVIEW PANEL ─── */
+  .preview-panel {
+    background:rgba(255,255,255,.06);
+    border:2px solid rgba(0,201,177,.25);
+    border-radius:24px;
+    padding:2rem 1.5rem;
+    text-align:center;
+    position:sticky;
+    top:90px;
+  }
+  .preview-label { font-family:'Fredoka One',cursive; font-size:1.1rem; color:var(--teal); margin-bottom:1.2rem; }
+  .preview-stage {
+    display:flex; justify-content:center; align-items:flex-end; gap:1rem;
+    min-height:220px;
+    background:radial-gradient(ellipse at center, rgba(0,201,177,.12) 0%, transparent 70%);
+    border-radius:16px; padding:1rem;
+    margin-bottom:1.5rem;
+  }
+  .preview-avatar-wrap { display:flex; flex-direction:column; align-items:center; gap:.5rem; }
+  .preview-avatar-wrap svg { filter:drop-shadow(0 8px 16px rgba(0,0,0,.4)); }
+  .preview-name { font-family:'Fredoka One',cursive; font-size:.85rem; color:rgba(255,255,255,.6); }
+  .preview-pet-wrap { display:flex; flex-direction:column; align-items:center; gap:.3rem; margin-bottom:10px; }
+  .preview-pet-wrap svg { filter:drop-shadow(0 4px 8px rgba(0,0,0,.4)); }
+  .preview-pet-name { font-size:.7rem; color:rgba(255,255,255,.5); }
+
+  .save-btn {
+    display:block; width:100%; padding:.9rem;
+    background:linear-gradient(135deg,var(--teal),#00a090);
+    color:var(--navy); font-family:'Fredoka One',cursive; font-size:1.2rem;
+    border:none; border-radius:14px; cursor:pointer;
+    transition:transform .2s, box-shadow .2s;
+    box-shadow:0 4px 16px rgba(0,201,177,.3);
+  }
+  .save-btn:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,201,177,.45); }
+  .save-btn:active { transform:translateY(0); }
+  .save-msg { font-size:.8rem; color:var(--teal); margin-top:.6rem; min-height:1.2em; text-align:center; opacity:0; transition:opacity .3s; }
+  .save-msg.show { opacity:1; }
+  .reset-btn { background:none; border:1px solid rgba(255,255,255,.2); color:rgba(255,255,255,.5); font-size:.75rem; font-family:'Nunito',sans-serif; font-weight:700; border-radius:8px; padding:.35rem .8rem; cursor:pointer; margin-top:.5rem; transition:all .2s; }
+  .reset-btn:hover { border-color:var(--coral); color:var(--coral); }
+
+  /* ─── OPTIONS PANEL ─── */
+  .options-panel { display:flex; flex-direction:column; gap:1.5rem; }
+  .option-section {
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:20px;
+    padding:1.25rem 1.25rem 1rem;
+  }
+  .option-title {
+    font-family:'Fredoka One',cursive; font-size:1rem; color:var(--yellow);
+    margin-bottom:.9rem; display:flex; align-items:center; gap:.4rem;
+  }
+  /* grid of selectable cards */
+  .avatar-grid { display:flex; flex-wrap:wrap; gap:.6rem; }
+  .av-card {
+    cursor:pointer; border-radius:14px; border:2px solid rgba(255,255,255,.1);
+    padding:.4rem .4rem .25rem;
+    background:rgba(255,255,255,.05);
+    transition:border-color .2s, transform .2s, background .2s;
+    display:flex; flex-direction:column; align-items:center; gap:.2rem;
+  }
+  .av-card:hover { border-color:rgba(0,201,177,.5); transform:translateY(-3px); background:rgba(0,201,177,.08); }
+  .av-card.selected { border-color:var(--teal); background:rgba(0,201,177,.15); box-shadow:0 0 0 1px var(--teal); }
+  .av-card .av-lbl { font-size:.6rem; color:rgba(255,255,255,.5); text-transform:uppercase; letter-spacing:.5px; font-weight:700; }
+
+  /* colour swatches */
+  .swatch-row { display:flex; flex-wrap:wrap; gap:.5rem; }
+  .swatch {
+    width:32px; height:32px; border-radius:50%; cursor:pointer;
+    border:3px solid transparent; transition:transform .15s, border-color .15s;
+    outline:none;
+  }
+  .swatch:hover { transform:scale(1.2); }
+  .swatch.selected { border-color:#fff; box-shadow:0 0 0 2px var(--teal); }
+
+  /* hat / hair / shoes small selectors */
+  .item-grid { display:flex; flex-wrap:wrap; gap:.5rem; }
+  .item-btn {
+    cursor:pointer; border:2px solid rgba(255,255,255,.15);
+    border-radius:12px; padding:.4rem .7rem;
+    background:rgba(255,255,255,.05);
+    font-size:.78rem; font-family:'Nunito',sans-serif; font-weight:700; color:rgba(255,255,255,.7);
+    transition:all .2s; white-space:nowrap;
+  }
+  .item-btn:hover { border-color:var(--yellow); color:var(--yellow); background:rgba(255,217,61,.08); }
+  .item-btn.selected { border-color:var(--yellow); color:var(--yellow); background:rgba(255,217,61,.15); }
+
+  /* pet section */
+  .pet-grid { display:flex; flex-wrap:wrap; gap:.8rem; }
+  .pet-card {
+    cursor:pointer; border-radius:16px; border:2px solid rgba(255,255,255,.1);
+    padding:.5rem .5rem .3rem;
+    background:rgba(255,255,255,.05);
+    transition:all .2s;
+    display:flex; flex-direction:column; align-items:center; gap:.2rem;
+  }
+  .pet-card:hover { border-color:rgba(255,107,53,.5); transform:translateY(-3px); }
+  .pet-card.selected { border-color:var(--orange); background:rgba(255,107,53,.12); box-shadow:0 0 0 1px var(--orange); }
+  .pet-card .pet-lbl { font-size:.62rem; color:rgba(255,255,255,.5); text-transform:uppercase; letter-spacing:.5px; font-weight:700; }
+
+  /* privacy note */
+  .privacy-note {
+    background:rgba(0,201,177,.07); border:1px solid rgba(0,201,177,.2);
+    border-radius:12px; padding:.75rem 1rem; font-size:.75rem; color:rgba(255,255,255,.5);
+    line-height:1.5; text-align:center; margin-top:1rem;
+  }
+  .privacy-note strong { color:var(--teal); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-circle">🦀</div>
+    <div>
+      <div class="logo-name">Cr<span class="la">a</span><span class="lb">b</span><span class="lc">c</span>ake</div>
+      <div class="logo-sub">The Fun Way to Learn</div>
+    </div>
+  </a>
+  <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+  <ul id="nav-menu">
+    <li><a href="index.html#games">Games</a></li>
+    <li><a href="index.html#categories">Categories</a></li>
+    <li><a href="avatar.html" class="active">My Avatar</a></li>
+    <li><a href="privacy.html">Privacy</a></li>
+  </ul>
+</nav>
+
+<div class="page-wrap">
+  <h1>🎨 Customise Your Avatar</h1>
+  <p class="page-subtitle">Choose your character, colours and pet — saved right here on your device!</p>
+
+  <div class="customiser-grid">
+
+    <!-- ─── OPTIONS (left) ─── -->
+    <div class="options-panel">
+
+      <!-- PICK YOUR CHARACTER -->
+      <div class="option-section">
+        <div class="option-title">👤 Pick Your Character</div>
+        <div class="avatar-grid" id="avatarGrid">
+          <!-- populated by JS -->
+        </div>
+      </div>
+
+      <!-- SKIN TONE -->
+      <div class="option-section">
+        <div class="option-title">🎨 Skin Tone</div>
+        <div class="swatch-row" id="skinSwatches">
+          <button class="swatch" data-skin="0" style="background:linear-gradient(135deg,#fde8cc,#f5c8a0)" title="Light" aria-label="Light skin"></button>
+          <button class="swatch" data-skin="1" style="background:linear-gradient(135deg,#f0c898,#e0a870)" title="Medium Light" aria-label="Medium light skin"></button>
+          <button class="swatch" data-skin="2" style="background:linear-gradient(135deg,#f0b870,#c87840)" title="Medium" aria-label="Medium skin"></button>
+          <button class="swatch" data-skin="3" style="background:linear-gradient(135deg,#f5c88a,#d4935a)" title="Medium Tan" aria-label="Medium tan skin"></button>
+          <button class="swatch" data-skin="4" style="background:linear-gradient(135deg,#d4935a,#b07030)" title="Tan" aria-label="Tan skin"></button>
+          <button class="swatch" data-skin="5" style="background:linear-gradient(135deg,#8B5E3C,#6B3A1F)" title="Dark" aria-label="Dark skin"></button>
+        </div>
+      </div>
+
+      <!-- TOP COLOUR -->
+      <div class="option-section">
+        <div class="option-title">👕 Top Colour</div>
+        <div class="swatch-row" id="topSwatches">
+          <button class="swatch" data-top="teal"   style="background:#1abc9c" title="Teal" aria-label="Teal top"></button>
+          <button class="swatch" data-top="red"    style="background:#e74c3c" title="Red" aria-label="Red top"></button>
+          <button class="swatch" data-top="blue"   style="background:#2980b9" title="Blue" aria-label="Blue top"></button>
+          <button class="swatch" data-top="purple" style="background:#8e44ad" title="Purple" aria-label="Purple top"></button>
+          <button class="swatch" data-top="yellow" style="background:#f1c40f" title="Yellow" aria-label="Yellow top"></button>
+          <button class="swatch" data-top="pink"   style="background:#f8b4c8" title="Pink" aria-label="Pink top"></button>
+          <button class="swatch" data-top="green"  style="background:#27ae60" title="Green" aria-label="Green top"></button>
+          <button class="swatch" data-top="orange" style="background:#e67e22" title="Orange" aria-label="Orange top"></button>
+          <button class="swatch" data-top="grey"   style="background:#95a5a6" title="Grey" aria-label="Grey top"></button>
+          <button class="swatch" data-top="white"  style="background:#ecf0f1;border:1px solid #ccc" title="White" aria-label="White top"></button>
+        </div>
+      </div>
+
+      <!-- BOTTOMS -->
+      <div class="option-section">
+        <div class="option-title">👖 Bottoms Colour</div>
+        <div class="swatch-row" id="bottomSwatches">
+          <button class="swatch" data-bottom="navy"   style="background:#2c3e50" title="Navy" aria-label="Navy bottoms"></button>
+          <button class="swatch" data-bottom="denim"  style="background:#4a7fa8" title="Denim" aria-label="Denim bottoms"></button>
+          <button class="swatch" data-bottom="black"  style="background:#2d1b3d" title="Black" aria-label="Black bottoms"></button>
+          <button class="swatch" data-bottom="olive"  style="background:#6b7c2e" title="Olive" aria-label="Olive bottoms"></button>
+          <button class="swatch" data-bottom="purple" style="background:#6c3483" title="Purple" aria-label="Purple bottoms"></button>
+          <button class="swatch" data-bottom="red"    style="background:#922b21" title="Red" aria-label="Red bottoms"></button>
+          <button class="swatch" data-bottom="teal"   style="background:#148f77" title="Teal" aria-label="Teal bottoms"></button>
+          <button class="swatch" data-bottom="brown"  style="background:#6e2f1a" title="Brown" aria-label="Brown bottoms"></button>
+        </div>
+      </div>
+
+      <!-- HAT -->
+      <div class="option-section">
+        <div class="option-title">🎩 Hat</div>
+        <div class="item-grid" id="hatGrid">
+          <button class="item-btn" data-hat="none">None</button>
+          <button class="item-btn" data-hat="cap">🧢 Cap</button>
+          <button class="item-btn" data-hat="witch">🧙 Witch</button>
+          <button class="item-btn" data-hat="party">🎉 Party</button>
+          <button class="item-btn" data-hat="crown">👑 Crown</button>
+          <button class="item-btn" data-hat="beanie">🪖 Beanie</button>
+        </div>
+      </div>
+
+      <!-- PET -->
+      <div class="option-section">
+        <div class="option-title">🐾 Choose Your Pet</div>
+        <div class="pet-grid" id="petGrid">
+          <!-- populated by JS -->
+        </div>
+      </div>
+
+    </div><!-- end options -->
+
+    <!-- ─── PREVIEW (right) ─── -->
+    <div class="preview-panel">
+      <div class="preview-label">✨ Your Crew</div>
+      <div class="preview-stage">
+        <div class="preview-avatar-wrap">
+          <svg id="previewAvatar" width="88" height="192" viewBox="0 0 88 192"></svg>
+          <div class="preview-name">You</div>
+        </div>
+        <div class="preview-pet-wrap" id="petPreviewWrap">
+          <svg id="previewPet" width="80" height="80" viewBox="0 0 130 130"></svg>
+          <div class="preview-pet-name" id="petPreviewName">No pet</div>
+        </div>
+      </div>
+      <button class="save-btn" id="saveBtn">💾 Save My Avatar</button>
+      <div class="save-msg" id="saveMsg">✅ Saved! Your avatar is ready.</div>
+      <button class="reset-btn" id="resetBtn">Reset to default</button>
+      <div class="privacy-note">
+        <strong>🔒 Safe & Private</strong><br>
+        Your choices are saved only on this device. No account needed, no data shared.
+      </div>
+    </div>
+
+  </div><!-- end grid -->
+</div><!-- end page-wrap -->
+
+<script>
+// ═══════════════════════════════════════════════════════
+// AVATAR SVG DEFINITIONS (v11)
+// ═══════════════════════════════════════════════════════
+
+// Skin tone gradients [light→shadow]
+const SKINS = [
+  ['#fde8cc','#f5c8a0'], // 0 light
+  ['#f0c898','#e0a870'], // 1 medium-light
+  ['#f0b870','#c87840'], // 2 medium
+  ['#f5c88a','#d4935a'], // 3 medium-tan
+  ['#d4935a','#b07030'], // 4 tan
+  ['#8B5E3C','#6B3A1F'], // 5 dark
+];
+
+const TOP_COLOURS = {
+  teal:'#1abc9c',red:'#e74c3c',blue:'#2980b9',purple:'#8e44ad',
+  yellow:'#f1c40f',pink:'#f8b4c8',green:'#27ae60',orange:'#e67e22',
+  grey:'#95a5a6',white:'#ecf0f1'
+};
+const TOP_DARK = {
+  teal:'#16a085',red:'#c0392b',blue:'#1a6090',purple:'#6c3483',
+  yellow:'#d4ac00',pink:'#e8809c',green:'#1e8449',orange:'#ca6f1e',
+  grey:'#7f8c8d',white:'#bdc3c7'
+};
+
+const BOTTOM_COLOURS = {
+  navy:'#2c3e50',denim:'#4a7fa8',black:'#2d1b3d',olive:'#6b7c2e',
+  purple:'#6c3483',red:'#922b21',teal:'#148f77',brown:'#6e2f1a'
+};
+
+// Avatar base types — each provides hair SVG snippets and whether male/female shape
+const AVATARS = [
+  { id:'g1', label:'Side Ponytail', gender:'girl',
+    hair:({s})=>`
+      <ellipse cx="44" cy="22" rx="22" ry="11" fill="#7b4a1e"/>
+      <rect x="22" y="19" width="44" height="17" rx="5" fill="#7b4a1e"/>
+      <rect x="18" y="25" width="8" height="20" rx="4" fill="#7b4a1e"/>
+      <rect x="62" y="25" width="8" height="14" rx="4" fill="#7b4a1e"/>
+      <path d="M 64 30 Q 78 34 82 50 Q 86 66 80 78 Q 77 85 73 81 Q 78 68 74 54 Q 70 40 62 34 Z" fill="#7b4a1e"/>
+      <circle cx="44" cy="44" r="20" fill="url(#avSkin)"/>
+      <ellipse cx="44" cy="23" rx="20" ry="8.5" fill="#7b4a1e"/>
+      <path d="M 24 27 Q 30 35 36 28" fill="#7b4a1e"/>
+      <path d="M 52 27 Q 56 33 62 28" fill="#7b4a1e"/>
+      <ellipse cx="66" cy="32" rx="3.5" ry="4.5" fill="#e74c3c"/>
+    `
+  },
+  { id:'g2', label:'Pigtails', gender:'girl',
+    hair:({s})=>`
+      <ellipse cx="44" cy="22" rx="22" ry="10" fill="#2a1a08"/>
+      <rect x="22" y="19" width="44" height="16" rx="5" fill="#2a1a08"/>
+      <ellipse cx="16" cy="37" rx="5.5" ry="3.5" fill="#2a1a08" transform="rotate(-8 16 37)"/>
+      <ellipse cx="15" cy="45" rx="5" ry="3.5" fill="#3a2810" transform="rotate(-8 15 45)"/>
+      <ellipse cx="14" cy="53" rx="4.5" ry="3.5" fill="#2a1a08" transform="rotate(-6 14 53)"/>
+      <ellipse cx="13.5" cy="61" rx="4" ry="3" fill="#2a1a08" transform="rotate(-4 13.5 61)"/>
+      <ellipse cx="16" cy="71" rx="4" ry="2.5" fill="#e91e8c"/>
+      <ellipse cx="72" cy="37" rx="5.5" ry="3.5" fill="#2a1a08" transform="rotate(8 72 37)"/>
+      <ellipse cx="73" cy="45" rx="5" ry="3.5" fill="#3a2810" transform="rotate(8 73 45)"/>
+      <ellipse cx="74" cy="53" rx="4.5" ry="3.5" fill="#2a1a08" transform="rotate(6 74 53)"/>
+      <ellipse cx="74.5" cy="61" rx="4" ry="3" fill="#2a1a08" transform="rotate(4 74.5 61)"/>
+      <ellipse cx="72" cy="71" rx="4" ry="2.5" fill="#e91e8c"/>
+      <circle cx="44" cy="44" r="20" fill="url(#avSkin)"/>
+      <ellipse cx="44" cy="24" rx="20" ry="8" fill="#2a1a08"/>
+      <rect x="20" y="30" width="6" height="15" rx="3" fill="#2a1a08"/>
+      <rect x="62" y="30" width="6" height="15" rx="3" fill="#2a1a08"/>
+    `
+  },
+  { id:'g3', label:'Curly Puff', gender:'girl',
+    hair:({s})=>`
+      <circle cx="44" cy="14" r="14" fill="#1a0800"/>
+      <circle cx="32" cy="18" r="11" fill="#1a0800"/>
+      <circle cx="56" cy="18" r="11" fill="#1a0800"/>
+      <circle cx="27" cy="24" r="9" fill="#1a0800"/>
+      <circle cx="61" cy="24" r="9" fill="#1a0800"/>
+      <circle cx="36" cy="12" r="10" fill="#1a0800"/>
+      <circle cx="52" cy="12" r="10" fill="#1a0800"/>
+      <circle cx="44" cy="11" r="3.5" fill="#2d1200" opacity=".45"/>
+      <rect x="30" y="27" width="28" height="5" rx="2.5" fill="#1a0800"/>
+      <ellipse cx="44" cy="29" rx="6" ry="2.5" fill="#c0392b"/>
+      <circle cx="44" cy="44" r="20" fill="url(#avSkin)"/>
+      <rect x="20" y="31" width="6" height="14" rx="3" fill="#1a0800"/>
+      <rect x="62" y="31" width="6" height="14" rx="3" fill="#1a0800"/>
+    `
+  },
+  { id:'b1', label:'Blonde Wavy', gender:'boy',
+    hair:({s})=>`
+      <ellipse cx="44" cy="22" rx="22" ry="12" fill="#f0c040"/>
+      <rect x="22" y="22" width="44" height="18" rx="5" fill="#f0c040"/>
+      <rect x="20" y="26" width="8" height="16" rx="4" fill="#f0c040"/>
+      <rect x="60" y="26" width="8" height="16" rx="4" fill="#f0c040"/>
+      <circle cx="44" cy="44" r="20" fill="url(#avSkin)"/>
+      <path d="M 24 24 Q 30 16 36 24 Q 40 30 46 22 Q 52 14 58 22 Q 64 30 70 24" stroke="#f0c040" stroke-width="8" fill="none" stroke-linecap="round"/>
+      <ellipse cx="44" cy="18" rx="12" ry="5" fill="#fdd060" opacity=".55"/>
+    `
+  },
+  { id:'b2', label:'Afro', gender:'boy',
+    hair:({s})=>`
+      <circle cx="44" cy="18" r="16" fill="#1a0800"/>
+      <circle cx="30" cy="22" r="13" fill="#1a0800"/>
+      <circle cx="58" cy="22" r="13" fill="#1a0800"/>
+      <circle cx="24" cy="30" r="11" fill="#1a0800"/>
+      <circle cx="64" cy="30" r="11" fill="#1a0800"/>
+      <circle cx="36" cy="14" r="12" fill="#1a0800"/>
+      <circle cx="52" cy="14" r="12" fill="#1a0800"/>
+      <circle cx="44" cy="12" r="11" fill="#1a0800"/>
+      <ellipse cx="40" cy="8" rx="8" ry="4" fill="#3d2000" opacity=".45"/>
+      <rect x="20" y="30" width="7" height="14" rx="3.5" fill="#1a0800"/>
+      <rect x="61" y="30" width="7" height="14" rx="3.5" fill="#1a0800"/>
+      <circle cx="44" cy="44" r="20" fill="url(#avSkin)"/>
+    `
+  },
+  { id:'b3', label:'Ginger Messy', gender:'boy',
+    hair:({s})=>`
+      <ellipse cx="44" cy="21" rx="22" ry="12" fill="#c0392b"/>
+      <rect x="22" y="21" width="44" height="18" rx="5" fill="#c0392b"/>
+      <rect x="20" y="25" width="8" height="14" rx="4" fill="#c0392b"/>
+      <rect x="60" y="25" width="8" height="14" rx="4" fill="#c0392b"/>
+      <circle cx="44" cy="44" r="20" fill="url(#avSkin)"/>
+      <path d="M 28 19 Q 32 11 38 18" fill="#c0392b"/>
+      <path d="M 36 15 Q 42 7 48 15" fill="#c0392b"/>
+      <path d="M 48 17 Q 54 10 60 17" fill="#c0392b"/>
+      <ellipse cx="42" cy="16" rx="10" ry="4" fill="#e05050" opacity=".5"/>
+      <path d="M 20 28 Q 18 36 22 42" stroke="#c0392b" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M 68 28 Q 70 36 66 42" stroke="#c0392b" stroke-width="4" fill="none" stroke-linecap="round"/>
+    `
+  },
+];
+
+// ═══════════════════════════════════════════════════════
+// BUILD AVATAR SVG
+// ═══════════════════════════════════════════════════════
+function buildAvatarSVG(av, skinIdx, topKey, bottomKey, hatKey, width=88, height=192) {
+  const [sc,sh] = SKINS[skinIdx];
+  const tc = TOP_COLOURS[topKey] || '#1abc9c';
+  const td = TOP_DARK[topKey] || '#16a085';
+  const bc = BOTTOM_COLOURS[bottomKey] || '#2c3e50';
+  const isGirl = av.gender === 'girl';
+  const id = `av_${Math.random().toString(36).slice(2,7)}`;
+
+  // cheek colour
+  const cheekId = `ck_${id}`;
+  // skin gradient
+  const skinId = `avSkin`;
+
+  const hatSVG = buildHat(hatKey, av.gender);
+
+  // Eye params differ girl/boy
+  const ecx1 = isGirl ? 35 : 36;
+  const ecx2 = isGirl ? 51 : 52;
+  const ecy  = isGirl ? 44 : 44;
+  const erx  = isGirl ? 4  : 4.5;
+  const ery  = isGirl ? 4.2: 4.8;
+  const irisr= isGirl ? 2.9: 3.2;
+  const irisCol = skinIdx>=4 ? '#4a2c00' : (av.id==='b3'?'#2980b9': av.id==='g1'?'#2eaa88': '#1a1a2e');
+  // Cheek positions
+  const ckx1 = isGirl ? 26 : 26, ckx2 = isGirl ? 62 : 62, cky = isGirl ? 51 : 53;
+
+  // Bottom shape (skirt vs shorts/jeans)
+  let bottomSVG = '';
+  let legSVG = '';
+  if(isGirl) {
+    bottomSVG = `
+      <path d="M 27 114 Q 28 148 30 150 Q 36 156 44 156 Q 52 156 58 150 Q 60 148 61 114 Z" fill="${bc}"/>
+      <line x1="32" y1="114" x2="31" y2="154" stroke="${bc}cc" stroke-width="1.1" opacity=".6"/>
+      <line x1="38" y1="114" x2="38" y2="156" stroke="${bc}cc" stroke-width="1.1" opacity=".6"/>
+      <line x1="44" y1="114" x2="44" y2="156" stroke="${bc}cc" stroke-width="1.1" opacity=".6"/>
+      <line x1="50" y1="114" x2="50" y2="156" stroke="${bc}cc" stroke-width="1.1" opacity=".6"/>
+      <line x1="56" y1="114" x2="57" y2="154" stroke="${bc}cc" stroke-width="1.1" opacity=".6"/>
+      <rect x="27" y="112" width="34" height="5" rx="2" fill="${bc}"/>
+    `;
+    legSVG = `
+      <path d="M 30 144 L 29 177 Q 35 184 39 177 L 38 144 Z" fill="url(#avSkin)"/>
+      <path d="M 50 144 L 49 177 Q 55 184 59 177 L 58 144 Z" fill="url(#avSkin)"/>
+    `;
+  } else {
+    bottomSVG = `
+      <path d="M 22 112 L 21 148 Q 32 156 44 156 Q 56 156 67 148 L 66 112 Z" fill="${bc}"/>
+      <line x1="44" y1="112" x2="44" y2="156" stroke="${bc}99" stroke-width="2"/>
+      <rect x="22" y="110" width="44" height="6" rx="2" fill="${bc}dd"/>
+    `;
+    legSVG = `
+      <path d="M 29 144 L 28 177 Q 35 185 40 177 L 39 144 Z" fill="url(#avSkin)"/>
+      <path d="M 49 144 L 48 177 Q 55 185 60 177 L 59 144 Z" fill="url(#avSkin)"/>
+    `;
+  }
+
+  // Brows (none for girls, 75% for boys)
+  let browSVG = '';
+  if(!isGirl) {
+    browSVG = `<path d="M 31.5 36 Q 36 31.5 40.5 36" stroke="#8B6000" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <path d="M 47.5 36 Q 52 31.5 56.5 36" stroke="#8B6000" stroke-width="1.8" fill="none" stroke-linecap="round"/>`;
+  }
+
+  // Lashes (girls only)
+  const lashesSVG = isGirl ? `
+    <line x1="32" y1="40.5" x2="31.4" y2="39" stroke="#1a1a2e" stroke-width="1.1" stroke-linecap="round"/>
+    <line x1="35" y1="40" x2="35" y2="38.5" stroke="#1a1a2e" stroke-width="1.1" stroke-linecap="round"/>
+    <line x1="38" y1="40.5" x2="38.6" y2="39" stroke="#1a1a2e" stroke-width="1.1" stroke-linecap="round"/>
+    <line x1="48" y1="40.5" x2="47.4" y2="39" stroke="#1a1a2e" stroke-width="1.1" stroke-linecap="round"/>
+    <line x1="51" y1="40" x2="51" y2="38.5" stroke="#1a1a2e" stroke-width="1.1" stroke-linecap="round"/>
+    <line x1="54" y1="40.5" x2="54.6" y2="39" stroke="#1a1a2e" stroke-width="1.1" stroke-linecap="round"/>
+  ` : '';
+
+  return `
+<defs>
+  <radialGradient id="avSkin" cx="50%" cy="35%" r="65%">
+    <stop offset="0%" stop-color="${sc}"/>
+    <stop offset="100%" stop-color="${sh}"/>
+  </radialGradient>
+  <radialGradient id="${cheekId}" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#ff9090" stop-opacity=".48"/>
+    <stop offset="100%" stop-color="#ff9090" stop-opacity="0"/>
+  </radialGradient>
+</defs>
+
+<!-- SHADOW -->
+<ellipse cx="44" cy="190" rx="22" ry="4" fill="rgba(0,0,0,.18)"/>
+
+<!-- SHOES -->
+<ellipse cx="30" cy="178" rx="12" ry="5" fill="#333" transform="rotate(-12 30 178)"/>
+<ellipse cx="58" cy="178" rx="12" ry="5" fill="#333" transform="rotate(12 58 178)"/>
+<ellipse cx="30" cy="180" rx="12" ry="3" fill="white" opacity=".2" transform="rotate(-12 30 180)"/>
+<ellipse cx="58" cy="180" rx="12" ry="3" fill="white" opacity=".2" transform="rotate(12 58 180)"/>
+
+${legSVG}
+
+${bottomSVG}
+
+<!-- TOP -->
+<path d="M 27 68 L 26 116 Q 35 122 44 122 Q 53 122 62 116 L 61 68 Q 53 63 44 61 Q 35 63 27 68 Z" fill="${tc}"/>
+<path d="M 27 68 L 26 116 Q 28 119 30 116 L 29 68 Z" fill="rgba(0,0,0,.08)"/>
+<path d="M 61 68 L 62 116 Q 60 119 58 116 L 59 68 Z" fill="rgba(0,0,0,.08)"/>
+<path d="M 34 68 Q 44 75 54 68" stroke="${td}" stroke-width="1.8" fill="none"/>
+
+<!-- ARMS -->
+<path d="M 26 70 Q 14 79 14 97 Q 14 106 22 107" stroke="url(#avSkin)" stroke-width="10" fill="none" stroke-linecap="round"/>
+<ellipse cx="26" cy="69" rx="6" ry="4.5" fill="${tc}" transform="rotate(-10 26 69)"/>
+<circle cx="22" cy="108" r="6" fill="url(#avSkin)"/>
+<path d="M 62 70 Q 74 79 74 97 Q 74 106 66 107" stroke="url(#avSkin)" stroke-width="10" fill="none" stroke-linecap="round"/>
+<ellipse cx="62" cy="69" rx="6" ry="4.5" fill="${tc}" transform="rotate(10 62 69)"/>
+<circle cx="66" cy="108" r="6" fill="url(#avSkin)"/>
+
+<!-- NECK -->
+<rect x="39" y="59" width="10" height="11" rx="4" fill="url(#avSkin)"/>
+
+<!-- HEAD base -->
+<circle cx="44" cy="44" r="22" fill="url(#avSkin)"/>
+
+<!-- HAIR (back) -->
+${av.hair({s:skinIdx})}
+
+<!-- EARS -->
+<circle cx="20" cy="46" r="5.5" fill="url(#avSkin)"/>
+<circle cx="68" cy="46" r="5.5" fill="url(#avSkin)"/>
+<circle cx="20" cy="46" r="2.8" fill="#f0a090" opacity=".4"/>
+<circle cx="68" cy="46" r="2.8" fill="#f0a090" opacity=".4"/>
+
+<!-- EYES -->
+<ellipse cx="${ecx1}" cy="${ecy}" rx="${erx}" ry="${ery}" fill="white"/>
+<ellipse cx="${ecx2}" cy="${ecy}" rx="${erx}" ry="${ery}" fill="white"/>
+<ellipse cx="${ecx1}" cy="${ecy-2.5}" rx="${erx}" ry="2" fill="#c09060" opacity=".16"/>
+<ellipse cx="${ecx2}" cy="${ecy-2.5}" rx="${erx}" ry="2" fill="#c09060" opacity=".16"/>
+<circle cx="${ecx1}" cy="${ecy+1}" r="${irisr}" fill="${irisCol}"/>
+<circle cx="${ecx2}" cy="${ecy+1}" r="${irisr}" fill="${irisCol}"/>
+<circle cx="${ecx1}" cy="${ecy+1}" r="${irisr*.55}" fill="#1a1a2e"/>
+<circle cx="${ecx2}" cy="${ecy+1}" r="${irisr*.55}" fill="#1a1a2e"/>
+<circle cx="${ecx1+1}" cy="${ecy-.8}" r="1" fill="white"/>
+<circle cx="${ecx2+1}" cy="${ecy-.8}" r="1" fill="white"/>
+${lashesSVG}
+${browSVG}
+
+<!-- NOSE + MOUTH -->
+<path d="M 42 52 Q 44 55 46 52" stroke="#c07848" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+<path d="M 39 58 Q 44 63 49 58" stroke="#c0694a" stroke-width="1.7" fill="none" stroke-linecap="round"/>
+<ellipse cx="44" cy="60" rx="3" ry="1.3" fill="#ff9090" opacity=".3"/>
+
+<!-- CHEEKS -->
+<circle cx="${ckx1}" cy="${cky}" r="7" fill="url(#${cheekId})"/>
+<circle cx="${ckx2}" cy="${cky}" r="7" fill="url(#${cheekId})"/>
+
+${hatSVG}
+`;
+}
+
+function buildHat(hatKey, gender) {
+  if(hatKey === 'none') return '';
+  if(hatKey === 'cap') return `
+    <ellipse cx="44" cy="22" rx="22" ry="9" fill="#e74c3c"/>
+    <rect x="22" y="22" width="44" height="8" rx="2" fill="#c0392b"/>
+    <ellipse cx="20" cy="30" rx="10" ry="4" fill="#c0392b"/>
+    <path d="M 44 14 Q 54 14 62 22" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  `;
+  if(hatKey === 'witch') return `
+    <polygon points="44,2 24,28 64,28" fill="#1a1a2e"/>
+    <rect x="18" y="26" width="52" height="7" rx="3" fill="#6c3483"/>
+    <path d="M 36 28 Q 44 20 52 28" stroke="#9b59b6" stroke-width="2" fill="none"/>
+  `;
+  if(hatKey === 'party') return `
+    <polygon points="44,4 26,30 62,30" fill="#f1c40f"/>
+    <line x1="40" y1="8" x2="38" y2="2" stroke="#e74c3c" stroke-width="1.5"/>
+    <line x1="48" y1="12" x2="50" y2="6" stroke="#1abc9c" stroke-width="1.5"/>
+    <line x1="44" y1="6" x2="44" y2="2" stroke="#e74c3c" stroke-width="1.5"/>
+    <circle cx="38" cy="2" r="2" fill="#e74c3c"/>
+    <circle cx="50" cy="6" r="2" fill="#1abc9c"/>
+    <rect x="26" y="28" width="36" height="5" rx="2" fill="#f39c12"/>
+  `;
+  if(hatKey === 'crown') return `
+    <polygon points="24,28 24,14 32,20 44,10 56,20 64,14 64,28" fill="#f1c40f"/>
+    <circle cx="44" cy="12" r="4" fill="#e74c3c"/>
+    <circle cx="30" cy="20" r="3" fill="#9b59b6"/>
+    <circle cx="58" cy="20" r="3" fill="#9b59b6"/>
+    <rect x="24" y="26" width="40" height="4" rx="2" fill="#f39c12"/>
+  `;
+  if(hatKey === 'beanie') return `
+    <ellipse cx="44" cy="28" rx="23" ry="10" fill="#2980b9"/>
+    <rect x="21" y="24" width="46" height="14" rx="3" fill="#2980b9"/>
+    <rect x="21" y="34" width="46" height="5" rx="2" fill="#1a6090"/>
+    <circle cx="44" cy="15" r="5" fill="#e74c3c"/>
+    <ellipse cx="44" cy="15" rx="5" ry="2" fill="#c0392b" opacity=".5"/>
+  `;
+  return '';
+}
+
+// ═══════════════════════════════════════════════════════
+// PET SVG DEFINITIONS (v3)
+// ═══════════════════════════════════════════════════════
+const PETS = [
+  { id:'none', label:'No Pet', svg:'' },
+  { id:'golden', label:'Golden Lab', svg:`
+    <defs>
+      <radialGradient id="petG" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#e8b060"/><stop offset="100%" stop-color="#c88030"/></radialGradient>
+    </defs>
+    <ellipse cx="26" cy="58" rx="18" ry="30" fill="#a06020" transform="rotate(-12 26 58)"/>
+    <ellipse cx="104" cy="58" rx="18" ry="30" fill="#a06020" transform="rotate(12 104 58)"/>
+    <ellipse cx="65" cy="55" rx="40" ry="38" fill="url(#petG)"/>
+    <ellipse cx="65" cy="72" rx="22" ry="16" fill="#f0d090"/>
+    <ellipse cx="65" cy="65" rx="10" ry="7" fill="#2c1810"/>
+    <ellipse cx="62" cy="63" rx="3.5" ry="2.5" fill="white" opacity=".4"/>
+    <path d="M 59 67 Q 65 70 71 67" stroke="#1a0a00" stroke-width="1.2" fill="none"/>
+    <circle cx="46" cy="48" r="11" fill="white"/>
+    <circle cx="84" cy="48" r="11" fill="white"/>
+    <circle cx="46" cy="49" r="7.5" fill="#6b3a00"/>
+    <circle cx="84" cy="49" r="7.5" fill="#6b3a00"/>
+    <circle cx="46" cy="49" r="4.5" fill="#1a1a2e"/>
+    <circle cx="84" cy="49" r="4.5" fill="#1a1a2e"/>
+    <circle cx="49" cy="46" r="3" fill="white"/>
+    <circle cx="87" cy="46" r="3" fill="white"/>
+    <path d="M 36 40 Q 46 34 56 39" stroke="#8a5020" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M 74 39 Q 84 34 94 40" stroke="#8a5020" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M 52 78 Q 65 88 78 78" stroke="#8a3010" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <ellipse cx="65" cy="86" rx="10" ry="8" fill="#ff6b8a"/>
+    <line x1="65" y1="80" x2="65" y2="92" stroke="#e05070" stroke-width="1.5"/>
+    <path d="M 28 85 Q 65 95 102 85" stroke="#e74c3c" stroke-width="8" fill="none" stroke-linecap="round"/>
+    <circle cx="65" cy="92" r="6" fill="#f1c40f"/>
+    <circle cx="65" cy="92" r="3" fill="#d4a000"/>
+  `},
+  { id:'husky', label:'Husky', svg:`
+    <defs>
+      <radialGradient id="petH" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#5a6a7a"/><stop offset="100%" stop-color="#3a4a5a"/></radialGradient>
+      <radialGradient id="petHi" cx="50%" cy="50%" r="60%"><stop offset="0%" stop-color="#e8e8e8"/><stop offset="100%" stop-color="#c8c8c8"/></radialGradient>
+    </defs>
+    <polygon points="28,38 18,8 46,28" fill="#3a4a5a"/>
+    <polygon points="102,38 112,8 84,28" fill="#3a4a5a"/>
+    <polygon points="30,34 22,12 44,28" fill="#ffbbcc"/>
+    <polygon points="100,34 108,12 86,28" fill="#ffbbcc"/>
+    <ellipse cx="65" cy="58" rx="42" ry="40" fill="url(#petH)"/>
+    <ellipse cx="65" cy="65" rx="30" ry="32" fill="url(#petHi)"/>
+    <ellipse cx="50" cy="42" rx="14" ry="10" fill="#3a4a5a"/>
+    <ellipse cx="80" cy="42" rx="14" ry="10" fill="#3a4a5a"/>
+    <ellipse cx="65" cy="74" rx="18" ry="13" fill="#d8d8d8"/>
+    <ellipse cx="65" cy="67" rx="9" ry="6.5" fill="#1a1a2e"/>
+    <ellipse cx="62" cy="65" rx="3" ry="2" fill="white" opacity=".4"/>
+    <circle cx="46" cy="50" r="11" fill="white"/>
+    <circle cx="84" cy="50" r="11" fill="white"/>
+    <circle cx="46" cy="51" r="7.5" fill="#4ab8d8"/>
+    <circle cx="84" cy="51" r="7.5" fill="#4ab8d8"/>
+    <circle cx="46" cy="51" r="4.5" fill="#1a2a3a"/>
+    <circle cx="84" cy="51" r="4.5" fill="#1a2a3a"/>
+    <circle cx="49" cy="48" r="3" fill="white"/>
+    <circle cx="87" cy="48" r="3" fill="white"/>
+    <path d="M 54 80 Q 65 90 76 80" stroke="#888" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M 26 88 Q 65 100 104 88" stroke="#1abc9c" stroke-width="8" fill="none" stroke-linecap="round"/>
+    <circle cx="65" cy="95" r="6" fill="#f1c40f"/>
+    <circle cx="65" cy="95" r="3" fill="#d4a000"/>
+  `},
+  { id:'beagle', label:'Beagle', svg:`
+    <defs>
+      <radialGradient id="petB" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#f5deb3"/><stop offset="100%" stop-color="#deb887"/></radialGradient>
+    </defs>
+    <ellipse cx="22" cy="68" rx="18" ry="36" fill="#8b4513" transform="rotate(-5 22 68)"/>
+    <ellipse cx="108" cy="68" rx="18" ry="36" fill="#8b4513" transform="rotate(5 108 68)"/>
+    <ellipse cx="65" cy="55" rx="38" ry="36" fill="url(#petB)"/>
+    <ellipse cx="65" cy="36" rx="26" ry="16" fill="#8b4513"/>
+    <ellipse cx="65" cy="55" rx="35" ry="32" fill="url(#petB)"/>
+    <ellipse cx="65" cy="42" rx="8" ry="14" fill="#fffaf0"/>
+    <ellipse cx="65" cy="71" rx="20" ry="14" fill="#f0e8d0"/>
+    <ellipse cx="65" cy="64" rx="11" ry="8" fill="#1a1a2e"/>
+    <ellipse cx="61" cy="62" rx="4" ry="2.5" fill="white" opacity=".4"/>
+    <ellipse cx="44" cy="49" rx="11" ry="9" fill="white"/>
+    <ellipse cx="86" cy="49" rx="11" ry="9" fill="white"/>
+    <circle cx="44" cy="51" r="7" fill="#6b3a00"/>
+    <circle cx="86" cy="51" r="7" fill="#6b3a00"/>
+    <circle cx="44" cy="51" r="4" fill="#1a1a2e"/>
+    <circle cx="86" cy="51" r="4" fill="#1a1a2e"/>
+    <circle cx="47" cy="48" r="2.8" fill="white"/>
+    <circle cx="89" cy="48" r="2.8" fill="white"/>
+    <path d="M 52 78 Q 65 85 78 78" stroke="#8a3010" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M 30 84 Q 65 94 100 84" stroke="#27ae60" stroke-width="8" fill="none" stroke-linecap="round"/>
+    <circle cx="65" cy="91" r="6" fill="#f1c40f"/>
+    <circle cx="65" cy="91" r="3" fill="#d4a000"/>
+  `},
+  { id:'tabby', label:'Orange Tabby', svg:`
+    <defs>
+      <radialGradient id="petT" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#e88030"/><stop offset="100%" stop-color="#c05010"/></radialGradient>
+    </defs>
+    <polygon points="28,36 14,6 48,26" fill="#c05010"/>
+    <polygon points="102,36 116,6 82,26" fill="#c05010"/>
+    <polygon points="30,32 18,10 46,26" fill="#ffbbcc"/>
+    <polygon points="100,32 112,10 84,26" fill="#ffbbcc"/>
+    <circle cx="65" cy="62" r="44" fill="url(#petT)"/>
+    <ellipse cx="65" cy="74" rx="22" ry="16" fill="#f4d0a0"/>
+    <polygon points="65,67 59,74 71,74" fill="#ffaacc"/>
+    <path d="M 58 76 Q 65 82 72 76" stroke="#c0694a" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <line x1="65" y1="74" x2="65" y2="76" stroke="#c0694a" stroke-width="1.8"/>
+    <line x1="16" y1="68" x2="44" y2="72" stroke="#fff" stroke-width="1.5" stroke-linecap="round" opacity=".9"/>
+    <line x1="16" y1="74" x2="44" y2="74" stroke="#fff" stroke-width="1.5" stroke-linecap="round" opacity=".9"/>
+    <line x1="86" y1="72" x2="114" y2="68" stroke="#fff" stroke-width="1.5" stroke-linecap="round" opacity=".9"/>
+    <line x1="86" y1="74" x2="114" y2="74" stroke="#fff" stroke-width="1.5" stroke-linecap="round" opacity=".9"/>
+    <ellipse cx="46" cy="52" rx="12" ry="11" fill="white"/>
+    <ellipse cx="84" cy="52" rx="12" ry="11" fill="white"/>
+    <circle cx="46" cy="53" r="8" fill="#3498db"/>
+    <circle cx="84" cy="53" r="8" fill="#3498db"/>
+    <ellipse cx="46" cy="53" rx="3.5" ry="7" fill="#1a1a2e"/>
+    <ellipse cx="84" cy="53" rx="3.5" ry="7" fill="#1a1a2e"/>
+    <circle cx="49" cy="49" r="3.5" fill="white"/>
+    <circle cx="87" cy="49" r="3.5" fill="white"/>
+    <path d="M 24 92 Q 65 104 106 92" stroke="#e74c3c" stroke-width="8" fill="none" stroke-linecap="round"/>
+    <circle cx="65" cy="100" r="6" fill="#f1c40f"/>
+    <circle cx="65" cy="100" r="3" fill="#d4a000"/>
+  `},
+  { id:'greyfold', label:'Grey Fold', svg:`
+    <defs>
+      <radialGradient id="petGF" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#9ab0c0"/><stop offset="100%" stop-color="#708090"/></radialGradient>
+    </defs>
+    <ellipse cx="36" cy="28" rx="16" ry="10" fill="#607080" transform="rotate(15 36 28)"/>
+    <ellipse cx="94" cy="28" rx="16" ry="10" fill="#607080" transform="rotate(-15 94 28)"/>
+    <ellipse cx="36" cy="28" rx="10" ry="6" fill="#ffbbcc" opacity=".8" transform="rotate(15 36 28)"/>
+    <ellipse cx="94" cy="28" rx="10" ry="6" fill="#ffbbcc" opacity=".8" transform="rotate(-15 94 28)"/>
+    <circle cx="65" cy="64" r="46" fill="url(#petGF)"/>
+    <ellipse cx="65" cy="76" rx="20" ry="14" fill="#d0dce8"/>
+    <polygon points="65,69 59,76 71,76" fill="#ffaacc"/>
+    <path d="M 58 78 Q 65 84 72 78" stroke="#8090a0" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <line x1="16" y1="71" x2="46" y2="74" stroke="#c0d0e0" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="16" y1="77" x2="46" y2="76" stroke="#c0d0e0" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="84" y1="74" x2="114" y2="71" stroke="#c0d0e0" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="84" y1="76" x2="114" y2="77" stroke="#c0d0e0" stroke-width="1.5" stroke-linecap="round"/>
+    <ellipse cx="46" cy="54" rx="13" ry="12" fill="white"/>
+    <ellipse cx="84" cy="54" rx="13" ry="12" fill="white"/>
+    <circle cx="46" cy="55" r="9" fill="#4a90c8"/>
+    <circle cx="84" cy="55" r="9" fill="#4a90c8"/>
+    <ellipse cx="46" cy="55" rx="4" ry="8" fill="#1a1a2e"/>
+    <ellipse cx="84" cy="55" rx="4" ry="8" fill="#1a1a2e"/>
+    <circle cx="50" cy="50" r="4" fill="white"/>
+    <circle cx="88" cy="50" r="4" fill="white"/>
+    <path d="M 22 94 Q 65 106 108 94" stroke="#9b59b6" stroke-width="8" fill="none" stroke-linecap="round"/>
+    <circle cx="65" cy="102" r="6" fill="#f1c40f"/>
+    <circle cx="65" cy="102" r="3" fill="#d4a000"/>
+  `},
+  { id:'blackcat', label:'Black Cat', svg:`
+    <defs>
+      <radialGradient id="petBC" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#2a2a3a"/><stop offset="100%" stop-color="#111120"/></radialGradient>
+    </defs>
+    <polygon points="26,38 12,6 46,26" fill="#111120"/>
+    <polygon points="104,38 118,6 84,26" fill="#111120"/>
+    <polygon points="28,34 16,10 44,26" fill="#553366"/>
+    <polygon points="102,34 114,10 86,26" fill="#553366"/>
+    <circle cx="65" cy="62" r="44" fill="url(#petBC)"/>
+    <ellipse cx="55" cy="40" rx="20" ry="10" fill="#333344" opacity=".6"/>
+    <ellipse cx="65" cy="74" rx="20" ry="14" fill="#2a2a44"/>
+    <polygon points="65,66 59,73 71,73" fill="#ffaacc"/>
+    <path d="M 58 75 Q 65 81 72 75" stroke="#553366" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <line x1="16" y1="68" x2="46" y2="71" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+    <line x1="16" y1="74" x2="46" y2="73" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+    <line x1="84" y1="71" x2="114" y2="68" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+    <line x1="84" y1="73" x2="114" y2="74" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+    <ellipse cx="46" cy="52" rx="13" ry="12" fill="#111120"/>
+    <ellipse cx="84" cy="52" rx="13" ry="12" fill="#111120"/>
+    <circle cx="46" cy="53" r="9" fill="#a0d000"/>
+    <circle cx="84" cy="53" r="9" fill="#a0d000"/>
+    <ellipse cx="46" cy="53" rx="4" ry="8.5" fill="#1a1a2e"/>
+    <ellipse cx="84" cy="53" rx="4" ry="8.5" fill="#1a1a2e"/>
+    <circle cx="50" cy="48" r="3.5" fill="white" opacity=".9"/>
+    <circle cx="88" cy="48" r="3.5" fill="white" opacity=".9"/>
+    <path d="M 24 92 Q 65 104 106 92" stroke="#8b0000" stroke-width="8" fill="none" stroke-linecap="round"/>
+    <circle cx="65" cy="100" r="6" fill="#f1c40f"/>
+    <circle cx="65" cy="100" r="3" fill="#d4a000"/>
+  `},
+];
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+const STORAGE_KEY = 'crabcake_avatar_v1';
+
+function defaultState() {
+  return { avatarId:'g1', skin:0, top:'teal', bottom:'navy', hat:'none', petId:'none' };
+}
+
+function loadState() {
+  try { return {...defaultState(), ...JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}')}; }
+  catch(e){ return defaultState(); }
+}
+
+function saveState(state) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+// ═══════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════
+function renderPreview(state) {
+  const av = AVATARS.find(a=>a.id===state.avatarId) || AVATARS[0];
+  const pet = PETS.find(p=>p.id===state.petId) || PETS[0];
+
+  // Avatar
+  const avEl = document.getElementById('previewAvatar');
+  avEl.innerHTML = buildAvatarSVG(av, state.skin, state.top, state.bottom, state.hat);
+
+  // Pet
+  const petWrap = document.getElementById('petPreviewWrap');
+  const petEl = document.getElementById('previewPet');
+  const petName = document.getElementById('petPreviewName');
+  if(pet.id === 'none' || !pet.svg) {
+    petWrap.style.opacity = '0.3';
+    petEl.innerHTML = '';
+    petName.textContent = 'No pet';
+  } else {
+    petWrap.style.opacity = '1';
+    petEl.innerHTML = pet.svg;
+    petName.textContent = pet.label;
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// BUILD SELECTORS
+// ═══════════════════════════════════════════════════════
+function buildAvatarGrid(state) {
+  const grid = document.getElementById('avatarGrid');
+  grid.innerHTML = '';
+  AVATARS.forEach(av => {
+    const card = document.createElement('div');
+    card.className = 'av-card' + (av.id === state.avatarId ? ' selected' : '');
+    card.setAttribute('role','button');
+    card.setAttribute('tabindex','0');
+    card.setAttribute('aria-label', av.label);
+    // tiny SVG preview
+    const previewSVG = `<svg width="44" height="96" viewBox="0 0 88 192">
+      <defs>
+        <radialGradient id="pS_${av.id}" cx="50%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="${SKINS[state.skin][0]}"/>
+          <stop offset="100%" stop-color="${SKINS[state.skin][1]}"/>
+        </radialGradient>
+      </defs>
+      ${av.hair({s:state.skin})}
+      <circle cx="44" cy="44" r="22" fill="url(#pS_${av.id})"/>
+    </svg>`;
+    card.innerHTML = previewSVG + `<div class="av-lbl">${av.label}</div>`;
+    card.addEventListener('click', () => {
+      state.avatarId = av.id;
+      updateSelection('avatar', av.id);
+      renderPreview(state);
+      rebuildAvatarGrid(state);
+    });
+    card.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' ') card.click(); });
+    grid.appendChild(card);
+  });
+}
+
+function rebuildAvatarGrid(state) {
+  document.querySelectorAll('.av-card').forEach((c,i)=>{
+    c.classList.toggle('selected', AVATARS[i]?.id === state.avatarId);
+  });
+}
+
+function buildPetGrid(state) {
+  const grid = document.getElementById('petGrid');
+  grid.innerHTML = '';
+  PETS.forEach(pet => {
+    const card = document.createElement('div');
+    card.className = 'pet-card' + (pet.id === state.petId ? ' selected' : '');
+    card.setAttribute('role','button'); card.setAttribute('tabindex','0');
+    card.setAttribute('aria-label', pet.label + ' pet');
+    let inner = '';
+    if(pet.svg) {
+      inner = `<svg width="65" height="65" viewBox="0 0 130 130">${pet.svg}</svg>`;
+    } else {
+      inner = `<div style="width:65px;height:65px;display:flex;align-items:center;justify-content:center;font-size:2rem;opacity:.4">🐾</div>`;
+    }
+    card.innerHTML = inner + `<div class="pet-lbl">${pet.label}</div>`;
+    card.addEventListener('click', ()=>{
+      state.petId = pet.id;
+      document.querySelectorAll('.pet-card').forEach(c=>c.classList.remove('selected'));
+      card.classList.add('selected');
+      renderPreview(state);
+    });
+    card.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' ') card.click(); });
+    grid.appendChild(card);
+  });
+}
+
+function initSwatches(wrapperId, dataAttr, stateKey, state) {
+  document.querySelectorAll(`#${wrapperId} .swatch`).forEach(btn=>{
+    const val = btn.dataset[dataAttr];
+    if(val === String(state[stateKey])) btn.classList.add('selected');
+    btn.addEventListener('click', ()=>{
+      state[stateKey] = (dataAttr==='skin') ? parseInt(val) : val;
+      document.querySelectorAll(`#${wrapperId} .swatch`).forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+      if(dataAttr==='skin') buildAvatarGrid(state); // refresh hair previews
+      renderPreview(state);
+    });
+  });
+}
+
+function initItemGrid(wrapperId, dataAttr, stateKey, state) {
+  document.querySelectorAll(`#${wrapperId} .item-btn`).forEach(btn=>{
+    const val = btn.dataset[dataAttr];
+    if(val === state[stateKey]) btn.classList.add('selected');
+    btn.addEventListener('click', ()=>{
+      state[stateKey] = val;
+      document.querySelectorAll(`#${wrapperId} .item-btn`).forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+      renderPreview(state);
+    });
+  });
+}
+
+function updateSelection(type, id) { /* handled inline */ }
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', ()=>{
+  const state = loadState();
+
+  buildAvatarGrid(state);
+  buildPetGrid(state);
+  initSwatches('skinSwatches','skin','skin',state);
+  initSwatches('topSwatches','top','top',state);
+  initSwatches('bottomSwatches','bottom','bottom',state);
+  initItemGrid('hatGrid','hat','hat',state);
+
+  renderPreview(state);
+
+  // Save button
+  document.getElementById('saveBtn').addEventListener('click', ()=>{
+    saveState(state);
+    const msg = document.getElementById('saveMsg');
+    msg.classList.add('show');
+    setTimeout(()=>msg.classList.remove('show'), 3000);
+  });
+
+  // Reset button
+  document.getElementById('resetBtn').addEventListener('click', ()=>{
+    if(!confirm('Reset your avatar to default?')) return;
+    localStorage.removeItem(STORAGE_KEY);
+    location.reload();
+  });
+
+  // Hamburger
+  const ham = document.getElementById('hamburger');
+  const navMenu = document.getElementById('nav-menu');
+  ham.addEventListener('click', ()=>{
+    const open = navMenu.classList.toggle('open');
+    ham.classList.toggle('open', open);
+  });
+  navMenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
+    navMenu.classList.remove('open'); ham.classList.remove('open');
+  }));
+});
+</script>
+
+</body>
+</html>

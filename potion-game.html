@@ -508,6 +508,7 @@ tr.me td{background:rgba(180,79,255,.1);border-left:2px solid var(--bright);}
       <div class="hb tries-hb" id="h-tries-b"><span class="hl">🧪 Tries Left</span><span class="hv" id="h-tries">10</span></div>
       <button class="new-game-btn hud-btn" id="new-game-btn">🔄 New</button>
       <a href="index.html" class="new-game-btn hud-btn" style="text-decoration:none;">🦀 Home</a>
+      <div id="potion-avatar-hud" style="display:flex;align-items:center;gap:4px;padding:0 4px;" title="Your Crew"></div>
     </div>
     <div class="xpbar"><div class="xpfill" id="xpfill" style="width:0%"></div></div>
     <p class="hint">1st try = max speed bonus · consecutive finds = streak multiplier up to ×4</p>
@@ -1770,6 +1771,13 @@ function init(){
 }
 
 init();
+</script>
+<script src="crabcake-avatar.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+  var hudEl = document.getElementById("potion-avatar-hud");
+  if(hudEl) CrabcakeAvatar.injectHUD(hudEl, {size:38, showPet:true});
+});
 </script>
 
 
