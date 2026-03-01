@@ -18,20 +18,19 @@ const CrabcakeAvatar = (function(){
     grey:'#95a5a6',white:'#ecf0f1'
   };
 
-  // ── Full v11 hair SVGs (match avatar.html exactly) ──
+  // ── Full v11 hair SVGs — accepts gradId for skin gradient reference ──
   const HAIR_SVG = {
-    g1: (sc) => `
+    g1: (gradId) => `
       <ellipse cx="44" cy="22" rx="22" ry="11" fill="#7b4a1e"/>
       <rect x="22" y="19" width="44" height="17" rx="5" fill="#7b4a1e"/>
       <rect x="18" y="25" width="8" height="20" rx="4" fill="#7b4a1e"/>
       <rect x="62" y="25" width="8" height="14" rx="4" fill="#7b4a1e"/>
       <path d="M 64 30 Q 78 34 82 50 Q 86 66 80 78 Q 77 85 73 81 Q 78 68 74 54 Q 70 40 62 34 Z" fill="#7b4a1e"/>
-      <circle cx="44" cy="44" r="20" fill="${sc}"/>
       <ellipse cx="44" cy="23" rx="20" ry="8.5" fill="#7b4a1e"/>
       <path d="M 24 27 Q 30 35 36 28" fill="#7b4a1e"/>
       <path d="M 52 27 Q 56 33 62 28" fill="#7b4a1e"/>
       <ellipse cx="66" cy="32" rx="3.5" ry="4.5" fill="#e74c3c"/>`,
-    g2: (sc) => `
+    g2: (gradId) => `
       <ellipse cx="44" cy="22" rx="22" ry="10" fill="#2a1a08"/>
       <rect x="22" y="19" width="44" height="16" rx="5" fill="#2a1a08"/>
       <ellipse cx="16" cy="37" rx="5.5" ry="3.5" fill="#2a1a08" transform="rotate(-8 16 37)"/>
@@ -44,11 +43,10 @@ const CrabcakeAvatar = (function(){
       <ellipse cx="74" cy="53" rx="4.5" ry="3.5" fill="#2a1a08" transform="rotate(6 74 53)"/>
       <ellipse cx="74.5" cy="61" rx="4" ry="3" fill="#2a1a08" transform="rotate(4 74.5 61)"/>
       <ellipse cx="72" cy="71" rx="4" ry="2.5" fill="#e91e8c"/>
-      <circle cx="44" cy="44" r="20" fill="${sc}"/>
       <ellipse cx="44" cy="24" rx="20" ry="8" fill="#2a1a08"/>
       <rect x="20" y="30" width="6" height="15" rx="3" fill="#2a1a08"/>
       <rect x="62" y="30" width="6" height="15" rx="3" fill="#2a1a08"/>`,
-    g3: (sc) => `
+    g3: (gradId) => `
       <circle cx="44" cy="14" r="14" fill="#1a0800"/>
       <circle cx="32" cy="18" r="11" fill="#1a0800"/>
       <circle cx="56" cy="18" r="11" fill="#1a0800"/>
@@ -59,18 +57,16 @@ const CrabcakeAvatar = (function(){
       <circle cx="44" cy="11" r="3.5" fill="#2d1200" opacity=".45"/>
       <rect x="30" y="27" width="28" height="5" rx="2.5" fill="#1a0800"/>
       <ellipse cx="44" cy="29" rx="6" ry="2.5" fill="#c0392b"/>
-      <circle cx="44" cy="44" r="20" fill="${sc}"/>
       <rect x="20" y="31" width="6" height="14" rx="3" fill="#1a0800"/>
       <rect x="62" y="31" width="6" height="14" rx="3" fill="#1a0800"/>`,
-    b1: (sc) => `
+    b1: (gradId) => `
       <ellipse cx="44" cy="22" rx="22" ry="12" fill="#f0c040"/>
       <rect x="22" y="22" width="44" height="18" rx="5" fill="#f0c040"/>
       <rect x="20" y="26" width="8" height="16" rx="4" fill="#f0c040"/>
       <rect x="60" y="26" width="8" height="16" rx="4" fill="#f0c040"/>
-      <circle cx="44" cy="44" r="20" fill="${sc}"/>
       <path d="M 24 24 Q 30 16 36 24 Q 40 30 46 22 Q 52 14 58 22 Q 64 30 70 24" stroke="#f0c040" stroke-width="8" fill="none" stroke-linecap="round"/>
       <ellipse cx="44" cy="18" rx="12" ry="5" fill="#fdd060" opacity=".55"/>`,
-    b2: (sc) => `
+    b2: (gradId) => `
       <circle cx="44" cy="18" r="16" fill="#1a0800"/>
       <circle cx="30" cy="22" r="13" fill="#1a0800"/>
       <circle cx="58" cy="22" r="13" fill="#1a0800"/>
@@ -81,21 +77,19 @@ const CrabcakeAvatar = (function(){
       <circle cx="44" cy="12" r="11" fill="#1a0800"/>
       <ellipse cx="40" cy="8" rx="8" ry="4" fill="#3d2000" opacity=".45"/>
       <rect x="20" y="30" width="7" height="14" rx="3.5" fill="#1a0800"/>
-      <rect x="61" y="30" width="7" height="14" rx="3.5" fill="#1a0800"/>
-      <circle cx="44" cy="44" r="20" fill="${sc}"/>`,
-    b3: (sc) => `
+      <rect x="61" y="30" width="7" height="14" rx="3.5" fill="#1a0800"/>`,
+    b3: (gradId) => `
       <ellipse cx="44" cy="21" rx="22" ry="12" fill="#c0392b"/>
       <rect x="22" y="21" width="44" height="18" rx="5" fill="#c0392b"/>
       <rect x="20" y="25" width="8" height="14" rx="4" fill="#c0392b"/>
       <rect x="60" y="25" width="8" height="14" rx="4" fill="#c0392b"/>
-      <circle cx="44" cy="44" r="20" fill="${sc}"/>
       <path d="M 28 19 Q 32 11 38 18" fill="#c0392b"/>
       <path d="M 36 15 Q 42 7 48 15" fill="#c0392b"/>
       <path d="M 48 17 Q 54 10 60 17" fill="#c0392b"/>
       <ellipse cx="42" cy="16" rx="10" ry="4" fill="#e05050" opacity=".5"/>
       <path d="M 20 28 Q 18 36 22 42" stroke="#c0392b" stroke-width="4" fill="none" stroke-linecap="round"/>
       <path d="M 68 28 Q 70 36 66 42" stroke="#c0392b" stroke-width="4" fill="none" stroke-linecap="round"/>`,
-  };
+  }
 
   // ── Full pet SVGs (match avatar.html exactly) ──
   const PET_SVG = {
@@ -268,7 +262,7 @@ const CrabcakeAvatar = (function(){
     const id      = 'hud_' + Math.random().toString(36).slice(2,6);
     const eyeCol  = state.skin >= 4 ? '#4a2c00' : '#2eaa88';
     const hairFn  = HAIR_SVG[state.avatarId] || HAIR_SVG['b1'];
-    const hairHTML = hairFn(sc);
+    const hairHTML = hairFn(`url(#${id}_sk)`);
 
     const lashes = isGirl ? `
       <line x1="32" y1="40.5" x2="31.4" y2="39" stroke="#1a1a2e" stroke-width="1.1" stroke-linecap="round"/>
@@ -293,7 +287,7 @@ const CrabcakeAvatar = (function(){
       <circle cx="44" cy="44" r="42" fill="rgba(0,0,0,.3)"/>
       <circle cx="44" cy="44" r="40" fill="${tc}"/>
       <g clip-path="url(#${id}_cl)" transform="translate(0,11)">
-        ${hairHTML.replace(/url\(#avSkin\)/g, `url(#${id}_sk)`).replace(/${sc}/g, `url(#${id}_sk)`)}
+        ${hairHTML}
         <circle cx="44" cy="44" r="20" fill="url(#${id}_sk)"/>
         <circle cx="20" cy="46" r="5.5" fill="url(#${id}_sk)"/>
         <circle cx="68" cy="46" r="5.5" fill="url(#${id}_sk)"/>
@@ -315,8 +309,27 @@ const CrabcakeAvatar = (function(){
 
   // Build full pet SVG in a circle
   function buildPetSVG(state, size=40) {
-    const svg = PET_SVG[state.petId];
+    let svg = PET_SVG[state.petId];
     if(!svg) return '';
+    // Make gradient IDs unique to avoid conflicts when rendered multiple times
+    const uid = 'p' + Math.random().toString(36).slice(2,6);
+    svg = svg
+      .replace(/id="petG"/g,  `id="petG_${uid}"`)  .replace(/url\(#petG\)/g,  `url(#petG_${uid})`)
+      .replace(/id="petH"/g,  `id="petH_${uid}"`)  .replace(/url\(#petH\)/g,  `url(#petH_${uid})`)
+      .replace(/id="petHi"/g, `id="petHi_${uid}"`) .replace(/url\(#petHi\)/g, `url(#petHi_${uid})`)
+      .replace(/id="petB"/g,  `id="petB_${uid}"`)  .replace(/url\(#petB\)/g,  `url(#petB_${uid})`)
+      .replace(/id="petT"/g,  `id="petT_${uid}"`)  .replace(/url\(#petT\)/g,  `url(#petT_${uid})`)
+      .replace(/id="petGF"/g, `id="petGF_${uid}"`) .replace(/url\(#petGF\)/g, `url(#petGF_${uid})`)
+      .replace(/id="petBC"/g, `id="petBC_${uid}"`) .replace(/url\(#petBC\)/g, `url(#petBC_${uid})`);
+    // Also deduplicate the _h suffix variants already in the SVG
+    svg = svg
+      .replace(/id="petG_h"/g,  `id="petG_${uid}"`)  .replace(/url\(#petG_h\)/g,  `url(#petG_${uid})`)
+      .replace(/id="petH_h"/g,  `id="petH_${uid}"`)  .replace(/url\(#petH_h\)/g,  `url(#petH_${uid})`)
+      .replace(/id="petHi_h"/g, `id="petHi_${uid}"`) .replace(/url\(#petHi_h\)/g, `url(#petHi_${uid})`)
+      .replace(/id="petB_h"/g,  `id="petB_${uid}"`)  .replace(/url\(#petB_h\)/g,  `url(#petB_${uid})`)
+      .replace(/id="petT_h"/g,  `id="petT_${uid}"`)  .replace(/url\(#petT_h\)/g,  `url(#petT_${uid})`)
+      .replace(/id="petGF_h"/g, `id="petGF_${uid}"`) .replace(/url\(#petGF_h\)/g, `url(#petGF_${uid})`)
+      .replace(/id="petBC_h"/g, `id="petBC_${uid}"`) .replace(/url\(#petBC_h\)/g, `url(#petBC_${uid})`);
     return `<svg width="${size}" height="${size}" viewBox="0 0 130 130"
       style="border-radius:50%;border:2px solid rgba(255,255,255,.3);box-shadow:0 2px 8px rgba(0,0,0,.4);"
       xmlns="http://www.w3.org/2000/svg">${svg}</svg>`;
