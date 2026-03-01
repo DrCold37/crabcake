@@ -590,11 +590,7 @@
       <p class="hero-notice">⚠️ Please be aware that this website is currently under construction. We're excited to announce that loads of fun activities, games, and more will be coming soon!</p>
 
       <!-- AVATAR CREW WIDGET -->
-      <div id="hero-crew-widget" style="display:none;margin-top:1.5rem;">
-        <a href="avatar.html" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;">
-          <div id="hero-crew-avatar" style="display:flex;align-items:center;gap:8px;"></div>
-        </a>
-      </div>
+
     </div>
   </section>
 
@@ -620,7 +616,7 @@
         <div class="cat-label">Reading</div>
         <div class="cat-count">1 Game</div>
       </div>
-      <div class="cat-card" style="--accent:var(--green);cursor:pointer;" onclick="window.open('kitchen-lab.html','_blank')">
+      <div class="cat-card" style="--accent:var(--green);cursor:pointer;" onclick="location.href='#games'">
         <span class="cat-emoji">🔬</span>
         <div class="cat-label">Science</div>
         <div class="cat-count">1 Game</div>
@@ -991,14 +987,7 @@
       var state = CrabcakeAvatar.load();
       var navHud = document.getElementById("nav-avatar-hud");
       if(navHud){ CrabcakeAvatar.injectHUD(navHud, {size:52, showPet:true}); navHud.style.display="inline-flex"; }
-      var heroWidget = document.getElementById("hero-crew-widget");
-      var heroAvEl   = document.getElementById("hero-crew-avatar");
-      if(heroAvEl && heroWidget){
-        heroAvEl.innerHTML = CrabcakeAvatar.buildHeadSVG(state, 72);
-        var pb = CrabcakeAvatar.buildPetBadge(state, 56);
-        if(pb) heroAvEl.insertAdjacentHTML("beforeend", pb);
-        heroWidget.style.display = "block";
-      }
+
     });
   </script>
 </body>
