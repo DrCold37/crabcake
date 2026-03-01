@@ -175,14 +175,14 @@
   .avatar-grid { display:flex; flex-wrap:wrap; gap:.4rem; }
   .av-card {
     cursor:pointer; border-radius:8px; border:2px solid rgba(255,255,255,.1);
-    padding:.2rem .2rem .1rem;
+    padding:.15rem .15rem .1rem;
     background:rgba(255,255,255,.05);
     transition:border-color .2s, transform .2s, background .2s;
-    display:flex; flex-direction:column; align-items:center; gap:.1rem;
+    display:flex; flex-direction:column; align-items:center; gap:0;
   }
   .av-card:hover { border-color:rgba(0,201,177,.5); transform:translateY(-3px); background:rgba(0,201,177,.08); }
   .av-card.selected { border-color:var(--teal); background:rgba(0,201,177,.15); box-shadow:0 0 0 1px var(--teal); }
-  .av-card .av-lbl { font-size:.6rem; color:rgba(255,255,255,.5); text-transform:uppercase; letter-spacing:.5px; font-weight:700; }
+  .av-card .av-lbl { font-size:.52rem; color:rgba(255,255,255,.5); text-transform:uppercase; letter-spacing:.3px; font-weight:700; line-height:1.2; }
 
   /* colour swatches */
   .swatch-row { display:flex; flex-wrap:wrap; gap:.5rem; }
@@ -936,6 +936,8 @@ function buildAvatarGrid(state) {
       updateSelection('avatar', av.id);
       renderPreview(state);
       rebuildAvatarGrid(state);
+      saveState(state);
+      if(typeof CrabcakeAvatar !== 'undefined') CrabcakeAvatar.refreshHUD();
     });
     card.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' ') card.click(); });
     grid.appendChild(card);
@@ -968,6 +970,8 @@ function buildPetGrid(state) {
       document.querySelectorAll('.pet-card').forEach(c=>c.classList.remove('selected'));
       card.classList.add('selected');
       renderPreview(state);
+      saveState(state);
+      if(typeof CrabcakeAvatar !== 'undefined') CrabcakeAvatar.refreshHUD();
     });
     card.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' ') card.click(); });
     grid.appendChild(card);
@@ -984,6 +988,8 @@ function initSwatches(wrapperId, dataAttr, stateKey, state) {
       btn.classList.add('selected');
       if(dataAttr==='skin') buildAvatarGrid(state); // refresh hair previews
       renderPreview(state);
+      saveState(state);
+      if(typeof CrabcakeAvatar !== 'undefined') CrabcakeAvatar.refreshHUD();
     });
   });
 }
@@ -997,6 +1003,8 @@ function initItemGrid(wrapperId, dataAttr, stateKey, state) {
       document.querySelectorAll(`#${wrapperId} .item-btn`).forEach(b=>b.classList.remove('selected'));
       btn.classList.add('selected');
       renderPreview(state);
+      saveState(state);
+      if(typeof CrabcakeAvatar !== 'undefined') CrabcakeAvatar.refreshHUD();
     });
   });
 }
