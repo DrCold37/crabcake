@@ -1208,14 +1208,6 @@
 
     });
   </script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-          .catch(err => console.log('SW registration failed:', err));
-      });
-    }
-  </script>
 
   <!-- PWA Install Banner -->
   <div id="pwa-banner" role="dialog" aria-label="Install Crabcake app">
@@ -1288,6 +1280,14 @@
     function dismissPwaTip() {
       document.getElementById('pwa-ios-tip').classList.remove('show');
       localStorage.setItem('crabcake_pwa_dismissed', '1');
+    }
+  </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .catch(err => console.log('SW registration failed:', err));
+      });
     }
   </script>
 </body>

@@ -436,8 +436,8 @@
   <div class="feedback-strip">
     <p class="feedback-text">💌 Found a bug or have a game idea?</p>
     <div class="feedback-btns">
-      <a class="feedback-btn" href="/cdn-cgi/l/email-protection#8ae2efe6e6e5cae9f8ebe8e9ebe1efa4e1e3eef9b5f9ffe8e0efe9feb7c8ffedafb8bad8effae5f8feafb8baafcfb8afb2baafb3b9afb8badeffe8efafb8bad9e5f8feace8e5eef3b7c2e3abafb8bac3afb8baece5ffe4eeafb8baebafb8bae8ffedafb8bae3e4afb8badeffe8efafb8bad9e5f8feafb9cbafbacbafbacb" onclick="showClaim('bug')">🐛 Report a Bug</a>
-      <a class="feedback-btn" href="/cdn-cgi/l/email-protection#09616c656566496a7b686b6a68626c2762606d7a367a7c6b636c6a7d344e68646c2c3b39406d6c682c3b396f667b2c3b394a7b686b6a68626c282f6b666d70344160282c3b39402c3b3961687f6c2c3b3968672c3b39606d6c682c3b396f667b2c3b39682c3b39676c7e2c3b396e68646c2c3a482c39482c3948" onclick="showClaim('idea')">💡 Suggest a Game</a>
+      <a class="feedback-btn" href="#" onclick="showClaim('bug')">🐛 Report a Bug</a>
+      <a class="feedback-btn" href="#" onclick="showClaim('idea')">💡 Suggest a Game</a>
     </div>
     <div class="feedback-claim" id="feedback-claim-bug">
       <button class="feedback-claim-btn" onclick="claimFeedbackBadge('bug')">✅ I sent it! Claim my 🐛 Bug Hunter badge</button>
@@ -458,7 +458,7 @@
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 // ─── Distinct colour palette (10 well-separated hues) ─────────────────────────
 const COLOR_HEX = {
   c1:  '#FF3B3B',   // vivid red
@@ -1199,4 +1199,46 @@ function awardTubeSortBadges(level, starsEarned) {
   if (elapsed < 45 && elapsed > 1 && _award('ts_lightning')) ne.push('ts_lightning');
   _crossCheck(ne);
   ne.forEach(id => _toast(id));
-  setTimeout
+  setTimeout(()=>{
+    const wrap=document.getElementById('lvlBadgesWrap');
+    const row=document.getElementById('lvlBadgesRow');
+    if(!wrap||!row)return;
+    const all=Object.keys(_lb());
+    if(!all.length&&!ne.length){wrap.style.display='none';return;}
+    wrap.style.display='';
+    const title=wrap.querySelector('.badges-section-title');
+    if(title)title.textContent=ne.length?`🏆 Badge${ne.length>1?'s':''} Earned!`:'🏆 Your Badges';
+    const show=ne.length?ne:all.slice(0,6);
+    row.innerHTML=show.map(id=>{const b=BADGE_DEF[id];if(!b)return'';
+      return`<div class="badge-coin${ne.includes(id)?' new-badge':''}" title="${b.desc}"><div class="badge-coin-em">${b.em}</div><div class="badge-coin-name">${b.name}</div></div>`;
+    }).join('');
+  },400);
+}
+
+function showClaim(type) {
+  setTimeout(() => {
+    const el = document.getElementById('feedback-claim-' + type);
+    if (el) el.style.display = 'block';
+  }, 800);
+}
+function claimFeedbackBadge(type) {
+  const id = type === 'bug' ? 'cg_bughunter' : 'cg_bigideas';
+  const btn = document.querySelector(`#feedback-claim-${type} .feedback-claim-btn`);
+  if (_award(id)) {
+    _toast(id);
+    if (btn) { btn.textContent = '🏆 Badge earned!'; btn.disabled = true; }
+  } else {
+    if (btn) { btn.textContent = '✅ Already earned!'; btn.disabled = true; }
+  }
+}
+</script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .catch(err => console.log('SW registration failed:', err));
+      });
+    }
+  </script>
+</body>
+</html>

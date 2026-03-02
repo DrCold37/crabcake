@@ -592,8 +592,8 @@
     <div class="feedback-strip">
       <p class="feedback-text">💌 Found a bug or have a game idea?</p>
       <div class="feedback-btns">
-        <a class="feedback-btn" href="/cdn-cgi/l/email-protection#472f222b2b28072435262524262c22692c2e2334783432252d2224337a053220627577152237283533627577620275627f77627e746275770a26332f627577032e3122612528233e7a0f2e666275770e6275772128322923627577266275772532206275772e296275770a26332f627577032e3122627406627706627706" onclick="showClaim('bug')">🐛 Report a Bug</a>
-        <a class="feedback-btn" href="/cdn-cgi/l/email-protection#8ae2efe6e6e5cae9f8ebe8e9ebe1efa4e1e3eef9b5f9ffe8e0efe9feb7cdebe7efafb8bac3eeefebafb8baece5f8afb8bac9f8ebe8e9ebe1efabace8e5eef3b7c2e3abafb8bac3afb8bae2ebfcefafb8baebe4afb8bae3eeefebafb8baece5f8afb8baebafb8bae4effdafb8baedebe7efafb9cbafbacbafbacb" onclick="showClaim('idea')">💡 Suggest a Game</a>
+        <a class="feedback-btn" href="#" onclick="showClaim('bug')">🐛 Report a Bug</a>
+        <a class="feedback-btn" href="#" onclick="showClaim('idea')">💡 Suggest a Game</a>
       </div>
       <div class="feedback-claim" id="feedback-claim-bug">
         <button class="feedback-claim-btn" onclick="claimFeedbackBadge('bug')">✅ I sent it! Claim my 🐛 Bug Hunter badge</button>
@@ -604,7 +604,7 @@
     </div>
   </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 // ── STATE ──
 let selectedAge = null;
 let score = 0;
@@ -1461,4 +1461,37 @@ function awardMathDiveBadges(sc, stk, age) {
   if (sc >= 15 && _award('md_speed')) ne.push('md_speed');
   if (_wrongCount === 0 && sc > 0 && _award('md_bullseye')) ne.push('md_bullseye');
   if (plays['mathdive'] >= 5 && _award('md_repeat')) ne.push('md_repeat');
-  
+  if (sc >= 20 && _award('md_legend')) ne.push('md_legend');
+  if (age === 9 && _award('md_times')) ne.push('md_times');
+  _crossCheck(ne);
+  ne.forEach(id => _toast(id));
+  setTimeout(() => _renderEndBadges(ne), 600);
+}
+
+function showClaim(type) {
+  setTimeout(() => {
+    const el = document.getElementById('feedback-claim-' + type);
+    if (el) el.style.display = 'block';
+  }, 800);
+}
+function claimFeedbackBadge(type) {
+  const id = type === 'bug' ? 'cg_bughunter' : 'cg_bigideas';
+  const btn = document.querySelector(`#feedback-claim-${type} .feedback-claim-btn`);
+  if (_award(id)) {
+    _toast(id);
+    if (btn) { btn.textContent = '🏆 Badge earned!'; btn.disabled = true; }
+  } else {
+    if (btn) { btn.textContent = '✅ Already earned!'; btn.disabled = true; }
+  }
+}
+</script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .catch(err => console.log('SW registration failed:', err));
+      });
+    }
+  </script>
+</body>
+</html>

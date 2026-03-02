@@ -613,8 +613,8 @@
     <div class="feedback-strip">
       <p class="feedback-text">💌 Found a bug or have a game idea?</p>
       <div class="feedback-btns">
-        <a class="feedback-btn" href="/cdn-cgi/l/email-protection#573f323b3b38173425363534363c32793c3e3324682422353d3234236a152230726567053227382523726567721265726f67726e647265671d2239303b327265670038253324713538332e6a1f3e767265671e7265673138223933726567367265673522307265673e397265671d2239303b327265670038253324726416726716726716" onclick="showClaim('bug')">🐛 Report a Bug</a>
-        <a class="feedback-btn" href="/cdn-cgi/l/email-protection#c5ada0a9a9aa85a6b7a4a7a6a4aea0ebaeaca1b6fab6b0a7afa0a6b1f882a4a8a0e0f7f58ca1a0a4e0f7f5a3aab7e0f7f586b7a4a7a6a4aea0e4e3a7aaa1bcf88dace4e0f7f58ce0f7f5ada4b3a0e0f7f5a4abe0f7f5aca1a0a4e0f7f5a3aab7e0f7f5a4e0f7f5aba0b2e0f7f5a2a4a8a0e0f684e0f584e0f584" onclick="showClaim('idea')">💡 Suggest a Game</a>
+        <a class="feedback-btn" href="#" onclick="showClaim('bug')">🐛 Report a Bug</a>
+        <a class="feedback-btn" href="#" onclick="showClaim('idea')">💡 Suggest a Game</a>
       </div>
       <div class="feedback-claim" id="feedback-claim-bug">
         <button class="feedback-claim-btn" onclick="claimFeedbackBadge('bug')">✅ I sent it! Claim my 🐛 Bug Hunter badge</button>
@@ -625,7 +625,7 @@
     </div>
   </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 // ── SENTENCE DATA ──
 const sentences = {
   5: [
@@ -1232,3 +1232,31 @@ function awardJungleWordsBadges(sc, lv) {
   ne.forEach(id => _toast(id));
   setTimeout(() => _renderEndBadges(ne), 600);
 }
+
+function showClaim(type) {
+  setTimeout(() => {
+    const el = document.getElementById('feedback-claim-' + type);
+    if (el) el.style.display = 'block';
+  }, 800);
+}
+function claimFeedbackBadge(type) {
+  const id = type === 'bug' ? 'cg_bughunter' : 'cg_bigideas';
+  const btn = document.querySelector(`#feedback-claim-${type} .feedback-claim-btn`);
+  if (_award(id)) {
+    _toast(id);
+    if (btn) { btn.textContent = '🏆 Badge earned!'; btn.disabled = true; }
+  } else {
+    if (btn) { btn.textContent = '✅ Already earned!'; btn.disabled = true; }
+  }
+}
+</script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .catch(err => console.log('SW registration failed:', err));
+      });
+    }
+  </script>
+</body>
+</html>
