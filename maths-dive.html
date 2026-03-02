@@ -103,7 +103,7 @@
       bottom: 0; left: 0; right: 0;
       height: 80px;
       background: linear-gradient(180deg, transparent, rgba(0,50,80,0.8));
-      z-index: 1;
+      z-index: 0;
       pointer-events: none;
     }
     .sea-floor::after {
@@ -359,9 +359,10 @@
 
     /* ── END SCREEN ── */
     #endScreen {
-      z-index: 10;
+      z-index: 15;
       gap: 1rem;
-      padding: 2rem;
+      padding: 2rem 2rem 110px;
+      overflow-y: auto;
     }
     .end-title {
       font-family: 'Boogaloo', cursive;
@@ -632,8 +633,6 @@ let timeLeft = 60;
 let timerInterval = null;
 let gameRunning = false;
 let _countdownTick = null;
-let _maxStreak = 0;
-let _lastCatchTime = 0;
 let currentAnswer = null;
 let currentQuestion = '';
 let fallingObjects = [];
@@ -750,9 +749,9 @@ function generateQuestion() {
   currentQuestion = q;
   document.getElementById('questionText').textContent = q;
 
-  // Update all active (not yet caught/missed) objects to reflect the new answer
+  // Update all objects already on screen to reflect the new answer
   fallingObjects.forEach(o => {
-    if (!o.caught && !o.missed) o.isCorrect = (o.value === ans);
+    o.isCorrect = (o.value === ans);
   });
 
   return { answer: ans, wrongs };
@@ -974,18 +973,13 @@ function gameLoop() {
   diver.y += (diver.targetY - diver.y) * 0.15;
 
   // Update & draw objects
-  // Collect deferred actions OUTSIDE the filter to avoid mutating fallingObjects mid-iteration
-  const _caught = [];
-  const _missedCorrect = [];
-  const _now = Date.now();
-
   fallingObjects = fallingObjects.filter(o => {
     // Remove after flash completes
     if (o.caught) {
-      if (o.flashGreen && _now - o.flashGreen < 200) {
+      if (o.flashGreen && Date.now() - o.flashGreen < 200) {
         const wx = o.x + Math.sin(o.wobble) * 12;
         drawObject(o, wx);
-        return true;
+        return true; // keep briefly to show flash
       }
       return false;
     }
@@ -995,36 +989,29 @@ function gameLoop() {
     o.wobble += o.wobbleSpeed;
     const wx = o.x + Math.sin(o.wobble) * 12;
 
-    // Check catch — defer onCatch until after filter
+    // Check catch
     const dx = Math.abs(wx - diver.x);
     const dy = Math.abs(o.y - diver.y);
-    if (dx < 45 && dy < 45 && (_now - _lastCatchTime > 200)) {
-      _lastCatchTime = _now;
+    if (dx < 45 && dy < 45) {
+      if (o.isCorrect) o.flashGreen = Date.now();
+      onCatch(o, wx, o.y);
       o.caught = true;
-      if (o.isCorrect) o.flashGreen = _now;
-      _caught.push({ o, wx, y: o.y });
       if (o.isCorrect) {
-        drawObject(o, wx); // flash frame
+        drawObject(o, wx); // draw one last frame with green flash
         return true;
       }
       return false;
     }
 
-    // Off screen — note missed correct for later
+    // Off screen
     if (o.y > canvas.height + 60) {
-      if (o.isCorrect) _missedCorrect.push(o);
+      if (o.isCorrect) generateQuestion();
       return false;
     }
 
     drawObject(o, wx);
     return true;
   });
-
-  // Now process catches safely, outside the filter
-  let _clearField = false;
-  _caught.forEach(({ o, wx, y }) => { if (onCatch(o, wx, y)) _clearField = true; });
-  if (_clearField) fallingObjects = fallingObjects.filter(o => o.caught && o.flashGreen);
-  _missedCorrect.forEach(() => generateQuestion());
 
   // Draw diver
   drawDiver();
@@ -1150,14 +1137,13 @@ function onCatch(obj, x, y) {
     if (streak > _maxStreak) { _maxStreak = streak; }
     if (streak >= 5 && _award('md_fire')) { _toast('md_fire'); }
     updateHUD();
-    const clearField = streak % 5 === 0;
-    if (clearField) {
+    if (streak > 0 && streak % 5 === 0) {
       timeLeft += 10;
       document.getElementById('timerVal').textContent = timeLeft;
       showFeedback(x, y - 40, '🔥 +10s bonus!', '#FFD93D');
       spawnConfetti(x, y);
       flashScreen('#FFD93D');
-    } else if (streak % 3 === 0) {
+    } else if (streak > 0 && streak % 3 === 0) {
       timeLeft += 5;
       document.getElementById('timerVal').textContent = timeLeft;
       showFeedback(x, y - 40, '⭐ +5s bonus!', '#4ECB71');
@@ -1169,7 +1155,7 @@ function onCatch(obj, x, y) {
     }
     playSound('correct');
     generateQuestion();
-    return clearField;
+    if (streak % 5 === 0) fallingObjects = [];
   } else {
     streak = 0;
     timeLeft = Math.max(0, timeLeft - 2);
