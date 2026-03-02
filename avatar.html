@@ -92,6 +92,16 @@
   @media(max-width:900px){
     nav { padding: 1rem 1.2rem; flex-wrap: nowrap; }
   }
+  @media(max-width: 600px) {
+    #nav-avatar-hud {
+      position: static !important;
+      left: auto !important;
+      transform: none !important;
+      pointer-events: auto !important;
+      margin: 0 auto;
+      flex-shrink: 0;
+    }
+  }
 
 
   /* ─── PAGE LAYOUT ─── */
@@ -1084,7 +1094,17 @@ document.addEventListener('DOMContentLoaded', ()=>{
   (function(){
     var navHud = document.getElementById("nav-avatar-hud");
     if(navHud && typeof CrabcakeAvatar !== 'undefined'){
-      CrabcakeAvatar.injectHUD(navHud, {size:52, showPet:true}); navHud.style.cssText="display:inline-flex;position:absolute;left:50%;transform:translateX(-50%);flex-shrink:0;pointer-events:none;z-index:50;"; navHud.querySelector("a").style.pointerEvents="auto";
+      CrabcakeAvatar.injectHUD(navHud, {size:52, showPet:true});
+      function applyHudLayout() {
+        if(window.innerWidth <= 600) {
+          navHud.style.cssText = "display:inline-flex;flex-shrink:0;";
+        } else {
+          navHud.style.cssText = "display:inline-flex;position:absolute;left:50%;transform:translateX(-50%);flex-shrink:0;pointer-events:none;z-index:50;";
+          navHud.querySelector("a").style.pointerEvents = "auto";
+        }
+      }
+      applyHudLayout();
+      window.addEventListener('resize', applyHudLayout);
     }
   })();
 </script>
