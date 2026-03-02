@@ -750,9 +750,12 @@ function generateQuestion() {
   currentQuestion = q;
   document.getElementById('questionText').textContent = q;
 
-  // Update all objects already on screen to reflect the new answer
+  // Mark all active objects as wrong for the new question.
+  // A fresh correct object will spawn shortly via the normal spawn cycle.
+  // This prevents a wrong object accidentally matching the new answer
+  // and triggering an instant phantom catch on the next frame.
   fallingObjects.forEach(o => {
-    if (!o.caught && !o.missed) o.isCorrect = (o.value === ans);
+    if (!o.caught && !o.missed) o.isCorrect = false;
   });
 
   return { answer: ans, wrongs };
@@ -1015,9 +1018,15 @@ function gameLoop() {
 
   // Process catches AFTER filter completes - safe to mutate now
   let _doClearField = false;
-  _toProcess.forEach(({ o, wx, y }) => { if (onCatch(o, wx, y)) _doClearField = true; });
+  let _correctCaught = false;
+  _toProcess.forEach(({ o, wx, y }) => {
+    if (o.isCorrect) _correctCaught = true;
+    if (onCatch(o, wx, y)) _doClearField = true;
+  });
   if (_missedCorrect) generateQuestion();
   if (_doClearField) fallingObjects = fallingObjects.filter(o => o.caught && o.flashGreen);
+  // Spawn a fresh correct object immediately after a correct catch so player is never stuck
+  if (_correctCaught) spawnCorrectObject();
 
   // Draw diver
   drawDiver();
