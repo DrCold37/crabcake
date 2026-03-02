@@ -631,6 +631,7 @@ let score = 0;
 let _wrongCount = 0;
 let _lastCatchTime = 0;
 let streak = 0;
+let _maxStreak = 0;
 let timeLeft = 60;
 let timerInterval = null;
 let gameRunning = false;
@@ -843,6 +844,7 @@ function startGame() {
   score = 0;
   _wrongCount = 0;
   streak = 0;
+  _maxStreak = 0;
   difficulty = 1;
   frameCount = 0;
   spawnRate = cfg.spawnRate;
