@@ -561,6 +561,99 @@
   .badge-tooltip:hover::before { content: attr(data-tip); position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: rgba(0,0,0,.85); color: #fff; font-size: .65rem; white-space: nowrap; padding: 5px 10px; border-radius: 8px; pointer-events: none; z-index: 10; border: 1px solid rgba(255,215,0,.3); }
   .badge-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:linear-gradient(135deg,#0a1628,#1a2a4a);border:2px solid #ffd700;border-radius:20px;padding:14px 22px;display:flex;align-items:center;gap:14px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.5),0 0 24px rgba(255,215,0,.3);transition:transform .5s cubic-bezier(.34,1.56,.64,1),opacity .4s;opacity:0;pointer-events:none;max-width:340px;}
   .badge-toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+
+  /* ── PWA INSTALL BANNER ── */
+  #pwa-banner {
+    position: fixed;
+    bottom: -120px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    background: linear-gradient(135deg, #0F1D36, #1a2a4a);
+    border: 2px solid var(--teal);
+    border-radius: 20px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 8px 32px rgba(0,0,0,.6), 0 0 20px rgba(0,201,177,.2);
+    transition: bottom .5s cubic-bezier(.34,1.56,.64,1);
+    max-width: 360px;
+    width: calc(100% - 40px);
+  }
+  #pwa-banner.show { bottom: 24px; }
+  #pwa-banner-icon { font-size: 2.4rem; flex-shrink: 0; }
+  #pwa-banner-text { flex: 1; }
+  #pwa-banner-text strong {
+    display: block;
+    color: #fff;
+    font-size: .95rem;
+    font-weight: 800;
+    margin-bottom: 2px;
+  }
+  #pwa-banner-text span {
+    color: rgba(255,255,255,.55);
+    font-size: .75rem;
+    font-weight: 600;
+  }
+  #pwa-banner-btn {
+    background: var(--teal);
+    color: #0F1D36;
+    border: none;
+    border-radius: 50px;
+    padding: 8px 16px;
+    font-weight: 900;
+    font-size: .82rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: transform .15s, background .15s;
+    flex-shrink: 0;
+    font-family: 'Nunito', sans-serif;
+  }
+  #pwa-banner-btn:hover { background: #00e8cc; transform: scale(1.05); }
+  #pwa-banner-close {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,.4);
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 4px;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+  #pwa-banner-close:hover { color: rgba(255,255,255,.8); }
+
+  /* iOS instruction tooltip */
+  #pwa-ios-tip {
+    position: fixed;
+    bottom: -160px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    background: linear-gradient(135deg, #0F1D36, #1a2a4a);
+    border: 2px solid var(--yellow);
+    border-radius: 20px;
+    padding: 16px 20px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,.6);
+    transition: bottom .5s cubic-bezier(.34,1.56,.64,1);
+    max-width: 320px;
+    width: calc(100% - 40px);
+  }
+  #pwa-ios-tip.show { bottom: 24px; }
+  #pwa-ios-tip p { color: rgba(255,255,255,.85); font-size: .82rem; font-weight: 600; line-height: 1.6; }
+  #pwa-ios-tip strong { color: var(--yellow); }
+  #pwa-ios-tip button {
+    margin-top: 10px;
+    background: none;
+    border: 1px solid rgba(255,255,255,.2);
+    color: rgba(255,255,255,.5);
+    border-radius: 50px;
+    padding: 5px 16px;
+    font-size: .75rem;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+  }
   </style>
 </head>
 <body>
@@ -1121,6 +1214,80 @@
         navigator.serviceWorker.register('/sw.js')
           .catch(err => console.log('SW registration failed:', err));
       });
+    }
+  </script>
+
+  <!-- PWA Install Banner -->
+  <div id="pwa-banner" role="dialog" aria-label="Install Crabcake app">
+    <div id="pwa-banner-icon">🦀</div>
+    <div id="pwa-banner-text">
+      <strong>Add to Home Screen</strong>
+      <span>Play offline, like a real app!</span>
+    </div>
+    <button id="pwa-banner-btn">Install</button>
+    <button id="pwa-banner-close" aria-label="Dismiss">✕</button>
+  </div>
+
+  <!-- iOS tip (Safari doesn't support install prompt) -->
+  <div id="pwa-ios-tip">
+    <p>📲 To install Crabcake:<br>Tap <strong>Share ⬆️</strong> then<br><strong>"Add to Home Screen"</strong></p>
+    <button onclick="dismissPwaTip()">Got it!</button>
+  </div>
+
+  <script>
+    (function() {
+      const DISMISSED_KEY = 'crabcake_pwa_dismissed';
+      if (localStorage.getItem(DISMISSED_KEY)) return;
+
+      let deferredPrompt = null;
+      const banner = document.getElementById('pwa-banner');
+      const iosTip = document.getElementById('pwa-ios-tip');
+
+      // Detect iOS Safari
+      const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+      const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+      // Don't show if already installed
+      if (isInStandaloneMode) return;
+
+      // Android/Chrome: catch install prompt
+      window.addEventListener('beforeinstallprompt', e => {
+        e.preventDefault();
+        deferredPrompt = e;
+        setTimeout(() => banner.classList.add('show'), 3000);
+      });
+
+      // Install button clicked
+      document.getElementById('pwa-banner-btn').addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        banner.classList.remove('show');
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') localStorage.setItem(DISMISSED_KEY, '1');
+        deferredPrompt = null;
+      });
+
+      // Dismiss button
+      document.getElementById('pwa-banner-close').addEventListener('click', () => {
+        banner.classList.remove('show');
+        localStorage.setItem(DISMISSED_KEY, '1');
+      });
+
+      // Hide banner once installed
+      window.addEventListener('appinstalled', () => {
+        banner.classList.remove('show');
+        localStorage.setItem(DISMISSED_KEY, '1');
+      });
+
+      // iOS: show tip after 3 seconds
+      if (isIOS) {
+        setTimeout(() => iosTip.classList.add('show'), 3000);
+      }
+    })();
+
+    function dismissPwaTip() {
+      document.getElementById('pwa-ios-tip').classList.remove('show');
+      localStorage.setItem('crabcake_pwa_dismissed', '1');
     }
   </script>
 </body>
