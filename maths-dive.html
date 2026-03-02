@@ -221,9 +221,14 @@
     .start-btn.ready {
       opacity: 1;
       pointer-events: all;
+      animation: btnGlow 1.4s ease-in-out infinite;
     }
-    .start-btn.ready:hover { transform: translateY(-3px); box-shadow: 0 9px 0 rgba(0,0,0,0.3), 0 12px 28px rgba(0,201,177,0.4); }
-    .start-btn.ready:active { transform: translateY(2px); box-shadow: 0 4px 0 rgba(0,0,0,0.3); }
+    @keyframes btnGlow {
+      0%, 100% { box-shadow: 0 6px 0 rgba(0,0,0,0.3), 0 8px 24px rgba(0,201,177,0.3); transform: translateY(0); }
+      50% { box-shadow: 0 6px 0 rgba(0,0,0,0.3), 0 12px 36px rgba(0,201,177,0.75), 0 0 24px rgba(0,201,177,0.5); transform: translateY(-3px); }
+    }
+    .start-btn.ready:hover { animation: none; transform: translateY(-4px); box-shadow: 0 10px 0 rgba(0,0,0,0.3), 0 16px 36px rgba(0,201,177,0.6); }
+    .start-btn.ready:active { animation: none; transform: translateY(2px); box-shadow: 0 4px 0 rgba(0,0,0,0.3); }
 
     /* ── HUD ── */
     #hud {
@@ -1354,7 +1359,8 @@ function claimFeedbackBadge(type) {
   }
 }
 
-document.getElementById('backLink').style.display = 'block';
+// ── INIT ──
+createAmbBubbles();
 
 // ═══════════════════════════════════════════════
 // BADGE ENGINE

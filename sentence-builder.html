@@ -180,9 +180,17 @@
       box-shadow: 0 6px 0 #1B5E20, 0 8px 24px rgba(76,175,80,0.35);
       transition: all 0.15s; opacity: 0.4; pointer-events: none;
     }
-    .start-btn.ready { opacity: 1; pointer-events: all; }
-    .start-btn.ready:hover  { transform: translateY(-3px); box-shadow: 0 9px 0 #1B5E20, 0 12px 28px rgba(76,175,80,0.45); }
-    .start-btn.ready:active { transform: translateY(2px);  box-shadow: 0 3px 0 #1B5E20; }
+    .start-btn.ready {
+      opacity: 1;
+      pointer-events: all;
+      animation: btnGlow 1.4s ease-in-out infinite;
+    }
+    @keyframes btnGlow {
+      0%, 100% { box-shadow: 0 6px 0 #1B5E20, 0 8px 24px rgba(76,175,80,0.35); transform: translateY(0); }
+      50% { box-shadow: 0 6px 0 #1B5E20, 0 12px 36px rgba(76,175,80,0.75), 0 0 24px rgba(76,175,80,0.5); transform: translateY(-3px); }
+    }
+    .start-btn.ready:hover  { animation: none; transform: translateY(-4px); box-shadow: 0 10px 0 #1B5E20, 0 16px 36px rgba(76,175,80,0.6); }
+    .start-btn.ready:active { animation: none; transform: translateY(2px);  box-shadow: 0 3px 0 #1B5E20; }
 
     /* ── HUD ── */
     #hud {
@@ -1108,7 +1116,6 @@ function claimFeedbackBadge(type) {
 
 // ── INIT ──
 createJungleAmbience();
-document.getElementById('backLink').style.display = 'block';
 
 // ═══════════════════════════════════════════════
 // BADGE ENGINE

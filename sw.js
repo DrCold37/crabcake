@@ -1,6 +1,6 @@
 // Crabcake Kids Service Worker
 // Cache version — increment this when you deploy updates
-const CACHE_NAME = 'crabcake-v1';
+const CACHE_NAME = 'crabcake-v3';
 
 // Files to cache for offline use
 const PRECACHE_URLS = [
