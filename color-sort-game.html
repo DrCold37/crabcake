@@ -3,6 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#00C9B1">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Crabcake">
+  <link rel="apple-touch-icon" href="/icon-192.png">
 <title>Tube Sort</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap');
@@ -428,8 +436,8 @@
   <div class="feedback-strip">
     <p class="feedback-text">💌 Found a bug or have a game idea?</p>
     <div class="feedback-btns">
-      <a class="feedback-btn" href="mailto:hello@crabcake.kids?subject=Bug%20Report%20%E2%80%93%20Tube%20Sort&body=Hi!%20I%20found%20a%20bug%20in%20Tube%20Sort%3A%0A%0A" onclick="showClaim('bug')">🐛 Report a Bug</a>
-      <a class="feedback-btn" href="mailto:hello@crabcake.kids?subject=Game%20Idea%20for%20Crabcake!&body=Hi!%20I%20have%20an%20idea%20for%20a%20new%20game%3A%0A%0A" onclick="showClaim('idea')">💡 Suggest a Game</a>
+      <a class="feedback-btn" href="/cdn-cgi/l/email-protection#8ae2efe6e6e5cae9f8ebe8e9ebe1efa4e1e3eef9b5f9ffe8e0efe9feb7c8ffedafb8bad8effae5f8feafb8baafcfb8afb2baafb3b9afb8badeffe8efafb8bad9e5f8feace8e5eef3b7c2e3abafb8bac3afb8baece5ffe4eeafb8baebafb8bae8ffedafb8bae3e4afb8badeffe8efafb8bad9e5f8feafb9cbafbacbafbacb" onclick="showClaim('bug')">🐛 Report a Bug</a>
+      <a class="feedback-btn" href="/cdn-cgi/l/email-protection#09616c656566496a7b686b6a68626c2762606d7a367a7c6b636c6a7d344e68646c2c3b39406d6c682c3b396f667b2c3b394a7b686b6a68626c282f6b666d70344160282c3b39402c3b3961687f6c2c3b3968672c3b39606d6c682c3b396f667b2c3b39682c3b39676c7e2c3b396e68646c2c3a482c39482c3948" onclick="showClaim('idea')">💡 Suggest a Game</a>
     </div>
     <div class="feedback-claim" id="feedback-claim-bug">
       <button class="feedback-claim-btn" onclick="claimFeedbackBadge('bug')">✅ I sent it! Claim my 🐛 Bug Hunter badge</button>
@@ -450,7 +458,7 @@
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ─── Distinct colour palette (10 well-separated hues) ─────────────────────────
 const COLOR_HEX = {
   c1:  '#FF3B3B',   // vivid red
@@ -488,6 +496,8 @@ const LEVELS = [
 const TUBE_CAPACITY = 4;
 
 let currentLevel  = 0;
+let _consecutivePerfect = 0;
+let _levelStartTime = 0;
 let tubes         = [];
 let selectedTube  = null;
 let moves         = 0;
@@ -1100,6 +1110,19 @@ const BADGE_DEF={
   ts_perfect:{game:'tubesort',em:'💎',name:'Perfectionist',desc:'Complete a level earning 3 stars'},
   ts_speed:{game:'tubesort',em:'⚡',name:'Speed Sorter',desc:'Complete Level 5 or beyond'},
   ts_master:{game:'tubesort',em:'👑',name:'Tube Master',desc:'Reach Level 10 in Tube Sort'},
+  ts_rainbow:{game:'tubesort',em:'🌈',name:'Colour Genius',desc:'Complete 3 levels in a row with 3 stars',hint:'3-star three levels in a row'},
+  ts_puzzle:{game:'tubesort',em:'🧩',name:'Puzzle Pro',desc:'Reach Level 15 in Tube Sort',hint:'Make it to Level 15'},
+  ts_lightning:{game:'tubesort',em:'⏱️',name:'Lightning Fast',desc:'Complete a level in under 45 seconds',hint:'Finish a level in 45 seconds'},
+  md_bullseye:{game:'mathdive',em:'🎯',name:'Bullseye',desc:'Finish a game without a single wrong answer'},
+  md_repeat:{game:'mathdive',em:'🌊',name:'Deep Diver',desc:'Play Math Dive 5 times'},
+  jw_speed:{game:'junglewords',em:'🔤',name:'Speed Reader',desc:'Complete a game in under 90 seconds'},
+  jw_champ:{game:'junglewords',em:'🦁',name:'Jungle Champion',desc:'Win 3 Jungle Words games in a row'},
+  jw_repeat:{game:'junglewords',em:'📚',name:'Bookworm',desc:'Play Jungle Words 5 times'},
+  wb_complete:{game:'witchbrew',em:'🧪',name:'Mad Scientist',desc:'Discover all 55 potions'},
+  wb_legendary5:{game:'witchbrew',em:'💜',name:'Potion Master',desc:'Brew 5 Legendary potions total'},
+  cg_earlybird:{game:'crabcake',em:'🌅',name:'Early Bird',desc:'Play any game before 8am'},
+  cg_returning:{game:'crabcake',em:'🔁',name:'Coming Back',desc:'Play on 3 different days'},
+  cg_collector:{game:'crabcake',em:'🏅',name:'Badge Collector',desc:'Earn 10 badges total'},
   cg_fan:{game:'crabcake',em:'🦀',name:'Crabcake Fan',desc:'Play all 4 Crabcake games at least once'},
   cg_allround:{game:'crabcake',em:'🌟',name:'All-Rounder',desc:'Earn at least one badge in every game'},
   cg_dedicated:{game:'crabcake',em:'🎮',name:'Dedicated',desc:'Play 10 games total across all games'},
@@ -1139,6 +1162,10 @@ function _crossCheck(ne){
   if(!d.cg_allround&&Object.values(gm).every(Boolean)){if(_award('cg_allround'))ne.push('cg_allround');}
   const d2=_lb();
   if(!d2.cg_dedicated&&(p._total||0)>=10){if(_award('cg_dedicated'))ne.push('cg_dedicated');}
+  if(!d2.cg_earlybird&&new Date().getHours()<8){if(_award('cg_earlybird'))ne.push('cg_earlybird');}
+  const DAYS_KEY='crabcake_days_v1';
+  try{const today=new Date().toDateString();let days=JSON.parse(localStorage.getItem(DAYS_KEY)||'[]');if(!days.includes(today)){days.push(today);localStorage.setItem(DAYS_KEY,JSON.stringify(days));}if(!d2.cg_returning&&days.length>=3){if(_award('cg_returning'))ne.push('cg_returning');}}catch{}
+  const d3=_lb();if(!d3.cg_collector&&Object.keys(d3).length>=10){if(_award('cg_collector'))ne.push('cg_collector');}
 }
 function _renderLvlBadges(ne){
   const wrap=document.getElementById('lvlBadgesWrap');
@@ -1163,17 +1190,13 @@ function awardTubeSortBadges(level, starsEarned) {
   if (starsEarned === 3 && _award('ts_perfect')) ne.push('ts_perfect');
   if (level >= 4 && _award('ts_speed')) ne.push('ts_speed');
   if (level >= 9 && _award('ts_master')) ne.push('ts_master');
+  if (level >= 14 && _award('ts_puzzle')) ne.push('ts_puzzle');
+  // Colour Genius: 3 consecutive 3-star levels
+  if (starsEarned === 3) { _consecutivePerfect++; } else { _consecutivePerfect = 0; }
+  if (_consecutivePerfect >= 3 && _award('ts_rainbow')) ne.push('ts_rainbow');
+  // Lightning Fast: completed level in under 45 seconds
+  const elapsed = (Date.now() - _levelStartTime) / 1000;
+  if (elapsed < 45 && elapsed > 1 && _award('ts_lightning')) ne.push('ts_lightning');
   _crossCheck(ne);
   ne.forEach(id => _toast(id));
-  setTimeout(() => _renderLvlBadges(ne), 400);
-}
-
-// ─── Boot ─────────────────────────────────────────────────────────────────────
-window.addEventListener('resize', resizeCanvases);
-resizeCanvases();
-drawBg();
-animateParticles();
-newGame();
-</script>
-</body>
-</html>
+  setTimeout

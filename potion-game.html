@@ -3,6 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#00C9B1">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Crabcake">
+  <link rel="apple-touch-icon" href="/icon-192.png">
 <title>Witch's Brew Workshop 🧙‍♀️</title>
 <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Bubblegum+Sans&display=swap" rel="stylesheet">
 <style>
@@ -508,7 +516,6 @@ tr.me td{background:rgba(180,79,255,.1);border-left:2px solid var(--bright);}
       <div class="hb tries-hb" id="h-tries-b"><span class="hl">🧪 Tries Left</span><span class="hv" id="h-tries">10</span></div>
       <button class="new-game-btn hud-btn" id="new-game-btn">🔄 New</button>
       <a href="index.html" class="new-game-btn hud-btn" style="text-decoration:none;">🦀 Home</a>
-      <div id="potion-avatar-hud" style="display:flex;align-items:center;gap:4px;padding:0 4px;" title="Your Crew"></div>
     </div>
     <div class="xpbar"><div class="xpfill" id="xpfill" style="width:0%"></div></div>
     <p class="hint">1st try = max speed bonus · consecutive finds = streak multiplier up to ×4</p>
@@ -1600,6 +1607,19 @@ const BADGE_DEF={
   wb_legend:{game:'witchbrew',em:'🟠',name:'Legendary!',desc:'Discover a Legendary potion'},
   wb_collect:{game:'witchbrew',em:'📖',name:'Spell Collector',desc:'Discover 10 or more potions total'},
   wb_streak:{game:'witchbrew',em:'🔥',name:'On A Roll',desc:'Achieve a 3× brew streak'},
+  wb_complete:{game:'witchbrew',em:'🧪',name:'Mad Scientist',desc:'Discover all 55 potions',hint:'Find every potion'},
+  wb_legendary5:{game:'witchbrew',em:'💜',name:'Potion Master',desc:'Brew 5 Legendary potions total',hint:'Brew 5 Legendaries'},
+  md_bullseye:{game:'mathdive',em:'🎯',name:'Bullseye',desc:'Finish a game without a single wrong answer'},
+  md_repeat:{game:'mathdive',em:'🌊',name:'Deep Diver',desc:'Play Math Dive 5 times'},
+  jw_speed:{game:'junglewords',em:'🔤',name:'Speed Reader',desc:'Complete a game in under 90 seconds'},
+  jw_champ:{game:'junglewords',em:'🦁',name:'Jungle Champion',desc:'Win 3 Jungle Words games in a row'},
+  jw_repeat:{game:'junglewords',em:'📚',name:'Bookworm',desc:'Play Jungle Words 5 times'},
+  ts_rainbow:{game:'tubesort',em:'🌈',name:'Colour Genius',desc:'Complete 3 levels in a row with 3 stars'},
+  ts_puzzle:{game:'tubesort',em:'🧩',name:'Puzzle Pro',desc:'Reach Level 15 in Tube Sort'},
+  ts_lightning:{game:'tubesort',em:'⏱️',name:'Lightning Fast',desc:'Complete a level in under 45 seconds'},
+  cg_earlybird:{game:'crabcake',em:'🌅',name:'Early Bird',desc:'Play any game before 8am'},
+  cg_returning:{game:'crabcake',em:'🔁',name:'Coming Back',desc:'Play on 3 different days'},
+  cg_collector:{game:'crabcake',em:'🏅',name:'Badge Collector',desc:'Earn 10 badges total'},
   ts_first:{game:'tubesort',em:'🧪',name:'First Sort',desc:'Complete Level 1 of Tube Sort'},
   ts_perfect:{game:'tubesort',em:'💎',name:'Perfectionist',desc:'Complete a level earning 3 stars'},
   ts_speed:{game:'tubesort',em:'⚡',name:'Speed Sorter',desc:'Complete Level 5 or beyond'},
@@ -1616,6 +1636,11 @@ function _lb(){try{return JSON.parse(localStorage.getItem(BADGE_KEY)||'{}');}cat
 function _sb(d){try{localStorage.setItem(BADGE_KEY,JSON.stringify(d));}catch{}}
 function _lp(){try{return JSON.parse(localStorage.getItem(PLAYS_KEY)||'{}');}catch{return{};}}
 function _sp(d){try{localStorage.setItem(PLAYS_KEY,JSON.stringify(d));}catch{}}
+
+// Track total legendary brews
+function _getLegendaryCount(){try{return parseInt(localStorage.getItem('crabcake_wb_legends_v1')||'0');}catch{return 0;}}
+function _incLegendaryCount(){try{const n=_getLegendaryCount()+1;localStorage.setItem('crabcake_wb_legends_v1',n);return n;}catch{return 0;}}
+
 function _award(id){const d=_lb();if(d[id])return false;d[id]={earned:true,date:new Date().toLocaleDateString()};_sb(d);return true;}
 function _incPlays(game){const p=_lp();p[game]=(p[game]||0)+1;p._total=(p._total||0)+1;_sp(p);return p;}
 let _tq=[],_tb=false;
@@ -1643,6 +1668,10 @@ function _crossCheck(ne){
   if(!d.cg_allround&&Object.values(gm).every(Boolean)){if(_award('cg_allround'))ne.push('cg_allround');}
   const d2=_lb();
   if(!d2.cg_dedicated&&(p._total||0)>=10){if(_award('cg_dedicated'))ne.push('cg_dedicated');}
+  if(!d2.cg_earlybird&&new Date().getHours()<8){if(_award('cg_earlybird'))ne.push('cg_earlybird');}
+  const DAYS_KEY='crabcake_days_v1';
+  try{const today=new Date().toDateString();let days=JSON.parse(localStorage.getItem(DAYS_KEY)||'[]');if(!days.includes(today)){days.push(today);localStorage.setItem(DAYS_KEY,JSON.stringify(days));}if(!d2.cg_returning&&days.length>=3){if(_award('cg_returning'))ne.push('cg_returning');}}catch{}
+  const d3=_lb();if(!d3.cg_collector&&Object.keys(d3).length>=10){if(_award('cg_collector'))ne.push('cg_collector');}
 }
 function _renderEndBadges(ne){
   const wrap=document.getElementById('goBadgesWrap');
@@ -1670,6 +1699,8 @@ function _wbCheckMidGame(recipe) {
   if (recipe.r === 'legendary' && _award('wb_legend')) ne.push('wb_legend');
   if (discovered.size >= 10 && _award('wb_collect')) ne.push('wb_collect');
   if (streak >= 3 && _award('wb_streak')) ne.push('wb_streak');
+  if (discovered.size >= 55 && _award('wb_complete')) ne.push('wb_complete');
+  if (recipe.r === 'legendary') { const lc = _incLegendaryCount(); if (lc >= 5 && _award('wb_legendary5')) ne.push('wb_legendary5'); }
   ne.forEach(id => { _toast(id); _wbGameBadges.push(id); });
 }
 function awardWitchBrewEndBadges() {
@@ -1772,14 +1803,15 @@ function init(){
 
 init();
 </script>
-<script src="crabcake-avatar.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", function(){
-  var hudEl = document.getElementById("potion-avatar-hud");
-  if(hudEl) CrabcakeAvatar.injectHUD(hudEl, {size:38, showPet:true});
-});
-</script>
 
 
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .catch(err => console.log('SW registration failed:', err));
+      });
+    }
+  </script>
 </body>
 </html>

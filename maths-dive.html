@@ -3,6 +3,14 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#00C9B1">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Crabcake">
+  <link rel="apple-touch-icon" href="/icon-192.png">
   <title>Math Dive 🤿 | Crabcake</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -584,8 +592,8 @@
     <div class="feedback-strip">
       <p class="feedback-text">💌 Found a bug or have a game idea?</p>
       <div class="feedback-btns">
-        <a class="feedback-btn" href="mailto:hello@crabcake.kids?subject=Bug%20Report%20%E2%80%93%20Math%20Dive&body=Hi!%20I%20found%20a%20bug%20in%20Math%20Dive%3A%0A%0A" onclick="showClaim('bug')">🐛 Report a Bug</a>
-        <a class="feedback-btn" href="mailto:hello@crabcake.kids?subject=Game%20Idea%20for%20Crabcake!&body=Hi!%20I%20have%20an%20idea%20for%20a%20new%20game%3A%0A%0A" onclick="showClaim('idea')">💡 Suggest a Game</a>
+        <a class="feedback-btn" href="/cdn-cgi/l/email-protection#472f222b2b28072435262524262c22692c2e2334783432252d2224337a053220627577152237283533627577620275627f77627e746275770a26332f627577032e3122612528233e7a0f2e666275770e6275772128322923627577266275772532206275772e296275770a26332f627577032e3122627406627706627706" onclick="showClaim('bug')">🐛 Report a Bug</a>
+        <a class="feedback-btn" href="/cdn-cgi/l/email-protection#8ae2efe6e6e5cae9f8ebe8e9ebe1efa4e1e3eef9b5f9ffe8e0efe9feb7cdebe7efafb8bac3eeefebafb8baece5f8afb8bac9f8ebe8e9ebe1efabace8e5eef3b7c2e3abafb8bac3afb8bae2ebfcefafb8baebe4afb8bae3eeefebafb8baece5f8afb8baebafb8bae4effdafb8baedebe7efafb9cbafbacbafbacb" onclick="showClaim('idea')">💡 Suggest a Game</a>
       </div>
       <div class="feedback-claim" id="feedback-claim-bug">
         <button class="feedback-claim-btn" onclick="claimFeedbackBadge('bug')">✅ I sent it! Claim my 🐛 Bug Hunter badge</button>
@@ -596,10 +604,11 @@
     </div>
   </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ── STATE ──
 let selectedAge = null;
 let score = 0;
+let _wrongCount = 0;
 let streak = 0;
 let timeLeft = 60;
 let timerInterval = null;
@@ -807,6 +816,7 @@ function startGame() {
   const cfg = ageConfig[selectedAge];
   timeLeft = cfg.time;
   score = 0;
+  _wrongCount = 0;
   streak = 0;
   difficulty = 1;
   frameCount = 0;
@@ -1131,6 +1141,7 @@ function onCatch(obj, x, y) {
     timeLeft = Math.max(0, timeLeft - 2);
     updateHUD();
     showFeedback(x, y, '✗ -2s', '#FF5C5C');
+    _wrongCount++;
     playSound('wrong');
     flashScreen('#FF5C5C');
     if (timeLeft <= 0) endGame();
@@ -1350,6 +1361,19 @@ const BADGE_DEF={
   md_speed:{game:'mathdive',em:'⚡',name:'Speed Demon',desc:'Score 15+ correct answers in one game'},
   md_legend:{game:'mathdive',em:'🏆',name:'Legendary Diver',desc:'Score 20+ correct answers in one game'},
   md_times:{game:'mathdive',em:'🧮',name:'Times Master',desc:'Complete a game on the Ages 9–10 level'},
+  md_bullseye:{game:'mathdive',em:'🎯',name:'Bullseye',desc:'Finish a game without a single wrong answer',hint:'No wrong answers in Math Dive'},
+  md_repeat:{game:'mathdive',em:'🌊',name:'Deep Diver',desc:'Play Math Dive 5 times',hint:'Play Math Dive 5 times'},
+  jw_speed:{game:'junglewords',em:'🔤',name:'Speed Reader',desc:'Complete a game in under 90 seconds'},
+  jw_champ:{game:'junglewords',em:'🦁',name:'Jungle Champion',desc:'Win 3 Jungle Words games in a row'},
+  jw_repeat:{game:'junglewords',em:'📚',name:'Bookworm',desc:'Play Jungle Words 5 times'},
+  wb_complete:{game:'witchbrew',em:'🧪',name:'Mad Scientist',desc:'Discover all 55 potions'},
+  wb_legendary5:{game:'witchbrew',em:'💜',name:'Potion Master',desc:'Brew 5 Legendary potions total'},
+  ts_rainbow:{game:'tubesort',em:'🌈',name:'Colour Genius',desc:'Complete 3 levels in a row with 3 stars'},
+  ts_puzzle:{game:'tubesort',em:'🧩',name:'Puzzle Pro',desc:'Reach Level 15 in Tube Sort'},
+  ts_lightning:{game:'tubesort',em:'⏱️',name:'Lightning Fast',desc:'Complete a level in under 45 seconds'},
+  cg_earlybird:{game:'crabcake',em:'🌅',name:'Early Bird',desc:'Play any game before 8am'},
+  cg_returning:{game:'crabcake',em:'🔁',name:'Coming Back',desc:'Play on 3 different days'},
+  cg_collector:{game:'crabcake',em:'🏅',name:'Badge Collector',desc:'Earn 10 badges total'},
   jw_first:{game:'junglewords',em:'🦁',name:'First Words',desc:'Complete your first Jungle Words game'},
   jw_builder:{game:'junglewords',em:'📝',name:'Sentence Builder',desc:'Build 5+ correct sentences in one game'},
   jw_wizard:{game:'junglewords',em:'🌟',name:'Word Wizard',desc:'Finish a game without losing a life'},
@@ -1403,6 +1427,10 @@ function _crossCheck(ne){
   if(!d.cg_allround&&Object.values(gm).every(Boolean)){if(_award('cg_allround'))ne.push('cg_allround');}
   const d2=_lb();
   if(!d2.cg_dedicated&&(p._total||0)>=10){if(_award('cg_dedicated'))ne.push('cg_dedicated');}
+  if(!d2.cg_earlybird&&new Date().getHours()<8){if(_award('cg_earlybird'))ne.push('cg_earlybird');}
+  const DAYS_KEY='crabcake_days_v1';
+  try{const today=new Date().toDateString();let days=JSON.parse(localStorage.getItem(DAYS_KEY)||'[]');if(!days.includes(today)){days.push(today);localStorage.setItem(DAYS_KEY,JSON.stringify(days));}if(!d2.cg_returning&&days.length>=3){if(_award('cg_returning'))ne.push('cg_returning');}}catch{}
+  const d3=_lb();if(!d3.cg_collector&&Object.keys(d3).length>=10){if(_award('cg_collector'))ne.push('cg_collector');}
 }
 function _renderEndBadges(ne){
   const wrap=document.getElementById('endBadgesWrap');
@@ -1426,16 +1454,6 @@ function awardMathDiveBadges(sc, stk, age) {
   if (_award('md_first')) ne.push('md_first');
   if (sc >= 10 && _award('md_sharp')) ne.push('md_sharp');
   if (sc >= 15 && _award('md_speed')) ne.push('md_speed');
-  if (sc >= 20 && _award('md_legend')) ne.push('md_legend');
-  if (age === 9 && _award('md_times')) ne.push('md_times');
-  _crossCheck(ne);
-  ne.forEach(id => _toast(id));
-  setTimeout(() => _renderEndBadges(ne), 400);
-}
-
-// ── Track streaks during gameplay for On Fire badge ──
-let _maxStreak = 0;
-const _origOnCatch = typeof onCatch === 'function' ? onCatch : null;
-</script>
-</body>
-</html>
+  if (_wrongCount === 0 && sc > 0 && _award('md_bullseye')) ne.push('md_bullseye');
+  if (plays['mathdive'] >= 5 && _award('md_repeat')) ne.push('md_repeat');
+  

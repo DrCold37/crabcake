@@ -3,6 +3,14 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#00C9B1">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Crabcake">
+  <link rel="apple-touch-icon" href="/icon-192.png">
   <title>Jungle Words 🌿 | Crabcake</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -605,8 +613,8 @@
     <div class="feedback-strip">
       <p class="feedback-text">💌 Found a bug or have a game idea?</p>
       <div class="feedback-btns">
-        <a class="feedback-btn" href="mailto:hello@crabcake.kids?subject=Bug%20Report%20%E2%80%93%20Jungle%20Words&body=Hi!%20I%20found%20a%20bug%20in%20Jungle%20Words%3A%0A%0A" onclick="showClaim('bug')">🐛 Report a Bug</a>
-        <a class="feedback-btn" href="mailto:hello@crabcake.kids?subject=Game%20Idea%20for%20Crabcake!&body=Hi!%20I%20have%20an%20idea%20for%20a%20new%20game%3A%0A%0A" onclick="showClaim('idea')">💡 Suggest a Game</a>
+        <a class="feedback-btn" href="/cdn-cgi/l/email-protection#573f323b3b38173425363534363c32793c3e3324682422353d3234236a152230726567053227382523726567721265726f67726e647265671d2239303b327265670038253324713538332e6a1f3e767265671e7265673138223933726567367265673522307265673e397265671d2239303b327265670038253324726416726716726716" onclick="showClaim('bug')">🐛 Report a Bug</a>
+        <a class="feedback-btn" href="/cdn-cgi/l/email-protection#c5ada0a9a9aa85a6b7a4a7a6a4aea0ebaeaca1b6fab6b0a7afa0a6b1f882a4a8a0e0f7f58ca1a0a4e0f7f5a3aab7e0f7f586b7a4a7a6a4aea0e4e3a7aaa1bcf88dace4e0f7f58ce0f7f5ada4b3a0e0f7f5a4abe0f7f5aca1a0a4e0f7f5a3aab7e0f7f5a4e0f7f5aba0b2e0f7f5a2a4a8a0e0f684e0f584e0f584" onclick="showClaim('idea')">💡 Suggest a Game</a>
       </div>
       <div class="feedback-claim" id="feedback-claim-bug">
         <button class="feedback-claim-btn" onclick="claimFeedbackBadge('bug')">✅ I sent it! Claim my 🐛 Bug Hunter badge</button>
@@ -617,7 +625,7 @@
     </div>
   </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ── SENTENCE DATA ──
 const sentences = {
   5: [
@@ -662,6 +670,7 @@ const sentences = {
 let selectedAge   = null;
 let score         = 0;
 let lives         = 3;
+let _gameStartTime = 0;
 let sentencesDone = 0;
 let gameRunning   = false;
 let currentSentence   = [];
@@ -747,6 +756,7 @@ function startGame() {
   score         = 0;
   lives         = 3;
   sentencesDone = 0;
+  _gameStartTime = Date.now();
   sentenceIndex = 0;
 
   // Shuffle sentences
@@ -1111,6 +1121,19 @@ const BADGE_DEF={
   jw_builder:{game:'junglewords',em:'📝',name:'Sentence Builder',desc:'Build 5+ correct sentences in one game'},
   jw_wizard:{game:'junglewords',em:'🌟',name:'Word Wizard',desc:'Finish a game without losing a life'},
   jw_elite:{game:'junglewords',em:'🏅',name:'Explorer Elite',desc:'Score 8/8 sentences in one game'},
+  jw_speed:{game:'junglewords',em:'🔤',name:'Speed Reader',desc:'Complete a game in under 90 seconds',hint:'Finish Jungle Words in 90 seconds'},
+  jw_champ:{game:'junglewords',em:'🦁',name:'Jungle Champion',desc:'Win 3 Jungle Words games in a row',hint:'3 wins in a row'},
+  jw_repeat:{game:'junglewords',em:'📚',name:'Bookworm',desc:'Play Jungle Words 5 times',hint:'Play Jungle Words 5 times'},
+  md_bullseye:{game:'mathdive',em:'🎯',name:'Bullseye',desc:'Finish a game without a single wrong answer'},
+  md_repeat:{game:'mathdive',em:'🌊',name:'Deep Diver',desc:'Play Math Dive 5 times'},
+  wb_complete:{game:'witchbrew',em:'🧪',name:'Mad Scientist',desc:'Discover all 55 potions'},
+  wb_legendary5:{game:'witchbrew',em:'💜',name:'Potion Master',desc:'Brew 5 Legendary potions total'},
+  ts_rainbow:{game:'tubesort',em:'🌈',name:'Colour Genius',desc:'Complete 3 levels in a row with 3 stars'},
+  ts_puzzle:{game:'tubesort',em:'🧩',name:'Puzzle Pro',desc:'Reach Level 15 in Tube Sort'},
+  ts_lightning:{game:'tubesort',em:'⏱️',name:'Lightning Fast',desc:'Complete a level in under 45 seconds'},
+  cg_earlybird:{game:'crabcake',em:'🌅',name:'Early Bird',desc:'Play any game before 8am'},
+  cg_returning:{game:'crabcake',em:'🔁',name:'Coming Back',desc:'Play on 3 different days'},
+  cg_collector:{game:'crabcake',em:'🏅',name:'Badge Collector',desc:'Earn 10 badges total'},
   wb_first:{game:'witchbrew',em:'🧙‍♀️',name:'Apprentice Witch',desc:'Brew your first successful potion'},
   wb_rare:{game:'witchbrew',em:'🔵',name:'Rare Find',desc:'Discover a Rare potion'},
   wb_epic:{game:'witchbrew',em:'🟣',name:'Epic Brewer',desc:'Discover an Epic potion'},
@@ -1160,6 +1183,10 @@ function _crossCheck(ne){
   if(!d.cg_allround&&Object.values(gm).every(Boolean)){if(_award('cg_allround'))ne.push('cg_allround');}
   const d2=_lb();
   if(!d2.cg_dedicated&&(p._total||0)>=10){if(_award('cg_dedicated'))ne.push('cg_dedicated');}
+  if(!d2.cg_earlybird&&new Date().getHours()<8){if(_award('cg_earlybird'))ne.push('cg_earlybird');}
+  const DAYS_KEY='crabcake_days_v1';
+  try{const today=new Date().toDateString();let days=JSON.parse(localStorage.getItem(DAYS_KEY)||'[]');if(!days.includes(today)){days.push(today);localStorage.setItem(DAYS_KEY,JSON.stringify(days));}if(!d2.cg_returning&&days.length>=3){if(_award('cg_returning'))ne.push('cg_returning');}}catch{}
+  const d3=_lb();if(!d3.cg_collector&&Object.keys(d3).length>=10){if(_award('cg_collector'))ne.push('cg_collector');}
 }
 function _renderEndBadges(ne){
   const wrap=document.getElementById('endBadgesWrap');
@@ -1179,15 +1206,26 @@ function _renderEndBadges(ne){
 // ── Jungle Words: award badges at game end ──
 function awardJungleWordsBadges(sc, lv) {
   const ne = [];
-  _incPlays('junglewords');
+  const plays = _incPlays('junglewords');
   if (_award('jw_first')) ne.push('jw_first');
   if (sc >= 5 && _award('jw_builder')) ne.push('jw_builder');
+  if (lives > 0 && _award('jw_wizard')) ne.push('jw_wizard');
   if (sc >= 8 && _award('jw_elite')) ne.push('jw_elite');
-  if (sc >= 1 && lives >= 3 && _award('jw_wizard')) ne.push('jw_wizard');
+  // Speed Reader: completed in under 90 seconds
+  const elapsed = (Date.now() - _gameStartTime) / 1000;
+  if (sc > 0 && elapsed < 90 && _award('jw_speed')) ne.push('jw_speed');
+  // Bookworm: 5 total plays
+  if (plays['junglewords'] >= 5 && _award('jw_repeat')) ne.push('jw_repeat');
+  // Jungle Champion: 3 consecutive wins (win = finished with lives > 0)
+  const JW_STREAK_KEY = 'crabcake_jw_streak_v1';
+  try {
+    let streak = parseInt(localStorage.getItem(JW_STREAK_KEY) || '0');
+    if (lives > 0) { streak++; } else { streak = 0; }
+    localStorage.setItem(JW_STREAK_KEY, streak);
+    if (streak >= 3 && _award('jw_champ')) ne.push('jw_champ');
+  } catch {}
+  // Cross-game
   _crossCheck(ne);
   ne.forEach(id => _toast(id));
-  setTimeout(() => _renderEndBadges(ne), 400);
+  setTimeout(() => _renderEndBadges(ne), 600);
 }
-</script>
-</body>
-</html>
