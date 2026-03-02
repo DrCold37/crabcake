@@ -673,6 +673,7 @@ let lives         = 3;
 let _gameStartTime = 0;
 let sentencesDone = 0;
 let gameRunning   = false;
+let _countdownTick = null;
 let currentSentence   = [];
 let builtSoFar        = [];
 let nextWordIndex     = 0;
@@ -734,10 +735,10 @@ function startCountdown() {
   let count = 3;
   numEl.textContent = count;
 
-  const tick = setInterval(() => {
+  _countdownTick = setInterval(() => {
     count--;
     if (count <= 0) {
-      clearInterval(tick);
+      clearInterval(_countdownTick); _countdownTick = null;
       numEl.textContent = '🌿';
       setTimeout(() => { el.classList.add('hidden'); startGame(); }, 600);
     } else {
@@ -1076,6 +1077,8 @@ function changeLevel() {
   document.getElementById('startBtn').classList.remove('ready');
   selectedAge = null;
   gameRunning = false;
+  if (_countdownTick) { clearInterval(_countdownTick); _countdownTick = null; }
+  document.getElementById('countdown').classList.add('hidden');
 }
 
 function hudBack() {
