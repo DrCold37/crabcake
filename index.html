@@ -882,13 +882,39 @@
       ts_perfect:{game:'tubesort',em:'💎',name:'Perfectionist',desc:'Complete a level earning 3 stars',hint:"Earn 3 stars on any level"},
       ts_speed:{game:'tubesort',em:'⚡',name:'Speed Sorter',desc:'Complete Level 5 or beyond',hint:"Reach Level 5"},
       ts_master:{game:'tubesort',em:'👑',name:'Tube Master',desc:'Reach Level 10 in Tube Sort',hint:"Make it to Level 10"},
+      kl_first:     {game:'kitchenlab',em:'🧪',name:'First Experiment',desc:'Complete your first Kitchen Lab game',hint:'Play any Kitchen Lab game'},
+      kl_sharp:     {game:'kitchenlab',em:'⭐',name:'Sharp Scientist',desc:'Score 6+ correct in one Kitchen Lab game',hint:'Score 6+ in Kitchen Lab'},
+      kl_perfect:   {game:'kitchenlab',em:'🏆',name:'Perfect Lab',desc:'Score 10/10 in Kitchen Lab',hint:'Perfect score in Kitchen Lab'},
+      kl_chem:      {game:'kitchenlab',em:'⚗️',name:'Chemist',desc:'Complete the Ages 9–10 level',hint:'Finish a 9–10 age game'},
+      kl_noerror:   {game:'kitchenlab',em:'💎',name:'No Mistakes',desc:'Finish a Kitchen Lab game without losing a life',hint:'Keep all 3 lives'},
+      kl_curious:   {game:'kitchenlab',em:'🔬',name:'Curious Mind',desc:'Play Kitchen Lab 3 times',hint:'Play Kitchen Lab 3 times'},
+      kl_juniorchef:{game:'kitchenlab',em:'🧑‍🍳',name:'Junior Chef',desc:'Play Kitchen Lab 5 times',hint:'Play Kitchen Lab 5 times'},
+      kl_kaboom:    {game:'kitchenlab',em:'💥',name:'Kaboom!',desc:'Make an experiment go wrong',hint:'Get a wrong answer in Kitchen Lab'},
+      kl_masterchef:{game:'kitchenlab',em:'🌟',name:'Master Chef',desc:'Complete all 3 Kitchen Lab age levels',hint:'Finish 5–6, 7–8 and 9–10'},
+      av_stylestar: {game:'avatar',em:'🎨',name:'Style Star',desc:'Customise your avatar for the first time',hint:'Change any avatar option'},
+      av_bestfriend:{game:'avatar',em:'🐾',name:'Best Friends',desc:'Choose a pet companion',hint:'Select any pet'},
+      av_fashion:   {game:'avatar',em:'👗',name:'Fashion Designer',desc:"Change your avatar's outfit colour",hint:'Pick a new outfit colour'},
+      av_makeover:  {game:'avatar',em:'✨',name:'Makeover!',desc:'Customise your avatar 3 times',hint:'Make 3 changes to your avatar'},
       cg_fan:{game:'crabcake',em:'🦀',name:'Crabcake Fan',desc:'Play all 4 Crabcake games at least once',hint:"Try all 4 games"},
       cg_allround:{game:'crabcake',em:'🌟',name:'All-Rounder',desc:'Earn at least one badge in every game',hint:"Badge in all 4 games"},
       cg_dedicated:{game:'crabcake',em:'🎮',name:'Dedicated',desc:'Play 10 games total across all games',hint:"Play 10 total games"},
       cg_bughunter:{game:'crabcake',em:'🐛',name:'Bug Hunter',desc:'Reported a bug to help improve Crabcake',hint:"Report a bug via email"},
       cg_bigideas:{game:'crabcake',em:'💡',name:'Big Ideas',desc:'Suggested a new game idea for Crabcake',hint:"Suggest a game via email"},
+      md_bullseye:{game:'mathdive',em:'🎯',name:'Bullseye',desc:'Finish a game without a single wrong answer',hint:'No wrong answers in Math Dive'},
+      md_repeat:{game:'mathdive',em:'🌊',name:'Deep Diver',desc:'Play Math Dive 5 times',hint:'Play Math Dive 5 times'},
+      jw_speed:{game:'junglewords',em:'🔤',name:'Speed Reader',desc:'Complete a game in under 90 seconds',hint:'Finish Jungle Words in 90 seconds'},
+      jw_champ:{game:'junglewords',em:'🦁',name:'Jungle Champion',desc:'Win 3 Jungle Words games in a row',hint:'3 wins in a row'},
+      jw_repeat:{game:'junglewords',em:'📚',name:'Bookworm',desc:'Play Jungle Words 5 times',hint:'Play Jungle Words 5 times'},
+      wb_complete:{game:'witchbrew',em:'🧪',name:'Mad Scientist',desc:'Discover all 55 potions',hint:'Find every potion'},
+      wb_legendary5:{game:'witchbrew',em:'💜',name:'Potion Master',desc:'Brew 5 Legendary potions total',hint:'Brew 5 Legendaries'},
+      ts_rainbow:{game:'tubesort',em:'🌈',name:'Colour Genius',desc:'Complete 3 levels in a row with 3 stars',hint:'3-star three levels in a row'},
+      ts_puzzle:{game:'tubesort',em:'🧩',name:'Puzzle Pro',desc:'Reach Level 15 in Tube Sort',hint:'Make it to Level 15'},
+      ts_lightning:{game:'tubesort',em:'⏱️',name:'Lightning Fast',desc:'Complete a level in under 45 seconds',hint:'Finish a level in 45 seconds'},
+      cg_earlybird:{game:'crabcake',em:'🌅',name:'Early Bird',desc:'Play any game before 8am',hint:'Play before 8am'},
+      cg_returning:{game:'crabcake',em:'🔁',name:'Coming Back',desc:'Play on 3 different days',hint:'Play on 3 different days'},
+      cg_collector:{game:'crabcake',em:'🏅',name:'Badge Collector',desc:'Earn 10 badges total',hint:'Earn 10 badges'},
     };
-    const GAME_LABELS={mathdive:'🤿 Math Dive',junglewords:'🦁 Jungle Words',witchbrew:'🧙‍♀️ Witch\'s Brew',tubesort:'🧪 Tube Sort',crabcake:'🦀 Crabcake'};
+    const GAME_LABELS={mathdive:'🤿 Math Dive',junglewords:'🦁 Jungle Words',witchbrew:'🧙‍♀️ Witch\'s Brew',tubesort:'🧪 Tube Sort',kitchenlab:'🧪 Kitchen Lab',avatar:'🎨 Avatar & Pet',crabcake:'🦀 Crabcake'};
     const BADGE_KEY='crabcake_badges_v1';
 
     function renderHomeBadges(){
@@ -951,6 +977,68 @@
     });
 
     renderHomeBadges();
+
+    // ── Auto-award cross-game badges ──
+    (function() {
+      const BADGE_KEY = 'crabcake_badges_v1';
+      const STATS_KEY = 'crabcake_stats_v1';
+
+      function awardBadge(id) {
+        try {
+          const d = JSON.parse(localStorage.getItem(BADGE_KEY)||'{}');
+          if (d[id]) return false;
+          d[id] = { earned: true, date: new Date().toLocaleDateString() };
+          localStorage.setItem(BADGE_KEY, JSON.stringify(d));
+          return true;
+        } catch { return false; }
+      }
+
+      function showToast(id) {
+        const b = BADGE_DEF[id];
+        if (!b) return;
+        const t = document.createElement('div');
+        t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#0a1628,#1a2a4a);border:2px solid #ffd700;border-radius:20px;padding:14px 22px;display:flex;align-items:center;gap:14px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.5);color:#fff;font-size:.9rem;max-width:340px;';
+        t.innerHTML = '<span style="font-size:2rem">' + b.em + '</span><div><div style="font-size:.6rem;text-transform:uppercase;letter-spacing:2px;color:#ffd700;font-weight:bold;">🏆 Badge Unlocked!</div><div style="font-weight:bold">' + b.name + '</div><div style="font-size:.72rem;color:#a0c0ff">' + b.desc + '</div></div>';
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 4000);
+        renderHomeBadges();
+      }
+
+      function tryAward(id) {
+        if (awardBadge(id)) showToast(id);
+      }
+
+      // Load/init stats
+      let stats;
+      try { stats = JSON.parse(localStorage.getItem(STATS_KEY)||'{}'); } catch { stats = {}; }
+      if (!stats.visitDates) stats.visitDates = [];
+
+      // Track visit dates (store unique date strings)
+      const todayStr = new Date().toLocaleDateString();
+      if (!stats.visitDates.includes(todayStr)) {
+        stats.visitDates.push(todayStr);
+        localStorage.setItem(STATS_KEY, JSON.stringify(stats));
+      }
+
+      // 🌅 Early Bird — before 8am
+      if (new Date().getHours() < 8) tryAward('cg_earlybird');
+
+      // 🔁 Coming Back — visited on 3+ different days
+      if (stats.visitDates.length >= 3) tryAward('cg_returning');
+
+      // 🏅 Badge Collector — 10+ badges earned
+      try {
+        const earned = JSON.parse(localStorage.getItem(BADGE_KEY)||'{}');
+        const count = Object.keys(earned).length;
+        // Check after a short delay so any just-awarded badges are counted
+        setTimeout(() => {
+          try {
+            const latestEarned = JSON.parse(localStorage.getItem(BADGE_KEY)||'{}');
+            if (Object.keys(latestEarned).length >= 10) tryAward('cg_collector');
+          } catch {}
+        }, 500);
+      } catch {}
+    })();
 
     // ── Homepage feedback badge claim ──
     const HP_BADGE_KEY = 'crabcake_badges_v1';

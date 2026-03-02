@@ -916,6 +916,46 @@ const PETS = [
 // ═══════════════════════════════════════════════════════
 const STORAGE_KEY = 'crabcake_avatar_v1';
 
+// ── Badge Engine ──
+const _AV_BADGE_KEY = 'crabcake_badges_v1';
+const _AV_STATS_KEY = 'crabcake_av_stats_v1';
+function _avAward(id) {
+  try {
+    const d = JSON.parse(localStorage.getItem(_AV_BADGE_KEY)||'{}');
+    if (d[id]) return false;
+    d[id] = { earned: true, date: new Date().toLocaleDateString() };
+    localStorage.setItem(_AV_BADGE_KEY, JSON.stringify(d));
+    return true;
+  } catch { return false; }
+}
+function _avToast(id) {
+  const defs = {
+    av_stylestar: {em:'🎨', name:'Style Star',     desc:'Customised your avatar for the first time!'},
+    av_bestfriend:{em:'🐾', name:'Best Friends',   desc:'You chose a pet companion!'},
+    av_fashion:   {em:'👗', name:'Fashion Designer',desc:"Changed your avatar's outfit colour!"},
+    av_makeover:  {em:'✨', name:'Makeover!',       desc:'You\'ve customised your avatar 3 times!'},
+  };
+  const b = defs[id]; if (!b) return;
+  const t = document.createElement('div');
+  t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#0a1628,#1a2a4a);border:2px solid #ffd700;border-radius:20px;padding:14px 22px;display:flex;align-items:center;gap:14px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.5);color:#fff;font-size:.9rem;max-width:340px;';
+  t.innerHTML = '<span style="font-size:2rem">' + b.em + '</span><div><div style="font-size:.6rem;text-transform:uppercase;letter-spacing:2px;color:#ffd700;font-weight:bold;">🏆 Badge Unlocked!</div><div style="font-weight:bold">' + b.name + '</div><div style="font-size:.72rem;color:#a0c0ff">' + b.desc + '</div></div>';
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 4000);
+}
+function _avTryAward(id) { if (_avAward(id)) _avToast(id); }
+function _avTrackChange(type) {
+  // type: 'avatar' | 'pet' | 'outfit'
+  let stats; try { stats = JSON.parse(localStorage.getItem(_AV_STATS_KEY)||'{}'); } catch { stats = {}; }
+  if (!stats.changes) stats.changes = 0;
+  stats.changes++;
+  localStorage.setItem(_AV_STATS_KEY, JSON.stringify(stats));
+
+  _avTryAward('av_stylestar');
+  if (type === 'pet') _avTryAward('av_bestfriend');
+  if (type === 'outfit') _avTryAward('av_fashion');
+  if (stats.changes >= 3) _avTryAward('av_makeover');
+}
+
 function defaultState() {
   return { avatarId:'g1', skin:0, top:'teal', bottom:'navy', hat:'none', petId:'none' };
 }
@@ -985,6 +1025,7 @@ function buildAvatarGrid(state) {
       renderPreview(state);
       rebuildAvatarGrid(state);
       saveState(state);
+      _avTrackChange('avatar');
       if(typeof CrabcakeAvatar !== 'undefined') CrabcakeAvatar.refreshHUD();
     });
     card.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' ') card.click(); });
@@ -1019,6 +1060,7 @@ function buildPetGrid(state) {
       card.classList.add('selected');
       renderPreview(state);
       saveState(state);
+      if(pet.id !== 'none') _avTrackChange('pet');
       if(typeof CrabcakeAvatar !== 'undefined') CrabcakeAvatar.refreshHUD();
     });
     card.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' ') card.click(); });
@@ -1034,9 +1076,10 @@ function initSwatches(wrapperId, dataAttr, stateKey, state) {
       state[stateKey] = (dataAttr==='skin') ? parseInt(val) : val;
       document.querySelectorAll(`#${wrapperId} .swatch`).forEach(b=>b.classList.remove('selected'));
       btn.classList.add('selected');
-      if(dataAttr==='skin') buildAvatarGrid(state); // refresh hair previews
+      if(dataAttr==='skin') buildAvatarGrid(state);
       renderPreview(state);
       saveState(state);
+      _avTrackChange('outfit');
       if(typeof CrabcakeAvatar !== 'undefined') CrabcakeAvatar.refreshHUD();
     });
   });
@@ -1052,6 +1095,7 @@ function initItemGrid(wrapperId, dataAttr, stateKey, state) {
       btn.classList.add('selected');
       renderPreview(state);
       saveState(state);
+      _avTrackChange('outfit');
       if(typeof CrabcakeAvatar !== 'undefined') CrabcakeAvatar.refreshHUD();
     });
   });

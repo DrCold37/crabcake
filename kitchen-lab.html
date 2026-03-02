@@ -697,6 +697,7 @@ let currentQ    = 0;
 let score       = 0;
 let lives       = 3;
 let answered    = false;
+let wrongAnswers = 0;
 
 // ══════════════════════════════════════════════
 // AMBIENT BUBBLES
@@ -748,7 +749,7 @@ function startCountdown(){
 function initGame(){
   const cfg=LEVELS[selectedAge];
   questions=shuffle([...cfg.questions]);
-  currentQ=0; score=0; lives=3; answered=false;
+  currentQ=0; score=0; lives=3; answered=false; wrongAnswers=0;
 
   document.getElementById('hud').classList.remove('hidden');
   document.getElementById('gameScreen').classList.remove('hidden');
@@ -852,7 +853,7 @@ function checkAnswer(isCorrect,clickedBtn,q){
     feedbackPop('✅ Correct!','#4ECB71');
     spawnConfetti(window.innerWidth/2,window.innerHeight/2);
   } else {
-    lives--; updateHUD();
+    lives--; wrongAnswers++; updateHUD();
     updateProgressDot(currentQ,'wrong-dot');
     feedbackPop('❌ Not quite!','#FF5C5C');
     if(lives<=0){ setTimeout(endGame,1500); return; }
@@ -978,13 +979,20 @@ const BADGE_DEF={
   kl_perfect:{game:'kitchenlab',em:'🏆',name:'Perfect Lab',desc:'Score 10/10 in Kitchen Lab'},
   kl_chem:   {game:'kitchenlab',em:'⚗️',name:'Chemist',desc:'Complete the Ages 9–10 level'},
   kl_noerror:{game:'kitchenlab',em:'💎',name:'No Mistakes',desc:'Finish without losing a life'},
-  kl_curious:{game:'kitchenlab',em:'🔬',name:'Curious Mind',desc:'Play Kitchen Lab 3 times'},
+  kl_curious:   {game:'kitchenlab',em:'🔬',name:'Curious Mind',desc:'Play Kitchen Lab 3 times'},
+  kl_juniorchef:{game:'kitchenlab',em:'🧑‍🍳',name:'Junior Chef',desc:'Play Kitchen Lab 5 times'},
+  kl_kaboom:    {game:'kitchenlab',em:'💥',name:'Kaboom!',desc:'Make an experiment go wrong'},
+  kl_masterchef:{game:'kitchenlab',em:'🌟',name:'Master Chef',desc:'Complete all 3 Kitchen Lab age levels'},
   md_first:  {game:'mathdive',em:'🤿',name:'First Dive',desc:'Complete your first Math Dive game'},
   jw_first:  {game:'junglewords',em:'🦁',name:'First Words',desc:'Complete your first Jungle Words game'},
   wb_first:  {game:'witchbrew',em:'🧙‍♀️',name:'Apprentice Witch',desc:'Brew your first successful potion'},
   ts_first:  {game:'tubesort',em:'🧪',name:'First Sort',desc:'Complete Level 1 of Tube Sort'},
-  cg_fan:    {game:'crabcake',em:'🦀',name:'Crabcake Fan',desc:'Play all Crabcake games at least once'},
+  cg_fan:      {game:'crabcake',em:'🦀',name:'Crabcake Fan',desc:'Play all Crabcake games at least once'},
   cg_dedicated:{game:'crabcake',em:'🎮',name:'Dedicated',desc:'Play 10 games total across all games'},
+  cg_earlybird:{game:'crabcake',em:'🌅',name:'Early Bird',desc:'Visit Crabcake before 8am'},
+  cg_returning:{game:'crabcake',em:'🔁',name:'Coming Back',desc:'Play on 3 different days'},
+  cg_allround: {game:'crabcake',em:'🌟',name:'All-Rounder',desc:'Earn at least one badge in every game'},
+  cg_collector:{game:'crabcake',em:'🏅',name:'Badge Collector',desc:'Earn 10 badges in total'},
 };
 const BADGE_KEY='crabcake_badges_v1';
 const PLAYS_KEY='crabcake_plays_v1';
@@ -1009,19 +1017,42 @@ function _nxt(){
   t.classList.add('show');
   setTimeout(()=>{t.classList.remove('show');setTimeout(_nxt,500);},3500);
 }
+function _crossCheck(ne){
+  const p=_lp();
+  const games=['mathdive','junglewords','witchbrew','tubesort','kitchenlab'];
+  if(!_lb().cg_fan&&games.every(g=>(p[g]||0)>=1)){if(_award('cg_fan'))ne.push('cg_fan');}
+  const d=_lb();
+  const gm={mathdive:false,junglewords:false,witchbrew:false,tubesort:false,kitchenlab:false};
+  Object.keys(BADGE_DEF).forEach(id=>{const b=BADGE_DEF[id];if(b.game!=='crabcake'&&d[id])gm[b.game]=true;});
+  if(!d.cg_allround&&Object.values(gm).every(Boolean)){if(_award('cg_allround'))ne.push('cg_allround');}
+  const d2=_lb();
+  if(!d2.cg_dedicated&&(p._total||0)>=10){if(_award('cg_dedicated'))ne.push('cg_dedicated');}
+  if(!d2.cg_earlybird&&new Date().getHours()<8){if(_award('cg_earlybird'))ne.push('cg_earlybird');}
+  const DAYS_KEY='crabcake_days_v1';
+  try{const today=new Date().toDateString();let days=JSON.parse(localStorage.getItem(DAYS_KEY)||'[]');if(!days.includes(today)){days.push(today);localStorage.setItem(DAYS_KEY,JSON.stringify(days));}if(!d2.cg_returning&&days.length>=3){if(_award('cg_returning'))ne.push('cg_returning');}}catch{}
+  const d3=_lb();if(!d3.cg_collector&&Object.keys(d3).length>=10){if(_award('cg_collector'))ne.push('cg_collector');}
+}
+
 function awardKitchenLabBadges(sc,age,total){
   const ne=[];
   const plays=_incPlays('kitchenlab');
+
+  // Track which age levels completed
+  const LEVELS_KEY='crabcake_kl_levels_v1';
+  let lvls; try{lvls=JSON.parse(localStorage.getItem(LEVELS_KEY)||'[]');}catch{lvls=[];}
+  if(!lvls.includes(age)){lvls.push(age);localStorage.setItem(LEVELS_KEY,JSON.stringify(lvls));}
+
   if(_award('kl_first')) ne.push('kl_first');
   if(sc>=6&&_award('kl_sharp')) ne.push('kl_sharp');
   if(sc===total&&_award('kl_perfect')) ne.push('kl_perfect');
   if(age===9&&_award('kl_chem')) ne.push('kl_chem');
   if(lives===3&&_award('kl_noerror')) ne.push('kl_noerror');
   if((plays['kitchenlab']||0)>=3&&_award('kl_curious')) ne.push('kl_curious');
-  const p=_lp();
-  const games=['mathdive','junglewords','witchbrew','tubesort','kitchenlab'];
-  if(!_lb().cg_fan&&games.every(g=>(p[g]||0)>=1)){if(_award('cg_fan'))ne.push('cg_fan');}
-  if(!_lb().cg_dedicated&&(p._total||0)>=10){if(_award('cg_dedicated'))ne.push('cg_dedicated');}
+  if((plays['kitchenlab']||0)>=5&&_award('kl_juniorchef')) ne.push('kl_juniorchef');
+  if(wrongAnswers>0&&_award('kl_kaboom')) ne.push('kl_kaboom');
+  if(lvls.length>=3&&_award('kl_masterchef')) ne.push('kl_masterchef');
+
+  _crossCheck(ne);
   ne.forEach(id=>_toast(id));
   _renderEndBadges(ne);
 }
