@@ -654,7 +654,117 @@
     cursor: pointer;
     font-family: 'Nunito', sans-serif;
   }
-  </style>
+  
+  /* ── BADGE TRANSFER SECTION ── */
+  .transfer-section {
+    padding: 48px 24px;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  .transfer-heading {
+    font-size: clamp(1.4rem, 3.5vw, 1.9rem);
+    font-weight: 800;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 6px;
+  }
+  .transfer-sub {
+    text-align: center;
+    color: rgba(255,255,255,.5);
+    font-size: .88rem;
+    margin-bottom: 28px;
+  }
+  .transfer-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 560px) { .transfer-cards { grid-template-columns: 1fr; } }
+  .transfer-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .transfer-card-title {
+    font-size: 0.8rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--teal);
+  }
+  .transfer-card p {
+    font-size: 0.83rem;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.5;
+    margin: 0;
+  }
+  .transfer-code-box {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    color: var(--teal);
+    word-break: break-all;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  .transfer-code-placeholder {
+    color: rgba(255,255,255,0.2);
+    font-style: italic;
+    font-family: inherit;
+  }
+  .transfer-btn {
+    padding: 10px 20px;
+    border-radius: 50px;
+    border: none;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .transfer-btn-export {
+    background: linear-gradient(135deg, var(--teal), #00a89a);
+    color: #0a1628;
+  }
+  .transfer-btn-export:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,201,177,0.4); }
+  .transfer-btn-export:active { transform: translateY(0); }
+  .transfer-btn-import {
+    background: linear-gradient(135deg, #7c6ff7, #a29bfe);
+    color: #fff;
+  }
+  .transfer-btn-import:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(162,155,254,0.4); }
+  .transfer-btn-import:active { transform: translateY(0); }
+  .transfer-input {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(0,0,0,0.3);
+    color: var(--teal);
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    outline: none;
+    box-sizing: border-box;
+  }
+  .transfer-input:focus { border-color: rgba(162,155,254,0.5); }
+  .transfer-input::placeholder { color: rgba(255,255,255,0.2); font-style: italic; }
+  .transfer-status {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-align: center;
+    min-height: 1.2em;
+  }
+  .transfer-status.ok  { color: var(--teal); }
+  .transfer-status.err { color: #ff6b6b; }
+</style>
 </head>
 <body>
 
@@ -677,6 +787,7 @@
     </a>
     <ul id="nav-menu">
       <li><a href="#my-badges">Achievements</a></li>
+      <li><a href="#transfer-badges">Transfer Badges</a></li>
       <li><a href="#games">Games</a></li>
       <li><a href="#categories">Categories</a></li>
       <li><a href="avatar.html">My Avatar</a></li>
@@ -920,6 +1031,42 @@
   <section class="cta-section">
     <h2>Ready to Dive In? 🦀</h2>
     <p>Join other kids already playing and learning on Crabcake every day!</p>
+  </section>
+
+
+  <!-- BADGE TRANSFER SECTION -->
+  <section class="transfer-section" id="transfer-badges">
+    <h2 class="transfer-heading">📲 Transfer Your Badges</h2>
+    <p class="transfer-sub">Moving to the app? Copy your badge code in the browser, then paste it in the app.</p>
+    <div class="transfer-cards">
+
+      <!-- EXPORT -->
+      <div class="transfer-card">
+        <div class="transfer-card-title">Step 1 · In your browser</div>
+        <p>Generate your badge code, then copy it to your clipboard.</p>
+        <div class="transfer-code-box" id="exportCodeBox">
+          <span class="transfer-code-placeholder" id="exportPlaceholder">Your code will appear here…</span>
+        </div>
+        <button class="transfer-btn transfer-btn-export" onclick="exportBadges()">✨ Generate My Badge Code</button>
+        <div class="transfer-status" id="exportStatus"></div>
+      </div>
+
+      <!-- IMPORT -->
+      <div class="transfer-card">
+        <div class="transfer-card-title">Step 2 · In the app</div>
+        <p>Open Crabcake from your home screen, paste your code below, and tap import.</p>
+        <input
+          class="transfer-input"
+          id="importCodeInput"
+          type="text"
+          placeholder="Paste your badge code here…"
+          oninput="document.getElementById('importStatus').textContent=''"
+        />
+        <button class="transfer-btn transfer-btn-import" onclick="importBadges()">📥 Import My Badges</button>
+        <div class="transfer-status" id="importStatus"></div>
+      </div>
+
+    </div>
   </section>
 
   </main>
@@ -1290,5 +1437,72 @@
       });
     }
   </script>
+<script>
+    // ── BADGE TRANSFER ──
+    const TRANSFER_KEYS = [
+      'crabcake_badges_v1',
+      'crabcake_plays_v1',
+      'crabcake_days_v1',
+      'crabcake_stats_v1',
+      'crabcake_jw_streak_v1',
+    ];
+
+    function exportBadges() {
+      const data = {};
+      TRANSFER_KEYS.forEach(k => {
+        const v = localStorage.getItem(k);
+        if (v) data[k] = v;
+      });
+      if (!Object.keys(data).length) {
+        document.getElementById('exportStatus').textContent = '⚠️ No badge data found yet — play some games first!';
+        document.getElementById('exportStatus').className = 'transfer-status err';
+        return;
+      }
+      const code = btoa(JSON.stringify(data));
+      const box = document.getElementById('exportCodeBox');
+      box.textContent = code;
+      // Copy to clipboard
+      navigator.clipboard.writeText(code).then(() => {
+        document.getElementById('exportStatus').textContent = '✅ Copied to clipboard!';
+        document.getElementById('exportStatus').className = 'transfer-status ok';
+      }).catch(() => {
+        document.getElementById('exportStatus').textContent = '📋 Code generated — select and copy it manually.';
+        document.getElementById('exportStatus').className = 'transfer-status ok';
+      });
+    }
+
+    function importBadges() {
+      const raw = document.getElementById('importCodeInput').value.trim();
+      if (!raw) {
+        document.getElementById('importStatus').textContent = '⚠️ Please paste your badge code first.';
+        document.getElementById('importStatus').className = 'transfer-status err';
+        return;
+      }
+      try {
+        const data = JSON.parse(atob(raw));
+        let count = 0;
+        TRANSFER_KEYS.forEach(k => {
+          if (data[k]) {
+            // Merge badges (don't overwrite new ones earned in PWA)
+            if (k === 'crabcake_badges_v1') {
+              const existing = JSON.parse(localStorage.getItem(k) || '{}');
+              const incoming = JSON.parse(data[k]);
+              const merged = Object.assign({}, incoming, existing); // existing PWA badges take priority
+              localStorage.setItem(k, JSON.stringify(merged));
+            } else {
+              localStorage.setItem(k, data[k]);
+            }
+            count++;
+          }
+        });
+        document.getElementById('importStatus').textContent = '🎉 Badges imported! Reload the page to see them.';
+        document.getElementById('importStatus').className = 'transfer-status ok';
+        document.getElementById('importCodeInput').value = '';
+      } catch(e) {
+        document.getElementById('importStatus').textContent = '❌ Invalid code — double-check you copied it correctly.';
+        document.getElementById('importStatus').className = 'transfer-status err';
+      }
+    }
+</script>
 </body>
 </html>
