@@ -628,6 +628,7 @@
 let selectedAge = null;
 let score = 0;
 let _wrongCount = 0;
+let _lastCatchTime = 0;
 let streak = 0;
 let timeLeft = 60;
 let timerInterval = null;
@@ -751,7 +752,7 @@ function generateQuestion() {
 
   // Update all objects already on screen to reflect the new answer
   fallingObjects.forEach(o => {
-    o.isCorrect = (o.value === ans);
+    if (!o.caught && !o.missed) o.isCorrect = (o.value === ans);
   });
 
   return { answer: ans, wrongs };
@@ -973,13 +974,16 @@ function gameLoop() {
   diver.y += (diver.targetY - diver.y) * 0.15;
 
   // Update & draw objects
+  // Never call onCatch/generateQuestion inside filter - they mutate fallingObjects
+  const _now = Date.now();
+  const _toProcess = [];
+  let _missedCorrect = false;
+
   fallingObjects = fallingObjects.filter(o => {
-    // Remove after flash completes
     if (o.caught) {
-      if (o.flashGreen && Date.now() - o.flashGreen < 200) {
-        const wx = o.x + Math.sin(o.wobble) * 12;
-        drawObject(o, wx);
-        return true; // keep briefly to show flash
+      if (o.flashGreen && _now - o.flashGreen < 200) {
+        drawObject(o, o.x + Math.sin(o.wobble) * 12);
+        return true;
       }
       return false;
     }
@@ -989,29 +993,31 @@ function gameLoop() {
     o.wobble += o.wobbleSpeed;
     const wx = o.x + Math.sin(o.wobble) * 12;
 
-    // Check catch
     const dx = Math.abs(wx - diver.x);
     const dy = Math.abs(o.y - diver.y);
-    if (dx < 45 && dy < 45) {
-      if (o.isCorrect) o.flashGreen = Date.now();
-      onCatch(o, wx, o.y);
+    if (dx < 45 && dy < 45 && (_now - _lastCatchTime > 150)) {
+      _lastCatchTime = _now;
       o.caught = true;
-      if (o.isCorrect) {
-        drawObject(o, wx); // draw one last frame with green flash
-        return true;
-      }
+      if (o.isCorrect) o.flashGreen = _now;
+      _toProcess.push({ o, wx, y: o.y });
+      if (o.isCorrect) { drawObject(o, wx); return true; }
       return false;
     }
 
-    // Off screen
     if (o.y > canvas.height + 60) {
-      if (o.isCorrect) generateQuestion();
+      if (o.isCorrect) _missedCorrect = true;
       return false;
     }
 
     drawObject(o, wx);
     return true;
   });
+
+  // Process catches AFTER filter completes - safe to mutate now
+  let _doClearField = false;
+  _toProcess.forEach(({ o, wx, y }) => { if (onCatch(o, wx, y)) _doClearField = true; });
+  if (_missedCorrect) generateQuestion();
+  if (_doClearField) fallingObjects = fallingObjects.filter(o => o.caught && o.flashGreen);
 
   // Draw diver
   drawDiver();
@@ -1137,13 +1143,14 @@ function onCatch(obj, x, y) {
     if (streak > _maxStreak) { _maxStreak = streak; }
     if (streak >= 5 && _award('md_fire')) { _toast('md_fire'); }
     updateHUD();
-    if (streak > 0 && streak % 5 === 0) {
+    const clearField = (streak % 5 === 0);
+    if (clearField) {
       timeLeft += 10;
       document.getElementById('timerVal').textContent = timeLeft;
       showFeedback(x, y - 40, '🔥 +10s bonus!', '#FFD93D');
       spawnConfetti(x, y);
       flashScreen('#FFD93D');
-    } else if (streak > 0 && streak % 3 === 0) {
+    } else if (streak % 3 === 0) {
       timeLeft += 5;
       document.getElementById('timerVal').textContent = timeLeft;
       showFeedback(x, y - 40, '⭐ +5s bonus!', '#4ECB71');
@@ -1155,7 +1162,7 @@ function onCatch(obj, x, y) {
     }
     playSound('correct');
     generateQuestion();
-    if (streak % 5 === 0) fallingObjects = [];
+    return clearField; // caller clears field safely after filter
   } else {
     streak = 0;
     timeLeft = Math.max(0, timeLeft - 2);
@@ -1165,6 +1172,7 @@ function onCatch(obj, x, y) {
     playSound('wrong');
     flashScreen('#FF5C5C');
     if (timeLeft <= 0) endGame();
+    return false;
   }
 }
 
