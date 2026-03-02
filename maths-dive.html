@@ -748,9 +748,9 @@ function generateQuestion() {
   currentQuestion = q;
   document.getElementById('questionText').textContent = q;
 
-  // Update all objects already on screen to reflect the new answer
+  // Update all active (not yet caught/missed) objects to reflect the new answer
   fallingObjects.forEach(o => {
-    o.isCorrect = (o.value === ans);
+    if (!o.caught && !o.missed) o.isCorrect = (o.value === ans);
   });
 
   return { answer: ans, wrongs };
@@ -993,8 +993,8 @@ function gameLoop() {
     const dy = Math.abs(o.y - diver.y);
     if (dx < 45 && dy < 45) {
       if (o.isCorrect) o.flashGreen = Date.now();
+      o.caught = true; // mark caught BEFORE onCatch so generateQuestion skips this obj
       onCatch(o, wx, o.y);
-      o.caught = true;
       if (o.isCorrect) {
         drawObject(o, wx); // draw one last frame with green flash
         return true;
