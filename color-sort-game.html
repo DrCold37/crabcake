@@ -1087,6 +1087,9 @@ function claimFeedbackBadge(type) {
 }
 
 // ── INIT ──
+resizeCanvases();
+window.addEventListener('resize', resizeCanvases);
+drawBg();
 newGame();
 
 // ═══════════════════════════════════════════════
