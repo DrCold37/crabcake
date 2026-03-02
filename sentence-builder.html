@@ -192,6 +192,15 @@
     .start-btn.ready:hover  { animation: none; transform: translateY(-4px); box-shadow: 0 10px 0 #1B5E20, 0 16px 36px rgba(76,175,80,0.6); }
     .start-btn.ready:active { animation: none; transform: translateY(2px);  box-shadow: 0 3px 0 #1B5E20; }
 
+
+    /* ── START SCREEN HOME BUTTON ── */
+    .start-home-btn {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      z-index: 50;
+    }
+
     /* ── HUD ── */
     #hud {
       position: fixed; top: 0; left: 0; right: 0; z-index: 20;
@@ -513,10 +522,14 @@
 
   <div class="jungle-bg" id="jungleBg"></div>
   <div class="jungle-floor"></div>
-  <a href="index.html" class="back-link" id="backLink">← Back</a>
+  <a id="backLink" style="display:none;"></a>
 
   <!-- START SCREEN -->
   <div class="screen" id="startScreen">
+    <a class="hud-btn start-home-btn" href="index.html#games" title="Home">
+      <span class="hud-btn-icon">🏠</span>
+      <span class="hud-btn-label">Home</span>
+    </a>
     <div class="game-icon">🦁</div>
     <div class="game-title">Jungle Words!</div>
     <div class="game-subtitle">Crabcake · Educational Games</div>

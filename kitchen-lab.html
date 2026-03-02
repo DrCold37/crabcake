@@ -170,6 +170,15 @@
     .start-btn.ready:hover  { animation: none; transform: translateY(-4px); box-shadow: 0 10px 0 rgba(0,0,0,0.3), 0 16px 36px rgba(0,201,177,0.6); }
     .start-btn.ready:active { animation: none; transform: translateY(2px);  box-shadow: 0 4px 0 rgba(0,0,0,0.3); }
 
+
+    /* ── START SCREEN HOME BUTTON ── */
+    .start-home-btn {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      z-index: 50;
+    }
+
     /* ── HUD ── */
     #hud {
       position: fixed; top: 0; left: 0; right: 0; z-index: 20;
@@ -415,10 +424,14 @@
 <div class="lab-bg"></div>
 <div class="lab-floor"></div>
 
-<a href="index.html" class="back-link" id="backLink" style="display:none;">← Home</a>
+<a id="backLink" style="display:none;"></a>
 
 <!-- ══════════════ START SCREEN ══════════════ -->
 <div class="screen" id="startScreen">
+  <a class="hud-btn start-home-btn" href="index.html#games" title="Home">
+    <span class="hud-btn-icon">🏠</span>
+    <span class="hud-btn-label">Home</span>
+  </a>
   <div class="lab-icon-display">🧪</div>
   <div class="game-title">Kitchen Lab</div>
   <div class="game-subtitle">Mix, React &amp; Discover!</div>
