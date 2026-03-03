@@ -216,7 +216,7 @@ const CrabcakeAvatar = (function(){
   };
 
   function load() {
-    try { return { avatarId:'g1', skin:0, top:'teal', bottom:'navy', hat:'none', petId:'none',
+    try { return { avatarId:'g1', skin:0, top:'teal', bottom:'navy', hat:'none', petId:'none', petBg:'auto',
                    ...JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}') }; }
     catch(e){ return { avatarId:'g1', skin:0, top:'teal', bottom:'navy', hat:'none', petId:'none' }; }
   }
@@ -225,6 +225,7 @@ const CrabcakeAvatar = (function(){
     const [sc,sh] = SKINS[state.skin] || SKINS[0];
     const isGirl  = !['b1','b2','b3'].includes(state.avatarId);
     const tc      = TOP_COLOURS[state.top] || '#1abc9c';
+    const circleBg = (state.avatarBg && state.avatarBg !== 'none') ? state.avatarBg : tc;
     const id      = 'hud_' + Math.random().toString(36).slice(2,8);
     const eyeCol  = state.skin >= 4 ? '#4a2c00' : '#2eaa88';
     const hair    = HAIR[state.avatarId] || HAIR['b1'];
@@ -253,7 +254,7 @@ const CrabcakeAvatar = (function(){
         <clipPath id="${id}_cl"><circle cx="44" cy="44" r="42"/></clipPath>
       </defs>
       <circle cx="44" cy="44" r="42" fill="rgba(0,0,0,.3)"/>
-      <circle cx="44" cy="44" r="40" fill="${tc}"/>
+      <circle cx="44" cy="44" r="40" fill="${circleBg}"/>
       <g clip-path="url(#${id}_cl)"><g transform="translate(0,5)">
         ${hair.bg}
         <circle cx="44" cy="44" r="18" fill="${sc}"/>
@@ -279,11 +280,12 @@ const CrabcakeAvatar = (function(){
   function buildPetSVG(state, size=40) {
     const svg = PET_SVG[state.petId];
     if(!svg) return '';
-    // Background colour per pet (shown as circle fill behind the artwork)
-    const bgCol = {
+    // Background colour — use user-chosen petBg or fall back to per-pet default
+    const petDefaultBg = {
       golden:'#c88030', husky:'#3a4a5a', beagle:'#b07840',
       tabby:'#c05010',  greyfold:'#607080', blackcat:'#111120'
     }[state.petId] || '#333';
+    const bgCol = (state.petBg && state.petBg !== 'auto') ? state.petBg : petDefaultBg;
     // Wrap in circle clipPath so artwork is clipped to circle, with bg fill
     return `<svg width="${size}" height="${size}" viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">
       <defs><clipPath id="pc"><circle cx="65" cy="65" r="63"/></clipPath></defs>
