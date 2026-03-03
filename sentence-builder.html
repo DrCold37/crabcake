@@ -205,13 +205,18 @@
     /* ── HUD ── */
     #hud {
       position: fixed; top: 0; left: 0; right: 0; z-index: 20;
-      display: flex; justify-content: space-between; align-items: center;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
       padding: 0.7rem 1.2rem;
       background: rgba(7,26,15,0.88);
       backdrop-filter: blur(8px);
       border-bottom: 2px solid rgba(76,175,80,0.35);
     }
     #hud.hidden { display: none; }
+    .hud-left   { display: flex; align-items: center; gap: 1rem; justify-content: flex-start; }
+    .hud-center { display: flex; align-items: center; justify-content: center; }
+    .hud-right  { display: flex; align-items: center; gap: 0.6rem; justify-content: flex-end; }
     .hud-item { display: flex; flex-direction: column; align-items: center; gap: 1px; }
     .hud-label { font-size: 0.52rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.4); }
     .hud-value { font-family: 'Fredoka One', cursive; font-size: 1.7rem; color: var(--gold); line-height: 1; }
@@ -563,30 +568,44 @@
 
   <!-- HUD -->
   <div id="hud" class="hidden">
-    <div class="hud-item">
-      <div class="hud-label">Score</div>
-      <div class="hud-value" id="scoreVal">0</div>
-    </div>
-    <button class="hud-btn" onclick="hudBack()" title="Level Select">
-      <span class="hud-btn-icon">↩️</span>
-      <span class="hud-btn-label">Levels</span>
-    </button>
-    <div class="hud-item">
-      <div class="hud-label">Lives</div>
-      <div class="lives-display" id="livesDisplay">
-        <span class="life-heart" id="h1">❤️</span>
-        <span class="life-heart" id="h2">❤️</span>
-        <span class="life-heart" id="h3">❤️</span>
+
+    <!-- LEFT: score / done / lives -->
+    <div class="hud-left">
+      <div class="hud-item">
+        <div class="hud-label">Score</div>
+        <div class="hud-value" id="scoreVal">0</div>
+      </div>
+      <div class="hud-item">
+        <div class="hud-label">Done</div>
+        <div class="hud-value" id="sentenceVal">0</div>
+      </div>
+      <div class="hud-item">
+        <div class="hud-label">Lives</div>
+        <div class="lives-display" id="livesDisplay">
+          <span class="life-heart" id="h1">❤️</span>
+          <span class="life-heart" id="h2">❤️</span>
+          <span class="life-heart" id="h3">❤️</span>
+        </div>
       </div>
     </div>
-    <a class="hud-btn" href="index.html#games" title="Home">
-      <span class="hud-btn-icon">🏠</span>
-      <span class="hud-btn-label">Home</span>
-    </a>
-    <div class="hud-item">
-      <div class="hud-label">Done</div>
-      <div class="hud-value" id="sentenceVal">0</div>
+
+    <!-- CENTER: avatar + pet -->
+    <div class="hud-center">
+      <div id="jw-avatar-hud" data-hud-size="48"></div>
     </div>
+
+    <!-- RIGHT: levels / home -->
+    <div class="hud-right">
+      <button class="hud-btn" onclick="hudBack()" title="Level Select">
+        <span class="hud-btn-icon">↩️</span>
+        <span class="hud-btn-label">Levels</span>
+      </button>
+      <a class="hud-btn" href="index.html#games" title="Home">
+        <span class="hud-btn-icon">🏠</span>
+        <span class="hud-btn-label">Home</span>
+      </a>
+    </div>
+
   </div>
 
   <!-- GAME AREA -->
@@ -630,7 +649,7 @@
     <div class="end-buttons">
       <button class="end-btn btn-play-again" onclick="playAgain()">🌿 Play Again!</button>
       <button class="end-btn btn-change-level" onclick="changeLevel()">Change Level</button>
-      <a href="index.html" class="end-btn btn-home">🦀 Home</a>
+      <a href="index.html#games" class="end-btn btn-home">🦀 Home</a>
     </div>
     <div class="feedback-strip">
       <p class="feedback-text">💌 Found a bug or have a game idea?</p>
@@ -1216,12 +1235,12 @@ function _renderEndBadges(ne){
   const wrap=document.getElementById('endBadgesWrap');
   const row=document.getElementById('endBadgesRow');
   if(!wrap||!row)return;
-  const all=Object.keys(_lb());
+  const all=Object.keys(_lb()).filter(id=>id.startsWith('jw_'));
   if(!all.length&&!ne.length){wrap.style.display='none';return;}
   wrap.style.display='';
   const title=wrap.querySelector('.badges-section-title');
-  if(title)title.textContent=ne.length?`🏆 Badge${ne.length>1?'s':''} Earned This Game!`:'🏆 Your Badges';
-  const show=ne.length?ne:all.slice(0,6);
+  if(title)title.textContent=ne.length?`🏆 Badge${ne.length>1?'s':''} Earned This Game!`:'🏆 Your Jungle Words Badges';
+  const show=ne.length?ne:all;
   row.innerHTML=show.map(id=>{const b=BADGE_DEF[id];if(!b)return'';
     return`<div class="badge-coin${ne.includes(id)?' new-badge':''}" title="${b.desc}"><div class="badge-coin-em">${b.em}</div><div class="badge-coin-name">${b.name}</div></div>`;
   }).join('');
@@ -1271,7 +1290,17 @@ function claimFeedbackBadge(type) {
   }
 }
 </script>
+    <script src="crabcake-avatar.js?v=4"></script>
   <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var hudEl = document.getElementById('jw-avatar-hud');
+      if (hudEl && typeof CrabcakeAvatar !== 'undefined') {
+        CrabcakeAvatar.injectHUD(hudEl, { size: 48, showPet: true });
+      }
+    });
+  </script>
+
+<script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js')
