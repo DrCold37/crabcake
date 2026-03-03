@@ -310,12 +310,12 @@ tr.me td{background:rgba(180,79,255,.1);border-left:2px solid var(--bright);}
   animation:witch-leave .5s cubic-bezier(.6,0,.8,1) forwards;
 }
 @keyframes witch-arrive{
-  0%  {opacity:1;transform:translateX(-180px) translateY(30px) rotate(-8deg);}
+  0%  {opacity:1;transform:translateX(-300px) translateY(30px) rotate(-8deg);}
   100%{opacity:1;transform:translateX(0px)    translateY(0px)  rotate(0deg);}
 }
 @keyframes witch-leave{
-  0%  {opacity:1;transform:translateX(0)     translateY(0)    rotate(0deg);}
-  100%{opacity:1;transform:translateX(-200px) translateY(-20px) rotate(-12deg);}
+  0%  {opacity:1;transform:translateX(0)     translateY(0)     rotate(0deg);}
+  100%{opacity:1;transform:translateX(220px) translateY(-20px) rotate(12deg);}
 }
 
 /* Witch stirring arm oscillation */
@@ -1056,10 +1056,17 @@ let witchScrollHandler = null;
 
 function positionWitch(cRect){
   const w=document.getElementById('witch-wrap');
-  const wx = cRect.left - 10;
+  const svg=document.getElementById('witch-svg');
+  const scale = window.innerWidth <= 700 ? 0.72 : 1;
+  const sw = Math.round(130 * scale);
+  const sh = Math.round(180 * scale);
+  if(svg){ svg.style.width=sw+'px'; svg.style.height=sh+'px'; }
+  // Position at left side of cauldron, facing right (no flip)
+  const wx = cRect.left - sw + 75;
   const wy = cRect.top - 10;
   w.style.left = wx+'px';
   w.style.top  = wy+'px';
+  w.style.transform = '';
 }
 
 function startWitchScrollTracking(){
