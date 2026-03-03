@@ -1869,6 +1869,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
       btn.classList.add('selected');
       renderPreview(state);
       saveState(state);
+      _avTrackChange('outfit');
+      if(typeof CrabcakeAvatar !== 'undefined') CrabcakeAvatar.refreshHUD();
     });
   });
 
