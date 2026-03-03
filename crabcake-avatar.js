@@ -221,14 +221,79 @@ const CrabcakeAvatar = (function(){
     catch(e){ return { avatarId:'g1', skin:0, top:'teal', bottom:'navy', hat:'none', petId:'none' }; }
   }
 
+
+  // ── Hair colour system ──
+  const _HAIR_COLOURS = {
+    blonde:    { p:'#e8b820', s:'#c89808', h:'#f8d050' },
+    ginger:    { p:'#c0392b', s:'#952d22', h:'#e05050' },
+    darkbrown: { p:'#5c3317', s:'#3a1f0a', h:'#7a4828' },
+    black:     { p:'#1c1c1c', s:'#0d0d0d', h:'#2e2e2e' },
+  };
+  const _HAIR_COLOUR_MAP = {
+    g1: [ ['#7b4a1e','p'] ],
+    g2: [ ['#2a1a08','p'], ['#3a2810','s'] ],
+    g3: [ ['#1a0800','p'], ['#2d1200','s'] ],
+    b1: [ ['#f0c040','p'], ['#fdd060','h'] ],
+    b2: [ ['#1a0800','p'], ['#3d2000','s'] ],
+    b3: [ ['#c0392b','p'], ['#e05050','h'] ],
+  };
+  function _applyHairColour(svg, styleId, colourKey) {
+    const palette = _HAIR_COLOURS[colourKey];
+    if (!palette) return svg;
+    let out = svg;
+    (_HAIR_COLOUR_MAP[styleId] || []).forEach(([src, slot]) => {
+      out = out.replace(new RegExp(src, 'gi'), palette[slot]);
+    });
+    return out;
+  }
+
+  // ── Hat rendering (mirrors avatar.html buildHat) ──
+  function _buildHat(hatKey) {
+    if (!hatKey || hatKey === 'none') return '';
+    if (hatKey === 'cap') return `
+      <ellipse cx="44" cy="22" rx="22" ry="9" fill="#e74c3c"/>
+      <rect x="22" y="22" width="44" height="8" rx="2" fill="#c0392b"/>
+      <ellipse cx="20" cy="30" rx="10" ry="4" fill="#c0392b"/>
+      <path d="M 44 14 Q 54 14 62 22" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/>`;
+    if (hatKey === 'witch') return `
+      <polygon points="44,2 24,28 64,28" fill="#1a1a2e"/>
+      <rect x="18" y="26" width="52" height="7" rx="3" fill="#6c3483"/>
+      <path d="M 36 28 Q 44 20 52 28" stroke="#9b59b6" stroke-width="2" fill="none"/>`;
+    if (hatKey === 'party') return `
+      <polygon points="44,4 26,30 62,30" fill="#f1c40f"/>
+      <line x1="40" y1="8" x2="38" y2="2" stroke="#e74c3c" stroke-width="1.5"/>
+      <line x1="48" y1="12" x2="50" y2="6" stroke="#1abc9c" stroke-width="1.5"/>
+      <circle cx="38" cy="2" r="2" fill="#e74c3c"/>
+      <circle cx="50" cy="6" r="2" fill="#1abc9c"/>
+      <rect x="26" y="28" width="36" height="5" rx="2" fill="#f39c12"/>`;
+    if (hatKey === 'crown') return `
+      <polygon points="24,28 24,14 32,20 44,10 56,20 64,14 64,28" fill="#f1c40f"/>
+      <circle cx="44" cy="12" r="4" fill="#e74c3c"/>
+      <circle cx="30" cy="20" r="3" fill="#9b59b6"/>
+      <circle cx="58" cy="20" r="3" fill="#9b59b6"/>
+      <rect x="24" y="26" width="40" height="4" rx="2" fill="#f39c12"/>`;
+    if (hatKey === 'beanie') return `
+      <ellipse cx="44" cy="20" rx="23" ry="10" fill="#2980b9"/>
+      <rect x="21" y="16" width="46" height="14" rx="3" fill="#2980b9"/>
+      <rect x="21" y="26" width="46" height="5" rx="2" fill="#1a6090"/>
+      <circle cx="44" cy="7" r="5" fill="#e74c3c"/>`;
+    return '';
+  }
+
   function buildHeadSVG(state, size=52) {
     const [sc,sh] = SKINS[state.skin] || SKINS[0];
-    const isGirl  = !['b1','b2','b3'].includes(state.avatarId);
+    const isGirl  = state.gender ? state.gender === 'girl' : !['b1','b2','b3'].includes(state.avatarId);
     const tc      = TOP_COLOURS[state.top] || '#1abc9c';
     const circleBg = (state.avatarBg && state.avatarBg !== 'none') ? state.avatarBg : tc;
     const id      = 'hud_' + Math.random().toString(36).slice(2,8);
     const eyeCol  = state.skin >= 4 ? '#4a2c00' : '#2eaa88';
-    const hair    = HAIR[state.avatarId] || HAIR['b1'];
+    const hairKey = state.hairStyle || state.avatarId || 'g1';
+    const hairRaw = HAIR[hairKey] || HAIR['g1'];
+    const _hc     = state.hairColour || 'darkbrown';
+    const hair    = {
+      bg: _applyHairColour(hairRaw.bg, hairKey, _hc),
+      fg: _applyHairColour(hairRaw.fg, hairKey, _hc),
+    };
 
     const lashes = isGirl ? `
       <line x1="32" y1="40.5" x2="31.4" y2="39" stroke="#1a1a2e" stroke-width="1.1" stroke-linecap="round"/>
@@ -261,6 +326,7 @@ const CrabcakeAvatar = (function(){
         <circle cx="22" cy="46" r="5" fill="${sc}"/>
         <circle cx="66" cy="46" r="5" fill="${sc}"/>
         ${hair.fg}
+        ${_buildHat(state.hat)}
         <ellipse cx="35" cy="43" rx="3.8" ry="4" fill="white"/>
         <ellipse cx="51" cy="43" rx="3.8" ry="4" fill="white"/>
         <circle cx="35" cy="44" r="2.7" fill="${eyeCol}"/>
