@@ -559,26 +559,40 @@
 
   <!-- HUD -->
   <div id="hud" class="hidden">
-    <div class="hud-item">
-      <div class="hud-label">Score</div>
-      <div class="hud-value" id="scoreVal">0</div>
+
+    <!-- LEFT: score / streak / time -->
+    <div class="hud-left">
+      <div class="hud-item">
+        <div class="hud-label">Score</div>
+        <div class="hud-value" id="scoreVal">0</div>
+      </div>
+      <div class="hud-item">
+        <div class="hud-label">Streak 🔥</div>
+        <div class="hud-value" id="streakVal">0</div>
+      </div>
+      <div class="hud-item">
+        <div class="hud-label">Time</div>
+        <div class="hud-value" id="timerVal">60</div>
+      </div>
     </div>
-    <button class="hud-btn" onclick="hudBack()" title="Level Select">
-      <span class="hud-btn-icon">↩️</span>
-      <span class="hud-btn-label">Levels</span>
-    </button>
-    <div class="hud-item">
-      <div class="hud-label">Streak 🔥</div>
-      <div class="hud-value" id="streakVal">0</div>
+
+    <!-- CENTER: avatar + pet -->
+    <div class="hud-center">
+      <div id="md-avatar-hud" data-hud-size="48"></div>
     </div>
-    <a class="hud-btn" href="index.html#games" title="Home">
-      <span class="hud-btn-icon">🏠</span>
-      <span class="hud-btn-label">Home</span>
-    </a>
-    <div class="hud-item">
-      <div class="hud-label">Time</div>
-      <div class="hud-value" id="timerVal">60</div>
+
+    <!-- RIGHT: levels / home -->
+    <div class="hud-right">
+      <button class="hud-btn" onclick="hudBack()" title="Level Select">
+        <span class="hud-btn-icon">↩️</span>
+        <span class="hud-btn-label">Levels</span>
+      </button>
+      <a class="hud-btn" href="index.html#games" title="Home">
+        <span class="hud-btn-icon">🏠</span>
+        <span class="hud-btn-label">Home</span>
+      </a>
     </div>
+
   </div>
 
   <!-- QUESTION BAR -->
