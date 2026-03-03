@@ -248,7 +248,7 @@
       display: grid;
       grid-template-columns: 1fr auto 1fr;
       align-items: center;
-      padding: 0.8rem 1.5rem;
+      padding: 0.6rem 1.5rem;
       background: rgba(10,22,40,0.85);
       backdrop-filter: blur(8px);
       border-bottom: 2px solid rgba(0,201,177,0.3);
@@ -257,6 +257,21 @@
     .hud-left  { display: flex; align-items: center; gap: 1rem; justify-content: flex-start; }
     .hud-center { display: flex; align-items: center; justify-content: center; }
     .hud-right { display: flex; align-items: center; gap: 0.5rem; justify-content: flex-end; }
+
+    @media (max-width: 600px) {
+      #hud {
+        padding: 0.35rem 0.7rem;
+        grid-template-columns: auto auto auto;
+      }
+      .hud-left  { gap: 0.6rem; }
+      .hud-right { gap: 0.3rem; }
+      .hud-label { font-size: 0.42rem; letter-spacing: 1px; }
+      .hud-value { font-size: 1.2rem; }
+      .hud-btn   { padding: 0.2rem 0.45rem; border-radius: 8px; }
+      .hud-btn-icon  { font-size: 1rem; }
+      .hud-btn-label { font-size: 0.38rem; letter-spacing: 1px; }
+      #md-avatar-hud svg { width: 36px !important; height: 36px !important; }
+    }
 
     .hud-item {
       display: flex;
