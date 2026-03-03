@@ -245,20 +245,43 @@ tr.me td{background:rgba(180,79,255,.1);border-left:2px solid var(--bright);}
 #lightning-canvas{position:fixed;pointer-events:none;z-index:41;}
 
 @media(max-width:700px){
+  /* Layout */
   .main{grid-template-columns:1fr;}
   .cauldron-area{order:-1;}
   .panel:last-child{order:2;}
-  .igrid{grid-template-columns:repeat(3,1fr);gap:5px;}
-  .ibtn{padding:7px 3px;}
-  .ibtn .em{font-size:1.5rem;}
-  .ibtn .nm{font-size:.62rem;}
-  .ibtn .tg{font-size:.52rem;}
-  .hud{gap:6px;}
-  .hb{padding:4px 8px;min-width:55px;}
-  .hv{font-size:1.1rem;}
-  .hl{font-size:.5rem;}
-  .brew-btn{padding:11px 18px;font-size:1.15rem;}
-  .cw{width:200px;height:200px;}
+  .wrap{padding:6px 10px;}
+
+  /* Header — shrink title aggressively */
+  header{padding:4px 0 2px;}
+  h1{font-size:1.3rem;letter-spacing:1px;}
+  .subtitle{display:none;}
+  .moon{font-size:2rem;top:6px;right:10px;}
+
+  /* HUD — compact single row */
+  .hud{gap:4px;margin:4px 0 3px;flex-wrap:nowrap;justify-content:center;}
+  .hb{padding:3px 6px;min-width:48px;}
+  .hv{font-size:1rem;}
+  .hl{font-size:.44rem;letter-spacing:.5px;}
+  .new-game-btn{padding:4px 8px;font-size:.78rem;}
+  #wb-avatar-hud svg{width:36px!important;height:auto!important;}
+
+  /* XP bar + hint — reduce */
+  .xpbar{height:4px;margin:2px auto;}
+  .hint{font-size:.55rem;margin-bottom:2px;}
+
+  /* Cauldron — shrink significantly */
+  .cw{width:160px;height:160px;}
+  .cauldron-area{gap:6px;}
+  .brew-btn{padding:9px 16px;font-size:1.05rem;}
+
+  /* Ingredient buttons — more compact */
+  .igrid{grid-template-columns:repeat(3,1fr);gap:4px;}
+  .ibtn{padding:5px 2px;}
+  .ibtn .em{font-size:1.3rem;}
+  .ibtn .nm{font-size:.58rem;}
+  .ibtn .tg{font-size:.48rem;padding:1px 4px;}
+  .panel{padding:8px;}
+  .ptitle{font-size:1rem;margin-bottom:6px;}
 }
 
 /* ═══════════════════════ WITCH BREW SEQUENCE ═══════════════════════ */
@@ -515,6 +538,7 @@ tr.me td{background:rgba(180,79,255,.1);border-left:2px solid var(--bright);}
       <div class="hb"><span class="hl">⭐ Score</span><span class="hv" id="h-score">0</span></div>
       <div class="hb streak-hb" id="h-streak-b"><span class="hl">🔥 Streak</span><span class="hv" id="h-streak">×1</span></div>
       <div class="hb tries-hb" id="h-tries-b"><span class="hl">🧪 Tries Left</span><span class="hv" id="h-tries">10</span></div>
+      <div id="wb-avatar-hud" data-hud-size="44" style="display:flex;align-items:center;"></div>
       <button class="new-game-btn hud-btn" id="new-game-btn">🔄 New</button>
       <a href="index.html#games" class="new-game-btn hud-btn" style="text-decoration:none;">🏠 Home</a>
     </div>
@@ -1811,6 +1835,16 @@ init();
           .catch(err => console.log('SW registration failed:', err));
       });
     }
+  </script>
+
+  <script src="crabcake-avatar.js?v=4"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var hudEl = document.getElementById('wb-avatar-hud');
+      if (hudEl && typeof CrabcakeAvatar !== 'undefined') {
+        CrabcakeAvatar.injectHUD(hudEl, { size: 44, showPet: true });
+      }
+    });
   </script>
 </body>
 </html>
