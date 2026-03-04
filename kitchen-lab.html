@@ -228,6 +228,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 </div>
 
 <canvas id="confetti-canvas"></canvas>
+<canvas id="fx-canvas" style="position:fixed;inset:0;z-index:44;pointer-events:none"></canvas>
 <div class="mix-flash" id="mixFlash"></div>
 <div class="toast" id="toast"><span class="toast-em" id="toastEm"></span><span class="toast-name" id="toastName"></span></div>
 <div class="hint-toast" id="hintToast"><div class="hint-toast-text" id="hintToastText"></div></div>
@@ -673,35 +674,132 @@ function playSound(type){
   try{
     const ac=getAudio();
     if(ac.state==='suspended')ac.resume();
-    const osc=ac.createOscillator(),gain=ac.createGain();
-    osc.connect(gain);gain.connect(ac.destination);
+
     if(type==='tap'){
+      const osc=ac.createOscillator(),g=ac.createGain();
+      osc.connect(g);g.connect(ac.destination);
       osc.type='sine';osc.frequency.setValueAtTime(660,ac.currentTime);
-      gain.gain.setValueAtTime(.08,ac.currentTime);
-      gain.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.12);
+      g.gain.setValueAtTime(.08,ac.currentTime);
+      g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.12);
       osc.start(ac.currentTime);osc.stop(ac.currentTime+.12);
-    } else if(type==='correct'){
-      osc.type='sine';
-      osc.frequency.setValueAtTime(523,ac.currentTime);
-      osc.frequency.setValueAtTime(659,ac.currentTime+.1);
-      osc.frequency.setValueAtTime(784,ac.currentTime+.2);
-      gain.gain.setValueAtTime(.15,ac.currentTime);
-      gain.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.5);
-      osc.start(ac.currentTime);osc.stop(ac.currentTime+.5);
-    } else if(type==='wrong'){
-      osc.type='sawtooth';
-      osc.frequency.setValueAtTime(200,ac.currentTime);
-      osc.frequency.setValueAtTime(150,ac.currentTime+.1);
-      gain.gain.setValueAtTime(.1,ac.currentTime);
-      gain.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.25);
-      osc.start(ac.currentTime);osc.stop(ac.currentTime+.25);
+
     } else if(type==='bubble'){
+      const osc=ac.createOscillator(),g=ac.createGain();
+      osc.connect(g);g.connect(ac.destination);
       osc.type='sine';
       osc.frequency.setValueAtTime(800,ac.currentTime);
       osc.frequency.exponentialRampToValueAtTime(400,ac.currentTime+.15);
-      gain.gain.setValueAtTime(.06,ac.currentTime);
-      gain.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.15);
+      g.gain.setValueAtTime(.06,ac.currentTime);
+      g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.15);
       osc.start(ac.currentTime);osc.stop(ac.currentTime+.15);
+
+    } else if(type==='correct'){
+      // Fun: fizzing bubbles then rising chime + sparkle
+      const t=ac.currentTime;
+
+      // Bubble fizz layer — noise burst
+      const bufSize=ac.sampleRate*.3;
+      const buf=ac.createBuffer(1,bufSize,ac.sampleRate);
+      const d=buf.getChannelData(0);
+      for(let i=0;i<bufSize;i++)d[i]=(Math.random()*2-1)*.3;
+      const noise=ac.createBufferSource();
+      noise.buffer=buf;
+      const noiseFilter=ac.createBiquadFilter();
+      noiseFilter.type='bandpass';noiseFilter.frequency.value=1200;noiseFilter.Q.value=2;
+      const noiseGain=ac.createGain();
+      noiseGain.gain.setValueAtTime(.18,t);
+      noiseGain.gain.exponentialRampToValueAtTime(.001,t+.3);
+      noise.connect(noiseFilter);noiseFilter.connect(noiseGain);noiseGain.connect(ac.destination);
+      noise.start(t);noise.stop(t+.3);
+
+      // Rising magic chime — C maj arpeggio
+      const notes=[523,659,784,1047];
+      notes.forEach((freq,i)=>{
+        const o=ac.createOscillator(),g=ac.createGain();
+        o.connect(g);g.connect(ac.destination);
+        o.type='sine';
+        o.frequency.setValueAtTime(freq,t+i*.1);
+        g.gain.setValueAtTime(0,t+i*.1);
+        g.gain.linearRampToValueAtTime(.18,t+i*.1+.04);
+        g.gain.exponentialRampToValueAtTime(.001,t+i*.1+.35);
+        o.start(t+i*.1);o.stop(t+i*.1+.4);
+      });
+
+      // High sparkle glitter on top
+      for(let i=0;i<5;i++){
+        const o=ac.createOscillator(),g=ac.createGain();
+        o.connect(g);g.connect(ac.destination);
+        o.type='sine';
+        const f=2000+Math.random()*2000;
+        o.frequency.setValueAtTime(f,t+i*.06);
+        o.frequency.exponentialRampToValueAtTime(f*1.4,t+i*.06+.15);
+        g.gain.setValueAtTime(.07,t+i*.06);
+        g.gain.exponentialRampToValueAtTime(.001,t+i*.06+.2);
+        o.start(t+i*.06);o.stop(t+i*.06+.25);
+      }
+
+      // Satisfying low thud to seal the deal
+      const sub=ac.createOscillator(),subG=ac.createGain();
+      sub.connect(subG);subG.connect(ac.destination);
+      sub.type='sine';
+      sub.frequency.setValueAtTime(120,t);
+      sub.frequency.exponentialRampToValueAtTime(60,t+.25);
+      subG.gain.setValueAtTime(.3,t);
+      subG.gain.exponentialRampToValueAtTime(.001,t+.3);
+      sub.start(t);sub.stop(t+.3);
+
+    } else if(type==='wrong'){
+      // Fun: boiling rumble + splat + descending wail
+      const t=ac.currentTime;
+
+      // Low rumble — filtered noise
+      const bufSize=ac.sampleRate*.6;
+      const buf=ac.createBuffer(1,bufSize,ac.sampleRate);
+      const d=buf.getChannelData(0);
+      for(let i=0;i<bufSize;i++)d[i]=(Math.random()*2-1);
+      const noise=ac.createBufferSource();
+      noise.buffer=buf;
+      const rumbleFilter=ac.createBiquadFilter();
+      rumbleFilter.type='lowpass';rumbleFilter.frequency.value=300;
+      const rumbleGain=ac.createGain();
+      rumbleGain.gain.setValueAtTime(.35,t);
+      rumbleGain.gain.exponentialRampToValueAtTime(.001,t+.5);
+      noise.connect(rumbleFilter);rumbleFilter.connect(rumbleGain);rumbleGain.connect(ac.destination);
+      noise.start(t);noise.stop(t+.55);
+
+      // Explosion burst — high noise
+      const expBuf=ac.createBuffer(1,ac.sampleRate*.15,ac.sampleRate);
+      const ed=expBuf.getChannelData(0);
+      for(let i=0;i<ed.length;i++)ed[i]=(Math.random()*2-1);
+      const expNoise=ac.createBufferSource();
+      expNoise.buffer=expBuf;
+      const expGain=ac.createGain();
+      expGain.gain.setValueAtTime(.5,t+.05);
+      expGain.gain.exponentialRampToValueAtTime(.001,t+.2);
+      expNoise.connect(expGain);expGain.connect(ac.destination);
+      expNoise.start(t+.05);expNoise.stop(t+.22);
+
+      // Descending wail — comic fail sound
+      const o=ac.createOscillator(),g=ac.createGain();
+      o.connect(g);g.connect(ac.destination);
+      o.type='sawtooth';
+      o.frequency.setValueAtTime(600,t+.1);
+      o.frequency.exponentialRampToValueAtTime(80,t+.7);
+      g.gain.setValueAtTime(.2,t+.1);
+      g.gain.exponentialRampToValueAtTime(.001,t+.75);
+      o.start(t+.1);o.stop(t+.78);
+
+      // Splat hits — 3 quick impacts
+      [0,.08,.16].forEach((dt,i)=>{
+        const so=ac.createOscillator(),sg=ac.createGain();
+        so.connect(sg);sg.connect(ac.destination);
+        so.type='sine';
+        so.frequency.setValueAtTime(200-i*40,t+dt);
+        so.frequency.exponentialRampToValueAtTime(50,t+dt+.12);
+        sg.gain.setValueAtTime(.25,t+dt);
+        sg.gain.exponentialRampToValueAtTime(.001,t+dt+.15);
+        so.start(t+dt);so.stop(t+dt+.18);
+      });
     }
   }catch(e){}
 }
@@ -1024,31 +1122,36 @@ function doMix(){
   const got=new Set(selected);
   const isCorrect=[...needed].every(id=>got.has(id))&&needed.size===got.size;
 
-  // Flash beaker
+  // Visual FX + audio fire immediately on click
+  if(isCorrect){ fxCorrect(); playSound('correct'); } else { fxWrong(); playSound('wrong'); }
   flashBeaker(isCorrect?'#4ECB71':'#FF5C5C');
 
+  const delay = isCorrect ? 1200 : 1800;
   setTimeout(()=>{
     if(isCorrect){
       score++;
       updateHUD();
       pipResults[expIndex]=livesAtExpStart-lives;
       spawnConfetti();
-      playSound('correct');
       showResult(true);
     } else {
       lives=Math.max(0,lives-1);
       updateHUD();
-      playSound('wrong');
-      shakeBeaker();
       if(lives<=0){
         pipResults[expIndex]=livesAtExpStart-lives;
-        showResult(false,true); // out of lives
+        showResult(false,true);
       } else {
         showResult(false,false);
       }
     }
     updatePips();
-  },600);
+  },delay);
+}
+
+function getBeakerCenter(){
+  const wrap=document.getElementById('beakerWrap');
+  const rect=wrap.getBoundingClientRect();
+  return{x:rect.left+rect.width/2, y:rect.top+rect.height*0.4};
 }
 
 function flashBeaker(color){
@@ -1061,14 +1164,194 @@ function flashBeaker(color){
 function shakeBeaker(){
   const wrap=document.getElementById('beakerWrap');
   wrap.style.animation='none';
-  void wrap.offsetWidth;
-  wrap.style.animation='shake .4s ease-out';
+  requestAnimationFrame(()=>{
+    wrap.style.animation='shake .5s ease-out';
+  });
   if(!document.getElementById('shakeKF')){
     const s=document.createElement('style');
     s.id='shakeKF';
-    s.textContent='@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}';
+    s.textContent='@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-10px)}40%{transform:translateX(10px)}60%{transform:translateX(-8px)}80%{transform:translateX(6px)}}';
     document.head.appendChild(s);
   }
+}
+
+// ── CORRECT FX: fizz + sparkles + gentle smoke ──
+function fxCorrect(){
+  const canvas=document.getElementById('fx-canvas');
+  const ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+  const {x,y}=getBeakerCenter();
+  const particles=[];
+
+  // Fizz bubbles rising from beaker
+  for(let i=0;i<30;i++){
+    particles.push({
+      type:'bubble',
+      x:x+(Math.random()-.5)*40,
+      y:y+20+Math.random()*30,
+      vx:(Math.random()-.5)*1.5,
+      vy:-(1.5+Math.random()*2.5),
+      r:2+Math.random()*5,
+      life:1,
+      decay:.012+Math.random()*.01,
+      color:`hsla(${160+Math.random()*40},80%,70%,`
+    });
+  }
+  // Sparkles burst outward
+  for(let i=0;i<25;i++){
+    const angle=Math.random()*Math.PI*2;
+    const speed=2+Math.random()*5;
+    particles.push({
+      type:'spark',
+      x,y:y-10,
+      vx:Math.cos(angle)*speed,
+      vy:Math.sin(angle)*speed-2,
+      r:2+Math.random()*3,
+      life:1,
+      decay:.02+Math.random()*.015,
+      color:`hsla(${50+Math.random()*60},100%,70%,`
+    });
+  }
+  // Smoke puffs drifting up
+  for(let i=0;i<12;i++){
+    particles.push({
+      type:'smoke',
+      x:x+(Math.random()-.5)*30,
+      y:y-20,
+      vx:(Math.random()-.5)*.8,
+      vy:-(0.5+Math.random()*1.2),
+      r:8+Math.random()*14,
+      life:.7,
+      decay:.008+Math.random()*.006,
+      color:'rgba(200,255,220,'
+    });
+  }
+
+  runFX(canvas,ctx,particles,80);
+}
+
+// ── WRONG FX: boil over + heavy smoke + explosion ──
+function fxWrong(){
+  const canvas=document.getElementById('fx-canvas');
+  const ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+  const {x,y}=getBeakerCenter();
+  const particles=[];
+
+  // Explosion burst — large fast particles
+  for(let i=0;i<50;i++){
+    const angle=Math.random()*Math.PI*2;
+    const speed=3+Math.random()*9;
+    particles.push({
+      type:'explode',
+      x,y:y-10,
+      vx:Math.cos(angle)*speed,
+      vy:Math.sin(angle)*speed-3,
+      r:3+Math.random()*7,
+      life:1,
+      decay:.016+Math.random()*.018,
+      grav:.15,
+      color:`hsla(${Math.random()<.5?0:30},100%,${55+Math.random()*20}%,`
+    });
+  }
+  // Boil-over blobs rising then falling
+  for(let i=0;i<20;i++){
+    particles.push({
+      type:'blob',
+      x:x+(Math.random()-.5)*50,
+      y:y+10,
+      vx:(Math.random()-.5)*3,
+      vy:-(3+Math.random()*4),
+      r:4+Math.random()*8,
+      life:1,
+      decay:.014,
+      grav:.12,
+      color:`hsla(${10+Math.random()*20},90%,55%,`
+    });
+  }
+  // Heavy smoke clouds
+  for(let i=0;i<20;i++){
+    particles.push({
+      type:'smoke',
+      x:x+(Math.random()-.5)*60,
+      y:y-10+Math.random()*20,
+      vx:(Math.random()-.5)*2,
+      vy:-(0.8+Math.random()*2),
+      r:14+Math.random()*22,
+      life:.9,
+      decay:.006+Math.random()*.006,
+      color:'rgba(80,80,80,'
+    });
+  }
+  // Ember sparks
+  for(let i=0;i<35;i++){
+    const angle=Math.random()*Math.PI*2;
+    const speed=1+Math.random()*6;
+    particles.push({
+      type:'ember',
+      x,y:y-5,
+      vx:Math.cos(angle)*speed,
+      vy:Math.sin(angle)*speed-4,
+      r:1.5+Math.random()*2.5,
+      life:1,
+      decay:.02+Math.random()*.02,
+      grav:.08,
+      color:`hsla(${40+Math.random()*20},100%,70%,`
+    });
+  }
+
+  // Shake too
+  shakeBeaker();
+  runFX(canvas,ctx,particles,120);
+}
+
+function runFX(canvas,ctx,particles,maxFrames){
+  let frame=0;
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p=>{
+      p.x+=p.vx;
+      p.y+=p.vy;
+      if(p.grav)p.vy+=p.grav;
+      if(p.type==='smoke')p.r+=.3;
+      p.life-=p.decay;
+      if(p.life<=0)return;
+
+      ctx.save();
+      ctx.globalAlpha=Math.max(0,p.life);
+
+      if(p.type==='smoke'){
+        const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r);
+        g.addColorStop(0,p.color+'0.25)');
+        g.addColorStop(1,p.color+'0)');
+        ctx.fillStyle=g;
+        ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+      } else if(p.type==='bubble'){
+        ctx.strokeStyle=p.color+'0.8)';
+        ctx.lineWidth=1.5;
+        ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.stroke();
+      } else if(p.type==='spark'||p.type==='ember'){
+        ctx.fillStyle=p.color+'1)';
+        ctx.shadowColor=p.color+'1)';
+        ctx.shadowBlur=6;
+        ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+      } else {
+        // explode / blob
+        const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r);
+        g.addColorStop(0,p.color+'1)');
+        g.addColorStop(1,p.color+'0)');
+        ctx.fillStyle=g;
+        ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+      }
+      ctx.restore();
+    });
+    frame++;
+    if(frame<maxFrames)requestAnimationFrame(draw);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+  draw();
 }
 
 // ══════════════════════════════════════════════
