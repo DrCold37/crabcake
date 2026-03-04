@@ -266,7 +266,7 @@
   /* Controls */
   .controls { display: flex; gap: 10px; align-items: center; }
 
-  button {
+  button, a.btn-ghost {
     font-family: 'Space Mono', monospace;
     font-size: 0.7rem;
     letter-spacing: 1px;
@@ -276,6 +276,9 @@
     cursor: pointer;
     transition: all 0.2s;
     text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .btn-primary {
@@ -433,7 +436,7 @@
   <div class="overlay-btns">
     <button class="btn-ghost"    onclick="restartFromOverlay()">↺ RETRY</button>
     <button class="btn-ghost"    onclick="prevLevelFromOverlay()">‹ PREV</button>
-    <a href="index.html#games" class="btn-ghost" style="text-decoration:none;">🏠 HOME</a>
+    <button class="btn-ghost" onclick="goHome()">🏠 HOME</button>
     <button class="btn-primary"  onclick="nextLevel()">NEXT LEVEL ›</button>
   </div>
   <div class="overlay-badges-wrap" id="lvlBadgesWrap" style="display:none">
