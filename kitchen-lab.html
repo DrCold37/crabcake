@@ -946,8 +946,17 @@ function buildShelf(){
 }
 
 function selectIngredient(id,btn){
+  if(btn.classList.contains('used')&&selected.includes(id)){
+    // Deselect — remove from selected
+    const i=selected.indexOf(id);
+    selected.splice(i,1);
+    btn.classList.remove('selected','used');
+    updateSlots();
+    fillBeaker();
+    updateMixBtn();
+    return;
+  }
   if(btn.classList.contains('used'))return;
-  if(selected.includes(id))return;
 
   const needed=currentExp.correct.length;
   if(selected.length>=needed)return;
