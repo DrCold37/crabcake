@@ -791,26 +791,7 @@ function startCountdown() {
   if (!selectedAge || gameRunning) return;
   document.getElementById('startScreen').classList.add('hidden');
   document.getElementById('backLink').style.display = 'none';
-
-  const el     = document.getElementById('countdown');
-  const numEl  = document.getElementById('countdownNum');
-  el.classList.remove('hidden');
-  let count = 3;
-  numEl.textContent = count;
-
-  _countdownTick = setInterval(() => {
-    count--;
-    if (count <= 0) {
-      clearInterval(_countdownTick); _countdownTick = null;
-      numEl.textContent = '🌿';
-      setTimeout(() => { el.classList.add('hidden'); startGame(); }, 600);
-    } else {
-      numEl.style.animation = 'none';
-      numEl.offsetHeight;
-      numEl.style.animation = 'countPop 0.8s ease-out';
-      numEl.textContent = count;
-    }
-  }, 900);
+  startGame();
 }
 
 // ── GAME START ──
