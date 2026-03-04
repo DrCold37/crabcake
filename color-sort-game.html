@@ -711,6 +711,26 @@ function render() {
   const area = document.getElementById('game-area');
   area.innerHTML = '';
 
+  // ── Dynamic grid sizing ───────────────────────────────────────────
+  const n = tubes.length;
+  // Target 2 rows max: for ≤10 use 5 cols (2×5), for >10 use ceil(n/2)
+  const cols = n <= 10 ? 5 : Math.ceil(n / 2);
+  const gap  = 12;
+  const availW = Math.min(window.innerWidth - 32, 780);
+  // Compute tube width that fills the row; never go below 36px or above 58px
+  const rawW = Math.floor((availW - (cols - 1) * gap) / cols);
+  const tubeW = Math.max(36, Math.min(58, rawW));
+  const tubeH = Math.round(tubeW * (200 / 58));
+  const segH  = Math.round(tubeW * (42  / 58));
+  document.documentElement.style.setProperty('--tube-w',     tubeW + 'px');
+  document.documentElement.style.setProperty('--tube-h',     tubeH + 'px');
+  document.documentElement.style.setProperty('--segment-h',  segH  + 'px');
+  area.style.display             = 'grid';
+  area.style.gridTemplateColumns = `repeat(${cols}, ${tubeW}px)`;
+  area.style.gap                 = gap + 'px';
+  area.style.justifyContent      = 'center';
+  // ─────────────────────────────────────────────────────────────────
+
   tubes.forEach((tube, i) => {
     const wrapper = document.createElement('div');
     wrapper.className = 'tube-wrapper';
