@@ -129,6 +129,14 @@
       font-size: clamp(3rem, 9vw, 5.5rem);
       color: var(--gold);
       text-shadow: 3px 3px 0 rgba(0,0,0,0.4), 0 0 40px rgba(255,213,79,0.3);
+      animation: titleBob 2.5s ease-in-out infinite;
+      animation-delay: 0.4s;
+      display: inline-block;
+    }
+    @keyframes titleBob {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-10px); }
+    };
       text-align: center;
       line-height: 1;
       margin-bottom: 0.3rem;
@@ -558,7 +566,6 @@
     </a>
     <div class="game-icon">🦁</div>
     <div class="game-title">Jungle Words!</div>
-    <div class="game-subtitle">Crabcake · Educational Games</div>
 
     <div class="age-select-label">Choose your explorer</div>
     <div class="age-buttons">

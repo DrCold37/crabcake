@@ -44,9 +44,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 
 /* ── START SCREEN ── */
 #startScreen{gap:0;padding:1.5rem 1rem}
-.lab-icon{font-size:4rem;margin-bottom:.3rem;animation:float 3s ease-in-out infinite}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-.game-title{font-family:'Boogaloo',cursive;font-size:clamp(2.4rem,8vw,4rem);color:var(--teal);text-shadow:0 3px 12px rgba(0,201,177,.4);text-align:center;line-height:1;margin-bottom:.2rem}
+.lab-icon{font-size:4rem;margin-bottom:.3rem;animation:iconSpin 3s ease-in-out infinite;display:inline-block}
+@keyframes iconSpin{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-12px) rotate(8deg)}}
+@keyframes titleBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes btnPulse{0%,100%{transform:scale(1);box-shadow:0 4px 24px rgba(0,201,177,.45)}50%{transform:scale(1.05);box-shadow:0 6px 32px rgba(0,201,177,.75)}}
+.game-title{font-family:'Boogaloo',cursive;font-size:clamp(2.4rem,8vw,4rem);color:var(--teal);text-shadow:0 3px 12px rgba(0,201,177,.4);text-align:center;line-height:1;margin-bottom:.2rem;animation:titleBob 2.5s ease-in-out infinite;animation-delay:.5s;display:inline-block}
 .game-subtitle{color:rgba(255,255,255,.5);font-size:.8rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:1.4rem}
 .age-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;width:100%;max-width:420px;margin-bottom:1rem}
 .age-btn{padding:.9rem .5rem;border-radius:16px;border:2px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fff;cursor:pointer;transition:all .2s;text-align:center;font-family:'Nunito',sans-serif;display:flex;flex-direction:column;align-items:center;gap:.15rem}
@@ -56,7 +58,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 .age-btn[data-age="7"].selected{border-color:#FFD54F;background:rgba(255,213,79,.15);box-shadow:0 0 16px rgba(255,213,79,.35)}
 .age-btn[data-age="9"].selected{border-color:#FF6B6B;background:rgba(255,107,107,.15);box-shadow:0 0 16px rgba(255,107,107,.35)}
 .start-exp-btn{margin-top:.6rem;padding:.75rem 2rem;border-radius:50px;border:none;font-family:'Boogaloo',cursive;font-size:1.2rem;cursor:pointer;transition:all .25s;
-  background:linear-gradient(135deg,var(--teal),var(--purple));color:#fff;box-shadow:0 4px 20px rgba(0,201,177,.3)}
+  background:linear-gradient(135deg,var(--teal),var(--purple));color:#fff;box-shadow:0 4px 24px rgba(0,201,177,.45),0 2px 8px rgba(0,0,0,.35)}
+.start-exp-btn:not(:disabled).active{animation:btnPulse 1.2s ease-in-out infinite}
 .start-exp-btn:disabled{background:rgba(255,255,255,.1);box-shadow:none;color:rgba(255,255,255,.3);cursor:not-allowed}
 .start-exp-btn:not(:disabled):hover{transform:translateY(-2px) scale(1.04);box-shadow:0 8px 28px rgba(0,201,177,.45)}
 .age-btn .age-emoji{font-size:1.8rem;display:block;margin-bottom:.3rem}
@@ -246,7 +249,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
     <span class="hud-btn-label">Home</span>
   </a>
   <div class="lab-icon">👨‍🔬</div>
-  <div class="game-title">Kitchen Lab</div>
+  <div class="game-title">Kitchen Lab!</div>
   <div class="game-subtitle">Mix · React · Discover</div>
   <div class="age-grid">
     <button class="age-btn" data-age="5" onclick="selectAge(5,this)">
@@ -265,7 +268,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
       <span class="age-topic">Chemistry</span>
     </button>
   </div>
-  <button class="start-exp-btn" id="startExpBtn" onclick="startGame()" disabled>Let's Experiment! 👨‍🔬</button>
+  <button class="start-exp-btn" id="startExpBtn" onclick="startGame()" disabled>🧪 Let's Experiment!</button>
 </div>
 
 <!-- ══ HUD ══ -->
@@ -836,6 +839,7 @@ function selectAge(age, btn){
   btn.classList.add('selected');
   const startBtn = document.getElementById('startExpBtn');
   startBtn.disabled = false;
+  startBtn.classList.add('active');
 }
 
 function startGame(){
