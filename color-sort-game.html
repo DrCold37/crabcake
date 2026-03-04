@@ -1205,12 +1205,12 @@ function _renderLvlBadges(ne){
   const wrap=document.getElementById('lvlBadgesWrap');
   const row=document.getElementById('lvlBadgesRow');
   if(!wrap||!row)return;
-  const all=Object.keys(_lb());
+  const all=Object.keys(_lb()).filter(id=>id.startsWith('ts_'));
   if(!all.length&&!ne.length){wrap.style.display='none';return;}
   wrap.style.display='';
   const title=wrap.querySelector('.badges-section-title');
-  if(title)title.textContent=ne.length?`🏆 Badge${ne.length>1?'s':''} Earned!`:'🏆 Your Badges';
-  const show=ne.length?ne:all.slice(0,6);
+  if(title)title.textContent=ne.length?`🏆 Badge${ne.length>1?'s':''} Earned!`:'🏆 Your Tube Sort Badges';
+  const show=ne.length?ne:all;
   row.innerHTML=show.map(id=>{const b=BADGE_DEF[id];if(!b)return'';
     return`<div class="badge-coin${ne.includes(id)?' new-badge':''}" title="${b.desc}"><div class="badge-coin-em">${b.em}</div><div class="badge-coin-name">${b.name}</div></div>`;
   }).join('');
