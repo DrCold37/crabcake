@@ -10,7 +10,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Crabcake">
   <link rel="apple-touch-icon" href="/icon-192.png">
-  <title>[v2.2] Kitchen Lab 👨‍🔬 – Free Science Game for Kids Ages 5–10 | Crabcake Kids</title>
+  <title>[v2.3] Kitchen Lab 👨‍🔬 – Free Science Game for Kids Ages 5–10 | Crabcake Kids</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@700;800;900&display=swap" media="print" onload="this.media='all'"/>
@@ -845,11 +845,7 @@ function startGame(){
     if(audioCtx.state==='suspended')audioCtx.resume();
   }catch(e){}
 
-  try {
-    experiments=[...EXPERIMENTS[age]].sort(()=>Math.random()-.5);
-  } catch(e) {
-    alert('CRASH at experiments spread: '+e.message); return;
-  }
+  experiments=[...EXPERIMENTS[age]].sort(()=>Math.random()-.5);
   expIndex=0; score=0; lives=3; selected=[]; pipResults={};
   gameRunning=true;
 
@@ -860,15 +856,7 @@ function startGame(){
 
   buildProgressPips();
   updateHUD();
-
-  // Debug: show experiment count on screen
-  document.getElementById('targetName').textContent = 'Loading... ('+experiments.length+' exps)';
-
-  try {
-    loadExperiment();
-  } catch(e) {
-    alert('CRASH in loadExperiment: '+e.message);
-  }
+  loadExperiment();
 }
 
 function hudBack(){
@@ -914,7 +902,8 @@ function updatePips(){
 // HUD
 // ══════════════════════════════════════════════
 function updateHUD(){
-  document.getElementById('scoreVal').textContent=score;
+  const sv=document.getElementById('scoreVal');
+  if(sv)sv.textContent=score;
   const hearts=['❤️❤️❤️','❤️❤️🖤','❤️🖤🖤','🖤🖤🖤'];
   document.getElementById('livesVal').textContent=hearts[Math.max(0,3-lives)];
 }
@@ -923,39 +912,26 @@ function updateHUD(){
 // LOAD EXPERIMENT
 // ══════════════════════════════════════════════
 function loadExperiment(){
-  try {
   if(expIndex>=experiments.length){endGame();return;}
   currentExp=experiments[expIndex];
   selected=[];
   livesAtExpStart=lives;
 
-  // Target
   document.getElementById('targetEmoji').textContent=currentExp.target.e;
   document.getElementById('targetName').textContent=currentExp.target.n;
 
-  // Reset beaker
   resetBeaker();
-
-  // Build slots
   buildSlots();
-
-  // Build shelf
   buildShelf();
 
-  // Mix button
   document.getElementById('mixBtn').disabled=true;
   document.getElementById('mixBtn').classList.remove('pulse');
 
-  // Reset hint
   _hintUsed=false;
   const hb=document.getElementById('hintBtn');
   if(hb){hb.disabled=false;hb.textContent='💡 Hint';}
 
   updatePips();
-  } catch(err) {
-    document.getElementById('targetName').textContent='ERROR: '+err.message;
-    console.error('loadExperiment failed:', err);
-  }
 }
 
 // ══════════════════════════════════════════════
