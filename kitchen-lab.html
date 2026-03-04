@@ -12,7 +12,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Crabcake">
   <link rel="apple-touch-icon" href="/icon-192.png">
-  <title>Kitchen Lab 🧪 – Free Science Game for Kids Ages 5–10 | Crabcake Kids</title>
+  <title>Kitchen Lab 👨‍🔬 – Free Science Game for Kids Ages 5–10 | Crabcake Kids</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@700;800;900&display=swap"/>
@@ -433,7 +433,7 @@
     <span class="hud-btn-icon">🏠</span>
     <span class="hud-btn-label">Home</span>
   </a>
-  <div class="lab-icon-display">🧪</div>
+  <div class="lab-icon-display">👨‍🔬</div>
   <div class="game-title">Kitchen Lab</div>
   <div class="game-subtitle">Mix, React &amp; Discover!</div>
 
@@ -455,7 +455,7 @@
       <span class="age-topic">Chemical Changes</span>
     </button>
   </div>
-  <button class="start-btn" id="startBtn" onclick="startCountdown()">Let's Experiment! 🧪</button>
+  <button class="start-btn" id="startBtn" onclick="startCountdown()">Let's Experiment! 👨‍🔬</button>
 </div>
 
 <!-- ══════════════ HUD ══════════════ -->
@@ -764,7 +764,7 @@ function startCountdown(){
   const iv=setInterval(()=>{
     n--;
     if(n<=0){
-      clearInterval(iv); num.textContent='🧪';
+      clearInterval(iv); num.textContent='👨‍🔬';
       setTimeout(()=>{ cd.classList.add('hidden'); initGame(); },700);
     } else {
       num.textContent=n;
@@ -983,7 +983,7 @@ function endGame(){
   } else if(pct<1.0){
     rating='⭐⭐⭐';title='Brilliant Scientist!';message='Amazing work in the lab! You really know your science! 🔬';
   } else {
-    rating='🏆✨';title='PERFECT EXPERIMENT!';message='A flawless score! You\'re a science genius! 🧪🌟';
+    rating='🏆✨';title='PERFECT EXPERIMENT!';message='A flawless score! You\'re a science genius! 👨‍🔬🌟';
     spawnConfetti(window.innerWidth/2,window.innerHeight/2);
     setTimeout(()=>spawnConfetti(window.innerWidth/3,window.innerHeight/3),300);
     setTimeout(()=>spawnConfetti(window.innerWidth*0.7,window.innerHeight*0.4),600);
