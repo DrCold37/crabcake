@@ -867,8 +867,11 @@ function startCountdown() {
 // ── GAME START ──
 function startGame() {
   if (gameRunning) return; // safety guard
-  // Resume AudioContext — age button click counts as user gesture
-  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  // Eagerly create + resume AudioContext inside the user gesture (age btn click)
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+  } catch(e) {}
   canvas = document.getElementById('gameCanvas');
   ctx = canvas.getContext('2d');
   resizeCanvas();
