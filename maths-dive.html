@@ -598,6 +598,10 @@
 
     <!-- RIGHT: levels / home -->
     <div class="hud-right">
+      <button class="hud-btn" id="soundToggleBtn" onclick="toggleSound()" title="Toggle Sound">
+        <span class="hud-btn-icon">🔊</span>
+        <span class="hud-btn-label">Sound</span>
+      </button>
       <button class="hud-btn" onclick="hudBack()" title="Level Select">
         <span class="hud-btn-icon">↩️</span>
         <span class="hud-btn-label">Levels</span>
@@ -867,6 +871,8 @@ function startCountdown() {
 // ── GAME START ──
 function startGame() {
   if (gameRunning) return; // safety guard
+  // Resume AudioContext — age button click counts as user gesture
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
   canvas = document.getElementById('gameCanvas');
   ctx = canvas.getContext('2d');
   resizeCanvas();
@@ -1062,6 +1068,7 @@ function gameLoop() {
     }
     playSound('correct');
     generateQuestion(); // safe: fallingObjects = nextObjects, caught obj not in it
+    fallingObjects.forEach(o => { o.isCorrect = (o.value === currentAnswer); });
     spawnCorrectObject(); // immediately give player a fresh correct object
 
   } else if (catchIsCorrect === false) {
@@ -1078,6 +1085,7 @@ function gameLoop() {
 
   if (missedCorrect) {
     generateQuestion();
+    fallingObjects.forEach(o => { o.isCorrect = (o.value === currentAnswer); });
     spawnCorrectObject();
   }
 
@@ -1330,9 +1338,22 @@ function getAudio() {
   if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   return audioCtx;
 }
+let _soundOn = true;
+
+function toggleSound() {
+  _soundOn = !_soundOn;
+  const btn = document.getElementById('soundToggleBtn');
+  if (btn) {
+    btn.querySelector('.hud-btn-icon').textContent = _soundOn ? '🔊' : '🔇';
+    btn.querySelector('.hud-btn-label').textContent = _soundOn ? 'Sound' : 'Muted';
+  }
+}
+
 function playSound(type) {
+  if (!_soundOn) return;
   try {
     const ac = getAudio();
+    if (ac.state === 'suspended') ac.resume();
     const osc = ac.createOscillator();
     const gain = ac.createGain();
     osc.connect(gain);
