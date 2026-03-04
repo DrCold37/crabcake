@@ -108,16 +108,7 @@
       z-index: 0;
       pointer-events: none;
     }
-    .sea-floor::after {
-      content: '🪸 🦞 🐚 🌿 🪸 🐚 🌿 🦀 🪸 🌿 🐚 🦞 🪸';
-      position: absolute;
-      bottom: 4px;
-      left: 0; right: 0;
-      text-align: center;
-      font-size: 1.4rem;
-      letter-spacing: 8px;
-      opacity: 0.7;
-    }
+    /* sea-floor emoji removed for mobile fit */
 
     /* ── START SCREEN ── */
     #startScreen {
@@ -387,13 +378,13 @@
     /* ── END SCREEN ── */
     #endScreen {
       z-index: 15;
-      gap: 1rem;
-      padding: 2rem 2rem 110px;
+      gap: 0.6rem;
+      padding: 1.2rem 1.5rem 1.5rem;
       overflow-y: auto;
     }
     .end-title {
       font-family: 'Boogaloo', cursive;
-      font-size: clamp(2rem, 6vw, 3.5rem);
+      font-size: clamp(1.6rem, 5vw, 3rem);
       color: var(--yellow);
       text-shadow: 3px 3px 0 rgba(0,0,0,0.3);
       text-align: center;
@@ -415,7 +406,7 @@
     }
     .end-score-num {
       font-family: 'Boogaloo', cursive;
-      font-size: 4rem;
+      font-size: 3rem;
       color: var(--yellow);
       line-height: 1;
       text-shadow: 3px 3px 0 rgba(0,0,0,0.2);
@@ -427,7 +418,7 @@
       margin-top: 0.3rem;
     }
     .end-rating {
-      font-size: 3rem;
+      font-size: 2rem;
       text-align: center;
     }
     .end-message {
@@ -523,7 +514,7 @@
   .badges-section-title{font-size:.75rem;text-transform:uppercase;letter-spacing:2px;color:#80e8ff;text-align:center;margin-bottom:8px;}
   .end-badges-wrap{margin:10px 0;padding:12px;background:rgba(0,201,177,.07);border:1px solid rgba(0,201,177,.2);border-radius:14px;}
   /* ── FEEDBACK STRIP ── */
-  .feedback-strip{margin-top:18px;padding:12px 16px;background:rgba(0,201,177,.06);border:1px solid rgba(0,201,177,.18);border-radius:14px;text-align:center;}
+  .feedback-strip{margin-top:10px;padding:8px 12px;background:rgba(0,201,177,.06);border:1px solid rgba(0,201,177,.18);border-radius:14px;text-align:center;}
   .feedback-text{font-size:.78rem;color:rgba(255,255,255,.55);margin-bottom:10px;}
   .feedback-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
   .feedback-btn{font-size:.7rem;padding:7px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:rgba(255,255,255,.7);text-decoration:none;transition:all .2s;white-space:nowrap;}
@@ -540,8 +531,6 @@
   <!-- Ocean background (always visible) -->
   <div class="ocean-bg" id="oceanBg"></div>
   <div class="sea-floor"></div>
-  <a href="index.html" class="back-link" id="backLink">← Back</a>
-
   <!-- START SCREEN -->
   <div class="screen" id="startScreen">
     <a class="hud-btn start-home-btn" href="index.html#games" title="Home">
@@ -870,7 +859,6 @@ function startCountdown() {
   if (!selectedAge) return;
   if (gameRunning) return; // prevent re-triggering while game is active
   document.getElementById('startScreen').classList.add('hidden');
-  document.getElementById('backLink').style.display = 'none';
 
   const el = document.getElementById('countdown');
   const numEl = document.getElementById('countdownNum');
@@ -970,7 +958,7 @@ function onTouchMove(e) {
   e.preventDefault();
   const rect = canvas.getBoundingClientRect();
   diver.targetX = e.touches[0].clientX - rect.left;
-  diver.targetY = e.touches[0].clientY - rect.top;
+  diver.targetY = (e.touches[0].clientY - rect.top) - 52; // offset up so finger is at emoji bottom
 }
 function onCanvasClick(e) {
   const rect = canvas.getBoundingClientRect();
@@ -1465,7 +1453,7 @@ function endGame() {
   document.getElementById('endMessage').textContent = message;
 
   document.getElementById('endScreen').classList.remove('hidden');
-  document.getElementById('backLink').style.display = 'block';
+  document.querySelector('.sea-floor').style.display = 'none';
 
   // Award badges
   awardMathDiveBadges(score, _maxStreak, selectedAge);
@@ -1474,7 +1462,7 @@ function endGame() {
 
 function playAgain() {
   document.getElementById('endScreen').classList.add('hidden');
-  document.getElementById('backLink').style.display = 'none';
+  document.querySelector('.sea-floor').style.display = '';
   fallingObjects = [];
   gameRunning = false;
   startCountdown();
@@ -1501,8 +1489,8 @@ function hudBack() {
 
 function changeAge() {
   document.getElementById('endScreen').classList.add('hidden');
+  document.querySelector('.sea-floor').style.display = '';
   document.getElementById('startScreen').classList.remove('hidden');
-  document.getElementById('backLink').style.display = 'none';
   document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('selected'));
   document.getElementById('startBtn').classList.remove('ready');
   selectedAge = null;
