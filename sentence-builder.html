@@ -341,8 +341,10 @@
       background: rgba(255,255,255,0.15);
       transition: background 0.3s, transform 0.3s;
     }
-    .dot.done    { background: var(--leaf2); transform: scale(1.2); }
-    .dot.current { background: var(--gold); transform: scale(1.3); box-shadow: 0 0 8px rgba(255,213,79,0.5); }
+    .dot.done     { background: var(--leaf2); transform: scale(1.2); }
+    .dot.done-warn{ background: #FFD93D; transform: scale(1.2); box-shadow: 0 0 6px rgba(255,217,61,0.5); }
+    .dot.done-bad { background: #FF5C5C; transform: scale(1.2); box-shadow: 0 0 6px rgba(255,92,92,0.5); }
+    .dot.current { transform: scale(1.3); box-shadow: 0 0 8px rgba(255,255,255,0.2); }
 
     /* ── CHARACTER ── */
     .character-wrap {
@@ -572,14 +574,6 @@
     <!-- LEFT: score / done / lives -->
     <div class="hud-left">
       <div class="hud-item">
-        <div class="hud-label">Score</div>
-        <div class="hud-value" id="scoreVal">0</div>
-      </div>
-      <div class="hud-item">
-        <div class="hud-label">Done</div>
-        <div class="hud-value" id="sentenceVal">0</div>
-      </div>
-      <div class="hud-item">
         <div class="hud-label">Lives</div>
         <div class="lives-display" id="livesDisplay">
           <span class="life-heart" id="h1">❤️</span>
@@ -596,6 +590,10 @@
 
     <!-- RIGHT: levels / home -->
     <div class="hud-right">
+      <button class="hud-btn" id="soundToggleBtn" onclick="toggleSound()" title="Toggle Sound">
+        <span class="hud-btn-icon">🔊</span>
+        <span class="hud-btn-label">Sound</span>
+      </button>
       <button class="hud-btn" onclick="hudBack()" title="Level Select">
         <span class="hud-btn-icon">↩️</span>
         <span class="hud-btn-label">Levels</span>
@@ -711,6 +709,8 @@ const sentences = {
 let selectedAge   = null;
 let score         = 0;
 let lives         = 3;
+let _livesAtSentenceStart = 3;
+let _dotResults   = {}; // sentenceIndex -> 0 (perfect), 1 (one lost), 2+ (two+ lost)
 let _gameStartTime = 0;
 let sentencesDone = 0;
 let gameRunning   = false;
@@ -794,9 +794,15 @@ function startCountdown() {
 // ── GAME START ──
 function startGame() {
   if (gameRunning) return;
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+  } catch(e) {}
   gameRunning   = true;
   score         = 0;
   lives         = 3;
+  _dotResults   = {};
+  _livesAtSentenceStart = 3;
   sentencesDone = 0;
   _gameStartTime = Date.now();
   sentenceIndex = 0;
@@ -835,14 +841,21 @@ function updateProgressDots() {
     const d = document.getElementById(`dot-${i}`);
     if (!d) continue;
     d.className = 'dot';
-    if (i < sentenceIndex) d.classList.add('done');
-    else if (i === sentenceIndex) d.classList.add('current');
+    if (i === sentenceIndex) {
+      d.classList.add('current');
+    } else if (i < sentenceIndex || _dotResults[i] !== undefined) {
+      const lost = _dotResults[i] || 0;
+      if (lost === 0)      d.classList.add('done');
+      else if (lost === 1) d.classList.add('done-warn');
+      else                 d.classList.add('done-bad');
+    }
   }
 }
 
 // ── LOAD SENTENCE ──
 function loadSentence() {
   if (sentenceIndex >= sentenceQueue.length) { endGame(); return; }
+  _livesAtSentenceStart = lives;
 
   const s = sentenceQueue[sentenceIndex];
   currentSentence = s.words;
@@ -929,6 +942,8 @@ function addBuiltWord(word, correct) {
 
 // ── SENTENCE COMPLETE ──
 function completeSentence() {
+  const lostThisSentence = _livesAtSentenceStart - lives;
+  _dotResults[sentenceIndex] = lostThisSentence;
   score++;
   sentencesDone++;
   updateHUD();
@@ -980,8 +995,6 @@ function setSpeech(text, duration) {
 
 // ── HUD ──
 function updateHUD() {
-  document.getElementById('scoreVal').textContent = score;
-  document.getElementById('sentenceVal').textContent = sentencesDone;
   // Lives
   for (let i = 1; i <= 3; i++) {
     const h = document.getElementById(`h${i}`);
@@ -1035,17 +1048,35 @@ function getAudio() {
   if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   return audioCtx;
 }
+let _soundOn = true;
+
+function toggleSound() {
+  _soundOn = !_soundOn;
+  const btn = document.getElementById('soundToggleBtn');
+  if (btn) {
+    btn.querySelector('.hud-btn-icon').textContent = _soundOn ? '🔊' : '🔇';
+    btn.querySelector('.hud-btn-label').textContent = _soundOn ? 'Sound' : 'Muted';
+  }
+}
+
 function playSound(type) {
+  if (!_soundOn) return;
   try {
     const ac   = getAudio();
+    if (ac.state === 'suspended') ac.resume();
     const osc  = ac.createOscillator();
     const gain = ac.createGain();
     osc.connect(gain); gain.connect(ac.destination);
     if (type === 'tap') {
-      osc.frequency.setValueAtTime(440, ac.currentTime);
-      gain.gain.setValueAtTime(0.08, ac.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.15);
-      osc.start(ac.currentTime); osc.stop(ac.currentTime + 0.15);
+      // Rising pitch per word position — satisfying building melody
+      const notes = [523, 587, 659, 698, 784, 880, 988, 1047];
+      const freq = notes[Math.min(nextWordIndex, notes.length - 1)];
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, ac.currentTime);
+      osc.frequency.setValueAtTime(freq * 1.06, ac.currentTime + 0.06);
+      gain.gain.setValueAtTime(0.1, ac.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.18);
+      osc.start(ac.currentTime); osc.stop(ac.currentTime + 0.18);
     } else if (type === 'correct') {
       osc.frequency.setValueAtTime(523, ac.currentTime);
       osc.frequency.setValueAtTime(659, ac.currentTime + 0.1);
