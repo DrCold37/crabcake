@@ -13,7 +13,10 @@
   <meta name="apple-mobile-web-app-title" content="Crabcake">
   <link rel="apple-touch-icon" href="/icon-192.png">
 <title>Witch's Brew Workshop 🧙‍♀️ – Free Puzzle Game for Kids | Crabcake Kids</title>
-<link href="https://fonts.googleapis.com/css2?family=Creepster&family=Bubblegum+Sans&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Creepster&family=Bubblegum+Sans&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Creepster&family=Bubblegum+Sans&display=swap" rel="stylesheet"></noscript>
 <style>
 :root{
   --bg:#0d0a1a;--purple:#6a0dad;--bright:#b44fff;
@@ -64,7 +67,7 @@ h1{font-family:'Creepster',cursive;font-size:clamp(2rem,6vw,3.5rem);color:var(--
 
 /* GRID */
 .main{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:start;margin-top:12px;}
-.panel{background:rgba(106,13,173,.12);border:2px solid var(--purple);border-radius:20px;padding:14px;box-shadow:0 0 20px rgba(106,13,173,.3);}
+.panel{background:rgba(106,13,173,.12);border:2px solid var(--purple);border-radius:20px;padding:14px;box-shadow:0 0 20px rgba(106,13,173,.3);min-height:200px;}
 .ptitle{font-family:'Creepster',cursive;font-size:1.3rem;color:var(--yellow);text-align:center;margin-bottom:10px;}
 .igrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
 .ibtn{background:rgba(255,255,255,.05);border:2px solid transparent;border-radius:14px;padding:9px 5px;cursor:pointer;transition:all .2s;text-align:center;font-family:'Bubblegum Sans',cursive;color:var(--text);}
@@ -1844,7 +1847,7 @@ init();
     }
   </script>
 
-  <script src="crabcake-avatar.js?v=4"></script>
+  <script src="crabcake-avatar.js?v=4" defer></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       var hudEl = document.getElementById('wb-avatar-hud');

@@ -15,7 +15,8 @@
   <title>Maths Dive 🤿 – Free Maths Game for Kids Ages 7–9 | Crabcake Kids</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@700;800;900&display=swap"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@700;800;900&display=swap" media="print" onload="this.media='all'"/>
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@700;800;900&display=swap"/></noscript>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -794,9 +795,12 @@ function generateQuestion() {
   const qBar = document.getElementById('questionBar');
   if (qBar) {
     qBar.classList.remove('q-flash');
-    void qBar.offsetWidth; // force reflow to restart animation
-    qBar.classList.add('q-flash');
-    setTimeout(() => qBar.classList.remove('q-flash'), 500);
+    qBar.style.animationName = 'none';
+    requestAnimationFrame(() => {
+      qBar.style.animationName = '';
+      qBar.classList.add('q-flash');
+      setTimeout(() => qBar.classList.remove('q-flash'), 500);
+    });
   }
   // Short alert chime — distinct from correct/wrong sounds
   try {
@@ -1659,7 +1663,7 @@ function claimFeedbackBadge(type) {
 }
 </script>
   
-  <script src="crabcake-avatar.js?v=4"></script>
+  <script src="crabcake-avatar.js?v=4" defer></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       var hudEl = document.getElementById('md-avatar-hud');
