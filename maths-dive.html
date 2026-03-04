@@ -328,6 +328,12 @@
       backdrop-filter: blur(8px);
     }
     .question-bar.hidden { display: none; }
+    @keyframes qFlash {
+      0%   { border-color: var(--yellow); box-shadow: 0 0 0 4px rgba(255,217,61,0.5); transform: translateX(-50%) scale(1.06); }
+      60%  { border-color: var(--teal);   box-shadow: 0 0 0 2px rgba(0,201,177,0.3);  transform: translateX(-50%) scale(1.01); }
+      100% { border-color: rgba(0,201,177,0.4); box-shadow: none; transform: translateX(-50%) scale(1); }
+    }
+    .question-bar.q-flash { animation: qFlash 0.5s ease-out forwards; }
     .question-text {
       font-family: 'Boogaloo', cursive;
       font-size: clamp(1.2rem, 4vw, 1.8rem);
@@ -613,7 +619,6 @@
   <!-- QUESTION BAR -->
   <div id="questionBar" class="question-bar hidden">
     <div>
-      <div class="question-label">Catch the answer to</div>
       <div class="question-text" id="questionText">?</div>
     </div>
   </div>
@@ -784,6 +789,30 @@ function generateQuestion() {
   currentAnswer = ans;
   currentQuestion = q;
   document.getElementById('questionText').textContent = q;
+
+  // Flash the question card and play an alert chime
+  const qBar = document.getElementById('questionBar');
+  if (qBar) {
+    qBar.classList.remove('q-flash');
+    void qBar.offsetWidth; // force reflow to restart animation
+    qBar.classList.add('q-flash');
+    setTimeout(() => qBar.classList.remove('q-flash'), 500);
+  }
+  // Short alert chime — distinct from correct/wrong sounds
+  try {
+    const ac = getAudio();
+    if (ac.state === 'suspended') ac.resume();
+    const osc = ac.createOscillator();
+    const gain = ac.createGain();
+    osc.connect(gain); gain.connect(ac.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(880, ac.currentTime);
+    osc.frequency.setValueAtTime(660, ac.currentTime + 0.08);
+    gain.gain.setValueAtTime(0.08, ac.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.2);
+    osc.start(ac.currentTime);
+    osc.stop(ac.currentTime + 0.2);
+  } catch(e) {}
 
   // Mark all active objects as wrong for the new question.
   // A fresh correct object will spawn shortly via the normal spawn cycle.
