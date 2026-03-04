@@ -10,7 +10,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Crabcake">
   <link rel="apple-touch-icon" href="/icon-192.png">
-  <title>[v2.1] Kitchen Lab 👨‍🔬 – Free Science Game for Kids Ages 5–10 | Crabcake Kids</title>
+  <title>[v2.2] Kitchen Lab 👨‍🔬 – Free Science Game for Kids Ages 5–10 | Crabcake Kids</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@700;800;900&display=swap" media="print" onload="this.media='all'"/>
@@ -845,18 +845,30 @@ function startGame(){
     if(audioCtx.state==='suspended')audioCtx.resume();
   }catch(e){}
 
-  experiments=[...EXPERIMENTS[age]].sort(()=>Math.random()-.5);
+  try {
+    experiments=[...EXPERIMENTS[age]].sort(()=>Math.random()-.5);
+  } catch(e) {
+    alert('CRASH at experiments spread: '+e.message); return;
+  }
   expIndex=0; score=0; lives=3; selected=[]; pipResults={};
   gameRunning=true;
 
   document.getElementById('startScreen').classList.add('hidden');
-  document.querySelector('.start-home-btn').style.display='none';
+  try { document.querySelector('.start-home-btn').style.display='none'; } catch(e){}
   document.getElementById('hud').classList.remove('hidden');
   document.getElementById('gameScreen').classList.remove('hidden');
 
   buildProgressPips();
   updateHUD();
-  loadExperiment();
+
+  // Debug: show experiment count on screen
+  document.getElementById('targetName').textContent = 'Loading... ('+experiments.length+' exps)';
+
+  try {
+    loadExperiment();
+  } catch(e) {
+    alert('CRASH in loadExperiment: '+e.message);
+  }
 }
 
 function hudBack(){
