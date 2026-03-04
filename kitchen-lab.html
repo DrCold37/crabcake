@@ -167,7 +167,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 .result-subtitle{font-size:.8rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:.8rem}
 .result-subtitle.correct{color:var(--green)}
 .result-subtitle.wrong{color:var(--coral)}
-.fact-box{background:rgba(0,201,177,.1);border:2px solid rgba(0,201,177,.25);border-radius:16px;padding:1rem 1.2rem;max-width:400px;margin-bottom:1rem;text-align:center}
+.fact-box{background:rgba(0,201,177,.1);border:2px solid rgba(0,201,177,.25);border-radius:16px;padding:1rem 1.2rem;max-width:400px;margin-bottom:.6rem;text-align:center}
+.hint-box{background:rgba(255,217,61,.08);border:2px solid rgba(255,217,61,.3);border-radius:16px;padding:1rem 1.2rem;max-width:400px;margin-bottom:1rem;text-align:center}
 .fact-label{font-size:.55rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--teal);margin-bottom:.3rem}
 .fact-text{font-size:.85rem;color:rgba(255,255,255,.85);line-height:1.5}
 .result-btns{display:flex;gap:.7rem;flex-wrap:wrap;justify-content:center}
@@ -363,6 +364,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
   <div class="fact-box" id="factBox">
     <div class="fact-label">🔬 Science fact</div>
     <div class="fact-text" id="factText"></div>
+  </div>
+  <div class="hint-box" id="hintBox" style="display:none">
+    <div class="fact-label">💡 Hint</div>
+    <div class="fact-text" id="hintBoxText"></div>
   </div>
   <div class="result-btns">
     <button class="btn-next">Next Experiment →</button>
@@ -1078,35 +1083,44 @@ function updateMixBtn(){
 }
 
 let _hintUsed=false;
+
+function autoHint(){
+  const missing=currentExp.correct.filter(id=>!selected.includes(id));
+  if(!missing.length)return;
+  const reveal=missing[Math.floor(Math.random()*missing.length)];
+  const ing=currentExp.ingredients.find(x=>x.id===reveal);
+  if(!ing)return;
+  _highlightHint(reveal,ing,'💡 Hint — try');
+}
+
+function _highlightHint(id,ing,prefix){
+  const btn=document.querySelector(`.ing-btn[data-id="${id}"]`);
+  if(btn){
+    btn.style.boxShadow='0 0 0 4px var(--yellow), 0 0 24px rgba(255,217,61,.7)';
+    btn.style.borderColor='var(--yellow)';
+    btn.style.transform='translateY(-4px) scale(1.08)';
+    setTimeout(()=>{
+      if(btn){btn.style.boxShadow='';btn.style.borderColor='';btn.style.transform='';}
+    },4000);
+  }
+  const t=document.getElementById('hintToast');
+  document.getElementById('hintToastText').textContent=`${prefix} ${ing.e} ${ing.n}!`;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),4000);
+}
+
 function showHint(){
   if(!currentExp||_hintUsed)return;
   _hintUsed=true;
   document.getElementById('hintBtn').disabled=true;
   document.getElementById('hintBtn').textContent='💡 Used';
-
-  // Reveal one correct ingredient not yet selected
   const missing=currentExp.correct.filter(id=>!selected.includes(id));
   if(!missing.length)return;
   const reveal=missing[0];
   const ing=currentExp.ingredients.find(x=>x.id===reveal);
   if(!ing)return;
-
-  // Highlight the shelf button
-  const btn=document.querySelector(`.ing-btn[data-id="${reveal}"]`);
-  if(btn){
-    btn.style.boxShadow='0 0 0 3px var(--yellow), 0 0 16px rgba(255,217,61,.5)';
-    btn.style.borderColor='var(--yellow)';
-    setTimeout(()=>{
-      if(btn){btn.style.boxShadow='';btn.style.borderColor='';}
-    },3000);
-  }
-
-  // Show hint toast
-  const t=document.getElementById('hintToast');
-  document.getElementById('hintToastText').textContent=`💡 Try adding ${ing.e} ${ing.n}!`;
-  t.classList.add('show');
+  _highlightHint(reveal,ing,'💡 Try adding');
   playSound('tap');
-  setTimeout(()=>t.classList.remove('show'),3000);
 }
 
 // ══════════════════════════════════════════════
@@ -1126,7 +1140,7 @@ function doMix(){
   if(isCorrect){ fxCorrect(); playSound('correct'); } else { fxWrong(); playSound('wrong'); }
   flashBeaker(isCorrect?'#4ECB71':'#FF5C5C');
 
-  const delay = isCorrect ? 1200 : 1800;
+  const delay = isCorrect ? 1200 : 1600;
   setTimeout(()=>{
     if(isCorrect){
       score++;
@@ -1137,12 +1151,8 @@ function doMix(){
     } else {
       lives=Math.max(0,lives-1);
       updateHUD();
-      if(lives<=0){
-        pipResults[expIndex]=livesAtExpStart-lives;
-        showResult(false,true);
-      } else {
-        showResult(false,false);
-      }
+      pipResults[expIndex]=livesAtExpStart-lives;
+      showResult(false, lives<=0);
     }
     updatePips();
   },delay);
@@ -1364,19 +1374,36 @@ function showResult(correct,outOfLives){
   const sub=document.getElementById('resultSubtitle');
   sub.textContent=correct?'✅ Correct!':(outOfLives?'❌ Out of lives!':'❌ Wrong mixture');
   sub.className='result-subtitle '+(correct?'correct':'wrong');
-  document.getElementById('factText').textContent=correct?currentExp.fact:currentExp.wrongFact;
+
+  // Fact box — correct only
+  document.getElementById('factBox').style.display=correct?'':'none';
+  document.getElementById('factText').textContent=correct?currentExp.fact:'';
+
+  // Hint box — wrong only
+  const hintBox=document.getElementById('hintBox');
+  if(!correct){
+    const allCorrect=currentExp.correct;
+    const hintId=allCorrect[Math.floor(Math.random()*allCorrect.length)];
+    const hintIng=currentExp.ingredients.find(x=>x.id===hintId);
+    if(hintIng){
+      document.getElementById('hintBoxText').textContent=
+        'Try using '+hintIng.e+' '+hintIng.n+' next time — it\'s one of the ingredients needed to make '+currentExp.target.e+' '+currentExp.target.n+'!';
+    }
+    hintBox.style.display='';
+  } else {
+    hintBox.style.display='none';
+  }
+
+  const nextBtn=document.querySelector('#resultOverlay .btn-next');
+  if(outOfLives){
+    nextBtn.textContent='See Results →';
+    nextBtn.onclick=()=>{ overlay.classList.add('hidden'); endGame(); };
+  } else {
+    nextBtn.textContent=correct?'Next Experiment →':'Next →';
+    nextBtn.onclick=nextExperiment;
+  }
 
   overlay.classList.remove('hidden');
-
-  if(outOfLives){
-    document.querySelector('#resultOverlay .btn-next').textContent='See Results →';
-    document.querySelector('#resultOverlay .btn-next').onclick=()=>{
-      overlay.classList.add('hidden'); endGame();
-    };
-  } else {
-    document.querySelector('#resultOverlay .btn-next').textContent=correct?'Next Experiment →':'Next →';
-    document.querySelector('#resultOverlay .btn-next').onclick=nextExperiment;
-  }
 }
 
 function retryExperiment(){
