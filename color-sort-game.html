@@ -46,6 +46,11 @@
   body > *:not(canvas) { position: relative; z-index: 1; }
 
   header { text-align: center; }
+  #ts-avatar-hud { min-height: 52px; }
+  @media (max-width: 480px) {
+    #ts-avatar-hud { min-height: 40px; margin-bottom: 2px; }
+    #ts-avatar-hud svg { width: 38px !important; height: auto !important; }
+  }
 
   h1 {
     font-family: 'Syne', sans-serif;
@@ -382,6 +387,7 @@
 <canvas id="particle-canvas"></canvas>
 
 <header>
+  <div id="ts-avatar-hud" style="display:flex;justify-content:center;margin-bottom:6px;"></div>
   <h1>TUBE SORT</h1>
   <p class="subtitle">POUR · SORT · ADVANCE</p>
 </header>
@@ -1267,6 +1273,14 @@ function claimFeedbackBadge(type) {
           .catch(err => console.log('SW registration failed:', err));
       });
     }
+    <script src="crabcake-avatar.js?v=4"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var hudEl = document.getElementById('ts-avatar-hud');
+      if (hudEl && typeof CrabcakeAvatar !== 'undefined') {
+        CrabcakeAvatar.injectHUD(hudEl, { size: 52, showPet: true });
+      }
+    });
   </script>
 </body>
 </html>
