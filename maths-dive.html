@@ -582,10 +582,6 @@
         <div class="hud-value" id="scoreVal">0</div>
       </div>
       <div class="hud-item">
-        <div class="hud-label">Streak 🔥</div>
-        <div class="hud-value" id="streakVal">0</div>
-      </div>
-      <div class="hud-item">
         <div class="hud-label">Time</div>
         <div class="hud-value" id="timerVal">60</div>
       </div>
@@ -1283,7 +1279,6 @@ function onCatch(obj, x, y) {
 
 function updateHUD() {
   document.getElementById('scoreVal').textContent = score;
-  document.getElementById('streakVal').textContent = streak;
   document.getElementById('timerVal').textContent = timerStarted ? timeLeft : '▶';
 }
 
