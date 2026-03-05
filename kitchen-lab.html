@@ -831,6 +831,39 @@ function playSound(type){
 }
 
 // ══════════════════════════════════════════════
+// BUBBLING SOUND (1.5s pre-result)
+// ══════════════════════════════════════════════
+function playBubbling(duration=1.5){
+  if(!_soundOn) return;
+  try{
+    const ac=getAudio();
+    if(ac.state==='suspended') ac.resume();
+    const now=ac.currentTime;
+    const end=now+duration;
+    // Create many short random plops to simulate bubbling
+    const rate=18; // plops per second
+    const count=Math.round(duration*rate);
+    for(let i=0;i<count;i++){
+      const t=now+(i/rate)+(Math.random()*0.04);
+      if(t>=end) break;
+      const osc=ac.createOscillator();
+      const g=ac.createGain();
+      osc.connect(g); g.connect(ac.destination);
+      // Random bubble pitch between 220-440Hz
+      const freq=220+Math.random()*220;
+      osc.type='sine';
+      osc.frequency.setValueAtTime(freq,t);
+      osc.frequency.exponentialRampToValueAtTime(freq*0.6,t+0.08);
+      g.gain.setValueAtTime(0,t);
+      g.gain.linearRampToValueAtTime(0.12+Math.random()*0.08,t+0.01);
+      g.gain.exponentialRampToValueAtTime(0.001,t+0.09);
+      osc.start(t);
+      osc.stop(t+0.1);
+    }
+  } catch(e){}
+}
+
+// ══════════════════════════════════════════════
 // BACKGROUND BUBBLES
 // ══════════════════════════════════════════════
 function initBgBubbles(){
@@ -1185,26 +1218,30 @@ function doMix(){
   const got=new Set(selected);
   const isCorrect=[...needed].every(id=>got.has(id))&&needed.size===got.size;
 
-  // Visual FX + audio fire immediately on click
-  if(isCorrect){ fxCorrect(); playSound('correct'); } else { fxWrong(); playSound('wrong'); }
-  flashBeaker(isCorrect?'#4ECB71':'#FF5C5C');
+  // Play bubbling immediately on click — result hidden until it completes
+  playBubbling(1.5);
 
-  const delay = isCorrect ? 1200 : 1600;
   setTimeout(()=>{
-    if(isCorrect){
-      score++;
-      updateHUD();
-      pipResults[expIndex]=livesAtExpStart-lives;
-      spawnConfetti();
-      showResult(true);
-    } else {
-      lives=Math.max(0,lives-1);
-      updateHUD();
-      pipResults[expIndex]=livesAtExpStart-lives;
-      showResult(false, lives<=0);
-    }
-    updatePips();
-  },delay);
+    // Flash colour + visual FX + audio reveal after bubbling completes
+    flashBeaker(isCorrect?'#4ECB71':'#FF5C5C');
+    if(isCorrect){ fxCorrect(); playSound('correct'); } else { fxWrong(); playSound('wrong'); }
+
+    setTimeout(()=>{
+      if(isCorrect){
+        score++;
+        updateHUD();
+        pipResults[expIndex]=livesAtExpStart-lives;
+        spawnConfetti();
+        showResult(true);
+      } else {
+        lives=Math.max(0,lives-1);
+        updateHUD();
+        pipResults[expIndex]=livesAtExpStart-lives;
+        showResult(false, lives<=0);
+      }
+      updatePips();
+    }, 1500);
+  },1500);
 }
 
 function getBeakerCenter(){
