@@ -1316,10 +1316,14 @@ function showResult(recipe,snap){
   resCard.style.borderColor = recipe ? '#00cc44' : '#ff3333';
   resCard.style.boxShadow   = recipe ? '0 0 50px rgba(0,204,68,.4)' : '0 0 50px rgba(255,51,51,.5)';
   document.getElementById('res-ovl').classList.add('show');
+  // Update button label for last brew
+  document.getElementById('close-btn').textContent = triesLeft <= 0 ? '📜 See Results!' : '🌟 Keep Brewing!';
   // Play sound
   if(recipe){ playSound(recipe.r==='legendary'?'legendary':'success'); } else { playSound('fail'); }
   // Auto-close: 8s for success, 5s for fail. If game just ended, close sooner and show game over.
-  const autoDelay = triesLeft<=0 ? 2000 : (recipe ? 10000 : 5000);
+  // Exception: if last brew was a SUCCESS, use full 10s so user can read the result.
+  const isLastBrew = triesLeft <= 0;
+  const autoDelay = isLastBrew ? (recipe ? 10000 : 2000) : (recipe ? 10000 : 5000);
   startResAutoClose(recipe && triesLeft>0);
   if(triesLeft<=0){
     clearTimeout(resAutoCloseTimer);
@@ -1327,7 +1331,7 @@ function showResult(recipe,snap){
       document.getElementById('res-ovl').classList.remove('show');
       clearCauldron();
       endGame();
-    }, 2000);
+    }, autoDelay);
   }
 }
 
@@ -1800,7 +1804,7 @@ function init(){
     cancelResAutoClose();
     document.getElementById('res-ovl').classList.remove('show');
     clearCauldron();
-    if(triesLeft<=0)endGame();
+    if(triesLeft<=0) endGame();
   });
 
   // Save score
