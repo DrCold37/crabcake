@@ -899,6 +899,7 @@ function startCountdown() {
   if (gameRunning) return; // prevent re-triggering while game is active
   document.getElementById('startScreen').classList.add('hidden');
   document.querySelector('.light-rays').style.display='none';
+  document.querySelector('.start-home-btn').style.display='none';
 
   const el = document.getElementById('countdown');
   const numEl = document.getElementById('countdownNum');
@@ -1532,6 +1533,7 @@ function changeAge() {
   document.querySelector('.sea-floor').style.display = '';
   document.getElementById('startScreen').classList.remove('hidden');
   document.querySelector('.light-rays').style.display='';
+  document.querySelector('.start-home-btn').style.display='';
   document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('selected'));
   document.getElementById('startBtn').classList.remove('ready');
   selectedAge = null;
