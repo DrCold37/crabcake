@@ -49,7 +49,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 /* LAYOUT */
 .wrap{position:relative;z-index:2;max-width:960px;margin:0 auto;padding:16px;}
 header{text-align:center;padding:16px 0 8px;}
-h1{font-family:'Creepster',cursive;font-size:clamp(2rem,6vw,3.5rem);color:var(--bright);text-shadow:0 0 20px var(--purple),0 0 40px var(--purple);letter-spacing:2px;animation:glow 2s infinite alternate;}
+h1{font-family:'Creepster',cursive;font-size:clamp(2rem,6vw,3.5rem);color:var(--bright);text-shadow:0 0 8px var(--purple),0 0 18px var(--purple);letter-spacing:2px;animation:glow 2s infinite alternate;}
 @keyframes glow{from{text-shadow:0 0 10px var(--purple)}to{text-shadow:0 0 30px var(--bright),0 0 60px var(--purple)}}
 .subtitle{font-size:1rem;color:var(--yellow);margin-top:4px;}
 
@@ -407,9 +407,9 @@ tr.me td{background:rgba(180,79,255,.1);border-left:2px solid var(--bright);}
 .confirm-yes:hover{opacity:.85;}
 .confirm-no{background:transparent;border:2px solid #666;color:#aaa;border-radius:16px;padding:10px 26px;font-family:'Bubblegum Sans',cursive;font-size:.95rem;cursor:pointer;}
 .confirm-no:hover{border-color:#aaa;color:#fff;}
-.new-game-btn{background:transparent;border:1px solid rgba(180,79,255,.5);border-radius:12px;padding:5px 10px;font-family:'Bubblegum Sans',cursive;color:#b44fff;cursor:pointer;font-size:.78rem;transition:all .2s;margin-top:6px;white-space:nowrap;}
+.new-game-btn{background:transparent;border:1px solid rgba(180,79,255,.5);border-radius:12px;padding:6px 12px;font-family:'Bubblegum Sans',cursive;color:#fff;cursor:pointer;font-size:.78rem;transition:all .2s;margin-top:6px;white-space:nowrap;}
 .new-game-btn:hover{background:rgba(180,79,255,.15);border-color:var(--bright);}
-.hud-btn{margin-top:0;align-self:center;}
+.hud-btn{margin-top:0;align-self:stretch;display:flex;align-items:center;justify-content:center;}
 /* ── FEEDBACK STRIP ── */
 .feedback-strip{margin-top:16px;padding:12px 16px;background:rgba(180,79,255,.06);border:1px solid rgba(180,79,255,.2);border-radius:14px;text-align:center;}
 .feedback-text{font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:10px;}
@@ -537,16 +537,15 @@ tr.me td{background:rgba(180,79,255,.1);border-left:2px solid var(--bright);}
   <header>
     <h1>🧙‍♀️ Witch's Brew Workshop <span class="moon">🌕</span></h1>
     <div class="hud">
-      <div class="hb"><span class="hl">⭐ Score</span><span class="hv" id="h-score">0</span></div>
-      <div class="hb streak-hb" id="h-streak-b"><span class="hl">🔥 Streak</span><span class="hv" id="h-streak">×1</span></div>
-      <div class="hb tries-hb" id="h-tries-b"><span class="hl">🧪 Tries Left</span><span class="hv" id="h-tries">10</span></div>
+      <div class="hb"><span class="hl">⭐</span><span class="hv" id="h-score">0</span></div>
+      <div class="hb streak-hb" id="h-streak-b"><span class="hl">🔥</span><span class="hv" id="h-streak">×1</span></div>
+      <div class="hb tries-hb" id="h-tries-b"><span class="hl">🧪</span><span class="hv" id="h-tries">10</span></div>
       <div id="wb-avatar-hud" data-hud-size="44" style="display:flex;align-items:center;"></div>
       <button class="new-game-btn hud-btn" id="new-game-btn">🔄 New</button>
       <a href="index.html#games" class="new-game-btn hud-btn" style="text-decoration:none;">🏠 Home</a>
     </div>
     <div class="xpbar"><div class="xpfill" id="xpfill" style="width:0%"></div></div>
-    <p class="hint">1st try = max speed bonus · consecutive finds = streak multiplier up to ×4</p>
-  </header>
+    </header>
 
   <div class="main">
     <!-- Ingredients -->
