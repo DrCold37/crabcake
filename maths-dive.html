@@ -115,7 +115,6 @@
       z-index: 10;
       gap: 0;
       padding: 2rem;
-      position: relative;
       overflow: hidden;
     }
     .game-title {
@@ -201,12 +200,11 @@
 
 /* ── LIGHT RAYS ── */
     .light-rays {
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 38%;
+      position: fixed;
+      inset: 0;
       overflow: hidden;
       pointer-events: none;
-      z-index: 0;
+      z-index: 9;
     }
     .ray {
       position: absolute;
@@ -569,16 +567,17 @@
   <div class="ocean-bg" id="oceanBg"></div>
   <div class="sea-floor"></div>
   <!-- START SCREEN -->
+  <a class="hud-btn start-home-btn" href="index.html#games" title="Home">
+    <span class="hud-btn-icon">🏠</span>
+    <span class="hud-btn-label">Home</span>
+  </a>
+
   <div class="screen" id="startScreen">
     <div class="light-rays" aria-hidden="true">
       <div class="ray"></div><div class="ray"></div><div class="ray"></div>
       <div class="ray"></div><div class="ray"></div><div class="ray"></div>
       <div class="ray"></div><div class="ray"></div>
     </div>
-    <a class="hud-btn start-home-btn" href="index.html#games" title="Home">
-      <span class="hud-btn-icon">🏠</span>
-      <span class="hud-btn-label">Home</span>
-    </a>
     <div class="diver-display">🤿</div>
     <div class="game-title">Math Dive!</div>
     <div class="age-select-label">Choose your diver</div>
@@ -899,6 +898,7 @@ function startCountdown() {
   if (!selectedAge) return;
   if (gameRunning) return; // prevent re-triggering while game is active
   document.getElementById('startScreen').classList.add('hidden');
+  document.querySelector('.light-rays').style.display='none';
 
   const el = document.getElementById('countdown');
   const numEl = document.getElementById('countdownNum');
@@ -1531,6 +1531,7 @@ function changeAge() {
   document.getElementById('endScreen').classList.add('hidden');
   document.querySelector('.sea-floor').style.display = '';
   document.getElementById('startScreen').classList.remove('hidden');
+  document.querySelector('.light-rays').style.display='';
   document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('selected'));
   document.getElementById('startBtn').classList.remove('ready');
   selectedAge = null;
