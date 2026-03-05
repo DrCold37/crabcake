@@ -40,11 +40,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 @keyframes twinkle{0%{opacity:.6}100%{opacity:1}}
 .moon{display:inline-block;font-size:2.2rem;vertical-align:middle;pointer-events:none;filter:drop-shadow(0 0 20px rgba(255,215,0,.6));animation:moon-glow 4s infinite alternate;}ow 4s infinite alternate;}
 @keyframes moon-glow{from{filter:drop-shadow(0 0 10px rgba(255,215,0,.4))}to{filter:drop-shadow(0 0 30px rgba(255,215,0,.9))}}
-.bat{position:fixed;font-size:24px;animation:fly linear infinite;z-index:1;pointer-events:none;}
-.bat:nth-child(2){top:10%;animation-duration:8s;}
-.bat:nth-child(3){top:25%;animation-duration:12s;animation-delay:-3s;font-size:18px;}
-.bat:nth-child(4){top:5%;animation-duration:10s;animation-delay:-6s;}
-@keyframes fly{0%{left:-5%;transform:scaleX(1)}49%{transform:scaleX(1)}50%{left:105%;transform:scaleX(-1)}100%{left:-5%;transform:scaleX(-1)}}
+49%{transform:scaleX(1)}50%{left:105%;transform:scaleX(-1)}100%{left:-5%;transform:scaleX(-1)}}
 
 /* LAYOUT */
 .wrap{position:relative;z-index:2;max-width:960px;margin:0 auto;padding:16px;}
@@ -442,7 +438,7 @@ tr.me td{background:rgba(180,79,255,.1);border-left:2px solid var(--bright);}
 </style>
 </head>
 <body>
-<div class="bat">🦇</div><div class="bat">🦇</div><div class="bat">🦇</div>
+
 <canvas id="lightning-canvas" width="200" height="200"></canvas>
 
 
