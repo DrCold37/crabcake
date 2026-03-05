@@ -35,8 +35,30 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
              radial-gradient(ellipse at 80% 20%,rgba(166,108,255,.07) 0%,transparent 50%),
              var(--bg)}
 .bubble-wrap{position:absolute;inset:0;pointer-events:none}
-.lab-bubble{position:absolute;border-radius:50%;opacity:.12;animation:rise linear infinite}
-@keyframes rise{0%{transform:translateY(100vh) scale(0)}100%{transform:translateY(-120px) scale(1)}}
+/* ── MOLECULES ── */
+.mol-wrap{position:absolute;pointer-events:none;animation:molDrift ease-in-out infinite;opacity:0}
+@keyframes molDrift{
+  0%  {opacity:0;transform:translate(0,0) rotate(0deg) scale(.85)}
+  10% {opacity:.55}
+  50% {opacity:.4;transform:translate(var(--dx),var(--dy)) rotate(var(--dr)) scale(1.05)}
+  90% {opacity:.2}
+  100%{opacity:0;transform:translate(calc(var(--dx)*2),calc(var(--dy)*2)) rotate(calc(var(--dr)*2)) scale(.9)}
+}
+.mol-atom{position:absolute;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.6),rgba(0,201,177,.4));border:1px solid rgba(0,201,177,.5)}
+.mol-bond{position:absolute;background:rgba(0,201,177,.35);transform-origin:left center}
+/* ── ELECTRIC ARCS ── */
+.arc-svg{position:absolute;pointer-events:none;opacity:0;animation:arcFlicker ease-in-out infinite}
+@keyframes arcFlicker{
+  0%,100%{opacity:0}2%{opacity:.7}4%{opacity:.1}6%{opacity:.6}8%{opacity:0}50%{opacity:0}52%{opacity:.5}54%{opacity:0}
+}
+/* ── STEAM ── */
+.steam-puff{position:absolute;bottom:0;border-radius:50%;background:radial-gradient(circle,rgba(180,230,255,.18),transparent 70%);animation:steamRise ease-out infinite;opacity:0;pointer-events:none}
+@keyframes steamRise{
+  0%  {transform:translateY(0) scaleX(1);opacity:0}
+  15% {opacity:.5}
+  60% {transform:translateY(-55vh) scaleX(1.8);opacity:.25}
+  100%{transform:translateY(-90vh) scaleX(2.4);opacity:0}
+}
 
 /* ── SCREENS ── */
 .screen{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem;overflow:hidden}
@@ -822,14 +844,90 @@ function playSound(type){
 function initBgBubbles(){
   const wrap=document.getElementById('bgBubbles');
   wrap.innerHTML='';
-  for(let i=0;i<12;i++){
-    const b=document.createElement('div');
-    b.className='lab-bubble';
-    const size=20+Math.random()*40;
-    b.style.cssText=`width:${size}px;height:${size}px;left:${Math.random()*100}%;bottom:-60px;
-      background:${['rgba(0,201,177','rgba(166,108,255','rgba(255,217,61'][Math.floor(Math.random()*3)]},0.15);
-      animation-duration:${6+Math.random()*8}s;animation-delay:${Math.random()*8}s`;
-    wrap.appendChild(b);
+  const W=window.innerWidth, H=window.innerHeight;
+
+  // ── MOLECULES (H2O / CO2 style dot-and-bond diagrams) ──
+  const molConfigs=[
+    // H2O: central atom + 2 side atoms
+    [{x:16,y:16,r:7},{x:0,y:8,r:5},{x:28,y:8,r:5}],
+    // CO2: 3 in a line
+    [{x:20,y:10,r:8},{x:4,y:10,r:6},{x:36,y:10,r:6}],
+    // simple 2-atom
+    [{x:8,y:8,r:6},{x:24,y:8,r:6}],
+    // triangle (like O3)
+    [{x:16,y:4,r:7},{x:4,y:22,r:5},{x:28,y:22,r:5}],
+  ];
+  for(let i=0;i<8;i++){
+    const cfg=molConfigs[i%molConfigs.length];
+    const div=document.createElement('div');
+    div.className='mol-wrap';
+    const dur=12+Math.random()*10;
+    const dx=(Math.random()-0.5)*120, dy=-(60+Math.random()*120), dr=(Math.random()-0.5)*60;
+    div.style.cssText=`left:${5+Math.random()*85}%;top:${10+Math.random()*75}%;
+      width:44px;height:44px;
+      --dx:${dx}px;--dy:${dy}px;--dr:${dr}deg;
+      animation-duration:${dur}s;animation-delay:-${Math.random()*dur}s`;
+    // atoms
+    cfg.forEach(a=>{
+      const el=document.createElement('div');
+      el.className='mol-atom';
+      el.style.cssText=`width:${a.r*2}px;height:${a.r*2}px;left:${a.x-a.r}px;top:${a.y-a.r}px`;
+      div.appendChild(el);
+    });
+    // bonds between atom 0 and others
+    for(let j=1;j<cfg.length;j++){
+      const a=cfg[0],b=cfg[j];
+      const dx2=b.x-a.x, dy2=b.y-a.y;
+      const len=Math.sqrt(dx2*dx2+dy2*dy2);
+      const ang=Math.atan2(dy2,dx2)*180/Math.PI;
+      const bond=document.createElement('div');
+      bond.className='mol-bond';
+      bond.style.cssText=`width:${len}px;height:2px;left:${a.x}px;top:${a.y}px;transform:rotate(${ang}deg)`;
+      div.appendChild(bond);
+    }
+    wrap.appendChild(div);
+  }
+
+  // ── ELECTRIC ARCS (SVG zigzag lines that flicker) ──
+  for(let i=0;i<5;i++){
+    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('class','arc-svg');
+    const len=40+Math.random()*60;
+    svg.setAttribute('width',String(len));
+    svg.setAttribute('height','40');
+    svg.setAttribute('viewBox',`0 0 ${len} 40`);
+    // build zigzag path
+    const segs=Math.floor(4+Math.random()*4);
+    let d=`M0,20`;
+    for(let s=1;s<=segs;s++){
+      const px=(len/segs)*s;
+      const py=8+Math.random()*24;
+      d+=` L${px},${py}`;
+    }
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d',d);
+    path.setAttribute('stroke',`rgba(${Math.random()>0.5?'180,140,255':'0,201,177'},.7)`);
+    path.setAttribute('stroke-width','1.5');
+    path.setAttribute('fill','none');
+    path.setAttribute('stroke-linecap','round');
+    svg.appendChild(path);
+    const dur=3+Math.random()*4;
+    svg.style.cssText=`left:${Math.random()*88}%;top:${10+Math.random()*70}%;
+      animation-duration:${dur}s;animation-delay:-${Math.random()*dur}s;
+      transform:rotate(${(Math.random()-0.5)*40}deg)`;
+    wrap.appendChild(svg);
+  }
+
+  // ── STEAM PUFFS (rising from bottom corners) ──
+  for(let i=0;i<8;i++){
+    const p=document.createElement('div');
+    p.className='steam-puff';
+    const size=30+Math.random()*60;
+    const dur=6+Math.random()*7;
+    p.style.cssText=`width:${size}px;height:${size}px;
+      left:${Math.random()*90}%;
+      animation-duration:${dur}s;animation-delay:-${Math.random()*dur}s`;
+    wrap.appendChild(p);
   }
 }
 
