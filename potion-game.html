@@ -38,7 +38,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   radial-gradient(2px 2px at 15% 90%,#b44fff 0%,transparent 100%);
   animation:twinkle 3s infinite alternate;}
 @keyframes twinkle{0%{opacity:.6}100%{opacity:1}}
-.moon{position:fixed;top:20px;right:30px;font-size:4rem;z-index:1;pointer-events:none;filter:drop-shadow(0 0 20px rgba(255,215,0,.6));animation:moon-glow 4s infinite alternate;}
+.moon{display:inline-block;font-size:2.2rem;vertical-align:middle;pointer-events:none;filter:drop-shadow(0 0 20px rgba(255,215,0,.6));animation:moon-glow 4s infinite alternate;}ow 4s infinite alternate;}
 @keyframes moon-glow{from{filter:drop-shadow(0 0 10px rgba(255,215,0,.4))}to{filter:drop-shadow(0 0 30px rgba(255,215,0,.9))}}
 .bat{position:fixed;font-size:24px;animation:fly linear infinite;z-index:1;pointer-events:none;}
 .bat:nth-child(2){top:10%;animation-duration:8s;}
@@ -258,7 +258,7 @@ tr.me td{background:rgba(180,79,255,.1);border-left:2px solid var(--bright);}
   header{padding:4px 0 2px;}
   h1{font-size:1.3rem;letter-spacing:1px;}
   .subtitle{display:none;}
-  .moon{font-size:2rem;top:6px;right:10px;}
+  .moon{font-size:1.6rem;}
 
   /* HUD — compact single row */
   .hud{gap:4px;margin:4px 0 3px;flex-wrap:nowrap;justify-content:center;}
@@ -442,7 +442,6 @@ tr.me td{background:rgba(180,79,255,.1);border-left:2px solid var(--bright);}
 </style>
 </head>
 <body>
-<div class="moon">🌕</div>
 <div class="bat">🦇</div><div class="bat">🦇</div><div class="bat">🦇</div>
 <canvas id="lightning-canvas" width="200" height="200"></canvas>
 
@@ -536,7 +535,7 @@ tr.me td{background:rgba(180,79,255,.1);border-left:2px solid var(--bright);}
 
 <div class="wrap">
   <header>
-    <h1>🧙‍♀️ Witch's Brew Workshop</h1>
+    <h1>🧙‍♀️ Witch's Brew Workshop <span class="moon">🌕</span></h1>
     <div class="hud">
       <div class="hb"><span class="hl">⭐ Score</span><span class="hv" id="h-score">0</span></div>
       <div class="hb streak-hb" id="h-streak-b"><span class="hl">🔥 Streak</span><span class="hv" id="h-streak">×1</span></div>
