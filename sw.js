@@ -3,8 +3,8 @@ const CACHE_NAME = 'crabcake-v4';
 
 const PRECACHE_URLS = [
   '/manifest.json',
-  '/icon-192.png',
-  '/icon-512.png',
+  '/icons/icon-192.png',
+  '/icons/icon-512.png',
 ];
 
 // ── Install: pre-cache only non-HTML assets ──
