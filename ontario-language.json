@@ -1,0 +1,461 @@
+{
+  "schema_version": "1.1",
+  "curriculum_id": "canada_ontario_language_2023",
+  "country": "canada",
+  "region": "ontario",
+  "subject": "literacy",
+  "display_name": {
+    "en": "Language",
+    "fr": "Langue"
+  },
+  "governing_body": {
+    "en": "Ontario Ministry of Education",
+    "fr": "Ministère de l'Éducation de l'Ontario"
+  },
+  "document": {
+    "title": "The Ontario Curriculum, Grades 1–8: Language",
+    "version": "2023",
+    "url": "https://www.ontario.ca/document/ontario-curriculum-grades-1-8-language"
+  },
+  "valid_from": "2023-09-01",
+  "valid_until": null,
+  "is_current": true,
+  "applies_to": {
+    "system": ["public", "catholic"],
+    "note": "Catholic boards use identical Language curriculum. PPM 168 mandates 30 minutes of daily systematic-explicit Strand B instruction in Grades 1–3. Check this field before serving content if system-specific filtering is required."
+  },
+  "games": ["jungle-words", "sentence-builder"],
+  "strands": [
+    { "strand_id": "literacy_connections", "code": "A", "display_name": { "en": "Literacy Connections and Applications", "fr": "Liens et applications en littératie" } },
+    { "strand_id": "foundations",          "code": "B", "display_name": { "en": "Foundations of Language",             "fr": "Fondements du langage" } },
+    { "strand_id": "comprehension",        "code": "C", "display_name": { "en": "Comprehension",                       "fr": "Compréhension" } },
+    { "strand_id": "composition",          "code": "D", "display_name": { "en": "Composition",                        "fr": "Composition" } }
+  ],
+  "bands": [
+    {
+      "band_id": "band_1",
+      "display_name": { "en": "Kindergarten", "fr": "Maternelle" },
+      "grades": [
+        {
+          "grade_id": "jk",
+          "grade_number": 0,
+          "sub_grade": "jk",
+          "display_label": { "en": "Junior Kindergarten", "fr": "Petite enfance (JK)" },
+          "typical_age_range": { "min": 4, "max": 5 },
+          "games_recommended": ["jungle-words"],
+          "document_note": "Language in Kindergarten draws from The Kindergarten Program 2016 OE1 and OE9–OE12. Replaced by The Ontario Curriculum, Kindergarten 2026 in September 2026.",
+          "expectations": [
+            {
+              "overall_code": "OE1",
+              "alias": "oral_language_jk",
+              "display_name": { "en": "Oral Communication", "fr": "Communication orale" },
+              "strand_id": "foundations",
+              "specific": [
+                {
+                  "code": "SE1.1",
+                  "alias": "rhyme_syllable_rhythm",
+                  "description": { "en": "Explore sounds, rhythms, and language structures including rhyme recognition and syllable clapping.", "fr": "Explorer les sons, les rythmes et les structures du langage, notamment la reconnaissance des rimes et le découpage syllabique." },
+                  "cognitive_level": "understand",
+                  "assessment_type": "formative",
+                  "mechanic": "tap_select",
+                  "games": ["jungle-words"],
+                  "prerequisite_alias": null,
+                  "key_vocabulary": ["rhyme", "syllable", "sound", "word", "same ending sound"]
+                }
+              ]
+            },
+            {
+              "overall_code": "OE11",
+              "alias": "reading_readiness_jk",
+              "display_name": { "en": "Reading Readiness", "fr": "Préparation à la lecture" },
+              "strand_id": "foundations",
+              "specific": [
+                {
+                  "code": "SE11.3",
+                  "alias": "concepts_of_print_jk",
+                  "description": { "en": "Demonstrate understanding of concepts of print: letters, words, spaces, and sentences.", "fr": "Démontrer une compréhension des concepts de l'écrit : lettres, mots, espaces et phrases." },
+                  "cognitive_level": "understand",
+                  "assessment_type": "formative",
+                  "mechanic": "tap_select",
+                  "games": ["jungle-words"],
+                  "prerequisite_alias": null,
+                  "key_vocabulary": ["letter", "word", "sentence", "space", "capital", "period", "left to right"]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "grade_id": "sk",
+          "grade_number": 0,
+          "sub_grade": "sk",
+          "display_label": { "en": "Senior Kindergarten", "fr": "Grande maternelle (SK)" },
+          "typical_age_range": { "min": 5, "max": 6 },
+          "games_recommended": ["jungle-words"],
+          "expectations": [
+            {
+              "overall_code": "OE11",
+              "alias": "phonological_awareness_sk",
+              "display_name": { "en": "Phonological Awareness", "fr": "Conscience phonologique" },
+              "strand_id": "foundations",
+              "specific": [
+                {
+                  "code": "SE11.8",
+                  "alias": "letter_name_sound_sk",
+                  "description": { "en": "Know most letters of the alphabet by name, identify the sound each represents, and identify words beginning with that letter.", "fr": "Connaître la plupart des lettres de l'alphabet par leur nom, identifier le son qu'elles représentent et identifier des mots qui commencent par cette lettre." },
+                  "cognitive_level": "remember",
+                  "assessment_type": "formative",
+                  "mechanic": "tap_select",
+                  "games": ["jungle-words"],
+                  "prerequisite_alias": "rhyme_syllable_rhythm",
+                  "key_vocabulary": ["letter name", "letter sound", "alphabet", "upper case", "lower case", "beginning sound"]
+                },
+                {
+                  "code": "SE1.11",
+                  "alias": "phoneme_awareness_sk",
+                  "description": { "en": "Demonstrate phonemic awareness: words can rhyme, begin or end with the same sound, and are made of individual sounds (phonemes) that can be manipulated.", "fr": "Démontrer une conscience phonémique : les mots peuvent rimer, commencer ou finir par le même son, et sont composés de phonèmes qui peuvent être manipulés." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "formative",
+                  "mechanic": "tap_select",
+                  "games": ["jungle-words"],
+                  "prerequisite_alias": "letter_name_sound_sk",
+                  "key_vocabulary": ["phoneme", "beginning sound", "ending sound", "middle sound", "rhyme", "blend", "segment"]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "band_id": "band_2",
+      "display_name": { "en": "Primary", "fr": "Primaire" },
+      "grades": [
+        {
+          "grade_id": "grade_1",
+          "grade_number": 1,
+          "sub_grade": null,
+          "display_label": { "en": "Grade 1", "fr": "1re année" },
+          "typical_age_range": { "min": 6, "max": 7 },
+          "games_recommended": ["jungle-words", "sentence-builder"],
+          "document_note": "PPM 168: 30 minutes daily systematic-explicit phonics instruction mandatory.",
+          "expectations": [
+            {
+              "overall_code": "B2",
+              "alias": "phonics_grade_1",
+              "display_name": { "en": "Foundations: Phonics and Phonemic Awareness", "fr": "Fondements : phonétique et conscience phonémique" },
+              "strand_id": "foundations",
+              "specific": [
+                {
+                  "code": "B2.1",
+                  "alias": "blend_segment_cvc",
+                  "description": { "en": "Orally isolate, blend, and segment phonemes in words from VC and CVC through CCVC and CVCC structures.", "fr": "Isoler, fusionner et segmenter oralement les phonèmes dans des mots de structures VC et CVC jusqu'à CCVC et CVCC." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "formative",
+                  "mechanic": "drag_and_drop",
+                  "games": ["jungle-words"],
+                  "prerequisite_alias": "phoneme_awareness_sk",
+                  "key_vocabulary": ["blend", "segment", "phoneme", "CVC", "beginning", "middle", "ending", "isolate"]
+                },
+                {
+                  "code": "B2.3",
+                  "alias": "phonics_short_vowels_digraphs",
+                  "description": { "en": "Apply grapheme-phoneme correspondence: single consonants, digraphs (ch, ck, sh, th, wh), and short vowels (/a/, /i/, /o/, /u/, /e/).", "fr": "Appliquer la correspondance graphème-phonème : consonnes simples, digrammes (ch, ck, sh, th, wh) et voyelles courtes." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "formative",
+                  "mechanic": "drag_and_drop",
+                  "games": ["jungle-words"],
+                  "prerequisite_alias": "blend_segment_cvc",
+                  "key_vocabulary": ["consonant", "vowel", "short vowel", "digraph", "grapheme", "phoneme", "sound-letter match"]
+                },
+                {
+                  "code": "B2.4",
+                  "alias": "read_spell_cvc",
+                  "description": { "en": "Read and spell CV, VC, and CVC words using learned phonics patterns.", "fr": "Lire et orthographier des mots CV, VC et CVC en utilisant les modèles phonétiques appris." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "summative",
+                  "mechanic": "fill_in_blank",
+                  "games": ["jungle-words"],
+                  "prerequisite_alias": "phonics_short_vowels_digraphs",
+                  "key_vocabulary": ["spell", "read", "word family", "pattern", "decode", "encode"]
+                },
+                {
+                  "code": "B2.7",
+                  "alias": "vocabulary_antonyms_gr1",
+                  "description": { "en": "Sort words by semantic features; understand antonyms (on/off, hot/cold) and multiple-meaning words.", "fr": "Classer les mots selon leurs caractéristiques sémantiques ; comprendre les antonymes et les mots à sens multiples." },
+                  "cognitive_level": "understand",
+                  "assessment_type": "formative",
+                  "mechanic": "drag_and_drop",
+                  "games": ["jungle-words"],
+                  "prerequisite_alias": null,
+                  "key_vocabulary": ["antonym", "opposite", "multiple meaning", "word sort", "meaning", "definition"]
+                }
+              ]
+            },
+            {
+              "overall_code": "B3",
+              "alias": "grammar_sentences_gr1",
+              "display_name": { "en": "Foundations: Grammar and Sentence Structure", "fr": "Fondements : grammaire et structure de la phrase" },
+              "strand_id": "foundations",
+              "specific": [
+                {
+                  "code": "B3.1",
+                  "alias": "simple_sentences_gr1",
+                  "description": { "en": "Form simple and compound sentences in declarative, interrogative, imperative, and exclamatory forms.", "fr": "Former des phrases simples et composées sous formes déclarative, interrogative, impérative et exclamative." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "formative",
+                  "mechanic": "drag_and_drop",
+                  "games": ["sentence-builder"],
+                  "prerequisite_alias": "read_spell_cvc",
+                  "key_vocabulary": ["sentence", "noun", "verb", "subject", "predicate", "declarative", "question", "exclamation", "command"]
+                },
+                {
+                  "code": "B3.2",
+                  "alias": "grammar_basics_gr1",
+                  "description": { "en": "Use common singular/plural nouns, pronoun 'I', past/present/future verb tenses, common adjectives and adverbs, and common conjunctions.", "fr": "Utiliser les noms singuliers/pluriels courants, le pronom 'I', les temps verbaux, les adjectifs et adverbes courants et les conjonctions." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "formative",
+                  "mechanic": "tap_select",
+                  "games": ["sentence-builder"],
+                  "prerequisite_alias": "simple_sentences_gr1",
+                  "key_vocabulary": ["noun", "verb", "adjective", "adverb", "conjunction", "singular", "plural", "past", "present", "future"]
+                },
+                {
+                  "code": "B3.3",
+                  "alias": "end_punctuation_gr1",
+                  "description": { "en": "Use a capital letter at the start of a sentence and correct end punctuation (period, question mark, exclamation mark).", "fr": "Utiliser une majuscule en début de phrase et la ponctuation finale appropriée (point, point d'interrogation, point d'exclamation)." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "formative",
+                  "mechanic": "tap_select",
+                  "games": ["sentence-builder"],
+                  "prerequisite_alias": "simple_sentences_gr1",
+                  "key_vocabulary": ["capital letter", "period", "question mark", "exclamation mark", "punctuation", "end mark"]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "grade_id": "grade_2",
+          "grade_number": 2,
+          "sub_grade": null,
+          "display_label": { "en": "Grade 2", "fr": "2e année" },
+          "typical_age_range": { "min": 7, "max": 8 },
+          "games_recommended": ["jungle-words", "sentence-builder"],
+          "document_note": "Grade 1 to 2 is the steepest phonics jump in the curriculum — scope roughly triples. Vowel teams, r-controlled vowels, diphthongs, silent letters, and spelling rules are all introduced.",
+          "expectations": [
+            {
+              "overall_code": "B2",
+              "alias": "phonics_grade_2",
+              "display_name": { "en": "Foundations: Advanced Phonics Patterns", "fr": "Fondements : modèles phonétiques avancés" },
+              "strand_id": "foundations",
+              "specific": [
+                {
+                  "code": "B2.1",
+                  "alias": "read_multisyllabic_words",
+                  "description": { "en": "Read CCVC, CVCC, CVCe, and multisyllabic words using all learned phonics patterns.", "fr": "Lire des mots CCVC, CVCC, CVCe et plurisyllabiques en utilisant tous les modèles phonétiques appris." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "summative",
+                  "mechanic": "drag_and_drop",
+                  "games": ["jungle-words"],
+                  "prerequisite_alias": "read_spell_cvc",
+                  "key_vocabulary": ["CVCe", "silent e", "multisyllabic", "syllable", "decode", "blend"]
+                },
+                {
+                  "code": "B2.2",
+                  "alias": "vowel_teams_rcontrolled_diphthongs",
+                  "description": { "en": "Apply vowel teams (ai/ay, ee/ea/ey, oa/ow/oe), r-controlled vowels (ar, or, er, ir, ur), diphthongs (oi/oy, ou/ow), and silent letters (kn, wr, mb).", "fr": "Appliquer les équipes de voyelles, les voyelles contrôlées par r, les diphtongues et les lettres muettes." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "formative",
+                  "mechanic": "drag_and_drop",
+                  "games": ["jungle-words"],
+                  "prerequisite_alias": "read_multisyllabic_words",
+                  "key_vocabulary": ["vowel team", "long vowel", "r-controlled", "diphthong", "silent letter", "ai", "ay", "ee", "ea", "oa", "ar", "or", "er"]
+                },
+                {
+                  "code": "B2.3",
+                  "alias": "prefixes_suffixes_gr2",
+                  "description": { "en": "Apply prefixes (un-, re-, in-, dis-) and suffixes (-ing, -er/-or, -est, -ly) with spelling change rules (doubling, e-drop, y→i).", "fr": "Appliquer les préfixes (un-, re-, in-, dis-) et les suffixes (-ing, -er/-or, -est, -ly) avec les règles de changement d'orthographe." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "formative",
+                  "mechanic": "drag_and_drop",
+                  "games": ["jungle-words"],
+                  "prerequisite_alias": "read_multisyllabic_words",
+                  "key_vocabulary": ["prefix", "suffix", "base word", "un-", "re-", "-ing", "-er", "-est", "-ly", "doubling rule", "e-drop", "y to i"]
+                }
+              ]
+            },
+            {
+              "overall_code": "B3",
+              "alias": "grammar_sentences_gr2",
+              "display_name": { "en": "Foundations: Grammar and Sentence Structure Grade 2", "fr": "Fondements : grammaire et structure de la phrase 2e année" },
+              "strand_id": "foundations",
+              "specific": [
+                {
+                  "code": "B3.1",
+                  "alias": "compound_sentences_gr2",
+                  "description": { "en": "Form compound sentences using conjunctions (and, but, or, so).", "fr": "Former des phrases composées à l'aide de conjonctions (et, mais, ou, donc)." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "formative",
+                  "mechanic": "drag_and_drop",
+                  "games": ["sentence-builder"],
+                  "prerequisite_alias": "simple_sentences_gr1",
+                  "key_vocabulary": ["compound sentence", "conjunction", "and", "but", "or", "so", "join", "connect"]
+                },
+                {
+                  "code": "B3.2",
+                  "alias": "grammar_gr2",
+                  "description": { "en": "Use abstract and collective nouns, personal pronouns, forms of 'to be', comparative and superlative adjectives, and conjunctions.", "fr": "Utiliser les noms abstraits et collectifs, les pronoms personnels, les formes du verbe 'être', les adjectifs comparatifs et superlatifs et les conjonctions." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "formative",
+                  "mechanic": "tap_select",
+                  "games": ["sentence-builder"],
+                  "prerequisite_alias": "grammar_basics_gr1",
+                  "key_vocabulary": ["pronoun", "comparative", "superlative", "collective noun", "abstract noun", "to be", "-er", "-est", "more", "most"]
+                },
+                {
+                  "code": "B3.3",
+                  "alias": "punctuation_gr2",
+                  "description": { "en": "Use capitals for proper nouns, commas in lists, apostrophes for possessives, and quotation marks for direct speech.", "fr": "Utiliser les majuscules pour les noms propres, la virgule dans les énumérations, l'apostrophe pour les possessifs et les guillemets pour le discours direct." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "formative",
+                  "mechanic": "tap_select",
+                  "games": ["sentence-builder"],
+                  "prerequisite_alias": "end_punctuation_gr1",
+                  "key_vocabulary": ["proper noun", "comma", "list", "apostrophe", "possessive", "quotation marks", "direct speech"]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "band_id": "band_3",
+      "display_name": { "en": "Early Junior", "fr": "Début du cycle moyen" },
+      "grades": [
+        {
+          "grade_id": "grade_3",
+          "grade_number": 3,
+          "sub_grade": null,
+          "display_label": { "en": "Grade 3", "fr": "3e année" },
+          "typical_age_range": { "min": 8, "max": 9 },
+          "games_recommended": ["jungle-words", "sentence-builder"],
+          "expectations": [
+            {
+              "overall_code": "B2",
+              "alias": "morphology_gr3",
+              "display_name": { "en": "Foundations: Morphological Knowledge", "fr": "Fondements : connaissance morphologique" },
+              "strand_id": "foundations",
+              "specific": [
+                {
+                  "code": "B2.3",
+                  "alias": "complex_affixes_gr3",
+                  "description": { "en": "Apply complex prefixes and suffixes and understand how affixes change word function, pronunciation, and spelling.", "fr": "Appliquer des préfixes et suffixes complexes et comprendre comment les affixes modifient la fonction, la prononciation et l'orthographe d'un mot." },
+                  "cognitive_level": "analyse",
+                  "assessment_type": "formative",
+                  "mechanic": "drag_and_drop",
+                  "games": ["jungle-words"],
+                  "prerequisite_alias": "prefixes_suffixes_gr2",
+                  "key_vocabulary": ["affix", "root word", "word function", "noun suffix", "verb suffix", "adjective suffix", "word analysis"]
+                }
+              ]
+            },
+            {
+              "overall_code": "B3",
+              "alias": "grammar_sentences_gr3",
+              "display_name": { "en": "Foundations: Complex Sentences", "fr": "Fondements : phrases complexes" },
+              "strand_id": "foundations",
+              "specific": [
+                {
+                  "code": "B3.1",
+                  "alias": "complex_sentences_adverbial",
+                  "description": { "en": "Form complex sentences containing adverbial clauses using subordinating conjunctions ('because', 'when', 'after', 'although').", "fr": "Former des phrases complexes contenant des propositions adverbiales à l'aide de conjonctions de subordination." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "formative",
+                  "mechanic": "drag_and_drop",
+                  "games": ["sentence-builder"],
+                  "prerequisite_alias": "compound_sentences_gr2",
+                  "key_vocabulary": ["complex sentence", "subordinating conjunction", "dependent clause", "independent clause", "because", "when", "after", "although"]
+                },
+                {
+                  "code": "B3.2",
+                  "alias": "grammar_gr3",
+                  "description": { "en": "Use possessive nouns, linking verbs, progressive tense, interrogative adjectives and adverbs, prepositions, and interjections.", "fr": "Utiliser les noms possessifs, les verbes d'état, le temps progressif, les adjectifs et adverbes interrogatifs, les prépositions et les interjections." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "formative",
+                  "mechanic": "tap_select",
+                  "games": ["sentence-builder"],
+                  "prerequisite_alias": "grammar_gr2",
+                  "key_vocabulary": ["possessive noun", "linking verb", "progressive tense", "preposition", "interjection", "is running", "am going"]
+                },
+                {
+                  "code": "B3.3",
+                  "alias": "punctuation_gr3",
+                  "description": { "en": "Use capitals in dialogue and titles, commas and quotation marks for direct speech, and apostrophes for contractions.", "fr": "Utiliser les majuscules dans les dialogues et les titres, les guillemets pour le discours direct et l'apostrophe pour les contractions." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "formative",
+                  "mechanic": "tap_select",
+                  "games": ["sentence-builder"],
+                  "prerequisite_alias": "punctuation_gr2",
+                  "key_vocabulary": ["dialogue", "contraction", "apostrophe", "quotation marks", "title", "capital", "comma"]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "grade_id": "grade_4",
+          "grade_number": 4,
+          "sub_grade": null,
+          "display_label": { "en": "Grade 4", "fr": "4e année" },
+          "typical_age_range": { "min": 9, "max": 10 },
+          "games_recommended": ["jungle-words", "sentence-builder"],
+          "expectations": [
+            {
+              "overall_code": "B3",
+              "alias": "grammar_sentences_gr4",
+              "display_name": { "en": "Foundations: Sentences with Clauses and Phrases", "fr": "Fondements : phrases avec propositions et syntagmes" },
+              "strand_id": "foundations",
+              "specific": [
+                {
+                  "code": "B3.1",
+                  "alias": "prepositional_dependent_clauses",
+                  "description": { "en": "Build compound sentences with prepositional phrases and/or independent and dependent clauses.", "fr": "Construire des phrases composées avec des syntagmes prépositionnels et/ou des propositions indépendantes et dépendantes." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "summative",
+                  "mechanic": "drag_and_drop",
+                  "games": ["sentence-builder"],
+                  "prerequisite_alias": "complex_sentences_adverbial",
+                  "key_vocabulary": ["prepositional phrase", "preposition", "dependent clause", "independent clause", "compound-complex", "before", "after", "during", "above", "beneath"]
+                },
+                {
+                  "code": "B3.2",
+                  "alias": "grammar_gr4",
+                  "description": { "en": "Use relative pronouns (who, which, that), perfect verb tense, interrogative and imperative verbs, and pronouns as adjectives.", "fr": "Utiliser les pronoms relatifs (qui, que, lequel), le temps parfait, les verbes interrogatifs et impératifs et les pronoms comme adjectifs." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "formative",
+                  "mechanic": "tap_select",
+                  "games": ["sentence-builder"],
+                  "prerequisite_alias": "grammar_gr3",
+                  "key_vocabulary": ["relative pronoun", "who", "which", "that", "perfect tense", "has done", "have been", "imperative", "possessive pronoun"]
+                },
+                {
+                  "code": "B3.3",
+                  "alias": "punctuation_gr4",
+                  "description": { "en": "Use capitals for proper adjectives, commas for nouns of direct address, and quotation marks for titles of short works.", "fr": "Utiliser les majuscules pour les adjectifs propres, la virgule pour les apostrophes nominales et les guillemets pour les titres de courts ouvrages." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "formative",
+                  "mechanic": "tap_select",
+                  "games": ["sentence-builder"],
+                  "prerequisite_alias": "punctuation_gr3",
+                  "key_vocabulary": ["proper adjective", "direct address", "comma", "quotation marks", "title", "short work", "Canadian", "Victorian"]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

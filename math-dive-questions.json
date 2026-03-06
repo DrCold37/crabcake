@@ -1,0 +1,161 @@
+{
+  "schema_version": "1.1",
+  "game_id": "math-dive",
+  "version": "1.0",
+  "last_updated": "2026-03-06",
+  "description": "Question sets for Math Dive. Questions reference curriculum aliases only — not curriculum-specific codes. The curriculum files map aliases to official codes per region. Adding a new curriculum requires only a new curriculum file, not changes here.",
+  "progression_rules": {
+    "warm_up_from_previous_band": true,
+    "warm_up_percentage": 0.25,
+    "mastery_threshold": 0.85,
+    "mastery_window": 10,
+    "note": "When a child enters a new band, serve 25% of questions from the top tier of the previous band as warm-up. Advance to upper grade tier within band on 85% accuracy over 10 consecutive questions."
+  },
+  "question_sets": [
+    {
+      "set_id": "subitize_to_3",
+      "curriculum_alias": "subitize_to_3",
+      "grade_id": "jk",
+      "band_id": "band_1",
+      "cognitive_level": "remember",
+      "assessment_type": "formative",
+      "mechanic": "flash_recognition",
+      "questions": [
+        { "id": "q001", "prompt_type": "dot_pattern", "value": 1, "answer": 1, "distractors": [2, 3] },
+        { "id": "q002", "prompt_type": "dot_pattern", "value": 2, "answer": 2, "distractors": [1, 3] },
+        { "id": "q003", "prompt_type": "dot_pattern", "value": 3, "answer": 3, "distractors": [1, 2] }
+      ]
+    },
+    {
+      "set_id": "subitize_to_5",
+      "curriculum_alias": "subitize_to_5",
+      "grade_id": "sk",
+      "band_id": "band_1",
+      "cognitive_level": "remember",
+      "assessment_type": "formative",
+      "mechanic": "flash_recognition",
+      "questions": [
+        { "id": "q010", "prompt_type": "dot_pattern", "value": 4, "answer": 4, "distractors": [3, 5] },
+        { "id": "q011", "prompt_type": "dot_pattern", "value": 5, "answer": 5, "distractors": [4, 6] },
+        { "id": "q012", "prompt_type": "dot_pattern", "value": 3, "answer": 3, "distractors": [2, 4] }
+      ]
+    },
+    {
+      "set_id": "addition_facts_to_10",
+      "curriculum_alias": "addition_facts_to_10",
+      "grade_id": "grade_1",
+      "band_id": "band_2",
+      "cognitive_level": "remember",
+      "assessment_type": "summative",
+      "mechanic": "flash_card",
+      "questions": [
+        { "id": "q020", "prompt": "3 + 4 = ?",  "answer": 7,  "distractors": [6, 8, 5] },
+        { "id": "q021", "prompt": "5 + 2 = ?",  "answer": 7,  "distractors": [6, 8, 9] },
+        { "id": "q022", "prompt": "6 + 3 = ?",  "answer": 9,  "distractors": [8, 7, 10] },
+        { "id": "q023", "prompt": "4 + 4 = ?",  "answer": 8,  "distractors": [6, 7, 9] },
+        { "id": "q024", "prompt": "2 + 8 = ?",  "answer": 10, "distractors": [9, 8, 7] },
+        { "id": "q025", "prompt": "10 - 3 = ?", "answer": 7,  "distractors": [6, 8, 4] },
+        { "id": "q026", "prompt": "9 - 4 = ?",  "answer": 5,  "distractors": [4, 6, 3] }
+      ]
+    },
+    {
+      "set_id": "skip_count_2_5_10",
+      "curriculum_alias": "skip_count_2_5_10",
+      "grade_id": "grade_1",
+      "band_id": "band_2",
+      "cognitive_level": "remember",
+      "assessment_type": "formative",
+      "mechanic": "sequence",
+      "questions": [
+        { "id": "q030", "prompt": "Count by 2s: 2, 4, 6, ?, 10",    "answer": 8,  "distractors": [7, 9, 11] },
+        { "id": "q031", "prompt": "Count by 5s: 5, 10, 15, ?, 25",   "answer": 20, "distractors": [18, 22, 19] },
+        { "id": "q032", "prompt": "Count by 10s: 10, 20, ?, 40, 50", "answer": 30, "distractors": [25, 35, 29] },
+        { "id": "q033", "prompt": "Count by 2s: 8, 10, ?, 14",       "answer": 12, "distractors": [11, 13, 15] }
+      ]
+    },
+    {
+      "set_id": "addition_facts_to_20",
+      "curriculum_alias": "addition_facts_to_20",
+      "grade_id": "grade_2",
+      "band_id": "band_2",
+      "cognitive_level": "remember",
+      "assessment_type": "summative",
+      "mechanic": "flash_card",
+      "questions": [
+        { "id": "q040", "prompt": "9 + 7 = ?",  "answer": 16, "distractors": [15, 17, 14] },
+        { "id": "q041", "prompt": "8 + 8 = ?",  "answer": 16, "distractors": [15, 17, 14] },
+        { "id": "q042", "prompt": "6 + 9 = ?",  "answer": 15, "distractors": [14, 16, 13] },
+        { "id": "q043", "prompt": "7 + 7 = ?",  "answer": 14, "distractors": [13, 15, 12] },
+        { "id": "q044", "prompt": "9 + 9 = ?",  "answer": 18, "distractors": [17, 16, 19] },
+        { "id": "q045", "prompt": "20 - 8 = ?", "answer": 12, "distractors": [11, 13, 10] },
+        { "id": "q046", "prompt": "18 - 9 = ?", "answer": 9,  "distractors": [8, 10, 7] }
+      ]
+    },
+    {
+      "set_id": "even_odd",
+      "curriculum_alias": "even_odd",
+      "grade_id": "grade_2",
+      "band_id": "band_2",
+      "cognitive_level": "understand",
+      "assessment_type": "formative",
+      "mechanic": "tap_select",
+      "questions": [
+        { "id": "q050", "prompt": "Is 14 even or odd?", "answer": "even", "distractors": ["odd"] },
+        { "id": "q051", "prompt": "Is 7 even or odd?",  "answer": "odd",  "distractors": ["even"] },
+        { "id": "q052", "prompt": "Is 22 even or odd?", "answer": "even", "distractors": ["odd"] },
+        { "id": "q053", "prompt": "Is 9 even or odd?",  "answer": "odd",  "distractors": ["even"] }
+      ]
+    },
+    {
+      "set_id": "multiplication_facts_2_5_10",
+      "curriculum_alias": "multiplication_facts_2_5_10",
+      "grade_id": "grade_3",
+      "band_id": "band_3",
+      "cognitive_level": "remember",
+      "assessment_type": "summative",
+      "mechanic": "flash_card",
+      "questions": [
+        { "id": "q060", "prompt": "2 × 7 = ?",  "answer": 14, "distractors": [12, 16, 13] },
+        { "id": "q061", "prompt": "5 × 6 = ?",  "answer": 30, "distractors": [25, 35, 28] },
+        { "id": "q062", "prompt": "10 × 4 = ?", "answer": 40, "distractors": [30, 50, 44] },
+        { "id": "q063", "prompt": "2 × 9 = ?",  "answer": 18, "distractors": [16, 20, 17] },
+        { "id": "q064", "prompt": "5 × 8 = ?",  "answer": 40, "distractors": [35, 45, 38] },
+        { "id": "q065", "prompt": "14 ÷ 2 = ?", "answer": 7,  "distractors": [6, 8, 5] },
+        { "id": "q066", "prompt": "30 ÷ 5 = ?", "answer": 6,  "distractors": [5, 7, 4] }
+      ]
+    },
+    {
+      "set_id": "round_to_10_100",
+      "curriculum_alias": "round_to_10_100",
+      "grade_id": "grade_3",
+      "band_id": "band_3",
+      "cognitive_level": "apply",
+      "assessment_type": "formative",
+      "mechanic": "tap_select",
+      "questions": [
+        { "id": "q070", "prompt": "Round 47 to the nearest ten.",      "answer": 50,  "distractors": [40, 45, 50] },
+        { "id": "q071", "prompt": "Round 83 to the nearest ten.",      "answer": 80,  "distractors": [90, 85, 70] },
+        { "id": "q072", "prompt": "Round 250 to the nearest hundred.", "answer": 300, "distractors": [200, 250, 400] },
+        { "id": "q073", "prompt": "Round 134 to the nearest hundred.", "answer": 100, "distractors": [200, 130, 140] }
+      ]
+    },
+    {
+      "set_id": "all_multiplication_facts",
+      "curriculum_alias": "all_multiplication_facts",
+      "grade_id": "grade_4",
+      "band_id": "band_3",
+      "cognitive_level": "remember",
+      "assessment_type": "summative",
+      "mechanic": "flash_card",
+      "questions": [
+        { "id": "q080", "prompt": "7 × 8 = ?", "answer": 56, "distractors": [54, 58, 48] },
+        { "id": "q081", "prompt": "6 × 9 = ?", "answer": 54, "distractors": [52, 56, 48] },
+        { "id": "q082", "prompt": "8 × 8 = ?", "answer": 64, "distractors": [62, 66, 56] },
+        { "id": "q083", "prompt": "9 × 9 = ?", "answer": 81, "distractors": [79, 83, 72] },
+        { "id": "q084", "prompt": "7 × 6 = ?", "answer": 42, "distractors": [40, 44, 36] },
+        { "id": "q085", "prompt": "56 ÷ 7 = ?", "answer": 8, "distractors": [6, 9, 7] },
+        { "id": "q086", "prompt": "63 ÷ 9 = ?", "answer": 7, "distractors": [6, 8, 5] }
+      ]
+    }
+  ]
+}

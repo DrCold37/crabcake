@@ -1,0 +1,622 @@
+{
+  "schema_version": "1.1",
+  "curriculum_id": "canada_ontario_math_2020",
+  "country": "canada",
+  "region": "ontario",
+  "subject": "numeracy",
+  "display_name": {
+    "en": "Mathematics",
+    "fr": "Mathématiques"
+  },
+  "governing_body": {
+    "en": "Ontario Ministry of Education",
+    "fr": "Ministère de l'Éducation de l'Ontario"
+  },
+  "document": {
+    "title": "The Ontario Curriculum, Grades 1–8: Mathematics",
+    "version": "2020",
+    "url": "https://www.ontario.ca/document/ontario-curriculum-grades-1-8-mathematics"
+  },
+  "valid_from": "2020-09-01",
+  "valid_until": null,
+  "is_current": true,
+  "applies_to": {
+    "system": ["public", "catholic"],
+    "note": "Catholic boards use identical Mathematics curriculum. OCSGEs are a values overlay only and do not modify academic expectations. Check this field before serving content if system-specific filtering is required."
+  },
+  "games": ["math-dive", "colour-sort"],
+  "strands": [
+    { "strand_id": "number",    "code": "B", "display_name": { "en": "Number",             "fr": "Nombre" } },
+    { "strand_id": "algebra",   "code": "C", "display_name": { "en": "Algebra",            "fr": "Algèbre" } },
+    { "strand_id": "data",      "code": "D", "display_name": { "en": "Data",               "fr": "Données" } },
+    { "strand_id": "spatial",   "code": "E", "display_name": { "en": "Spatial Sense",      "fr": "Sens spatial" } },
+    { "strand_id": "financial", "code": "F", "display_name": { "en": "Financial Literacy", "fr": "Littératie financière" } }
+  ],
+  "bands": [
+    {
+      "band_id": "band_1",
+      "display_name": { "en": "Kindergarten", "fr": "Maternelle" },
+      "grades": [
+        {
+          "grade_id": "jk",
+          "grade_number": 0,
+          "sub_grade": "jk",
+          "display_label": { "en": "Junior Kindergarten", "fr": "Petite enfance (JK)" },
+          "typical_age_range": { "min": 4, "max": 5 },
+          "games_recommended": ["colour-sort"],
+          "document_note": "The Kindergarten Program 2016 does not formally separate JK/SK expectations. 'Initially' language indicates JK-level behaviours.",
+          "expectations": [
+            {
+              "overall_code": "OE18",
+              "alias": "patterning_jk",
+              "display_name": { "en": "Patterning", "fr": "Régularités" },
+              "strand_id": "algebra",
+              "specific": [
+                {
+                  "code": "SE18.1",
+                  "alias": "identify_repeating_pattern",
+                  "description": { "en": "Identify and describe repeating patterns in everyday contexts.", "fr": "Identifier et décrire des régularités répétitives dans des contextes quotidiens." },
+                  "cognitive_level": "understand",
+                  "assessment_type": "formative",
+                  "mechanic": "tap_select",
+                  "games": ["colour-sort"],
+                  "prerequisite_alias": null,
+                  "key_vocabulary": ["pattern", "repeat", "same", "different", "next"]
+                },
+                {
+                  "code": "SE18.2",
+                  "alias": "extend_pattern",
+                  "description": { "en": "Extend a repeating pattern and fill in missing elements.", "fr": "Prolonger une régularité répétitive et compléter les éléments manquants." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "formative",
+                  "mechanic": "drag_and_drop",
+                  "games": ["colour-sort"],
+                  "prerequisite_alias": "identify_repeating_pattern",
+                  "key_vocabulary": ["extend", "next", "missing", "what comes next"]
+                }
+              ]
+            },
+            {
+              "overall_code": "OE17",
+              "alias": "geometry_sort_jk",
+              "display_name": { "en": "Geometry and Spatial Sense", "fr": "Géométrie et sens de l'espace" },
+              "strand_id": "spatial",
+              "specific": [
+                {
+                  "code": "SE17.1",
+                  "alias": "sort_shapes_one_attribute",
+                  "description": { "en": "Sort and compare 2D shapes and 3D figures by one attribute (colour, size, or shape).", "fr": "Trier et comparer des figures 2D et 3D selon un attribut (couleur, taille ou forme)." },
+                  "cognitive_level": "understand",
+                  "assessment_type": "formative",
+                  "mechanic": "drag_and_drop",
+                  "games": ["colour-sort"],
+                  "prerequisite_alias": null,
+                  "key_vocabulary": ["circle", "square", "triangle", "rectangle", "sort", "group", "attribute"]
+                }
+              ]
+            },
+            {
+              "overall_code": "OE15",
+              "alias": "number_sense_jk",
+              "display_name": { "en": "Number Sense and Counting", "fr": "Sens du nombre et dénombrement" },
+              "strand_id": "number",
+              "specific": [
+                {
+                  "code": "SE15.2",
+                  "alias": "compare_sets_more_fewer",
+                  "description": { "en": "Compare sets using 'more', 'fewer', and 'same' with one-to-one correspondence.", "fr": "Comparer des ensembles en utilisant 'plus', 'moins' et 'pareil' avec correspondance terme à terme." },
+                  "cognitive_level": "understand",
+                  "assessment_type": "formative",
+                  "mechanic": "drag_and_drop",
+                  "games": ["colour-sort"],
+                  "prerequisite_alias": null,
+                  "key_vocabulary": ["more", "fewer", "same", "five frame", "ten frame", "count"]
+                },
+                {
+                  "code": "SE15.5",
+                  "alias": "subitize_to_3",
+                  "description": { "en": "Subitize quantities to 3 using dot plates, dice, and dominoes.", "fr": "Reconnaître des quantités jusqu'à 3 sans compter." },
+                  "cognitive_level": "remember",
+                  "assessment_type": "formative",
+                  "mechanic": "flash_recognition",
+                  "games": ["math-dive"],
+                  "prerequisite_alias": null,
+                  "key_vocabulary": ["subitize", "how many", "dot pattern", "instant"]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "grade_id": "sk",
+          "grade_number": 0,
+          "sub_grade": "sk",
+          "display_label": { "en": "Senior Kindergarten", "fr": "Grande maternelle (SK)" },
+          "typical_age_range": { "min": 5, "max": 6 },
+          "games_recommended": ["colour-sort", "math-dive"],
+          "document_note": "'Eventually' language in the 2016 Kindergarten Program indicates SK-level behaviours.",
+          "expectations": [
+            {
+              "overall_code": "OE15",
+              "alias": "number_sense_sk",
+              "display_name": { "en": "Number Sense and Counting", "fr": "Sens du nombre et dénombrement" },
+              "strand_id": "number",
+              "specific": [
+                {
+                  "code": "SE15.5",
+                  "alias": "subitize_to_5",
+                  "description": { "en": "Subitize quantities to 5 and begin decomposing into parts.", "fr": "Reconnaître des quantités jusqu'à 5 sans compter et commencer à les décomposer." },
+                  "cognitive_level": "remember",
+                  "assessment_type": "formative",
+                  "mechanic": "flash_recognition",
+                  "games": ["math-dive"],
+                  "prerequisite_alias": "subitize_to_3",
+                  "key_vocabulary": ["subitize", "quantity", "part", "whole", "five frame"]
+                },
+                {
+                  "code": "SE15.9",
+                  "alias": "compose_decompose_to_10",
+                  "description": { "en": "Compose and decompose quantities to 10 in different ways (e.g. 7 = 3 + 4 or 5 + 2).", "fr": "Composer et décomposer des quantités jusqu'à 10 de différentes façons." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "formative",
+                  "mechanic": "fill_in_blank",
+                  "games": ["math-dive"],
+                  "prerequisite_alias": "subitize_to_5",
+                  "key_vocabulary": ["compose", "decompose", "part", "whole", "equals", "makes"]
+                },
+                {
+                  "code": "SE15.10",
+                  "alias": "joining_separating_sets",
+                  "description": { "en": "Demonstrate addition and subtraction by joining and separating sets.", "fr": "Démontrer l'addition et la soustraction en joignant et séparant des ensembles." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "formative",
+                  "mechanic": "drag_and_drop",
+                  "games": ["math-dive"],
+                  "prerequisite_alias": "compose_decompose_to_10",
+                  "key_vocabulary": ["add", "subtract", "join", "separate", "how many", "left over"]
+                }
+              ]
+            },
+            {
+              "overall_code": "OE18",
+              "alias": "patterning_sk",
+              "display_name": { "en": "Patterning", "fr": "Régularités" },
+              "strand_id": "algebra",
+              "specific": [
+                {
+                  "code": "SE18.3",
+                  "alias": "identify_pattern_core",
+                  "description": { "en": "Identify the core unit of a repeating pattern (e.g. ABB in ABBABBABB).", "fr": "Identifier le noyau d'une régularité (ex. ABB dans ABBABBABB)." },
+                  "cognitive_level": "analyse",
+                  "assessment_type": "formative",
+                  "mechanic": "tap_select",
+                  "games": ["colour-sort"],
+                  "prerequisite_alias": "extend_pattern",
+                  "key_vocabulary": ["core", "unit", "AB pattern", "ABB pattern", "ABC pattern"]
+                },
+                {
+                  "code": "SE18.4",
+                  "alias": "translate_pattern",
+                  "description": { "en": "Translate a repeating pattern using different materials (same structure, different objects).", "fr": "Transposer une régularité en utilisant des matériaux différents à même structure." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "summative",
+                  "mechanic": "drag_and_drop",
+                  "games": ["colour-sort"],
+                  "prerequisite_alias": "identify_pattern_core",
+                  "key_vocabulary": ["translate", "same pattern", "different objects", "structure"]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "band_id": "band_2",
+      "display_name": { "en": "Primary", "fr": "Primaire" },
+      "grades": [
+        {
+          "grade_id": "grade_1",
+          "grade_number": 1,
+          "sub_grade": null,
+          "display_label": { "en": "Grade 1", "fr": "1re année" },
+          "typical_age_range": { "min": 6, "max": 7 },
+          "games_recommended": ["math-dive", "colour-sort"],
+          "expectations": [
+            {
+              "overall_code": "B1",
+              "alias": "whole_numbers_to_50",
+              "display_name": { "en": "Number: Whole Numbers to 50", "fr": "Nombre : nombres entiers jusqu'à 50" },
+              "strand_id": "number",
+              "specific": [
+                {
+                  "code": "B1.1",
+                  "alias": "read_represent_to_50",
+                  "description": { "en": "Read and represent whole numbers to 50 using various tools and notations.", "fr": "Lire et représenter des nombres entiers jusqu'à 50 à l'aide d'outils variés." },
+                  "cognitive_level": "understand",
+                  "assessment_type": "formative",
+                  "mechanic": "tap_select",
+                  "games": ["math-dive"],
+                  "prerequisite_alias": "joining_separating_sets",
+                  "key_vocabulary": ["ones", "tens", "place value", "represent", "numeral"]
+                },
+                {
+                  "code": "B1.3",
+                  "alias": "compare_order_to_50",
+                  "description": { "en": "Compare and order whole numbers to 50.", "fr": "Comparer et ordonner des nombres entiers jusqu'à 50." },
+                  "cognitive_level": "understand",
+                  "assessment_type": "formative",
+                  "mechanic": "drag_and_drop",
+                  "games": ["math-dive"],
+                  "prerequisite_alias": "read_represent_to_50",
+                  "key_vocabulary": ["greater than", "less than", "equal to", "order", "least", "greatest"]
+                },
+                {
+                  "code": "B1.5",
+                  "alias": "skip_count_2_5_10",
+                  "description": { "en": "Count forward and backward by 1s, 2s, 5s, and 10s.", "fr": "Compter de l'avant et de l'arrière par 1, 2, 5 et 10." },
+                  "cognitive_level": "remember",
+                  "assessment_type": "formative",
+                  "mechanic": "sequence",
+                  "games": ["math-dive"],
+                  "prerequisite_alias": "read_represent_to_50",
+                  "key_vocabulary": ["skip count", "by twos", "by fives", "by tens", "forward", "backward"]
+                }
+              ]
+            },
+            {
+              "overall_code": "B2",
+              "alias": "operations_grade_1",
+              "display_name": { "en": "Number: Operations to 20", "fr": "Nombre : opérations jusqu'à 20" },
+              "strand_id": "number",
+              "specific": [
+                {
+                  "code": "B2.2",
+                  "alias": "addition_facts_to_10",
+                  "description": { "en": "Recall addition facts for numbers up to 10 and related subtraction facts.", "fr": "Mémoriser les faits d'addition pour les nombres jusqu'à 10 et les faits de soustraction correspondants." },
+                  "cognitive_level": "remember",
+                  "assessment_type": "summative",
+                  "mechanic": "flash_card",
+                  "games": ["math-dive"],
+                  "prerequisite_alias": "joining_separating_sets",
+                  "key_vocabulary": ["add", "subtract", "sum", "difference", "equals", "fact", "related facts"]
+                },
+                {
+                  "code": "B2.3",
+                  "alias": "mental_math_to_20",
+                  "description": { "en": "Use mental math strategies to add and subtract to 20.", "fr": "Utiliser des stratégies de calcul mental pour additionner et soustraire jusqu'à 20." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "formative",
+                  "mechanic": "flash_card",
+                  "games": ["math-dive"],
+                  "prerequisite_alias": "addition_facts_to_10",
+                  "key_vocabulary": ["mental math", "strategy", "make ten", "doubles", "near doubles"]
+                },
+                {
+                  "code": "B2.4",
+                  "alias": "word_problems_to_50",
+                  "description": { "en": "Solve addition and subtraction problems involving whole numbers to 50.", "fr": "Résoudre des problèmes d'addition et de soustraction portant sur des nombres entiers jusqu'à 50." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "summative",
+                  "mechanic": "word_problem",
+                  "games": ["math-dive"],
+                  "prerequisite_alias": "mental_math_to_20",
+                  "key_vocabulary": ["altogether", "in all", "how many more", "how many left", "total"]
+                }
+              ]
+            },
+            {
+              "overall_code": "D1",
+              "alias": "data_grade_1",
+              "display_name": { "en": "Data: Sorting and Graphing", "fr": "Données : tri et représentation graphique" },
+              "strand_id": "data",
+              "specific": [
+                {
+                  "code": "D1.1",
+                  "alias": "sort_one_attribute",
+                  "description": { "en": "Sort a set of objects by one attribute and explain the sorting rule.", "fr": "Trier un ensemble d'objets selon un attribut et expliquer la règle de tri." },
+                  "cognitive_level": "understand",
+                  "assessment_type": "formative",
+                  "mechanic": "drag_and_drop",
+                  "games": ["colour-sort"],
+                  "prerequisite_alias": "sort_shapes_one_attribute",
+                  "key_vocabulary": ["sort", "group", "attribute", "rule", "same", "different"]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "grade_id": "grade_2",
+          "grade_number": 2,
+          "sub_grade": null,
+          "display_label": { "en": "Grade 2", "fr": "2e année" },
+          "typical_age_range": { "min": 7, "max": 8 },
+          "games_recommended": ["math-dive", "colour-sort"],
+          "expectations": [
+            {
+              "overall_code": "B1",
+              "alias": "whole_numbers_to_200",
+              "display_name": { "en": "Number: Whole Numbers to 200", "fr": "Nombre : nombres entiers jusqu'à 200" },
+              "strand_id": "number",
+              "specific": [
+                {
+                  "code": "B1.1",
+                  "alias": "read_represent_to_200",
+                  "description": { "en": "Read, represent, compose, and decompose whole numbers to 200.", "fr": "Lire, représenter, composer et décomposer des nombres entiers jusqu'à 200." },
+                  "cognitive_level": "understand",
+                  "assessment_type": "formative",
+                  "mechanic": "tap_select",
+                  "games": ["math-dive"],
+                  "prerequisite_alias": "read_represent_to_50",
+                  "key_vocabulary": ["hundreds", "tens", "ones", "compose", "decompose", "standard form", "expanded form"]
+                },
+                {
+                  "code": "B1.4",
+                  "alias": "skip_count_20_25_50",
+                  "description": { "en": "Count forward by 20s, 25s, and 50s using a number line.", "fr": "Compter de l'avant par 20, 25 et 50 à l'aide d'une droite numérique." },
+                  "cognitive_level": "remember",
+                  "assessment_type": "formative",
+                  "mechanic": "sequence",
+                  "games": ["math-dive"],
+                  "prerequisite_alias": "skip_count_2_5_10",
+                  "key_vocabulary": ["skip count", "by twenties", "by twenty-fives", "by fifties", "number line"]
+                },
+                {
+                  "code": "B1.5",
+                  "alias": "even_odd",
+                  "description": { "en": "Identify and classify numbers as even or odd.", "fr": "Identifier et classifier les nombres comme pairs ou impairs." },
+                  "cognitive_level": "understand",
+                  "assessment_type": "formative",
+                  "mechanic": "tap_select",
+                  "games": ["math-dive"],
+                  "prerequisite_alias": "read_represent_to_200",
+                  "key_vocabulary": ["even", "odd", "pairs", "remainder", "two equal groups"]
+                }
+              ]
+            },
+            {
+              "overall_code": "B2",
+              "alias": "operations_grade_2",
+              "display_name": { "en": "Number: Operations to 100", "fr": "Nombre : opérations jusqu'à 100" },
+              "strand_id": "number",
+              "specific": [
+                {
+                  "code": "B2.2",
+                  "alias": "addition_facts_to_20",
+                  "description": { "en": "Recall addition facts for numbers up to 20 and related subtraction facts.", "fr": "Mémoriser les faits d'addition pour les nombres jusqu'à 20 et les faits de soustraction correspondants." },
+                  "cognitive_level": "remember",
+                  "assessment_type": "summative",
+                  "mechanic": "flash_card",
+                  "games": ["math-dive"],
+                  "prerequisite_alias": "addition_facts_to_10",
+                  "key_vocabulary": ["add", "subtract", "sum", "difference", "fact family", "related facts"]
+                },
+                {
+                  "code": "B2.3",
+                  "alias": "mental_math_to_50",
+                  "description": { "en": "Use mental math strategies to add and subtract to 50.", "fr": "Utiliser des stratégies de calcul mental pour additionner et soustraire jusqu'à 50." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "formative",
+                  "mechanic": "flash_card",
+                  "games": ["math-dive"],
+                  "prerequisite_alias": "addition_facts_to_20",
+                  "key_vocabulary": ["mental math", "compensation", "decompose", "regroup", "bridging ten"]
+                },
+                {
+                  "code": "B2.4",
+                  "alias": "word_problems_to_100",
+                  "description": { "en": "Solve addition and subtraction problems to 100.", "fr": "Résoudre des problèmes d'addition et de soustraction jusqu'à 100." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "summative",
+                  "mechanic": "word_problem",
+                  "games": ["math-dive"],
+                  "prerequisite_alias": "mental_math_to_50",
+                  "key_vocabulary": ["altogether", "in all", "difference", "how many more", "how many fewer", "total"]
+                },
+                {
+                  "code": "B2.5",
+                  "alias": "multiplication_equal_groups",
+                  "description": { "en": "Represent and solve multiplication as repeated equal groups using arrays.", "fr": "Représenter et résoudre la multiplication comme des groupes égaux répétés à l'aide de réseaux." },
+                  "cognitive_level": "understand",
+                  "assessment_type": "formative",
+                  "mechanic": "drag_and_drop",
+                  "games": ["math-dive"],
+                  "prerequisite_alias": "addition_facts_to_20",
+                  "key_vocabulary": ["multiply", "groups of", "rows", "columns", "array", "repeated addition", "times"]
+                },
+                {
+                  "code": "B2.6",
+                  "alias": "division_sharing_to_12",
+                  "description": { "en": "Divide up to 12 objects equally into groups (equal sharing and equal grouping).", "fr": "Diviser jusqu'à 12 objets en groupes égaux (partage équitable et regroupement égal)." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "formative",
+                  "mechanic": "drag_and_drop",
+                  "games": ["math-dive"],
+                  "prerequisite_alias": "multiplication_equal_groups",
+                  "key_vocabulary": ["divide", "share equally", "groups", "how many in each", "how many groups", "fair share"]
+                }
+              ]
+            },
+            {
+              "overall_code": "D1",
+              "alias": "data_grade_2",
+              "display_name": { "en": "Data: Venn and Carroll Diagrams", "fr": "Données : diagrammes de Venn et de Carroll" },
+              "strand_id": "data",
+              "specific": [
+                {
+                  "code": "D1.1",
+                  "alias": "sort_two_attributes_venn",
+                  "description": { "en": "Sort objects by two attributes using Venn and Carroll diagrams.", "fr": "Trier des objets selon deux attributs à l'aide de diagrammes de Venn et de Carroll." },
+                  "cognitive_level": "analyse",
+                  "assessment_type": "summative",
+                  "mechanic": "drag_and_drop",
+                  "games": ["colour-sort"],
+                  "prerequisite_alias": "sort_one_attribute",
+                  "key_vocabulary": ["Venn diagram", "Carroll diagram", "both", "neither", "two attributes", "overlap"]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "band_id": "band_3",
+      "display_name": { "en": "Early Junior", "fr": "Début du cycle moyen" },
+      "grades": [
+        {
+          "grade_id": "grade_3",
+          "grade_number": 3,
+          "sub_grade": null,
+          "display_label": { "en": "Grade 3", "fr": "3e année" },
+          "typical_age_range": { "min": 8, "max": 9 },
+          "games_recommended": ["math-dive"],
+          "expectations": [
+            {
+              "overall_code": "B1",
+              "alias": "whole_numbers_to_1000",
+              "display_name": { "en": "Number: Whole Numbers to 1,000", "fr": "Nombre : nombres entiers jusqu'à 1 000" },
+              "strand_id": "number",
+              "specific": [
+                {
+                  "code": "B1.3",
+                  "alias": "round_to_10_100",
+                  "description": { "en": "Round whole numbers to the nearest ten or hundred.", "fr": "Arrondir des nombres entiers à la dizaine ou à la centaine près." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "formative",
+                  "mechanic": "tap_select",
+                  "games": ["math-dive"],
+                  "prerequisite_alias": "read_represent_to_200",
+                  "key_vocabulary": ["round", "nearest ten", "nearest hundred", "estimate", "benchmark"]
+                }
+              ]
+            },
+            {
+              "overall_code": "B2",
+              "alias": "operations_grade_3",
+              "display_name": { "en": "Number: Operations to 1,000", "fr": "Nombre : opérations jusqu'à 1 000" },
+              "strand_id": "number",
+              "specific": [
+                {
+                  "code": "B2.2",
+                  "alias": "multiplication_facts_2_5_10",
+                  "description": { "en": "Recall multiplication facts for 2, 5, and 10 and related division facts.", "fr": "Mémoriser les tables de multiplication de 2, 5 et 10 et les faits de division correspondants." },
+                  "cognitive_level": "remember",
+                  "assessment_type": "summative",
+                  "mechanic": "flash_card",
+                  "games": ["math-dive"],
+                  "prerequisite_alias": "multiplication_equal_groups",
+                  "key_vocabulary": ["times table", "multiply", "divide", "factor", "product", "quotient"]
+                },
+                {
+                  "code": "B2.3",
+                  "alias": "mental_math_to_1000",
+                  "description": { "en": "Use mental math strategies to add and subtract to 1,000.", "fr": "Utiliser des stratégies de calcul mental pour additionner et soustraire jusqu'à 1 000." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "formative",
+                  "mechanic": "flash_card",
+                  "games": ["math-dive"],
+                  "prerequisite_alias": "word_problems_to_100",
+                  "key_vocabulary": ["mental math", "regroup", "trade", "hundreds", "place value strategy"]
+                },
+                {
+                  "code": "B2.6",
+                  "alias": "multiply_to_10x10_divide_to_100",
+                  "description": { "en": "Represent multiplication up to 10×10 and division up to 100÷10 using arrays.", "fr": "Représenter la multiplication jusqu'à 10×10 et la division jusqu'à 100÷10 à l'aide de réseaux." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "summative",
+                  "mechanic": "drag_and_drop",
+                  "games": ["math-dive"],
+                  "prerequisite_alias": "multiplication_facts_2_5_10",
+                  "key_vocabulary": ["array", "rows", "columns", "factor", "product", "dividend", "divisor", "quotient"]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "grade_id": "grade_4",
+          "grade_number": 4,
+          "sub_grade": null,
+          "display_label": { "en": "Grade 4", "fr": "4e année" },
+          "typical_age_range": { "min": 9, "max": 10 },
+          "games_recommended": ["math-dive"],
+          "expectations": [
+            {
+              "overall_code": "B1",
+              "alias": "whole_numbers_to_10000",
+              "display_name": { "en": "Number: Whole Numbers to 10,000", "fr": "Nombre : nombres entiers jusqu'à 10 000" },
+              "strand_id": "number",
+              "specific": [
+                {
+                  "code": "B1.3",
+                  "alias": "round_to_10_100_1000",
+                  "description": { "en": "Round whole numbers to the nearest ten, hundred, or thousand.", "fr": "Arrondir des nombres entiers à la dizaine, à la centaine ou au millier près." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "formative",
+                  "mechanic": "tap_select",
+                  "games": ["math-dive"],
+                  "prerequisite_alias": "round_to_10_100",
+                  "key_vocabulary": ["round", "nearest thousand", "estimate", "benchmark", "number line"]
+                },
+                {
+                  "code": "B1.7",
+                  "alias": "decimal_tenths",
+                  "description": { "en": "Read, represent, compare, and order decimal tenths.", "fr": "Lire, représenter, comparer et ordonner des dixièmes sous forme décimale." },
+                  "cognitive_level": "understand",
+                  "assessment_type": "formative",
+                  "mechanic": "drag_and_drop",
+                  "games": ["math-dive"],
+                  "prerequisite_alias": "whole_numbers_to_10000",
+                  "key_vocabulary": ["decimal", "tenths", "decimal point", "place value", "compare"]
+                }
+              ]
+            },
+            {
+              "overall_code": "B2",
+              "alias": "operations_grade_4",
+              "display_name": { "en": "Number: Operations to 10,000", "fr": "Nombre : opérations jusqu'à 10 000" },
+              "strand_id": "number",
+              "specific": [
+                {
+                  "code": "B2.2",
+                  "alias": "all_multiplication_facts",
+                  "description": { "en": "Recall all multiplication facts from 1×1 to 10×10 and related division facts.", "fr": "Mémoriser toutes les tables de multiplication de 1×1 à 10×10 et les faits de division correspondants." },
+                  "cognitive_level": "remember",
+                  "assessment_type": "summative",
+                  "mechanic": "flash_card",
+                  "games": ["math-dive"],
+                  "prerequisite_alias": "multiplication_facts_2_5_10",
+                  "key_vocabulary": ["times table", "fact", "product", "quotient", "inverse", "related facts"]
+                },
+                {
+                  "code": "B2.5",
+                  "alias": "multiply_multi_digit",
+                  "description": { "en": "Multiply 2- or 3-digit numbers by a 1-digit number.", "fr": "Multiplier des nombres à 2 ou 3 chiffres par un nombre à 1 chiffre." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "summative",
+                  "mechanic": "flash_card",
+                  "games": ["math-dive"],
+                  "prerequisite_alias": "all_multiplication_facts",
+                  "key_vocabulary": ["multiply", "regroup", "partial product", "standard algorithm", "estimate"]
+                },
+                {
+                  "code": "B2.6",
+                  "alias": "divide_multi_digit",
+                  "description": { "en": "Divide 2- or 3-digit numbers by a 1-digit number, expressing remainders as fractions.", "fr": "Diviser des nombres à 2 ou 3 chiffres par un nombre à 1 chiffre en exprimant le reste sous forme de fraction." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "summative",
+                  "mechanic": "flash_card",
+                  "games": ["math-dive"],
+                  "prerequisite_alias": "multiply_multi_digit",
+                  "key_vocabulary": ["divide", "remainder", "quotient", "divisor", "dividend", "fraction remainder"]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

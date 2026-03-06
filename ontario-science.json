@@ -1,0 +1,410 @@
+{
+  "schema_version": "1.1",
+  "curriculum_id": "canada_ontario_science_2022",
+  "country": "canada",
+  "region": "ontario",
+  "subject": "science",
+  "display_name": {
+    "en": "Science and Technology",
+    "fr": "Sciences et technologie"
+  },
+  "governing_body": {
+    "en": "Ontario Ministry of Education",
+    "fr": "Ministère de l'Éducation de l'Ontario"
+  },
+  "document": {
+    "title": "The Ontario Curriculum, Grades 1–8: Science and Technology",
+    "version": "2022",
+    "url": "https://www.ontario.ca/document/ontario-curriculum-grades-1-8-science-and-technology"
+  },
+  "valid_from": "2022-09-01",
+  "valid_until": null,
+  "is_current": true,
+  "applies_to": {
+    "system": ["public", "catholic"],
+    "note": "Catholic boards use identical Science and Technology curriculum. Check this field before serving content if system-specific filtering is required."
+  },
+  "games": ["kitchen-lab", "potion-game"],
+  "strands": [
+    { "strand_id": "stem_skills",  "code": "A", "display_name": { "en": "STEM Skills and Connections",  "fr": "Compétences STIM et liens" } },
+    { "strand_id": "life",         "code": "B", "display_name": { "en": "Life Systems",                  "fr": "Systèmes vivants" } },
+    { "strand_id": "matter",       "code": "C", "display_name": { "en": "Matter and Energy",             "fr": "Matière et énergie" } },
+    { "strand_id": "structures",   "code": "D", "display_name": { "en": "Structures and Mechanisms",     "fr": "Structures et mécanismes" } },
+    { "strand_id": "earth",        "code": "E", "display_name": { "en": "Earth and Space Systems",       "fr": "Systèmes de la Terre et de l'espace" } }
+  ],
+  "bands": [
+    {
+      "band_id": "band_1",
+      "display_name": { "en": "Kindergarten", "fr": "Maternelle" },
+      "grades": [
+        {
+          "grade_id": "jk",
+          "grade_number": 0,
+          "sub_grade": "jk",
+          "display_label": { "en": "Junior Kindergarten", "fr": "Petite enfance (JK)" },
+          "typical_age_range": { "min": 4, "max": 5 },
+          "games_recommended": ["kitchen-lab"],
+          "document_note": "Science in Kindergarten is inquiry-based and process-oriented, not topic-based. Expectations are from The Kindergarten Program 2016.",
+          "expectations": [
+            {
+              "overall_code": "OE13",
+              "alias": "inquiry_jk",
+              "display_name": { "en": "Basic Inquiry Skills", "fr": "Compétences d'enquête de base" },
+              "strand_id": "stem_skills",
+              "specific": [
+                {
+                  "code": "SE13.2",
+                  "alias": "predict_and_observe",
+                  "description": { "en": "Make predictions and observations during simple investigations.", "fr": "Faire des prédictions et des observations lors d'investigations simples." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "formative",
+                  "mechanic": "predict_observe_record",
+                  "games": ["kitchen-lab"],
+                  "prerequisite_alias": null,
+                  "key_vocabulary": ["predict", "observe", "what will happen", "I think", "I notice"]
+                }
+              ]
+            },
+            {
+              "overall_code": "OE14",
+              "alias": "living_nonliving_jk",
+              "display_name": { "en": "Living and Non-Living Things", "fr": "Êtres vivants et non-vivants" },
+              "strand_id": "life",
+              "specific": [
+                {
+                  "code": "SE14.2",
+                  "alias": "sort_living_nonliving",
+                  "description": { "en": "Sort and classify living and non-living things by observable features.", "fr": "Trier et classifier les êtres vivants et non-vivants selon leurs caractéristiques observables." },
+                  "cognitive_level": "understand",
+                  "assessment_type": "formative",
+                  "mechanic": "drag_and_drop",
+                  "games": ["kitchen-lab"],
+                  "prerequisite_alias": null,
+                  "key_vocabulary": ["living", "non-living", "grows", "moves", "breathes", "needs food"]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "grade_id": "sk",
+          "grade_number": 0,
+          "sub_grade": "sk",
+          "display_label": { "en": "Senior Kindergarten", "fr": "Grande maternelle (SK)" },
+          "typical_age_range": { "min": 5, "max": 6 },
+          "games_recommended": ["kitchen-lab"],
+          "expectations": [
+            {
+              "overall_code": "OE13",
+              "alias": "inquiry_sk",
+              "display_name": { "en": "Inquiry Skills", "fr": "Compétences d'enquête" },
+              "strand_id": "stem_skills",
+              "specific": [
+                {
+                  "code": "SE13.4",
+                  "alias": "communicate_findings",
+                  "description": { "en": "Communicate observations and findings from investigations using drawings, words, or models.", "fr": "Communiquer les observations et les résultats d'investigations à l'aide de dessins, de mots ou de modèles." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "formative",
+                  "mechanic": "predict_observe_record",
+                  "games": ["kitchen-lab"],
+                  "prerequisite_alias": "predict_and_observe",
+                  "key_vocabulary": ["observe", "record", "drawing", "result", "conclusion", "I found out"]
+                }
+              ]
+            },
+            {
+              "overall_code": "OE29",
+              "alias": "cause_effect_environment",
+              "display_name": { "en": "Cause and Effect in Environments", "fr": "Cause et effet dans les environnements" },
+              "strand_id": "earth",
+              "specific": [
+                {
+                  "code": "SE29.2",
+                  "alias": "what_if_change",
+                  "description": { "en": "Explore what would happen if something in the environment changed (cause and effect).", "fr": "Explorer ce qui se passerait si quelque chose dans l'environnement changeait (cause et effet)." },
+                  "cognitive_level": "analyse",
+                  "assessment_type": "formative",
+                  "mechanic": "predict_observe_record",
+                  "games": ["kitchen-lab"],
+                  "prerequisite_alias": "predict_and_observe",
+                  "key_vocabulary": ["cause", "effect", "what if", "change", "because", "so"]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "band_id": "band_2",
+      "display_name": { "en": "Primary", "fr": "Primaire" },
+      "grades": [
+        {
+          "grade_id": "grade_1",
+          "grade_number": 1,
+          "sub_grade": null,
+          "display_label": { "en": "Grade 1", "fr": "1re année" },
+          "typical_age_range": { "min": 6, "max": 7 },
+          "games_recommended": ["kitchen-lab", "potion-game"],
+          "expectations": [
+            {
+              "overall_code": "C2",
+              "alias": "energy_forms_gr1",
+              "display_name": { "en": "Matter and Energy: Energy in Our Lives", "fr": "Matière et énergie : l'énergie dans notre vie" },
+              "strand_id": "matter",
+              "specific": [
+                {
+                  "code": "C2.3",
+                  "alias": "identify_energy_forms",
+                  "description": { "en": "Identify and classify forms of energy: light, heat, sound, and movement.", "fr": "Identifier et classifier les formes d'énergie : lumière, chaleur, son et mouvement." },
+                  "cognitive_level": "remember",
+                  "assessment_type": "formative",
+                  "mechanic": "tap_select",
+                  "games": ["kitchen-lab"],
+                  "prerequisite_alias": "sort_living_nonliving",
+                  "key_vocabulary": ["energy", "light", "heat", "sound", "movement", "source", "Sun"]
+                }
+              ]
+            },
+            {
+              "overall_code": "D2",
+              "alias": "material_properties_gr1",
+              "display_name": { "en": "Structures: Everyday Material Properties", "fr": "Structures : propriétés des matériaux" },
+              "strand_id": "structures",
+              "specific": [
+                {
+                  "code": "D2.1",
+                  "alias": "material_properties_sort",
+                  "description": { "en": "Identify and sort materials by properties: hard, soft, flexible, rigid, rough, smooth, absorbent.", "fr": "Identifier et trier les matériaux selon leurs propriétés." },
+                  "cognitive_level": "understand",
+                  "assessment_type": "formative",
+                  "mechanic": "drag_and_drop",
+                  "games": ["kitchen-lab"],
+                  "prerequisite_alias": "sort_living_nonliving",
+                  "key_vocabulary": ["hard", "soft", "flexible", "rigid", "rough", "smooth", "absorbent", "property", "material"]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "grade_id": "grade_2",
+          "grade_number": 2,
+          "sub_grade": null,
+          "display_label": { "en": "Grade 2", "fr": "2e année" },
+          "typical_age_range": { "min": 7, "max": 8 },
+          "games_recommended": ["kitchen-lab", "potion-game"],
+          "expectations": [
+            {
+              "overall_code": "C2",
+              "alias": "liquids_solids_gr2",
+              "display_name": { "en": "Matter and Energy: Properties of Liquids and Solids", "fr": "Matière et énergie : propriétés des liquides et des solides" },
+              "strand_id": "matter",
+              "specific": [
+                {
+                  "code": "C2.1",
+                  "alias": "classify_liquid_solid",
+                  "description": { "en": "Classify matter as liquid or solid and describe observable properties of each.", "fr": "Classifier la matière comme liquide ou solide et décrire les propriétés observables de chacun." },
+                  "cognitive_level": "understand",
+                  "assessment_type": "formative",
+                  "mechanic": "tap_select",
+                  "games": ["kitchen-lab", "potion-game"],
+                  "prerequisite_alias": "material_properties_sort",
+                  "key_vocabulary": ["liquid", "solid", "matter", "property", "flow", "shape", "volume"]
+                },
+                {
+                  "code": "C2.3",
+                  "alias": "freezing_melting_conditions",
+                  "description": { "en": "Describe the conditions that cause water to freeze and melt.", "fr": "Décrire les conditions qui provoquent la congélation et la fusion de l'eau." },
+                  "cognitive_level": "understand",
+                  "assessment_type": "formative",
+                  "mechanic": "predict_observe_record",
+                  "games": ["kitchen-lab"],
+                  "prerequisite_alias": "classify_liquid_solid",
+                  "key_vocabulary": ["freeze", "melt", "temperature", "ice", "water", "conditions", "0 degrees"]
+                },
+                {
+                  "code": "C2.5",
+                  "alias": "mixing_liquids_solids",
+                  "description": { "en": "Describe ways liquids and solids can be combined to make useful mixtures.", "fr": "Décrire les façons dont les liquides et les solides peuvent être combinés pour créer des mélanges utiles." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "summative",
+                  "mechanic": "drag_and_drop",
+                  "games": ["kitchen-lab", "potion-game"],
+                  "prerequisite_alias": "classify_liquid_solid",
+                  "key_vocabulary": ["mixture", "combine", "dissolve", "solution", "suspend", "separate", "ingredients"]
+                },
+                {
+                  "code": "C2.7",
+                  "alias": "safety_symbols",
+                  "description": { "en": "Identify and explain international safety symbols used in science contexts.", "fr": "Identifier et expliquer les symboles de sécurité internationaux utilisés en sciences." },
+                  "cognitive_level": "remember",
+                  "assessment_type": "formative",
+                  "mechanic": "tap_select",
+                  "games": ["kitchen-lab"],
+                  "prerequisite_alias": null,
+                  "key_vocabulary": ["safety", "warning", "hazard", "symbol", "danger", "caution", "protective equipment"]
+                }
+              ]
+            },
+            {
+              "overall_code": "E2",
+              "alias": "water_cycle_gr2",
+              "display_name": { "en": "Earth and Space: Water Cycle", "fr": "Terre et espace : cycle de l'eau" },
+              "strand_id": "earth",
+              "specific": [
+                {
+                  "code": "E2.3",
+                  "alias": "water_cycle_stages",
+                  "description": { "en": "Describe the stages of the water cycle: evaporation, condensation, precipitation, and collection.", "fr": "Décrire les étapes du cycle de l'eau : évaporation, condensation, précipitation et collecte." },
+                  "cognitive_level": "understand",
+                  "assessment_type": "formative",
+                  "mechanic": "sequence",
+                  "games": ["kitchen-lab"],
+                  "prerequisite_alias": "freezing_melting_conditions",
+                  "key_vocabulary": ["water cycle", "evaporation", "condensation", "precipitation", "collection", "vapour", "clouds", "rain"]
+                },
+                {
+                  "code": "E2.4",
+                  "alias": "three_states_water",
+                  "description": { "en": "Identify the three states of water (solid, liquid, gas) and explain how temperature affects state changes.", "fr": "Identifier les trois états de l'eau (solide, liquide, gaz) et expliquer l'effet de la température sur les changements d'état." },
+                  "cognitive_level": "understand",
+                  "assessment_type": "formative",
+                  "mechanic": "tap_select",
+                  "games": ["kitchen-lab"],
+                  "prerequisite_alias": "freezing_melting_conditions",
+                  "key_vocabulary": ["solid", "liquid", "gas", "state", "temperature", "boil", "evaporate", "freeze", "melt"]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "band_id": "band_3",
+      "display_name": { "en": "Early Junior", "fr": "Début du cycle moyen" },
+      "grades": [
+        {
+          "grade_id": "grade_3",
+          "grade_number": 3,
+          "sub_grade": null,
+          "display_label": { "en": "Grade 3", "fr": "3e année" },
+          "typical_age_range": { "min": 8, "max": 9 },
+          "games_recommended": ["kitchen-lab"],
+          "expectations": [
+            {
+              "overall_code": "E2",
+              "alias": "soil_composition_gr3",
+              "display_name": { "en": "Earth and Space: Soils in the Environment", "fr": "Terre et espace : les sols dans l'environnement" },
+              "strand_id": "earth",
+              "specific": [
+                {
+                  "code": "E2.1",
+                  "alias": "soil_components_mix",
+                  "description": { "en": "Identify soil components and describe how they can be combined (e.g. composting, mixing).", "fr": "Identifier les composantes du sol et décrire comment elles peuvent être combinées (ex. compostage, mélange)." },
+                  "cognitive_level": "apply",
+                  "assessment_type": "formative",
+                  "mechanic": "drag_and_drop",
+                  "games": ["kitchen-lab"],
+                  "prerequisite_alias": "mixing_liquids_solids",
+                  "key_vocabulary": ["soil", "compost", "humus", "sand", "clay", "silt", "organic", "decompose", "nutrients"]
+                }
+              ]
+            },
+            {
+              "overall_code": "C2",
+              "alias": "forces_motion_gr3",
+              "display_name": { "en": "Matter and Energy: Forces and Motion", "fr": "Matière et énergie : forces et mouvement" },
+              "strand_id": "matter",
+              "specific": [
+                {
+                  "code": "C2.2",
+                  "alias": "push_pull_effects",
+                  "description": { "en": "Describe how forces (push, pull, gravity, friction, magnetic) affect the motion of objects.", "fr": "Décrire comment les forces (pousser, tirer, gravité, friction, magnétique) affectent le mouvement des objets." },
+                  "cognitive_level": "understand",
+                  "assessment_type": "formative",
+                  "mechanic": "predict_observe_record",
+                  "games": ["kitchen-lab"],
+                  "prerequisite_alias": "identify_energy_forms",
+                  "key_vocabulary": ["force", "push", "pull", "gravity", "friction", "magnetic", "motion", "speed", "direction"]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "grade_id": "grade_4",
+          "grade_number": 4,
+          "sub_grade": null,
+          "display_label": { "en": "Grade 4", "fr": "4e année" },
+          "typical_age_range": { "min": 9, "max": 10 },
+          "games_recommended": ["kitchen-lab"],
+          "expectations": [
+            {
+              "overall_code": "B2",
+              "alias": "food_chains_gr4",
+              "display_name": { "en": "Life Systems: Habitats and Communities", "fr": "Systèmes vivants : habitats et communautés" },
+              "strand_id": "life",
+              "specific": [
+                {
+                  "code": "B2.3",
+                  "alias": "producers_consumers_decomposers",
+                  "description": { "en": "Classify organisms as producers, consumers, or decomposers within a food chain.", "fr": "Classifier les organismes comme producteurs, consommateurs ou décomposeurs dans une chaîne alimentaire." },
+                  "cognitive_level": "analyse",
+                  "assessment_type": "summative",
+                  "mechanic": "drag_and_drop",
+                  "games": ["kitchen-lab"],
+                  "prerequisite_alias": "sort_living_nonliving",
+                  "key_vocabulary": ["producer", "consumer", "decomposer", "food chain", "food web", "habitat", "community", "organism"]
+                },
+                {
+                  "code": "B2.4",
+                  "alias": "food_web_interconnected",
+                  "description": { "en": "Demonstrate understanding of food webs as interconnected food chains.", "fr": "Démontrer une compréhension des réseaux alimentaires comme des chaînes alimentaires interconnectées." },
+                  "cognitive_level": "analyse",
+                  "assessment_type": "summative",
+                  "mechanic": "drag_and_drop",
+                  "games": ["kitchen-lab"],
+                  "prerequisite_alias": "producers_consumers_decomposers",
+                  "key_vocabulary": ["food web", "interconnected", "predator", "prey", "energy flow", "ecosystem"]
+                }
+              ]
+            },
+            {
+              "overall_code": "C2",
+              "alias": "light_sound_gr4",
+              "display_name": { "en": "Matter and Energy: Light and Sound", "fr": "Matière et énergie : lumière et son" },
+              "strand_id": "matter",
+              "specific": [
+                {
+                  "code": "C2.1",
+                  "alias": "light_properties",
+                  "description": { "en": "Describe properties of light: travels in straight lines, reflection, and refraction.", "fr": "Décrire les propriétés de la lumière : voyage en ligne droite, réflexion et réfraction." },
+                  "cognitive_level": "understand",
+                  "assessment_type": "formative",
+                  "mechanic": "predict_observe_record",
+                  "games": ["kitchen-lab"],
+                  "prerequisite_alias": "identify_energy_forms",
+                  "key_vocabulary": ["light", "reflection", "refraction", "straight line", "transparent", "opaque", "translucent", "shadow"]
+                },
+                {
+                  "code": "C2.2",
+                  "alias": "sound_properties",
+                  "description": { "en": "Describe properties of sound: caused by vibrations, pitch, and volume.", "fr": "Décrire les propriétés du son : causé par des vibrations, hauteur et volume." },
+                  "cognitive_level": "understand",
+                  "assessment_type": "formative",
+                  "mechanic": "predict_observe_record",
+                  "games": ["kitchen-lab"],
+                  "prerequisite_alias": "identify_energy_forms",
+                  "key_vocabulary": ["sound", "vibration", "pitch", "volume", "loud", "soft", "high", "low", "travel", "waves"]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

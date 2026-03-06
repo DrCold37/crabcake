@@ -1,0 +1,460 @@
+{
+  "schema_version": "1.1",
+  "game_id": "potion-game",
+  "version": "1.0",
+  "last_updated": "2026-03-06",
+  "description": "Experiments configuration for Witch's Brew / Potion Game. Each entry defines what ingredients exist, what happens when specific combinations are added to the cauldron, and what the child observes. There are no questions — the learning comes from experimenting freely and watching the outcomes. The game engine handles all animation and presentation; this file is the source of truth for ingredient properties and reaction logic.",
+  "curriculum_aliases_covered": [
+    "classify_liquid_solid",
+    "mixing_liquids_solids",
+    "predict_and_observe",
+    "cause_effect_environment"
+  ],
+  "ingredients": [
+    {
+      "ingredient_id": "dragon_tears",
+      "display_name": "Dragon Tears",
+      "state": "liquid",
+      "colour": "#1565C0",
+      "icon": "drop",
+      "band": "band_2",
+      "real_world_analogue": "water",
+      "notes": "Base liquid for most Band 2 potions. Neutral — no reaction on its own."
+    },
+    {
+      "ingredient_id": "moonflower_oil",
+      "display_name": "Moonflower Oil",
+      "state": "liquid",
+      "colour": "#F9A825",
+      "icon": "drop",
+      "band": "band_2",
+      "real_world_analogue": "cooking oil",
+      "notes": "Does not mix with water — demonstrates liquid immiscibility."
+    },
+    {
+      "ingredient_id": "enchanted_water",
+      "display_name": "Enchanted Water",
+      "state": "liquid",
+      "colour": "#80DEEA",
+      "icon": "drop",
+      "band": "band_2",
+      "real_world_analogue": "plain water",
+      "notes": "Interchangeable with dragon tears. Used to vary visual presentation."
+    },
+    {
+      "ingredient_id": "swamp_water",
+      "display_name": "Swamp Water",
+      "state": "liquid",
+      "colour": "#558B2F",
+      "icon": "drop",
+      "band": "band_2",
+      "real_world_analogue": "murky water",
+      "notes": "Murky appearance teaches that not all liquids are clear."
+    },
+    {
+      "ingredient_id": "volcano_oil",
+      "display_name": "Volcano Oil",
+      "state": "liquid",
+      "colour": "#BF360C",
+      "icon": "drop",
+      "band": "band_3",
+      "real_world_analogue": "vegetable oil with food colouring",
+      "notes": "Floats on water-based liquids. Used for density/layering experiments in Band 3."
+    },
+    {
+      "ingredient_id": "prism_oil",
+      "display_name": "Prism Oil",
+      "state": "liquid",
+      "colour": "#CE93D8",
+      "icon": "drop",
+      "band": "band_3",
+      "real_world_analogue": "light mineral oil",
+      "notes": "Creates rainbow-shimmer visual effect. Used in light-themed experiments."
+    },
+    {
+      "ingredient_id": "star_dust",
+      "display_name": "Star Dust",
+      "state": "solid",
+      "solubility": "dissolves",
+      "colour": "#FFF9C4",
+      "icon": "powder",
+      "band": "band_2",
+      "real_world_analogue": "sugar or salt",
+      "notes": "Dissolves in dragon tears or enchanted water to form a clear solution."
+    },
+    {
+      "ingredient_id": "dragon_scales",
+      "display_name": "Dragon Scales",
+      "state": "solid",
+      "solubility": "dissolves",
+      "colour": "#26A69A",
+      "icon": "chip",
+      "band": "band_2",
+      "real_world_analogue": "salt crystals",
+      "notes": "Dissolves in warm water. Demonstrates solution formation."
+    },
+    {
+      "ingredient_id": "crystal_powder",
+      "display_name": "Rainbow Crystal Powder",
+      "state": "solid",
+      "solubility": "dissolves",
+      "colour": "#E040FB",
+      "icon": "powder",
+      "band": "band_2",
+      "real_world_analogue": "coloured sugar",
+      "notes": "Dissolves and colours the liquid visibly — good visual reinforcement of dissolving."
+    },
+    {
+      "ingredient_id": "dried_mushroom",
+      "display_name": "Dried Mushroom",
+      "state": "solid",
+      "solubility": "suspends",
+      "colour": "#8D6E63",
+      "icon": "chunk",
+      "band": "band_2",
+      "real_world_analogue": "dried plant matter",
+      "notes": "Does not dissolve — creates a suspension that settles over time."
+    },
+    {
+      "ingredient_id": "fine_mud",
+      "display_name": "Fine Mud",
+      "state": "solid",
+      "solubility": "suspends",
+      "colour": "#795548",
+      "icon": "powder",
+      "band": "band_2",
+      "real_world_analogue": "clay powder in water",
+      "notes": "Suspends in water briefly then settles — classic suspension demonstration."
+    },
+    {
+      "ingredient_id": "toad_stone",
+      "display_name": "Toad Stone",
+      "state": "solid",
+      "solubility": "insoluble",
+      "colour": "#9E9E9E",
+      "icon": "chunk",
+      "band": "band_2",
+      "real_world_analogue": "pebble/gravel",
+      "notes": "Sinks immediately and does not dissolve or suspend. Used to contrast with dissolving solids."
+    },
+    {
+      "ingredient_id": "fizzing_powder",
+      "display_name": "Fizzing Powder",
+      "state": "solid",
+      "solubility": "reacts",
+      "colour": "#FFFFFF",
+      "icon": "powder",
+      "band": "band_3",
+      "real_world_analogue": "baking soda",
+      "notes": "Reacts with acidic liquids (moonberry juice) to produce visible bubbles (CO2). Do not combine with plain water — no reaction."
+    },
+    {
+      "ingredient_id": "moonberry_juice",
+      "display_name": "Moonberry Juice",
+      "state": "liquid",
+      "colour": "#AD1457",
+      "icon": "drop",
+      "band": "band_3",
+      "real_world_analogue": "vinegar or lemon juice (acidic)",
+      "notes": "Acidic liquid. Reacts with fizzing powder. Also acts as a pH indicator — turns blue_lotus_powder red."
+    },
+    {
+      "ingredient_id": "blue_lotus_powder",
+      "display_name": "Blue Lotus Powder",
+      "state": "solid",
+      "solubility": "dissolves",
+      "colour": "#1A237E",
+      "icon": "powder",
+      "band": "band_3",
+      "real_world_analogue": "red cabbage powder (natural pH indicator)",
+      "notes": "Dissolves in water to give blue colour. Turns red/pink in acidic conditions (moonberry juice). Turns green in alkaline conditions (stardust solution). Teaches pH indicator concept without the chemistry label."
+    },
+    {
+      "ingredient_id": "stardust_alkaline",
+      "display_name": "Stardust (Alkaline)",
+      "state": "solid",
+      "solubility": "dissolves",
+      "colour": "#E8F5E9",
+      "icon": "powder",
+      "band": "band_3",
+      "real_world_analogue": "baking soda dissolved in water (alkaline)",
+      "notes": "Dissolves to create an alkaline solution. Turns blue_lotus_powder green. Neutralises moonberry juice reaction."
+    },
+    {
+      "ingredient_id": "sound_stone",
+      "display_name": "Sound Stone",
+      "state": "solid",
+      "solubility": "dissolves",
+      "colour": "#607D8B",
+      "icon": "chip",
+      "band": "band_3",
+      "real_world_analogue": "vibrating crystal (metaphorical)",
+      "notes": "Narrative ingredient for sound experiments. Dissolves in water and triggers a sound wave visual effect when combined with heat."
+    },
+    {
+      "ingredient_id": "sun_crystal",
+      "display_name": "Sun Crystal",
+      "state": "solid",
+      "solubility": "dissolves",
+      "colour": "#FFD600",
+      "icon": "gem",
+      "band": "band_3",
+      "real_world_analogue": "phosphorescent powder",
+      "notes": "Dissolves and causes a glowing light effect. Brighter glow than moonstone powder — used in variable-testing experiments."
+    },
+    {
+      "ingredient_id": "moonstone_powder",
+      "display_name": "Moonstone Powder",
+      "state": "solid",
+      "solubility": "dissolves",
+      "colour": "#B0BEC5",
+      "icon": "powder",
+      "band": "band_3",
+      "real_world_analogue": "mica powder",
+      "notes": "Dissolves and produces a dim glow. Contrast ingredient for sun crystal variable tests."
+    }
+  ],
+  "reactions": [
+    {
+      "reaction_id": "r001",
+      "band": "band_2",
+      "ingredients_required": ["dragon_tears", "star_dust"],
+      "outcome": "solution_clear",
+      "description": "Star dust dissolves completely — the cauldron liquid becomes clear and slightly shimmery.",
+      "visual_effect": "dissolve_sparkle",
+      "sound_effect": "soft_chime",
+      "real_world_concept": "dissolution — a solid forming a solution in a liquid",
+      "curriculum_alias": "mixing_liquids_solids"
+    },
+    {
+      "reaction_id": "r002",
+      "band": "band_2",
+      "ingredients_required": ["dragon_tears", "dragon_scales"],
+      "outcome": "solution_teal",
+      "description": "Dragon scales dissolve to create a shimmering teal solution.",
+      "visual_effect": "dissolve_teal_glow",
+      "sound_effect": "bubble_low",
+      "real_world_concept": "dissolution",
+      "curriculum_alias": "mixing_liquids_solids"
+    },
+    {
+      "reaction_id": "r003",
+      "band": "band_2",
+      "ingredients_required": ["enchanted_water", "crystal_powder"],
+      "outcome": "solution_purple",
+      "description": "Crystal powder dissolves and turns the water a bright purple.",
+      "visual_effect": "colour_flood_purple",
+      "sound_effect": "soft_chime",
+      "real_world_concept": "dissolution with colour change",
+      "curriculum_alias": "mixing_liquids_solids"
+    },
+    {
+      "reaction_id": "r004",
+      "band": "band_2",
+      "ingredients_required": ["dragon_tears", "fine_mud"],
+      "outcome": "suspension_murky",
+      "description": "Fine mud disperses throughout the cauldron making it cloudy. After a few seconds, particles slowly settle to the bottom.",
+      "visual_effect": "suspension_settle",
+      "sound_effect": "splash",
+      "real_world_concept": "suspension — solid particles that do not dissolve and eventually settle",
+      "curriculum_alias": "mixing_liquids_solids"
+    },
+    {
+      "reaction_id": "r005",
+      "band": "band_2",
+      "ingredients_required": ["dragon_tears", "toad_stone"],
+      "outcome": "no_mixing",
+      "description": "The toad stone sinks immediately to the bottom. The water stays clear. Nothing dissolves.",
+      "visual_effect": "sink_plop",
+      "sound_effect": "plop",
+      "real_world_concept": "insoluble solid — does not dissolve or suspend",
+      "curriculum_alias": "classify_liquid_solid"
+    },
+    {
+      "reaction_id": "r006",
+      "band": "band_2",
+      "ingredients_required": ["dragon_tears", "moonflower_oil"],
+      "outcome": "immiscible_layers",
+      "description": "The oil floats on top of the water in a distinct layer — the two liquids do not mix.",
+      "visual_effect": "layer_float",
+      "sound_effect": "glug",
+      "real_world_concept": "immiscible liquids — two liquids that do not mix",
+      "curriculum_alias": "mixing_liquids_solids"
+    },
+    {
+      "reaction_id": "r007",
+      "band": "band_3",
+      "ingredients_required": ["moonberry_juice", "fizzing_powder"],
+      "outcome": "fizzing_reaction",
+      "description": "The cauldron fizzes and bubbles dramatically! A gas is produced. The mixture froths.",
+      "visual_effect": "fizz_overflow",
+      "sound_effect": "sizzle_pop",
+      "real_world_concept": "chemical reaction — acid + base → gas (CO2) produced",
+      "curriculum_alias": "mixing_liquids_solids"
+    },
+    {
+      "reaction_id": "r008",
+      "band": "band_3",
+      "ingredients_required": ["enchanted_water", "blue_lotus_powder"],
+      "outcome": "solution_blue_indicator",
+      "description": "The cauldron turns a deep blue. The potion is now a colour-changing indicator.",
+      "visual_effect": "colour_flood_blue",
+      "sound_effect": "soft_chime",
+      "real_world_concept": "pH indicator baseline — neutral liquid",
+      "curriculum_alias": "mixing_liquids_solids"
+    },
+    {
+      "reaction_id": "r009",
+      "band": "band_3",
+      "ingredients_required": ["enchanted_water", "blue_lotus_powder", "moonberry_juice"],
+      "outcome": "indicator_turns_red",
+      "description": "The blue potion turns bright red/pink when moonberry juice is added — showing an acidic condition.",
+      "visual_effect": "colour_shift_blue_to_red",
+      "sound_effect": "magical_whoosh",
+      "real_world_concept": "pH indicator in acid — colour change signals acidity",
+      "curriculum_alias": "cause_effect_environment"
+    },
+    {
+      "reaction_id": "r010",
+      "band": "band_3",
+      "ingredients_required": ["enchanted_water", "blue_lotus_powder", "stardust_alkaline"],
+      "outcome": "indicator_turns_green",
+      "description": "The blue potion turns green when stardust is added — showing an alkaline condition.",
+      "visual_effect": "colour_shift_blue_to_green",
+      "sound_effect": "magical_whoosh",
+      "real_world_concept": "pH indicator in alkali — colour change signals alkalinity",
+      "curriculum_alias": "cause_effect_environment"
+    },
+    {
+      "reaction_id": "r011",
+      "band": "band_3",
+      "ingredients_required": ["dragon_tears", "volcano_oil"],
+      "outcome": "density_layers",
+      "description": "The volcano oil floats on top in a distinct red layer. The two liquids form visible density layers.",
+      "visual_effect": "layer_float_red",
+      "sound_effect": "glug",
+      "real_world_concept": "density — less dense liquids float on more dense liquids",
+      "curriculum_alias": "mixing_liquids_solids"
+    },
+    {
+      "reaction_id": "r012",
+      "band": "band_3",
+      "ingredients_required": ["dragon_tears", "sun_crystal"],
+      "outcome": "bright_glow",
+      "description": "The cauldron glows brightly in gold — sun crystal dissolved and released strong light energy.",
+      "visual_effect": "glow_gold_strong",
+      "sound_effect": "shimmer_high",
+      "real_world_concept": "variable testing — sun crystal produces more light than moonstone",
+      "curriculum_alias": "cause_effect_environment"
+    },
+    {
+      "reaction_id": "r013",
+      "band": "band_3",
+      "ingredients_required": ["dragon_tears", "moonstone_powder"],
+      "outcome": "dim_glow",
+      "description": "The cauldron glows dimly in silver — moonstone powder released less light energy than sun crystal.",
+      "visual_effect": "glow_silver_dim",
+      "sound_effect": "shimmer_low",
+      "real_world_concept": "variable testing — contrast result for sun crystal comparison",
+      "curriculum_alias": "cause_effect_environment"
+    },
+    {
+      "reaction_id": "r014",
+      "band": "band_3",
+      "ingredients_required": ["enchanted_water", "sound_stone"],
+      "outcome": "sound_wave_visible",
+      "description": "The sound stone dissolves and the cauldron surface ripples with visible sound waves radiating outward.",
+      "visual_effect": "ripple_rings",
+      "sound_effect": "deep_hum",
+      "real_world_concept": "sound travels as waves through a medium",
+      "curriculum_alias": "cause_effect_environment"
+    },
+    {
+      "reaction_id": "r015",
+      "band": "band_2",
+      "ingredients_required": ["dragon_tears"],
+      "outcome": "base_liquid_only",
+      "description": "Just water in the cauldron. Nothing happens yet.",
+      "visual_effect": "idle_ripple",
+      "sound_effect": "water_lap",
+      "real_world_concept": "baseline state — liquid in a container",
+      "curriculum_alias": "classify_liquid_solid"
+    }
+  ],
+  "potions": [
+    {
+      "potion_id": "invisibility_potion",
+      "display_name": "Invisibility Potion",
+      "band": "band_2",
+      "required_ingredients": ["dragon_tears", "star_dust"],
+      "optional_ingredients": [],
+      "completion_reaction": "r001",
+      "success_colour": "#E3F2FD",
+      "success_visual": "shimmer_fade",
+      "description": "A clear, shimmering potion that is barely visible in the cauldron.",
+      "curriculum_concept": "A solid dissolving completely in a liquid forms a clear solution."
+    },
+    {
+      "potion_id": "swamp_sludge",
+      "display_name": "Swamp Sludge Potion",
+      "band": "band_2",
+      "required_ingredients": ["swamp_water", "fine_mud"],
+      "optional_ingredients": ["dried_mushroom"],
+      "completion_reaction": "r004",
+      "success_colour": "#558B2F",
+      "success_visual": "murky_bubble",
+      "description": "A murky, green-brown potion with particles that slowly settle to the bottom.",
+      "curriculum_concept": "A suspension — solid particles that do not dissolve and eventually settle."
+    },
+    {
+      "potion_id": "rainbow_fizz",
+      "display_name": "Rainbow Fizz Potion",
+      "band": "band_3",
+      "required_ingredients": ["moonberry_juice", "fizzing_powder"],
+      "optional_ingredients": ["crystal_powder"],
+      "completion_reaction": "r007",
+      "success_colour": "#F48FB1",
+      "success_visual": "fizz_overflow",
+      "description": "A fizzing, bubbling potion that overflows with foam.",
+      "curriculum_concept": "A chemical reaction between an acid and a base produces a gas."
+    },
+    {
+      "potion_id": "colour_reveal_potion",
+      "display_name": "Colour Reveal Potion",
+      "band": "band_3",
+      "required_ingredients": ["enchanted_water", "blue_lotus_powder"],
+      "optional_ingredients": ["moonberry_juice", "stardust_alkaline"],
+      "completion_reaction": "r008",
+      "alternate_reactions": ["r009", "r010"],
+      "success_colour": "#1A237E",
+      "success_visual": "colour_shift",
+      "description": "A potion that changes colour depending on what is added — blue normally, red with moonberry juice, green with stardust.",
+      "curriculum_concept": "A pH indicator changes colour in different conditions, showing cause and effect."
+    },
+    {
+      "potion_id": "light_potion",
+      "display_name": "Light Potion",
+      "band": "band_3",
+      "required_ingredients": ["dragon_tears"],
+      "optional_ingredients": ["sun_crystal", "moonstone_powder"],
+      "completion_reaction": "r012",
+      "alternate_reactions": ["r013"],
+      "success_colour": "#FFD600",
+      "success_visual": "glow_strong",
+      "description": "A glowing potion — brighter with sun crystal, dimmer with moonstone. Good for variable comparison.",
+      "curriculum_concept": "Changing one ingredient (the variable) produces a measurably different outcome."
+    },
+    {
+      "potion_id": "sound_potion",
+      "display_name": "Echo Potion",
+      "band": "band_3",
+      "required_ingredients": ["enchanted_water", "sound_stone"],
+      "optional_ingredients": [],
+      "completion_reaction": "r014",
+      "success_colour": "#607D8B",
+      "success_visual": "ripple_rings",
+      "description": "A potion that hums and ripples — showing sound waves moving through the liquid.",
+      "curriculum_concept": "Sound travels as waves through a medium (the liquid)."
+    }
+  ]
+}

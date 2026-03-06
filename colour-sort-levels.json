@@ -1,0 +1,394 @@
+{
+  "schema_version": "1.1",
+  "game_id": "colour-sort",
+  "version": "1.0",
+  "last_updated": "2026-03-06",
+  "description": "Levels configuration for Colour Sort. Each level is a self-contained sorting puzzle. The game engine presents items and bins — the child drags items to the correct bin. No questions are asked; mastery is demonstrated by completing the sort correctly. Levels progress from single-attribute sorts (band 1) through two-attribute Venn and Carroll diagrams (band 2).",
+  "progression_rules": {
+    "warm_up_from_previous_band": true,
+    "warm_up_percentage": 0.25,
+    "mastery_threshold": 0.85,
+    "mastery_window": 8,
+    "unlock_on_mastery": true,
+    "note": "Levels unlock sequentially within a tier. A child must complete a level with 85% accuracy across 8 attempts before the next level unlocks. Band 1 sorts by a single visible attribute. Band 2 introduces two attributes and overlap (Venn) and grid (Carroll) layouts."
+  },
+  "tiers": [
+    {
+      "tier_id": "tier_1",
+      "band_id": "band_1",
+      "grade_id": "jk",
+      "display_label": "Starter Sorts",
+      "curriculum_aliases": ["sort_shapes_one_attribute", "identify_repeating_pattern"],
+      "sort_type": "single_attribute",
+      "layout": "two_bins",
+      "levels": [
+        {
+          "level_id": "cs_t1_l1",
+          "display_name": "Red or Blue?",
+          "sort_attribute": "colour",
+          "bins": [
+            { "bin_id": "red",  "label": "Red",  "colour": "#E53935" },
+            { "bin_id": "blue", "label": "Blue", "colour": "#1E88E5" }
+          ],
+          "items": [
+            { "item_id": "i1", "shape": "circle",   "colour": "red",  "bin": "red"  },
+            { "item_id": "i2", "shape": "square",   "colour": "blue", "bin": "blue" },
+            { "item_id": "i3", "shape": "triangle", "colour": "red",  "bin": "red"  },
+            { "item_id": "i4", "shape": "circle",   "colour": "blue", "bin": "blue" },
+            { "item_id": "i5", "shape": "square",   "colour": "red",  "bin": "red"  },
+            { "item_id": "i6", "shape": "triangle", "colour": "blue", "bin": "blue" }
+          ]
+        },
+        {
+          "level_id": "cs_t1_l2",
+          "display_name": "Circles or Squares?",
+          "sort_attribute": "shape",
+          "bins": [
+            { "bin_id": "circle", "label": "Circles" },
+            { "bin_id": "square", "label": "Squares" }
+          ],
+          "items": [
+            { "item_id": "i1", "shape": "circle", "colour": "red",    "bin": "circle" },
+            { "item_id": "i2", "shape": "square", "colour": "blue",   "bin": "square" },
+            { "item_id": "i3", "shape": "circle", "colour": "yellow", "bin": "circle" },
+            { "item_id": "i4", "shape": "square", "colour": "green",  "bin": "square" },
+            { "item_id": "i5", "shape": "circle", "colour": "red",    "bin": "circle" },
+            { "item_id": "i6", "shape": "square", "colour": "blue",   "bin": "square" }
+          ]
+        },
+        {
+          "level_id": "cs_t1_l3",
+          "display_name": "Big or Small?",
+          "sort_attribute": "size",
+          "bins": [
+            { "bin_id": "big",   "label": "Big"   },
+            { "bin_id": "small", "label": "Small" }
+          ],
+          "items": [
+            { "item_id": "i1", "shape": "circle",   "size": "big",   "colour": "red",    "bin": "big"   },
+            { "item_id": "i2", "shape": "circle",   "size": "small", "colour": "red",    "bin": "small" },
+            { "item_id": "i3", "shape": "square",   "size": "big",   "colour": "blue",   "bin": "big"   },
+            { "item_id": "i4", "shape": "square",   "size": "small", "colour": "blue",   "bin": "small" },
+            { "item_id": "i5", "shape": "triangle", "size": "big",   "colour": "yellow", "bin": "big"   },
+            { "item_id": "i6", "shape": "triangle", "size": "small", "colour": "yellow", "bin": "small" }
+          ]
+        },
+        {
+          "level_id": "cs_t1_l4",
+          "display_name": "Three Colours",
+          "sort_attribute": "colour",
+          "bins": [
+            { "bin_id": "red",    "label": "Red",    "colour": "#E53935" },
+            { "bin_id": "yellow", "label": "Yellow", "colour": "#FDD835" },
+            { "bin_id": "green",  "label": "Green",  "colour": "#43A047" }
+          ],
+          "items": [
+            { "item_id": "i1", "shape": "circle",   "colour": "red",    "bin": "red"    },
+            { "item_id": "i2", "shape": "square",   "colour": "yellow", "bin": "yellow" },
+            { "item_id": "i3", "shape": "triangle", "colour": "green",  "bin": "green"  },
+            { "item_id": "i4", "shape": "circle",   "colour": "yellow", "bin": "yellow" },
+            { "item_id": "i5", "shape": "square",   "colour": "green",  "bin": "green"  },
+            { "item_id": "i6", "shape": "triangle", "colour": "red",    "bin": "red"    }
+          ]
+        }
+      ]
+    },
+    {
+      "tier_id": "tier_2",
+      "band_id": "band_1",
+      "grade_id": "sk",
+      "display_label": "Pattern Sorts",
+      "curriculum_aliases": ["identify_pattern_core", "translate_pattern"],
+      "sort_type": "pattern_completion",
+      "layout": "sequence",
+      "note": "These levels present a partial sequence. The child drags the correct item into the gap. The game engine renders the pattern as a horizontal tile strip with one or more blanks.",
+      "levels": [
+        {
+          "level_id": "cs_t2_l1",
+          "display_name": "What Comes Next? (AB)",
+          "pattern_type": "AB",
+          "levels_detail": [
+            {
+              "sub_id": "a",
+              "sequence": ["red", "blue", "red", "blue", "red", "?"],
+              "answer": "blue",
+              "available_tiles": ["red", "blue", "green"]
+            },
+            {
+              "sub_id": "b",
+              "sequence": ["circle", "square", "circle", "square", "circle", "?"],
+              "answer": "square",
+              "available_tiles": ["circle", "square", "triangle"]
+            },
+            {
+              "sub_id": "c",
+              "sequence": ["big", "small", "big", "small", "big", "?"],
+              "answer": "small",
+              "available_tiles": ["big", "small", "medium"]
+            }
+          ]
+        },
+        {
+          "level_id": "cs_t2_l2",
+          "display_name": "Fill the Gap (AB)",
+          "pattern_type": "AB",
+          "levels_detail": [
+            {
+              "sub_id": "a",
+              "sequence": ["red", "blue", "?", "blue", "red", "blue"],
+              "missing_index": 2,
+              "answer": "red",
+              "available_tiles": ["red", "blue", "green"]
+            },
+            {
+              "sub_id": "b",
+              "sequence": ["circle", "?", "circle", "square", "circle", "square"],
+              "missing_index": 1,
+              "answer": "square",
+              "available_tiles": ["circle", "square", "triangle"]
+            }
+          ]
+        },
+        {
+          "level_id": "cs_t2_l3",
+          "display_name": "What Comes Next? (ABB)",
+          "pattern_type": "ABB",
+          "levels_detail": [
+            {
+              "sub_id": "a",
+              "sequence": ["red", "blue", "blue", "red", "blue", "blue", "red", "?"],
+              "answer": "blue",
+              "available_tiles": ["red", "blue", "green"]
+            },
+            {
+              "sub_id": "b",
+              "sequence": ["triangle", "circle", "circle", "triangle", "circle", "circle", "triangle", "?"],
+              "answer": "circle",
+              "available_tiles": ["triangle", "circle", "square"]
+            }
+          ]
+        },
+        {
+          "level_id": "cs_t2_l4",
+          "display_name": "What Comes Next? (ABC)",
+          "pattern_type": "ABC",
+          "levels_detail": [
+            {
+              "sub_id": "a",
+              "sequence": ["red", "green", "blue", "red", "green", "blue", "red", "?"],
+              "answer": "green",
+              "available_tiles": ["red", "green", "blue", "yellow"]
+            },
+            {
+              "sub_id": "b",
+              "sequence": ["circle", "square", "triangle", "circle", "square", "triangle", "circle", "?"],
+              "answer": "square",
+              "available_tiles": ["circle", "square", "triangle", "rectangle"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tier_id": "tier_3",
+      "band_id": "band_2",
+      "grade_id": "grade_1",
+      "display_label": "Rule Sorts",
+      "curriculum_aliases": ["sort_one_attribute"],
+      "sort_type": "single_attribute",
+      "layout": "two_bins",
+      "note": "Items are now thematic objects (animals, foods, everyday items) rather than abstract shapes. The rule is implicit — the child must infer it from the items rather than being told the sort attribute explicitly in later levels.",
+      "levels": [
+        {
+          "level_id": "cs_t3_l1",
+          "display_name": "Flies or Doesn't Fly?",
+          "sort_attribute": "can_fly",
+          "bins": [
+            { "bin_id": "can_fly",    "label": "Can Fly"        },
+            { "bin_id": "cannot_fly", "label": "Cannot Fly"     }
+          ],
+          "items": [
+            { "item_id": "i1", "name": "butterfly",  "can_fly": true,  "bin": "can_fly"    },
+            { "item_id": "i2", "name": "rock",        "can_fly": false, "bin": "cannot_fly" },
+            { "item_id": "i3", "name": "eagle",       "can_fly": true,  "bin": "can_fly"    },
+            { "item_id": "i4", "name": "boot",        "can_fly": false, "bin": "cannot_fly" },
+            { "item_id": "i5", "name": "ladybird",    "can_fly": true,  "bin": "can_fly"    },
+            { "item_id": "i6", "name": "chair",       "can_fly": false, "bin": "cannot_fly" }
+          ]
+        },
+        {
+          "level_id": "cs_t3_l2",
+          "display_name": "Lives in Water or on Land?",
+          "sort_attribute": "habitat",
+          "bins": [
+            { "bin_id": "water", "label": "Lives in Water" },
+            { "bin_id": "land",  "label": "Lives on Land"  }
+          ],
+          "items": [
+            { "item_id": "i1", "name": "fish",       "habitat": "water", "bin": "water" },
+            { "item_id": "i2", "name": "cat",        "habitat": "land",  "bin": "land"  },
+            { "item_id": "i3", "name": "crab",       "habitat": "water", "bin": "water" },
+            { "item_id": "i4", "name": "horse",      "habitat": "land",  "bin": "land"  },
+            { "item_id": "i5", "name": "jellyfish",  "habitat": "water", "bin": "water" },
+            { "item_id": "i6", "name": "rabbit",     "habitat": "land",  "bin": "land"  }
+          ]
+        },
+        {
+          "level_id": "cs_t3_l3",
+          "display_name": "3 Sides or 4 Sides?",
+          "sort_attribute": "sides",
+          "bins": [
+            { "bin_id": "3", "label": "3 Sides" },
+            { "bin_id": "4", "label": "4 Sides" }
+          ],
+          "items": [
+            { "item_id": "i1", "shape": "triangle",  "sides": 3, "bin": "3" },
+            { "item_id": "i2", "shape": "square",    "sides": 4, "bin": "4" },
+            { "item_id": "i3", "shape": "triangle",  "sides": 3, "bin": "3" },
+            { "item_id": "i4", "shape": "rectangle", "sides": 4, "bin": "4" },
+            { "item_id": "i5", "shape": "triangle",  "sides": 3, "bin": "3" },
+            { "item_id": "i6", "shape": "rhombus",   "sides": 4, "bin": "4" }
+          ]
+        },
+        {
+          "level_id": "cs_t3_l4",
+          "display_name": "Fruit or Vegetable?",
+          "sort_attribute": "food_type",
+          "bins": [
+            { "bin_id": "fruit",     "label": "Fruit"     },
+            { "bin_id": "vegetable", "label": "Vegetable" }
+          ],
+          "items": [
+            { "item_id": "i1", "name": "apple",    "food_type": "fruit",     "bin": "fruit"     },
+            { "item_id": "i2", "name": "carrot",   "food_type": "vegetable", "bin": "vegetable" },
+            { "item_id": "i3", "name": "banana",   "food_type": "fruit",     "bin": "fruit"     },
+            { "item_id": "i4", "name": "broccoli", "food_type": "vegetable", "bin": "vegetable" },
+            { "item_id": "i5", "name": "grape",    "food_type": "fruit",     "bin": "fruit"     },
+            { "item_id": "i6", "name": "potato",   "food_type": "vegetable", "bin": "vegetable" }
+          ]
+        },
+        {
+          "level_id": "cs_t3_l5",
+          "display_name": "What's the Rule? (Infer the Rule)",
+          "sort_attribute": "inferred",
+          "note": "Items are pre-sorted into two groups. The child must tap the correct rule label from options. Game engine shows two completed bins and presents rule options as buttons.",
+          "levels_detail": [
+            {
+              "sub_id": "a",
+              "bin_a_label": "Group A",
+              "bin_a_items": ["dog", "cat", "horse", "rabbit"],
+              "bin_b_label": "Group B",
+              "bin_b_items": ["eagle", "parrot", "penguin", "duck"],
+              "answer": "animals with fur vs animals with feathers",
+              "distractors": ["big vs small", "fast vs slow", "wild vs pets"]
+            },
+            {
+              "sub_id": "b",
+              "bin_a_label": "Group A",
+              "bin_a_items": ["hammer", "saw", "drill", "wrench"],
+              "bin_b_label": "Group B",
+              "bin_b_items": ["pencil", "ruler", "eraser", "scissors"],
+              "answer": "tools for building vs tools for school",
+              "distractors": ["heavy vs light", "old vs new", "red vs blue"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tier_id": "tier_4",
+      "band_id": "band_2",
+      "grade_id": "grade_2",
+      "display_label": "Venn and Carroll Sorts",
+      "curriculum_aliases": ["sort_two_attributes_venn"],
+      "sort_type": "two_attributes",
+      "note": "Two-attribute sorting using Venn diagrams (overlapping circles) and Carroll diagrams (2×2 grid). Items with both attributes go in the overlap zone. Items with neither go outside all bins (Venn) or in the appropriate grid cell (Carroll).",
+      "levels": [
+        {
+          "level_id": "cs_t4_l1",
+          "display_name": "Red and Round (Venn)",
+          "layout": "venn",
+          "attribute_a": "red",
+          "attribute_b": "round",
+          "bins": {
+            "a_only":  { "label": "Red but not round"  },
+            "overlap": { "label": "Red AND round"      },
+            "b_only":  { "label": "Round but not red"  },
+            "neither": { "label": "Neither"            }
+          },
+          "items": [
+            { "item_id": "i1", "name": "red circle",    "red": true,  "round": true,  "bin": "overlap" },
+            { "item_id": "i2", "name": "blue circle",   "red": false, "round": true,  "bin": "b_only"  },
+            { "item_id": "i3", "name": "red square",    "red": true,  "round": false, "bin": "a_only"  },
+            { "item_id": "i4", "name": "blue square",   "red": false, "round": false, "bin": "neither" },
+            { "item_id": "i5", "name": "red oval",      "red": true,  "round": true,  "bin": "overlap" },
+            { "item_id": "i6", "name": "yellow circle", "red": false, "round": true,  "bin": "b_only"  }
+          ]
+        },
+        {
+          "level_id": "cs_t4_l2",
+          "display_name": "Wings and Water (Venn)",
+          "layout": "venn",
+          "attribute_a": "has_wings",
+          "attribute_b": "lives_in_water",
+          "bins": {
+            "a_only":  { "label": "Wings but not water" },
+            "overlap": { "label": "Wings AND water"     },
+            "b_only":  { "label": "Water but not wings" },
+            "neither": { "label": "Neither"             }
+          },
+          "items": [
+            { "item_id": "i1", "name": "duck",       "has_wings": true,  "lives_in_water": true,  "bin": "overlap" },
+            { "item_id": "i2", "name": "eagle",      "has_wings": true,  "lives_in_water": false, "bin": "a_only"  },
+            { "item_id": "i3", "name": "fish",       "has_wings": false, "lives_in_water": true,  "bin": "b_only"  },
+            { "item_id": "i4", "name": "dog",        "has_wings": false, "lives_in_water": false, "bin": "neither" },
+            { "item_id": "i5", "name": "swan",       "has_wings": true,  "lives_in_water": true,  "bin": "overlap" },
+            { "item_id": "i6", "name": "butterfly",  "has_wings": true,  "lives_in_water": false, "bin": "a_only"  }
+          ]
+        },
+        {
+          "level_id": "cs_t4_l3",
+          "display_name": "Even and Less Than 10 (Carroll)",
+          "layout": "carroll",
+          "attribute_a": { "label": "Even", "inverse_label": "Odd"          },
+          "attribute_b": { "label": "Less than 10", "inverse_label": "10 or more" },
+          "bins": {
+            "a_b":       { "label": "Even AND less than 10"     },
+            "a_not_b":   { "label": "Even AND 10 or more"       },
+            "not_a_b":   { "label": "Odd AND less than 10"      },
+            "not_a_not_b":{ "label": "Odd AND 10 or more"       }
+          },
+          "items": [
+            { "item_id": "i1", "value": 4,  "even": true,  "less_than_10": true,  "bin": "a_b"        },
+            { "item_id": "i2", "value": 7,  "even": false, "less_than_10": true,  "bin": "not_a_b"    },
+            { "item_id": "i3", "value": 12, "even": true,  "less_than_10": false, "bin": "a_not_b"    },
+            { "item_id": "i4", "value": 15, "even": false, "less_than_10": false, "bin": "not_a_not_b"},
+            { "item_id": "i5", "value": 2,  "even": true,  "less_than_10": true,  "bin": "a_b"        },
+            { "item_id": "i6", "value": 20, "even": true,  "less_than_10": false, "bin": "a_not_b"    }
+          ]
+        },
+        {
+          "level_id": "cs_t4_l4",
+          "display_name": "Sharp and Metal (Venn)",
+          "layout": "venn",
+          "attribute_a": "sharp",
+          "attribute_b": "made_of_metal",
+          "bins": {
+            "a_only":  { "label": "Sharp but not metal" },
+            "overlap": { "label": "Sharp AND metal"     },
+            "b_only":  { "label": "Metal but not sharp" },
+            "neither": { "label": "Neither"             }
+          },
+          "items": [
+            { "item_id": "i1", "name": "knife",       "sharp": true,  "made_of_metal": true,  "bin": "overlap" },
+            { "item_id": "i2", "name": "pencil",      "sharp": true,  "made_of_metal": false, "bin": "a_only"  },
+            { "item_id": "i3", "name": "metal spoon", "sharp": false, "made_of_metal": true,  "bin": "b_only"  },
+            { "item_id": "i4", "name": "sponge",      "sharp": false, "made_of_metal": false, "bin": "neither" },
+            { "item_id": "i5", "name": "scissors",    "sharp": true,  "made_of_metal": true,  "bin": "overlap" },
+            { "item_id": "i6", "name": "wooden stick","sharp": true,  "made_of_metal": false, "bin": "a_only"  }
+          ]
+        }
+      ]
+    }
+  ]
+}

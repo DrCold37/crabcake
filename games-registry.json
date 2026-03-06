@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.1",
+  "last_updated": "2026-03-06",
+  "games": [
+    {
+      "game_id": "math-dive",
+      "display_name": { "en": "Math Dive",     "fr": "Plongée mathématique" },
+      "file": "maths-dive.html",
+      "subjects": ["numeracy"],
+      "bands": ["band_1", "band_2", "band_3"],
+      "data_file": "math-dive-questions.json",
+      "data_type": "question_sets"
+    },
+    {
+      "game_id": "colour-sort",
+      "display_name": { "en": "Colour Sort",   "fr": "Tri de couleurs" },
+      "file": "color-sort-game.html",
+      "subjects": ["numeracy", "science"],
+      "bands": ["band_1", "band_2"],
+      "data_file": "colour-sort-levels.json",
+      "data_type": "levels"
+    },
+    {
+      "game_id": "jungle-words",
+      "display_name": { "en": "Jungle Words",  "fr": "Mots de la jungle" },
+      "file": "jungle-words.html",
+      "subjects": ["literacy"],
+      "bands": ["band_1", "band_2", "band_3"],
+      "domains": ["phonics", "grammar"],
+      "data_file": "jungle-words-questions.json",
+      "data_type": "question_sets"
+    },
+    {
+      "game_id": "kitchen-lab",
+      "display_name": { "en": "Kitchen Lab",   "fr": "Laboratoire de cuisine" },
+      "file": "kitchen-lab.html",
+      "subjects": ["science"],
+      "bands": ["band_1", "band_2", "band_3"],
+      "data_file": "kitchen-lab-questions.json",
+      "data_type": "question_sets"
+    },
+    {
+      "game_id": "potion-game",
+      "display_name": { "en": "Witch's Brew",  "fr": "Potion de sorcière" },
+      "file": "potion-game.html",
+      "subjects": ["science"],
+      "bands": ["band_2", "band_3"],
+      "data_file": "potion-game-experiments.json",
+      "data_type": "experiments"
+    }
+  ]
+}
