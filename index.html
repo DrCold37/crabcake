@@ -769,6 +769,140 @@
   }
   .transfer-status.ok  { color: var(--teal); }
   .transfer-status.err { color: #ff6b6b; }
+
+  /* ── CURRICULUM BADGE ── */
+  .curriculum-badge {
+    max-width: 700px;
+    margin: 0 auto 2rem;
+    padding: 0 2rem;
+  }
+  .curriculum-badge-inner {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    background: rgba(255,255,255,0.04);
+    border: 1.5px solid rgba(255,255,255,0.1);
+    border-left: 4px solid var(--teal);
+    border-radius: 16px;
+    padding: 1.1rem 1.4rem;
+  }
+  .curriculum-flag {
+    font-size: 2rem;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .curriculum-title {
+    font-size: 0.65rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--teal);
+    margin-bottom: 0.4rem;
+  }
+  .curriculum-body {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+  }
+  .curriculum-future {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.35);
+    line-height: 1.5;
+    font-style: italic;
+  }
+  @media(max-width: 560px) {
+    .curriculum-badge-inner { flex-direction: column; gap: 0.6rem; }
+    .curriculum-flag { font-size: 1.6rem; }
+  }
+
+  /* ── GRADE SELECTOR ── */
+  :root {
+    --band-1-col: #FFD93D;
+    --band-2-col: #00C9B1;
+    --band-3-col: #A66CFF;
+  }
+  .selector-section { margin: 0 auto 2rem; max-width: 1200px; padding: 0 2rem; }
+  .selector-label {
+    text-align: center; font-size: 1rem; font-weight: 800;
+    color: var(--teal); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 1rem;
+  }
+  .band-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .band-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 0.45rem;
+    padding: 1rem 1.4rem 0.9rem; border-radius: 20px; border: 3px solid transparent;
+    background: rgba(255,255,255,0.06); cursor: pointer;
+    transition: transform 0.15s, background 0.15s, border-color 0.15s, box-shadow 0.15s;
+    min-width: 130px; text-align: center; position: relative; overflow: hidden;
+    font-family: 'Nunito', sans-serif;
+  }
+  .band-btn::before {
+    content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity 0.2s;
+  }
+  .band-btn[data-band="band_1"]::before { background: radial-gradient(circle at 50% 0%, rgba(255,217,61,0.18), transparent 70%); }
+  .band-btn[data-band="band_2"]::before { background: radial-gradient(circle at 50% 0%, rgba(0,201,177,0.18), transparent 70%); }
+  .band-btn[data-band="band_3"]::before { background: radial-gradient(circle at 50% 0%, rgba(166,108,255,0.18), transparent 70%); }
+  .band-btn:hover { transform: translateY(-3px); background: rgba(255,255,255,0.1); }
+  .band-btn:hover::before { opacity: 1; }
+  .band-btn.active { transform: translateY(-4px); background: rgba(255,255,255,0.1); }
+  .band-btn.active::before { opacity: 1; }
+  .band-btn[data-band="band_1"].active { border-color: var(--band-1-col); box-shadow: 0 0 0 3px rgba(255,217,61,0.2), 0 8px 24px rgba(255,217,61,0.15); }
+  .band-btn[data-band="band_2"].active { border-color: var(--band-2-col); box-shadow: 0 0 0 3px rgba(0,201,177,0.2), 0 8px 24px rgba(0,201,177,0.15); }
+  .band-btn[data-band="band_3"].active { border-color: var(--band-3-col); box-shadow: 0 0 0 3px rgba(166,108,255,0.2), 0 8px 24px rgba(166,108,255,0.15); }
+  .band-btn .band-emoji { font-size: 2rem; line-height: 1; }
+  .band-btn .band-age { font-size: 1.25rem; font-weight: 900; line-height: 1.1; }
+  .band-btn .band-label { font-size: 0.72rem; font-weight: 700; opacity: 0.65; text-transform: uppercase; letter-spacing: 0.5px; }
+  .band-btn[data-band="band_1"] .band-age { color: var(--band-1-col); }
+  .band-btn[data-band="band_2"] .band-age { color: var(--band-2-col); }
+  .band-btn[data-band="band_3"] .band-age { color: var(--band-3-col); }
+  .band-btn .tick {
+    display: none; position: absolute; top: 9px; right: 9px;
+    width: 18px; height: 18px; border-radius: 50%; font-size: 0.6rem;
+    align-items: center; justify-content: center; font-weight: 900;
+  }
+  .band-btn[data-band="band_1"] .tick { background: var(--band-1-col); color: var(--navy); }
+  .band-btn[data-band="band_2"] .tick { background: var(--band-2-col); color: var(--navy); }
+  .band-btn[data-band="band_3"] .tick { background: var(--band-3-col); color: var(--navy); }
+  .band-btn.active .tick { display: flex; }
+
+  /* section pill */
+  .section-band-pill {
+    display: inline-block; font-size: 0.75rem; font-weight: 800;
+    padding: 0.3rem 1rem; border-radius: 50px; margin: 1rem auto 0;
+    text-align: center; opacity: 0; transition: opacity 0.25s; white-space: nowrap;
+  }
+  .section-band-pill.visible { opacity: 1; }
+  .section-band-pill.band1 { background: rgba(255,217,61,0.18); color: var(--band-1-col); border: 1px solid rgba(255,217,61,0.4); }
+  .section-band-pill.band2 { background: rgba(0,201,177,0.15); color: var(--band-2-col); border: 1px solid rgba(0,201,177,0.4); }
+  .section-band-pill.band3 { background: rgba(166,108,255,0.15); color: var(--band-3-col); border: 1px solid rgba(166,108,255,0.4); }
+
+  /* dimmed / highlighted game cards */
+  .game-card.dimmed { opacity: 0.3; pointer-events: none; transform: none !important; }
+  .game-card.highlighted { border-color: rgba(255,255,255,0.18); }
+
+  /* grade links inside card */
+  .grade-links { display: none; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.8rem; }
+  .grade-links.visible { display: flex; }
+  .grade-link {
+    font-size: 0.72rem; font-weight: 800; padding: 0.22rem 0.75rem;
+    border-radius: 50px; text-decoration: none; transition: opacity 0.15s;
+    border: 1.5px solid transparent;
+  }
+  .grade-link:hover { opacity: 0.8; }
+  .grade-link.band1 { background: rgba(255,217,61,0.15); color: var(--band-1-col); border-color: rgba(255,217,61,0.4); }
+  .grade-link.band2 { background: rgba(0,201,177,0.12); color: var(--band-2-col); border-color: rgba(0,201,177,0.4); }
+  .grade-link.band3 { background: rgba(166,108,255,0.12); color: var(--band-3-col); border-color: rgba(166,108,255,0.4); }
+
+  /* no-selection hint */
+  .no-selection-hint {
+    text-align: center; color: rgba(255,255,255,0.4);
+    font-size: 0.9rem; font-weight: 700; margin: 1.5rem auto 0;
+    max-width: 1200px; padding: 0 2rem;
+  }
+  .hint-arrow { margin-right: 6px; }
 </style>
 
   <script type="application/ld+json">
@@ -975,13 +1109,60 @@
     </svg>
   </div>
 
-  <!-- FEATURED GAMES -->
   <section id="games">
     <h2 class="section-title" style="color:var(--teal)">🌟 Featured Games</h2>
-    <p class="section-sub">Play our games now — more exciting adventures coming soon!</p>
+    <p class="section-sub">Pick your age group — then tap a game to play!</p>
+
+    <!-- CURRICULUM BADGE -->
+    <div class="curriculum-badge">
+      <div class="curriculum-badge-inner">
+        <div class="curriculum-flag">🍁</div>
+        <div class="curriculum-text">
+          <div class="curriculum-title">Ontario Curriculum Aligned</div>
+          <div class="curriculum-body">All game content is designed to reflect the Ontario, Canada Ministry of Education standards — covering Mathematics, Language, and Science &amp; Technology from Kindergarten through Grade 4.</div>
+          <div class="curriculum-future">More curriculums coming soon, including other Canadian provinces, the UK, and Common Core (US).</div>
+        </div>
+      </div>
+    </div>
+    <div class="selector-section">
+      <div class="selector-label">Who's playing today?</div>
+      <div class="band-buttons">
+        <button class="band-btn" data-band="band_1" onclick="selectBand('band_1')">
+          <span class="tick">✓</span>
+          <span class="band-emoji">🌱</span>
+          <span class="band-age">Ages 4–6</span>
+          <span class="band-label">JK / SK</span>
+        </button>
+        <button class="band-btn" data-band="band_2" onclick="selectBand('band_2')">
+          <span class="tick">✓</span>
+          <span class="band-emoji">🌿</span>
+          <span class="band-age">Ages 6–8</span>
+          <span class="band-label">Grade 1 &amp; 2</span>
+        </button>
+        <button class="band-btn" data-band="band_3" onclick="selectBand('band_3')">
+          <span class="tick">✓</span>
+          <span class="band-emoji">🌳</span>
+          <span class="band-age">Ages 8–10</span>
+          <span class="band-label">Grade 3 &amp; 4</span>
+        </button>
+      </div>
+      <div style="text-align:center;">
+        <span class="section-band-pill" id="bandPill"></span>
+      </div>
+    </div>
+
+    <div class="no-selection-hint" id="selectionHint">
+      <span class="hint-arrow">☝️</span>Pick your age group above to see games made just for you!
+    </div>
+
     <div class="games-grid" style="max-width:1200px;">
 
-      <div class="game-card" onclick="window.location.href='/games/maths-dive.html'" style="cursor:pointer;">
+      <a class="game-card" id="card-maths-dive"
+         data-bands='["band_1","band_2","band_3"]'
+         data-subject="numeracy"
+         data-grades='{"band_1":"JK / SK","band_2":"Grade 1 &amp; 2","band_3":"Grade 3 &amp; 4"}'
+         data-file="/games/maths-dive.html"
+         href="/games/maths-dive.html">
         <div class="game-thumb" style="background:linear-gradient(135deg,#0a3060,#0d2044)">🤿</div>
         <div class="game-info">
           <h3>Math Dive</h3>
@@ -991,10 +1172,16 @@
             <span class="tag tag-cat">Maths</span>
             <span class="tag tag-new">🆕 New</span>
           </div>
+          <div class="grade-links" id="links-maths-dive"></div>
         </div>
-      </div>
+      </a>
 
-      <div class="game-card" onclick="window.location.href='/games/jungle-words.html'" style="cursor:pointer;">
+      <a class="game-card" id="card-jungle-words"
+         data-bands='["band_1","band_2","band_3"]'
+         data-subject="literacy"
+         data-grades='{"band_1":"JK / SK","band_2":"Grade 1 &amp; 2","band_3":"Grade 3 &amp; 4"}'
+         data-file="/games/jungle-words.html"
+         href="/games/jungle-words.html">
         <div class="game-thumb" style="background:linear-gradient(135deg,#0d2818,#1a4a2e)">🦁</div>
         <div class="game-info">
           <h3>Jungle Words</h3>
@@ -1004,23 +1191,35 @@
             <span class="tag tag-cat">Reading</span>
             <span class="tag tag-new">🆕 New</span>
           </div>
+          <div class="grade-links" id="links-jungle-words"></div>
         </div>
-      </div>
+      </a>
 
-      <div class="game-card" onclick="window.location.href='/games/potion-game.html'" style="cursor:pointer;">
+      <a class="game-card" id="card-potion-game"
+         data-bands='["band_1","band_2","band_3"]'
+         data-subject="science"
+         data-grades='{"band_1":"JK / SK","band_2":"Grade 1 &amp; 2","band_3":"Grade 3 &amp; 4"}'
+         data-file="/games/potion-game.html"
+         href="/games/potion-game.html">
         <div class="game-thumb" style="background:linear-gradient(135deg,#2a0a4a,#160d26)">🧙‍♀️</div>
         <div class="game-info">
           <h3>Witch's Brew Workshop</h3>
           <p>Mix magical potions, collect rare ingredients, and cast spells in this enchanting creative adventure!</p>
           <div class="game-tags">
             <span class="tag tag-age">Ages 5–10</span>
-            <span class="tag tag-cat">Art & Music</span>
+            <span class="tag tag-cat">Art &amp; Music</span>
             <span class="tag tag-new">🆕 New</span>
           </div>
+          <div class="grade-links" id="links-potion-game"></div>
         </div>
-      </div>
+      </a>
 
-      <div class="game-card" onclick="window.location.href='/games/color-sort-game.html'" style="cursor:pointer;">
+      <a class="game-card" id="card-colour-sort"
+         data-bands='["band_1","band_2","band_3"]'
+         data-subject="numeracy"
+         data-grades='{"band_1":"JK / SK","band_2":"Grade 1 &amp; 2","band_3":"Grade 3 &amp; 4"}'
+         data-file="/games/color-sort-game.html"
+         href="/games/color-sort-game.html">
         <div class="game-thumb" style="background:linear-gradient(135deg,#1a2a3e,#0d1826)">🧪</div>
         <div class="game-info">
           <h3>Tube Sort</h3>
@@ -1030,10 +1229,16 @@
             <span class="tag tag-cat">Puzzles</span>
             <span class="tag tag-new">🆕 New</span>
           </div>
+          <div class="grade-links" id="links-colour-sort"></div>
         </div>
-      </div>
+      </a>
 
-      <div class="game-card" onclick="window.location.href='/games/kitchen-lab.html'" style="cursor:pointer;">
+      <a class="game-card" id="card-kitchen-lab"
+         data-bands='["band_1","band_2","band_3"]'
+         data-subject="science"
+         data-grades='{"band_1":"JK / SK","band_2":"Grade 1 &amp; 2","band_3":"Grade 3 &amp; 4"}'
+         data-file="/games/kitchen-lab.html"
+         href="/games/kitchen-lab.html">
         <div class="game-thumb" style="background:linear-gradient(135deg,#0a2a1a,#0d3320)">👨‍🔬</div>
         <div class="game-info">
           <h3>Kitchen Lab</h3>
@@ -1043,11 +1248,11 @@
             <span class="tag tag-cat">Science</span>
             <span class="tag tag-new">🆕 New</span>
           </div>
+          <div class="grade-links" id="links-kitchen-lab"></div>
         </div>
-      </div>
+      </a>
 
-    </div>
-  
+    </div><!-- /games-grid -->
 
 
   <!-- STATS -->
@@ -1538,6 +1743,111 @@
       });
     }
   </script>
+<script>
+  // ── GRADE SELECTOR ──────────────────────────────────────────────────────────
+  const BANDS = {
+    band_1: {
+      label: 'Ages 4–6 · JK / SK',
+      pillClass: 'band1', linkClass: 'band1',
+      grades: [
+        { id: 'jk', label: '🌱 JK' },
+        { id: 'sk', label: '🌱 SK' }
+      ]
+    },
+    band_2: {
+      label: 'Ages 6–8 · Grade 1 & 2',
+      pillClass: 'band2', linkClass: 'band2',
+      grades: [
+        { id: 'grade_1', label: '🌿 Grade 1' },
+        { id: 'grade_2', label: '🌿 Grade 2' }
+      ]
+    },
+    band_3: {
+      label: 'Ages 8–10 · Grade 3 & 4',
+      pillClass: 'band3', linkClass: 'band3',
+      grades: [
+        { id: 'grade_3', label: '🌳 Grade 3' },
+        { id: 'grade_4', label: '🌳 Grade 4' }
+      ]
+    }
+  };
+
+  let activeBand = localStorage.getItem('ck_band') || null;
+  if (activeBand) selectBand(activeBand, false);
+
+  function selectBand(band, save = true) {
+    // Toggle off if same band clicked again
+    if (activeBand === band) {
+      activeBand = null;
+      localStorage.removeItem('ck_band');
+      resetCards();
+      return;
+    }
+
+    activeBand = band;
+    if (save) localStorage.setItem('ck_band', band);
+
+    const config = BANDS[band];
+
+    document.querySelectorAll('.band-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.band === band);
+    });
+
+    const pill = document.getElementById('bandPill');
+    pill.textContent = config.label;
+    pill.className = `section-band-pill visible ${config.pillClass}`;
+
+    document.getElementById('selectionHint').style.display = 'none';
+
+    document.querySelectorAll('.game-card').forEach(card => {
+      const cardBands = JSON.parse(card.dataset.bands || '[]');
+      const cardFile  = card.dataset.file;
+      const inBand    = cardBands.includes(band);
+
+      card.classList.toggle('dimmed', !inBand);
+      card.classList.toggle('highlighted', inBand);
+
+      if (inBand) {
+        card.href = `${cardFile}?band=${band}`;
+      } else {
+        card.href = cardFile;
+      }
+
+      const cardId  = card.id ? card.id.replace('card-', '') : null;
+      if (!cardId) return;
+      const linksEl = document.getElementById(`links-${cardId}`);
+      if (!linksEl) return;
+
+      if (inBand) {
+        linksEl.innerHTML = config.grades.map(g =>
+          `<a class="grade-link ${config.linkClass}"
+              href="${cardFile}?band=${band}&grade=${g.id}"
+              onclick="event.stopPropagation()">${g.label}</a>`
+        ).join('');
+        linksEl.classList.add('visible');
+      } else {
+        linksEl.innerHTML = '';
+        linksEl.classList.remove('visible');
+      }
+    });
+  }
+
+  function resetCards() {
+    document.querySelectorAll('.band-btn').forEach(b => b.classList.remove('active'));
+    const pill = document.getElementById('bandPill');
+    pill.className = 'section-band-pill';
+    pill.textContent = '';
+    document.getElementById('selectionHint').style.display = '';
+    document.querySelectorAll('.game-card').forEach(card => {
+      card.classList.remove('dimmed', 'highlighted');
+      if (card.dataset.file) card.href = card.dataset.file;
+      const cardId  = card.id ? card.id.replace('card-', '') : null;
+      if (!cardId) return;
+      const linksEl = document.getElementById(`links-${cardId}`);
+      if (linksEl) { linksEl.innerHTML = ''; linksEl.classList.remove('visible'); }
+    });
+  }
+</script>
 <script>
     // ── BADGE TRANSFER ──
     const TRANSFER_KEYS = [
