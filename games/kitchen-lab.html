@@ -1,0 +1,1842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="description" content="Kitchen Lab is a free science game for kids ages 5–10. Mix ingredients, trigger reactions and discover chemistry — from states of matter to chemical reactions. Play free on Crabcake Kids!"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#00C9B1">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Crabcake">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <title>[v2.4] Kitchen Lab 👨‍🔬 – Free Science Game for Kids Ages 5–10 | Crabcake Kids</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@700;800;900&display=swap" media="print" onload="this.media='all'"/>
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@700;800;900&display=swap"/></noscript>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#0d1b2a; --deep:#0a1520;
+  --teal:#00C9B1; --teal2:#00a896;
+  --yellow:#FFD93D; --coral:#FF5C5C;
+  --orange:#FF9040; --green:#4ECB71;
+  --purple:#A66CFF; --sky:#6ECBF5;
+  --white:#ffffff;
+}
+
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:'Nunito',sans-serif;touch-action:manipulation}
+
+/* ── BACKGROUND BUBBLES ── */
+.lab-bg{position:fixed;inset:0;z-index:0;overflow:hidden;
+  background:radial-gradient(ellipse at 20% 50%,rgba(0,201,177,.07) 0%,transparent 60%),
+             radial-gradient(ellipse at 80% 20%,rgba(166,108,255,.07) 0%,transparent 50%),
+             var(--bg)}
+.bubble-wrap{position:absolute;inset:0;pointer-events:none}
+/* molecules removed */
+/* ── ELECTRIC ARCS ── */
+.arc-svg{position:absolute;pointer-events:none;opacity:0;animation:arcFlicker ease-in-out infinite}
+@keyframes arcFlicker{
+  0%,100%{opacity:0}2%{opacity:.7}4%{opacity:.1}6%{opacity:.6}8%{opacity:0}50%{opacity:0}52%{opacity:.5}54%{opacity:0}
+}
+/* ── STEAM ── */
+.steam-puff{position:absolute;bottom:0;border-radius:50%;background:radial-gradient(circle,rgba(180,230,255,.35) 0%,rgba(0,201,177,.12) 50%,transparent 75%);animation:steamRise ease-out infinite;opacity:0;pointer-events:none;filter:blur(4px)}
+@keyframes steamRise{
+  0%  {transform:translateY(0) scaleX(1) scaleY(1);opacity:0}
+  10% {opacity:.75}
+  50% {transform:translateY(-40vh) scaleX(3.2) scaleY(1.4);opacity:.55}
+  80% {opacity:.3}
+  100%{transform:translateY(-85vh) scaleX(5) scaleY(2);opacity:0}
+}
+
+/* ── SCREENS ── */
+.screen{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem;overflow:hidden}
+.screen.hidden{display:none}
+
+/* ── START SCREEN ── */
+#startScreen{gap:0;padding:1.5rem 1rem}
+.lab-icon{font-size:4rem;margin-bottom:.3rem;animation:iconSpin 3s ease-in-out infinite;display:inline-block}
+@keyframes iconSpin{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-12px) rotate(8deg)}}
+@keyframes titleBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes btnPulse{0%,100%{transform:scale(1);box-shadow:0 4px 24px rgba(0,201,177,.45)}50%{transform:scale(1.05);box-shadow:0 6px 32px rgba(0,201,177,.75)}}
+.game-title{font-family:'Boogaloo',cursive;font-size:clamp(2.4rem,8vw,4rem);color:var(--teal);text-shadow:0 3px 12px rgba(0,201,177,.4);text-align:center;line-height:1;margin-bottom:.2rem;animation:titleBob 2.5s ease-in-out infinite;animation-delay:.5s;display:inline-block}
+.game-subtitle{color:rgba(255,255,255,.5);font-size:.8rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:1.4rem}
+.age-grid{display:flex;gap:.9rem;flex-wrap:wrap;justify-content:center;width:100%;max-width:480px;margin-bottom:1rem}
+.age-btn{padding:.9rem 1.4rem;border-radius:16px;border:2px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fff;cursor:pointer;transition:all .2s;text-align:center;font-family:'Nunito',sans-serif;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:120px;align-items:center;gap:.15rem}
+.age-btn:hover{transform:translateY(-3px);background:rgba(0,201,177,.15);border-color:var(--teal)}
+.age-btn.selected{transform:translateY(-3px)}
+.age-btn[data-age="5"]{border-color:rgba(0,201,177,.45)}
+.age-btn[data-age="7"]{border-color:rgba(255,213,79,.45)}
+.age-btn[data-age="9"]{border-color:rgba(255,107,107,.45)}
+.age-btn[data-age="5"].selected{border-color:var(--teal);background:rgba(0,201,177,.2);box-shadow:0 0 16px rgba(0,201,177,.35)}
+.age-btn[data-age="7"].selected{border-color:#FFD54F;background:rgba(255,213,79,.15);box-shadow:0 0 16px rgba(255,213,79,.35)}
+.age-btn[data-age="9"].selected{border-color:#FF6B6B;background:rgba(255,107,107,.15);box-shadow:0 0 16px rgba(255,107,107,.35)}
+.start-exp-btn{margin-top:.6rem;padding:.75rem 2rem;border-radius:50px;border:none;font-family:'Boogaloo',cursive;font-size:1.2rem;cursor:pointer;transition:all .25s;
+  background:linear-gradient(135deg,var(--teal),var(--purple));color:#fff;box-shadow:0 4px 24px rgba(0,201,177,.45),0 2px 8px rgba(0,0,0,.35)}
+.start-exp-btn:not(:disabled).active{animation:btnPulse 1.2s ease-in-out infinite}
+.start-exp-btn:disabled{background:rgba(255,255,255,.1);box-shadow:none;color:rgba(255,255,255,.3);cursor:not-allowed}
+.start-exp-btn:not(:disabled):hover{transform:translateY(-2px) scale(1.04);box-shadow:0 8px 28px rgba(0,201,177,.45)}
+/* ── BAND DISPLAY ── */
+#bandDisplay{margin:.6rem 0 1.2rem;display:flex;flex-direction:column;align-items:center;gap:.6rem;min-height:76px;justify-content:center}
+.band-pill{display:inline-flex;align-items:center;gap:.5rem;padding:.55rem 1.4rem;border-radius:50px;font-size:1.05rem;font-weight:800;border:2px solid;animation:pillPop .4s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes pillPop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+.band-pill.band1{color:#FFD93D;border-color:rgba(255,217,61,.5);background:rgba(255,217,61,.12)}
+.band-pill.band2{color:#00C9B1;border-color:rgba(0,201,177,.5);background:rgba(0,201,177,.12)}
+.band-pill.band3{color:#A66CFF;border-color:rgba(166,108,255,.5);background:rgba(166,108,255,.12)}
+.band-source-note{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.35);letter-spacing:.5px}
+.band-no-info{text-align:center;font-size:.88rem;font-weight:700;color:rgba(255,255,255,.5);max-width:260px;line-height:1.6}
+.band-no-info a{color:#00C9B1;text-decoration:none;font-weight:900}
+.band-no-info a:hover{text-decoration:underline}
+.age-btn .age-emoji{font-size:1.8rem;display:block;margin-bottom:.3rem}
+.age-btn .age-label{font-size:.7rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--teal)}
+.age-btn .age-topic{font-size:.6rem;color:rgba(255,255,255,.5);margin-top:.2rem;text-align:center}
+.back-link{color:rgba(255,255,255,.35);font-size:.75rem;text-decoration:none;letter-spacing:1px;margin-top:.5rem}
+.back-link:hover{color:var(--teal)}
+.start-home-btn{position:fixed;top:1rem;left:1rem;z-index:50;text-decoration:none}
+
+/* ── HUD ── */
+#hud{position:fixed;top:0;left:0;right:0;z-index:30;
+  display:grid;grid-template-columns:1fr auto 1fr;
+  align-items:center;padding:.7rem 1.2rem;
+  background:rgba(10,21,32,.92);backdrop-filter:blur(8px);
+  border-bottom:2px solid rgba(0,201,177,.25)}
+#hud.hidden{display:none}
+.hud-left{display:flex;align-items:center;gap:.8rem;justify-content:flex-start}
+.hud-center{display:flex;justify-content:center}
+.hud-right{display:flex;align-items:center;gap:.5rem;justify-content:flex-end}
+.hud-item{display:flex;flex-direction:column;align-items:center;gap:1px}
+.hud-label{font-size:.55rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4)}
+.hud-value{font-size:1.6rem;font-weight:900;color:#fff;line-height:1}
+
+@media(max-width:600px){
+  #hud{padding:.5rem .6rem .5rem .8rem;grid-template-columns:auto auto auto}
+  .hud-left{gap:.4rem}
+  .hud-right{gap:.3rem}
+  .hud-btn{padding:.25rem .45rem;border-radius:8px;min-width:0}
+  .hud-btn-icon{font-size:1rem}
+  .hud-btn-label{font-size:.38rem;letter-spacing:1px}
+  .hud-label{font-size:.42rem}
+  .hud-value{font-size:1.1rem}
+  #kl-avatar-hud svg{width:36px !important;height:auto !important}
+}
+.hud-btn{display:flex;flex-direction:column;align-items:center;gap:2px;background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.12);border-radius:12px;padding:.3rem .7rem;cursor:pointer;transition:all .15s;text-decoration:none;color:#fff;font-family:'Nunito',sans-serif}
+.hud-btn:hover{background:rgba(255,255,255,.14);transform:translateY(-2px)}
+.hud-btn-icon{font-size:1.2rem;line-height:1}
+.hud-btn-label{font-size:.5rem;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.4)}
+.progress-pips{display:flex;gap:8px;justify-content:center;align-items:center;min-height:20px;padding:.2rem 0}
+.pip{width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,.3);border:2px solid rgba(255,255,255,.4);transition:background .3s,transform .3s}
+.pip.done{background:var(--green);border-color:var(--green);transform:scale(1.2)}
+.pip.done-warn{background:var(--yellow);border-color:var(--yellow);transform:scale(1.2)}
+.pip.current{background:rgba(255,255,255,.6);border-color:#fff;transform:scale(1.3);box-shadow:0 0 10px rgba(255,255,255,.4)}
+
+
+/* ── GAME SCREEN ── */
+#gameScreen{justify-content:flex-start;padding-top:80px;gap:0;overflow-y:auto}
+
+/* TARGET */
+.target-card{width:100%;max-width:480px;display:flex;align-items:center;gap:.8rem;
+  background:rgba(0,201,177,.08);border:2px solid rgba(0,201,177,.25);
+  border-radius:16px;padding:.6rem 1rem;margin-bottom:.6rem;flex-shrink:0}
+.target-label{font-size:.6rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--teal);opacity:.7}
+.target-name{font-family:'Boogaloo',cursive;font-size:1.4rem;color:#fff}
+.target-emoji{font-size:2.2rem;margin-left:auto}
+
+/* BEAKER */
+.beaker-wrap{position:relative;flex-shrink:0;margin-bottom:.5rem;display:flex;flex-direction:column;align-items:center}
+.beaker-svg-wrap{position:relative;width:130px;height:160px}
+.beaker-svg{width:100%;height:100%}
+.beaker-liquid{transition:height .4s ease,fill .4s ease}
+.beaker-bubbles{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);width:80px;height:80px;pointer-events:none}
+.beaker-bubble{position:absolute;border-radius:50%;opacity:0;animation:bub 1.2s ease-in infinite}
+@keyframes bub{0%{opacity:.7;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-60px) scale(.4)}}
+.slot-row{display:flex;gap:.5rem;margin-top:.4rem;flex-shrink:0}
+.ing-slot{width:56px;height:56px;border-radius:12px;border:2px dashed rgba(255,255,255,.2);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.04);transition:all .3s;font-size:1.4rem;position:relative;cursor:pointer}
+.ing-slot.filled{border-style:solid;border-color:rgba(0,201,177,.5);background:rgba(0,201,177,.1)}
+.ing-slot .slot-name{font-size:.42rem;font-weight:800;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px;margin-top:1px;max-width:50px;text-align:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.ing-slot .remove-x{position:absolute;top:-6px;right:-6px;width:16px;height:16px;border-radius:50%;background:var(--coral);color:#fff;font-size:.55rem;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:opacity .2s}
+.ing-slot.filled:hover .remove-x{opacity:1}
+
+/* MIX BUTTON */
+.mix-btn{padding:.7rem 2.5rem;border-radius:50px;border:none;font-family:'Boogaloo',cursive;font-size:1.3rem;cursor:pointer;transition:all .2s;margin:.4rem 0;flex-shrink:0;
+  background:linear-gradient(135deg,var(--teal),var(--purple));color:#fff;
+  box-shadow:0 4px 20px rgba(0,201,177,.3);letter-spacing:.5px}
+.mix-btn:disabled{background:rgba(255,255,255,.1);box-shadow:none;color:rgba(255,255,255,.3);cursor:not-allowed}
+.mix-btn:not(:disabled):hover{transform:translateY(-2px) scale(1.04);box-shadow:0 8px 28px rgba(0,201,177,.45)}
+.mix-btn.pulse{animation:mixPulse 1s ease-in-out infinite}
+@keyframes mixPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.hint-btn{padding:.7rem 1.2rem;border-radius:50px;border:2px solid rgba(255,217,61,.4);background:rgba(255,217,61,.08);color:var(--yellow);font-family:'Boogaloo',cursive;font-size:1.1rem;cursor:pointer;transition:all .2s;white-space:nowrap}
+.hint-btn:hover{background:rgba(255,217,61,.18);border-color:var(--yellow);transform:translateY(-2px)}
+.hint-btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+/* Hint toast */
+.hint-toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(20px);z-index:60;
+  background:rgba(255,217,61,.15);border:1px solid rgba(255,217,61,.4);border-radius:14px;
+  padding:.6rem 1.2rem;max-width:320px;text-align:center;
+  opacity:0;transition:all .35s;pointer-events:none}
+.hint-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.hint-toast-text{font-size:.78rem;font-weight:800;color:var(--yellow);line-height:1.4}
+
+/* INGREDIENT SHELF */
+.shelf-title{font-size:.58rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.4rem;flex-shrink:0}
+.ingredient-shelf{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;width:100%;max-width:480px;flex-shrink:0;padding-bottom:.5rem}
+.ing-btn{display:flex;flex-direction:column;align-items:center;gap:3px;
+  width:72px;padding:.5rem .3rem;border-radius:14px;border:2px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.06);cursor:pointer;transition:all .2s;
+  font-family:'Nunito',sans-serif;color:#fff}
+.ing-btn:hover:not(.used){transform:translateY(-3px);background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3)}
+.ing-btn .ing-em{font-size:1.8rem;line-height:1}
+.ing-btn .ing-name{font-size:.5rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:rgba(255,255,255,.6);text-align:center;max-width:64px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.ing-btn.selected{border-color:var(--teal);background:rgba(0,201,177,.15);transform:translateY(-3px)}
+.ing-btn.used{opacity:.35;cursor:not-allowed;transform:none}
+@media(max-width:400px){.ing-btn{width:64px;padding:.4rem .2rem}.ing-btn .ing-em{font-size:1.6rem}}
+
+/* ── RESULT OVERLAY ── */
+#resultOverlay{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem;
+  background:rgba(10,21,32,.96);backdrop-filter:blur(8px)}
+#resultOverlay.hidden{display:none}
+.result-emoji{font-size:5rem;animation:popIn .5s cubic-bezier(.34,1.56,.64,1) both;margin-bottom:.5rem}
+.result-title{font-family:'Boogaloo',cursive;font-size:2rem;color:var(--teal);margin-bottom:.3rem;text-align:center}
+.result-subtitle{font-size:.8rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:.8rem}
+.result-subtitle.correct{color:var(--green)}
+.result-subtitle.wrong{color:var(--coral)}
+.fact-box{background:rgba(0,201,177,.1);border:2px solid rgba(0,201,177,.25);border-radius:16px;padding:1rem 1.2rem;max-width:400px;margin-bottom:.6rem;text-align:center}
+.hint-box{background:rgba(255,217,61,.08);border:2px solid rgba(255,217,61,.3);border-radius:16px;padding:1rem 1.2rem;max-width:400px;margin-bottom:1rem;text-align:center}
+.fact-label{font-size:.55rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--teal);margin-bottom:.3rem}
+.fact-text{font-size:.85rem;color:rgba(255,255,255,.85);line-height:1.5}
+.result-btns{display:flex;gap:.7rem;flex-wrap:wrap;justify-content:center}
+.btn-next{padding:.7rem 1.8rem;border-radius:50px;border:none;font-family:'Boogaloo',cursive;font-size:1.1rem;cursor:pointer;
+  background:linear-gradient(135deg,var(--teal),var(--purple));color:#fff;
+  box-shadow:0 4px 20px rgba(0,201,177,.3)}
+.btn-next:hover{transform:translateY(-2px)}
+
+/* ── SCIENCE CHECK QUIZ CARD ── */
+#quizCard{width:100%;max-width:400px;background:rgba(166,108,255,.07);border:2px solid rgba(166,108,255,.3);border-radius:16px;padding:1rem 1.2rem;margin-bottom:.8rem;animation:slideUp .4s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.qz-badge{font-size:.55rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#A66CFF;margin-bottom:.55rem}
+.qz-prompt{font-size:.88rem;font-weight:800;line-height:1.45;margin-bottom:.75rem;color:rgba(255,255,255,.9)}
+.qz-options{display:flex;flex-direction:column;gap:.4rem}
+.qz-opt{padding:.6rem .9rem;border-radius:11px;border:1.5px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);font-family:'Nunito',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .15s;text-align:left;color:#fff;line-height:1.4}
+.qz-opt:hover:not(:disabled){border-color:rgba(166,108,255,.45);background:rgba(166,108,255,.1)}
+.qz-opt.qz-correct{border-color:#4CAF50;background:rgba(76,175,80,.15);color:#8FE897;pointer-events:none}
+.qz-opt.qz-wrong  {border-color:#FF6B6B;background:rgba(255,107,107,.12);color:rgba(255,107,107,.8);pointer-events:none}
+.qz-opt.qz-muted  {opacity:.3;pointer-events:none}
+.btn-retry{padding:.7rem 1.5rem;border-radius:50px;border:2px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);font-family:'Boogaloo',cursive;font-size:1.1rem;cursor:pointer}
+.btn-retry:hover{border-color:rgba(255,255,255,.4);color:#fff}
+@keyframes popIn{from{opacity:0;transform:scale(.4) rotate(-10deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+
+/* ── END SCREEN ── */
+#endScreen{gap:.7rem}
+.end-icon{font-size:4rem;animation:float 3s ease-in-out infinite}
+.end-title{font-family:'Boogaloo',cursive;font-size:2.5rem;color:var(--yellow);text-align:center}
+.end-score{font-size:1rem;color:rgba(255,255,255,.6);text-align:center}
+.end-stars{font-size:2rem;letter-spacing:.3rem}
+.end-badges-wrap{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:1rem;width:100%;max-width:400px;text-align:center}
+.end-badges-title{font-size:.6rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--yellow);margin-bottom:.6rem}
+.end-badges-row{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center}
+.badge-coin{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:default}
+.badge-coin-em{font-size:2rem;background:radial-gradient(circle at 35% 35%,#ffd700,#b8860b);border-radius:50%;width:48px;height:48px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.4),inset 0 1px 2px rgba(255,255,255,.3)}
+.badge-coin-name{font-size:.48rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--yellow);text-align:center;max-width:52px}
+.badge-coin.new-badge .badge-coin-em{animation:badgePop .5s cubic-bezier(.34,1.56,.64,1) both;box-shadow:0 0 20px rgba(255,215,0,.6),0 4px 12px rgba(0,0,0,.4),inset 0 1px 2px rgba(255,255,255,.3)}
+@keyframes badgePop{from{transform:scale(0) rotate(-20deg)}to{transform:scale(1) rotate(0)}}
+.end-btns{display:flex;gap:.7rem;flex-wrap:wrap;justify-content:center}
+.btn-play-again{padding:.7rem 1.8rem;border-radius:50px;border:none;font-family:'Boogaloo',cursive;font-size:1.1rem;cursor:pointer;
+  background:linear-gradient(135deg,var(--teal),var(--purple));color:#fff}
+.btn-home{padding:.7rem 1.5rem;border-radius:50px;border:2px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);font-family:'Boogaloo',cursive;font-size:1.1rem;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
+
+/* ── MIX FLASH ── */
+.mix-flash{position:fixed;inset:0;z-index:40;pointer-events:none;opacity:0;transition:opacity .1s}
+.mix-flash.on{opacity:1}
+
+/* ── FEEDBACK STRIP ── */
+.feedback-strip{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:.7rem 1rem;width:100%;max-width:400px;text-align:center;flex-shrink:0}
+.feedback-text{font-size:.7rem;color:rgba(255,255,255,.45);margin-bottom:.5rem}
+.feedback-btns{display:flex;gap:.5rem;justify-content:center}
+.feedback-btn{padding:.35rem .9rem;border-radius:20px;border:1px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.5);font-size:.65rem;font-family:'Nunito',sans-serif;cursor:pointer;text-decoration:none;transition:all .2s}
+.feedback-btn:hover{border-color:var(--teal);color:var(--teal)}
+
+/* ── CONFETTI ── */
+#confetti-canvas{position:fixed;inset:0;z-index:45;pointer-events:none}
+
+/* ── TOAST ── */
+.toast{position:fixed;top:70px;left:50%;transform:translateX(-50%) translateY(-20px);z-index:60;
+  background:rgba(30,40,55,.95);border:1px solid rgba(0,201,177,.3);border-radius:50px;
+  padding:.5rem 1.2rem;display:flex;align-items:center;gap:.5rem;
+  opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast-em{font-size:1.3rem}.toast-name{font-size:.75rem;font-weight:800;color:var(--yellow)}
+</style>
+</head>
+<body>
+
+<div class="lab-bg">
+  <div class="bubble-wrap" id="bgBubbles"></div>
+</div>
+
+<canvas id="confetti-canvas"></canvas>
+<canvas id="fx-canvas" style="position:fixed;inset:0;z-index:44;pointer-events:none"></canvas>
+<div class="mix-flash" id="mixFlash"></div>
+<div class="toast" id="toast"><span class="toast-em" id="toastEm"></span><span class="toast-name" id="toastName"></span></div>
+<div class="hint-toast" id="hintToast"><div class="hint-toast-text" id="hintToastText"></div></div>
+
+<!-- ══ START SCREEN ══ -->
+<div class="screen" id="startScreen">
+  <a class="hud-btn start-home-btn" href="/index.html#games" title="Home">
+    <span class="hud-btn-icon">🏠</span>
+    <span class="hud-btn-label">Home</span>
+  </a>
+  <div class="lab-icon">👨‍🔬</div>
+  <div class="game-title">Kitchen Lab!</div>
+  <div class="game-subtitle">Mix · React · Discover</div>
+  <!-- Band info injected by JS -->
+  <div id="bandDisplay"></div>
+  <button class="start-exp-btn" id="startExpBtn" onclick="startGame()" disabled>🧪 Let's Experiment!</button>
+</div>
+
+<!-- ══ HUD ══ -->
+<div id="hud" class="hidden">
+  <div class="hud-left">
+    <div class="hud-item">
+      <div class="hud-label">Lives</div>
+      <div class="hud-value" id="livesVal">❤️❤️❤️</div>
+    </div>
+  </div>
+  <div class="hud-center">
+    <div id="kl-avatar-hud" data-hud-size="48"></div>
+  </div>
+  <div class="hud-right">
+    <button class="hud-btn" id="soundToggleBtn" onclick="toggleSound()" title="Sound">
+      <span class="hud-btn-icon">🔊</span>
+      <span class="hud-btn-label">Sound</span>
+    </button>
+    <a class="hud-btn" href="/index.html#games" style="text-decoration:none;">
+      <span class="hud-btn-icon">🏠</span>
+      <span class="hud-btn-label">Home</span>
+    </a>
+  </div>
+</div>
+
+<!-- ══ GAME SCREEN ══ -->
+<div class="screen hidden" id="gameScreen">
+
+  <!-- Progress dots -->
+  <div class="progress-pips" id="progressPips" style="margin-bottom:.6rem;margin-top:.4rem;flex-shrink:0;width:100%;max-width:480px"></div>
+
+  <!-- Target -->
+  <div class="target-card" id="targetCard">
+    <div>
+      <div class="target-label">🎯 Make this</div>
+      <div class="target-name" id="targetName">—</div>
+    </div>
+    <div class="target-emoji" id="targetEmoji">❓</div>
+  </div>
+
+  <!-- Beaker -->
+  <div class="beaker-wrap">
+    <div class="beaker-svg-wrap" id="beakerWrap">
+      <svg class="beaker-svg" viewBox="0 0 130 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Beaker body -->
+        <path d="M30 20 L30 110 Q30 140 65 140 Q100 140 100 110 L100 20 Z" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+        <!-- Beaker lip -->
+        <rect x="22" y="14" width="86" height="10" rx="5" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+        <!-- Liquid fill (clipped) -->
+        <clipPath id="beakerClip">
+          <path d="M31 22 L31 110 Q31 138 65 138 Q99 138 99 110 L99 22 Z"/>
+        </clipPath>
+        <rect id="liquidRect" x="31" y="120" width="68" height="0" rx="0" fill="rgba(0,201,177,0.5)" clip-path="url(#beakerClip)" style="transition:y .5s ease,height .5s ease,fill .5s ease"/>
+        <!-- Bubbles in liquid -->
+        <circle id="b1" cx="45" cy="130" r="3" fill="rgba(255,255,255,0.3)" opacity="0"/>
+        <circle id="b2" cx="70" cy="125" r="2" fill="rgba(255,255,255,0.3)" opacity="0"/>
+        <circle id="b3" cx="85" cy="128" r="2.5" fill="rgba(255,255,255,0.3)" opacity="0"/>
+        <!-- Shine -->
+        <path d="M38 30 L38 100" stroke="rgba(255,255,255,0.08)" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <!-- Ingredient slots -->
+    <div class="slot-row" id="slotRow"></div>
+  </div>
+
+  <!-- Mix + Hint buttons -->
+  <div style="display:flex;gap:.6rem;align-items:center;margin:.4rem 0;flex-shrink:0">
+    <button class="mix-btn" id="mixBtn" onclick="doMix()" disabled>
+      🧪 Mix It!
+    </button>
+    <button class="hint-btn" id="hintBtn" onclick="showHint()">
+      💡 Hint
+    </button>
+  </div>
+
+  <!-- Shelf title -->
+  <div class="shelf-title">Ingredient Shelf — tap to add</div>
+
+  <!-- Ingredient shelf -->
+  <div class="ingredient-shelf" id="ingredientShelf"></div>
+
+
+
+
+</div>
+
+<!-- ══ RESULT OVERLAY ══ -->
+<div id="resultOverlay" class="hidden">
+  <div class="result-emoji" id="resultEmoji">🧊</div>
+  <div class="result-title" id="resultTitle">Ice!</div>
+  <div class="result-subtitle" id="resultSubtitle">Correct!</div>
+  <div class="fact-box" id="factBox">
+    <div class="fact-label">🔬 Science fact</div>
+    <div class="fact-text" id="factText"></div>
+  </div>
+  <div class="hint-box" id="hintBox" style="display:none">
+    <div class="fact-label">💡 Hint</div>
+    <div class="fact-text" id="hintBoxText"></div>
+  </div>
+
+  <!-- ── SCIENCE CHECK QUIZ CARD (from JSON) ── -->
+  <div id="quizCard" style="display:none">
+    <div class="qz-badge">⚗️ Science Check</div>
+    <div class="qz-prompt" id="qzPrompt"></div>
+    <div class="qz-options" id="qzOptions"></div>
+  </div>
+  <div class="result-btns">
+    <button class="btn-next">Next Experiment →</button>
+  </div>
+</div>
+
+<!-- ══ END SCREEN ══ -->
+<div class="screen hidden" id="endScreen">
+  <div class="end-icon">🏆</div>
+  <div class="end-title" id="endTitle">Lab Complete!</div>
+  <div class="end-score" id="endScore"></div>
+  <div class="end-stars" id="endStars">⭐⭐⭐</div>
+  <div class="end-badges-wrap" id="endBadgesWrap" style="display:none">
+    <div class="end-badges-title">🏆 Your Kitchen Lab Badges</div>
+    <div class="end-badges-row" id="endBadgesRow"></div>
+  </div>
+  <div class="end-btns">
+    <button class="btn-play-again" onclick="playAgain()">Play Again</button>
+    <a class="btn-home" href="/index.html#games">🏠 Home</a>
+  </div>
+  <div class="feedback-strip">
+    <p class="feedback-text">💌 Found a bug or have a game idea?</p>
+    <div class="feedback-btns">
+      <a class="feedback-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSdummy/viewform" target="_blank">🐛 Report a Bug</a>
+      <a class="feedback-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSdummy/viewform" target="_blank">💡 Suggest an Idea</a>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// EXPERIMENT DATA
+// ══════════════════════════════════════════════
+const EXPERIMENTS = {
+  5: [
+    { target:{e:'🧊',n:'Ice',color:'#aef0ff'},
+      correct:['water','cold'],
+      ingredients:[
+        {id:'water',e:'💧',n:'Water',color:'#6ECBF5'},
+        {id:'cold',e:'❄️',n:'Cold',color:'#aef0ff'},
+        {id:'heat',e:'🔥',n:'Heat',color:'#FF6B35'},
+        {id:'salt',e:'🧂',n:'Salt',color:'#fff'},
+        {id:'sugar',e:'🍬',n:'Sugar',color:'#FFD93D'},
+        {id:'oil',e:'🫙',n:'Oil',color:'#E8C84A'},
+      ],
+      fact:'Water freezes at 0°C! Its molecules slow down and lock into crystals — that\'s solid ice!',
+      wrongFact:'Hmm, that combination won\'t make ice! You need Water ❄️ + Cold ❄️ to freeze it.' },
+
+    { target:{e:'💨',n:'Steam',color:'#B0E0FF'},
+      correct:['water','heat'],
+      ingredients:[
+        {id:'water',e:'💧',n:'Water',color:'#6ECBF5'},
+        {id:'heat',e:'🔥',n:'Heat',color:'#FF6B35'},
+        {id:'cold',e:'❄️',n:'Cold',color:'#aef0ff'},
+        {id:'salt',e:'🧂',n:'Salt',color:'#fff'},
+        {id:'wood',e:'🪵',n:'Wood',color:'#8B4513'},
+        {id:'sugar',e:'🍬',n:'Sugar',color:'#FFD93D'},
+      ],
+      fact:'Heating water to 100°C turns it into steam! Molecules move so fast they escape into the air — evaporation!',
+      wrongFact:'Not quite! Water + Heat makes steam. The heat makes water molecules move fast enough to escape!' },
+
+    { target:{e:'🫓',n:'Dough',color:'#F5E6C8'},
+      correct:['flour','water'],
+      ingredients:[
+        {id:'flour',e:'🌾',n:'Flour',color:'#F5E6C8'},
+        {id:'water',e:'💧',n:'Water',color:'#6ECBF5'},
+        {id:'heat',e:'🔥',n:'Heat',color:'#FF6B35'},
+        {id:'sugar',e:'🍬',n:'Sugar',color:'#FFD93D'},
+        {id:'salt',e:'🧂',n:'Salt',color:'#fff'},
+        {id:'oil',e:'🫙',n:'Oil',color:'#E8C84A'},
+      ],
+      fact:'Mixing flour and water creates dough! It\'s a physical mixture — no chemical change happens.',
+      wrongFact:'Almost! Flour + Water makes dough. The water makes the flour proteins stick together!' },
+
+    { target:{e:'🌊',n:'Salty Water',color:'#4ECBF5'},
+      correct:['salt','water'],
+      ingredients:[
+        {id:'salt',e:'🧂',n:'Salt',color:'#fff'},
+        {id:'water',e:'💧',n:'Water',color:'#6ECBF5'},
+        {id:'sugar',e:'🍬',n:'Sugar',color:'#FFD93D'},
+        {id:'flour',e:'🌾',n:'Flour',color:'#F5E6C8'},
+        {id:'oil',e:'🫙',n:'Oil',color:'#E8C84A'},
+        {id:'heat',e:'🔥',n:'Heat',color:'#FF6B35'},
+      ],
+      fact:'Salt dissolves in water — its tiny particles spread out evenly and seem to vanish. The salt is still there!',
+      wrongFact:'Try Salt + Water! Salt dissolves (disappears into) water — that\'s a solution!' },
+
+    { target:{e:'🟠',n:'Orange',color:'#FF9040'},
+      correct:['red','yellow'],
+      ingredients:[
+        {id:'red',e:'🔴',n:'Red',color:'#FF5C5C'},
+        {id:'yellow',e:'🟡',n:'Yellow',color:'#FFD93D'},
+        {id:'blue',e:'🔵',n:'Blue',color:'#6ECBF5'},
+        {id:'green',e:'🟢',n:'Green',color:'#4ECB71'},
+        {id:'white',e:'⬜',n:'White',color:'#fff'},
+        {id:'black',e:'⬛',n:'Black',color:'#333'},
+      ],
+      fact:'Red + Yellow = Orange! Mixing colours is a physical change. Painters call these primary and secondary colours!',
+      wrongFact:'Not quite! Red + Yellow makes Orange. Try those two!' },
+
+    { target:{e:'🟢',n:'Green',color:'#4ECB71'},
+      correct:['blue','yellow'],
+      ingredients:[
+        {id:'blue',e:'🔵',n:'Blue',color:'#6ECBF5'},
+        {id:'yellow',e:'🟡',n:'Yellow',color:'#FFD93D'},
+        {id:'red',e:'🔴',n:'Red',color:'#FF5C5C'},
+        {id:'white',e:'⬜',n:'White',color:'#fff'},
+        {id:'black',e:'⬛',n:'Black',color:'#333'},
+        {id:'orange',e:'🟠',n:'Orange',color:'#FF9040'},
+      ],
+      fact:'Blue + Yellow = Green! All the colours you see come from mixing just three primary colours: Red, Blue and Yellow.',
+      wrongFact:'Not quite! Blue + Yellow makes Green. Those are two of the three primary colours!' },
+  ],
+
+  7: [
+    { target:{e:'💥',n:'Fizzy Reaction',color:'#FFD93D'},
+      correct:['vinegar','bakingsoda'],
+      ingredients:[
+        {id:'vinegar',e:'🍶',n:'Vinegar',color:'#E8F5A3'},
+        {id:'bakingsoda',e:'🥄',n:'Baking Soda',color:'#fff'},
+        {id:'water',e:'💧',n:'Water',color:'#6ECBF5'},
+        {id:'salt',e:'🧂',n:'Salt',color:'#fff'},
+        {id:'sugar',e:'🍬',n:'Sugar',color:'#FFD93D'},
+        {id:'lemon',e:'🍋',n:'Lemon',color:'#FFE066'},
+      ],
+      fact:'Vinegar (acid) + Baking Soda (base) react to produce CO₂ gas — that\'s the fizzing! It\'s a chemical change.',
+      wrongFact:'No fizz! You need Vinegar + Baking Soda — an acid meets a base to create CO₂ bubbles!' },
+
+    { target:{e:'🟣',n:'Purple',color:'#A66CFF'},
+      correct:['red','blue'],
+      ingredients:[
+        {id:'red',e:'🔴',n:'Red',color:'#FF5C5C'},
+        {id:'blue',e:'🔵',n:'Blue',color:'#6ECBF5'},
+        {id:'yellow',e:'🟡',n:'Yellow',color:'#FFD93D'},
+        {id:'green',e:'🟢',n:'Green',color:'#4ECB71'},
+        {id:'white',e:'⬜',n:'White',color:'#fff'},
+        {id:'black',e:'⬛',n:'Black',color:'#333'},
+      ],
+      fact:'Red + Blue = Purple (Violet)! Light and paint mix differently — with paint it\'s called subtractive colour mixing.',
+      wrongFact:'Keep trying! Red + Blue makes Purple. Mix those primary colours!' },
+
+    { target:{e:'🧈',n:'Butter',color:'#FFD93D'},
+      correct:['cream','shake'],
+      ingredients:[
+        {id:'cream',e:'🥛',n:'Cream',color:'#fff'},
+        {id:'shake',e:'🫙',n:'Shake',color:'#A66CFF'},
+        {id:'heat',e:'🔥',n:'Heat',color:'#FF6B35'},
+        {id:'water',e:'💧',n:'Water',color:'#6ECBF5'},
+        {id:'salt',e:'🧂',n:'Salt',color:'#fff'},
+        {id:'sugar',e:'🍬',n:'Sugar',color:'#FFD93D'},
+      ],
+      fact:'Shaking cream breaks apart the fat molecules and clumps them into butter! It\'s a physical change — no new substance created.',
+      wrongFact:'Not quite! Cream + Shake (agitation) makes butter. The mechanical energy breaks fat globules apart!' },
+
+    { target:{e:'⚡',n:'Lemon Battery',color:'#FFD93D'},
+      correct:['lemon','zinc','copper'],
+      ingredients:[
+        {id:'lemon',e:'🍋',n:'Lemon',color:'#FFE066'},
+        {id:'zinc',e:'🔩',n:'Zinc Nail',color:'#aaa'},
+        {id:'copper',e:'🪙',n:'Copper',color:'#b87333'},
+        {id:'water',e:'💧',n:'Water',color:'#6ECBF5'},
+        {id:'salt',e:'🧂',n:'Salt',color:'#fff'},
+        {id:'sugar',e:'🍬',n:'Sugar',color:'#FFD93D'},
+      ],
+      fact:'Lemon juice (acid) reacts with zinc and copper to move electrons — creating electricity! That\'s an electrochemical cell.',
+      wrongFact:'You need Lemon + Zinc Nail + Copper! The acid in lemon juice drives electrons between the two metals.' },
+
+    { target:{e:'💎',n:'Crystal',color:'#aef0ff'},
+      correct:['salt','hotwater'],
+      ingredients:[
+        {id:'salt',e:'🧂',n:'Salt',color:'#fff'},
+        {id:'hotwater',e:'♨️',n:'Hot Water',color:'#FF9040'},
+        {id:'cold',e:'❄️',n:'Cold',color:'#aef0ff'},
+        {id:'sugar',e:'🍬',n:'Sugar',color:'#FFD93D'},
+        {id:'vinegar',e:'🍶',n:'Vinegar',color:'#E8F5A3'},
+        {id:'lemon',e:'🍋',n:'Lemon',color:'#FFE066'},
+      ],
+      fact:'Hot water dissolves more salt. As it cools, salt comes back out and stacks into crystal shapes — that\'s called crystallisation!',
+      wrongFact:'Try Salt + Hot Water! When it cools, salt forms beautiful crystal shapes!' },
+
+    { target:{e:'🩷',n:'Pink Indicator',color:'#FF9EC4'},
+      correct:['cabbage','vinegar'],
+      ingredients:[
+        {id:'cabbage',e:'🥬',n:'Red Cabbage',color:'#9B59B6'},
+        {id:'vinegar',e:'🍶',n:'Vinegar',color:'#E8F5A3'},
+        {id:'water',e:'💧',n:'Water',color:'#6ECBF5'},
+        {id:'lemon',e:'🍋',n:'Lemon',color:'#FFE066'},
+        {id:'salt',e:'🧂',n:'Salt',color:'#fff'},
+        {id:'sugar',e:'🍬',n:'Sugar',color:'#FFD93D'},
+      ],
+      fact:'Red cabbage juice is a natural pH indicator! Add acid (vinegar) and it turns pink. Add base and it turns green!',
+      wrongFact:'Try Red Cabbage + Vinegar! Cabbage juice changes colour depending on whether something is an acid or base.' },
+  ],
+
+  9: [
+    { target:{e:'🟤',n:'Rust',color:'#8B4513'},
+      correct:['iron','oxygen','water'],
+      ingredients:[
+        {id:'iron',e:'🔩',n:'Iron',color:'#aaa'},
+        {id:'oxygen',e:'💨',n:'Oxygen',color:'#B0E0FF'},
+        {id:'water',e:'💧',n:'Water',color:'#6ECBF5'},
+        {id:'salt',e:'🧂',n:'Salt',color:'#fff'},
+        {id:'oil',e:'🫙',n:'Oil',color:'#E8C84A'},
+        {id:'vinegar',e:'🍶',n:'Vinegar',color:'#E8F5A3'},
+      ],
+      fact:'Iron + Oxygen + Water causes oxidation — a slow chemical reaction producing iron oxide (rust). Salt speeds it up!',
+      wrongFact:'Rust needs Iron + Oxygen + Water! The iron atoms react with oxygen to form iron oxide.' },
+
+    { target:{e:'🍬',n:'Glucose',color:'#FFD93D'},
+      correct:['water','co2','sunlight'],
+      ingredients:[
+        {id:'water',e:'💧',n:'Water',color:'#6ECBF5'},
+        {id:'co2',e:'☁️',n:'CO₂',color:'#ccc'},
+        {id:'sunlight',e:'☀️',n:'Sunlight',color:'#FFD93D'},
+        {id:'oxygen',e:'💨',n:'Oxygen',color:'#B0E0FF'},
+        {id:'nitrogen',e:'🌫️',n:'Nitrogen',color:'#B0E0FF'},
+        {id:'soil',e:'🪨',n:'Soil',color:'#8B4513'},
+      ],
+      fact:'Plants use Water + CO₂ + Sunlight to make glucose (sugar) and release oxygen. This is photosynthesis — the basis of all life!',
+      wrongFact:'Photosynthesis needs Water + CO₂ + Sunlight! Plants use light energy to build sugar molecules.' },
+
+    { target:{e:'🟢',n:'Slime',color:'#4ECB71'},
+      correct:['glue','borax'],
+      ingredients:[
+        {id:'glue',e:'🫙',n:'PVA Glue',color:'#fff'},
+        {id:'borax',e:'🧪',n:'Borax',color:'#A66CFF'},
+        {id:'water',e:'💧',n:'Water',color:'#6ECBF5'},
+        {id:'salt',e:'🧂',n:'Salt',color:'#fff'},
+        {id:'vinegar',e:'🍶',n:'Vinegar',color:'#E8F5A3'},
+        {id:'sugar',e:'🍬',n:'Sugar',color:'#FFD93D'},
+      ],
+      fact:'PVA glue is a polymer (long chains of molecules). Borax cross-links them together — creating a non-Newtonian fluid: slime!',
+      wrongFact:'Try PVA Glue + Borax! Borax creates cross-links between the glue\'s polymer chains to make slime!' },
+
+    { target:{e:'💧',n:'Neutralisation',color:'#6ECBF5'},
+      correct:['acid','base'],
+      ingredients:[
+        {id:'acid',e:'🍋',n:'Acid (HCl)',color:'#FFE066'},
+        {id:'base',e:'🧴',n:'Base (NaOH)',color:'#A66CFF'},
+        {id:'water',e:'💧',n:'Water',color:'#6ECBF5'},
+        {id:'salt',e:'🧂',n:'Salt',color:'#fff'},
+        {id:'vinegar',e:'🍶',n:'Vinegar',color:'#E8F5A3'},
+        {id:'sugar',e:'🍬',n:'Sugar',color:'#FFD93D'},
+      ],
+      fact:'Acid + Base → Salt + Water. The H⁺ from the acid and OH⁻ from the base combine to make water. This is neutralisation!',
+      wrongFact:'Try Acid + Base! They neutralise each other — the reaction produces salt and water.' },
+
+    { target:{e:'🍾',n:'Fermentation',color:'#A66CFF'},
+      correct:['sugar','yeast'],
+      ingredients:[
+        {id:'sugar',e:'🍬',n:'Sugar',color:'#FFD93D'},
+        {id:'yeast',e:'🍞',n:'Yeast',color:'#F5E6C8'},
+        {id:'water',e:'💧',n:'Water',color:'#6ECBF5'},
+        {id:'salt',e:'🧂',n:'Salt',color:'#fff'},
+        {id:'flour',e:'🌾',n:'Flour',color:'#F5E6C8'},
+        {id:'vinegar',e:'🍶',n:'Vinegar',color:'#E8F5A3'},
+      ],
+      fact:'Yeast eats sugar and produces CO₂ and ethanol — that\'s fermentation! This is how bread rises and how vinegar is made.',
+      wrongFact:'Try Sugar + Yeast! Yeast organisms consume sugar and release carbon dioxide gas as a byproduct.' },
+
+    { target:{e:'🔵',n:'Blue Flame',color:'#6ECBF5'},
+      correct:['methane','oxygen'],
+      ingredients:[
+        {id:'methane',e:'💨',n:'Methane',color:'#ccc'},
+        {id:'oxygen',e:'💧',n:'Oxygen',color:'#B0E0FF'},
+        {id:'water',e:'💧',n:'Water',color:'#6ECBF5'},
+        {id:'co2',e:'☁️',n:'CO₂',color:'#ccc'},
+        {id:'nitrogen',e:'🌫️',n:'Nitrogen',color:'#B0E0FF'},
+        {id:'hydrogen',e:'⚡',n:'Hydrogen',color:'#FFD93D'},
+      ],
+      fact:'Methane + Oxygen = combustion! CH₄ + 2O₂ → CO₂ + 2H₂O + energy. Complete combustion produces a blue flame — very efficient!',
+      wrongFact:'Try Methane + Oxygen! Combustion is a rapid chemical reaction that releases heat and light energy.' },
+  ]
+};
+
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+let selectedAge = null;
+let experiments  = [];
+let expIndex     = 0;
+let currentExp   = null;
+let quizPool     = null; // tap_select questions from JSON
+let quizPoolIdx  = 0;
+let score        = 0;
+let lives        = 3;
+let selected     = []; // ingredient IDs currently selected
+let gameRunning  = false;
+let livesAtExpStart = 3;
+let pipResults   = {}; // expIndex -> lives lost
+let _soundOn     = true;
+let audioCtx     = null;
+
+const MAX_SLOTS = 3;
+
+// ══════════════════════════════════════════════
+// AUDIO
+// ══════════════════════════════════════════════
+function getAudio(){
+  if(!audioCtx) audioCtx = new(window.AudioContext||window.webkitAudioContext)();
+  return audioCtx;
+}
+function toggleSound(){
+  _soundOn=!_soundOn;
+  const btn=document.getElementById('soundToggleBtn');
+  if(btn){btn.querySelector('.hud-btn-icon').textContent=_soundOn?'🔊':'🔇';
+          btn.querySelector('.hud-btn-label').textContent=_soundOn?'Sound':'Muted';}
+}
+function playSound(type){
+  if(!_soundOn)return;
+  try{
+    const ac=getAudio();
+    if(ac.state==='suspended')ac.resume();
+
+    if(type==='tap'){
+      const osc=ac.createOscillator(),g=ac.createGain();
+      osc.connect(g);g.connect(ac.destination);
+      osc.type='sine';osc.frequency.setValueAtTime(660,ac.currentTime);
+      g.gain.setValueAtTime(.08,ac.currentTime);
+      g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.12);
+      osc.start(ac.currentTime);osc.stop(ac.currentTime+.12);
+
+    } else if(type==='bubble'){
+      const osc=ac.createOscillator(),g=ac.createGain();
+      osc.connect(g);g.connect(ac.destination);
+      osc.type='sine';
+      osc.frequency.setValueAtTime(800,ac.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(400,ac.currentTime+.15);
+      g.gain.setValueAtTime(.06,ac.currentTime);
+      g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.15);
+      osc.start(ac.currentTime);osc.stop(ac.currentTime+.15);
+
+    } else if(type==='correct'){
+      // Fun: fizzing bubbles then rising chime + sparkle
+      const t=ac.currentTime;
+
+      // Bubble fizz layer — noise burst
+      const bufSize=ac.sampleRate*.3;
+      const buf=ac.createBuffer(1,bufSize,ac.sampleRate);
+      const d=buf.getChannelData(0);
+      for(let i=0;i<bufSize;i++)d[i]=(Math.random()*2-1)*.3;
+      const noise=ac.createBufferSource();
+      noise.buffer=buf;
+      const noiseFilter=ac.createBiquadFilter();
+      noiseFilter.type='bandpass';noiseFilter.frequency.value=1200;noiseFilter.Q.value=2;
+      const noiseGain=ac.createGain();
+      noiseGain.gain.setValueAtTime(.18,t);
+      noiseGain.gain.exponentialRampToValueAtTime(.001,t+.3);
+      noise.connect(noiseFilter);noiseFilter.connect(noiseGain);noiseGain.connect(ac.destination);
+      noise.start(t);noise.stop(t+.3);
+
+      // Rising magic chime — C maj arpeggio
+      const notes=[523,659,784,1047];
+      notes.forEach((freq,i)=>{
+        const o=ac.createOscillator(),g=ac.createGain();
+        o.connect(g);g.connect(ac.destination);
+        o.type='sine';
+        o.frequency.setValueAtTime(freq,t+i*.1);
+        g.gain.setValueAtTime(0,t+i*.1);
+        g.gain.linearRampToValueAtTime(.18,t+i*.1+.04);
+        g.gain.exponentialRampToValueAtTime(.001,t+i*.1+.35);
+        o.start(t+i*.1);o.stop(t+i*.1+.4);
+      });
+
+      // High sparkle glitter on top
+      for(let i=0;i<5;i++){
+        const o=ac.createOscillator(),g=ac.createGain();
+        o.connect(g);g.connect(ac.destination);
+        o.type='sine';
+        const f=2000+Math.random()*2000;
+        o.frequency.setValueAtTime(f,t+i*.06);
+        o.frequency.exponentialRampToValueAtTime(f*1.4,t+i*.06+.15);
+        g.gain.setValueAtTime(.07,t+i*.06);
+        g.gain.exponentialRampToValueAtTime(.001,t+i*.06+.2);
+        o.start(t+i*.06);o.stop(t+i*.06+.25);
+      }
+
+      // Satisfying low thud to seal the deal
+      const sub=ac.createOscillator(),subG=ac.createGain();
+      sub.connect(subG);subG.connect(ac.destination);
+      sub.type='sine';
+      sub.frequency.setValueAtTime(120,t);
+      sub.frequency.exponentialRampToValueAtTime(60,t+.25);
+      subG.gain.setValueAtTime(.3,t);
+      subG.gain.exponentialRampToValueAtTime(.001,t+.3);
+      sub.start(t);sub.stop(t+.3);
+
+    } else if(type==='wrong'){
+      // Fun: boiling rumble + splat + descending wail
+      const t=ac.currentTime;
+
+      // Low rumble — filtered noise
+      const bufSize=ac.sampleRate*.6;
+      const buf=ac.createBuffer(1,bufSize,ac.sampleRate);
+      const d=buf.getChannelData(0);
+      for(let i=0;i<bufSize;i++)d[i]=(Math.random()*2-1);
+      const noise=ac.createBufferSource();
+      noise.buffer=buf;
+      const rumbleFilter=ac.createBiquadFilter();
+      rumbleFilter.type='lowpass';rumbleFilter.frequency.value=300;
+      const rumbleGain=ac.createGain();
+      rumbleGain.gain.setValueAtTime(.35,t);
+      rumbleGain.gain.exponentialRampToValueAtTime(.001,t+.5);
+      noise.connect(rumbleFilter);rumbleFilter.connect(rumbleGain);rumbleGain.connect(ac.destination);
+      noise.start(t);noise.stop(t+.55);
+
+      // Explosion burst — high noise
+      const expBuf=ac.createBuffer(1,ac.sampleRate*.15,ac.sampleRate);
+      const ed=expBuf.getChannelData(0);
+      for(let i=0;i<ed.length;i++)ed[i]=(Math.random()*2-1);
+      const expNoise=ac.createBufferSource();
+      expNoise.buffer=expBuf;
+      const expGain=ac.createGain();
+      expGain.gain.setValueAtTime(.5,t+.05);
+      expGain.gain.exponentialRampToValueAtTime(.001,t+.2);
+      expNoise.connect(expGain);expGain.connect(ac.destination);
+      expNoise.start(t+.05);expNoise.stop(t+.22);
+
+      // Descending wail — comic fail sound
+      const o=ac.createOscillator(),g=ac.createGain();
+      o.connect(g);g.connect(ac.destination);
+      o.type='sawtooth';
+      o.frequency.setValueAtTime(600,t+.1);
+      o.frequency.exponentialRampToValueAtTime(80,t+.7);
+      g.gain.setValueAtTime(.2,t+.1);
+      g.gain.exponentialRampToValueAtTime(.001,t+.75);
+      o.start(t+.1);o.stop(t+.78);
+
+      // Splat hits — 3 quick impacts
+      [0,.08,.16].forEach((dt,i)=>{
+        const so=ac.createOscillator(),sg=ac.createGain();
+        so.connect(sg);sg.connect(ac.destination);
+        so.type='sine';
+        so.frequency.setValueAtTime(200-i*40,t+dt);
+        so.frequency.exponentialRampToValueAtTime(50,t+dt+.12);
+        sg.gain.setValueAtTime(.25,t+dt);
+        sg.gain.exponentialRampToValueAtTime(.001,t+dt+.15);
+        so.start(t+dt);so.stop(t+dt+.18);
+      });
+    }
+  }catch(e){}
+}
+
+// ══════════════════════════════════════════════
+// BUBBLING SOUND (1.5s pre-result)
+// ══════════════════════════════════════════════
+function playBubbling(duration=1.5){
+  if(!_soundOn) return;
+  try{
+    const ac=getAudio();
+    if(ac.state==='suspended') ac.resume();
+    const now=ac.currentTime;
+    const end=now+duration;
+    // Create many short random plops to simulate bubbling
+    const rate=18; // plops per second
+    const count=Math.round(duration*rate);
+    for(let i=0;i<count;i++){
+      const t=now+(i/rate)+(Math.random()*0.04);
+      if(t>=end) break;
+      const osc=ac.createOscillator();
+      const g=ac.createGain();
+      osc.connect(g); g.connect(ac.destination);
+      // Random bubble pitch between 220-440Hz
+      const freq=220+Math.random()*220;
+      osc.type='sine';
+      osc.frequency.setValueAtTime(freq,t);
+      osc.frequency.exponentialRampToValueAtTime(freq*0.6,t+0.08);
+      g.gain.setValueAtTime(0,t);
+      g.gain.linearRampToValueAtTime(0.12+Math.random()*0.08,t+0.01);
+      g.gain.exponentialRampToValueAtTime(0.001,t+0.09);
+      osc.start(t);
+      osc.stop(t+0.1);
+    }
+  } catch(e){}
+}
+
+// ══════════════════════════════════════════════
+// BACKGROUND BUBBLES
+// ══════════════════════════════════════════════
+function initBgBubbles(){
+  const wrap=document.getElementById('bgBubbles');
+  wrap.innerHTML='';
+  const W=window.innerWidth, H=window.innerHeight;
+
+    // ── ELECTRIC ARCS (SVG zigzag lines that flicker) ──
+  for(let i=0;i<5;i++){
+    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('class','arc-svg');
+    const len=40+Math.random()*60;
+    svg.setAttribute('width',String(len));
+    svg.setAttribute('height','40');
+    svg.setAttribute('viewBox',`0 0 ${len} 40`);
+    // build zigzag path
+    const segs=Math.floor(4+Math.random()*4);
+    let d=`M0,20`;
+    for(let s=1;s<=segs;s++){
+      const px=(len/segs)*s;
+      const py=8+Math.random()*24;
+      d+=` L${px},${py}`;
+    }
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d',d);
+    path.setAttribute('stroke',`rgba(${Math.random()>0.5?'180,140,255':'0,201,177'},.7)`);
+    path.setAttribute('stroke-width','1.5');
+    path.setAttribute('fill','none');
+    path.setAttribute('stroke-linecap','round');
+    svg.appendChild(path);
+    const dur=3+Math.random()*4;
+    svg.style.cssText=`left:${Math.random()*88}%;top:${10+Math.random()*70}%;
+      animation-duration:${dur}s;animation-delay:-${Math.random()*dur}s;
+      transform:rotate(${(Math.random()-0.5)*40}deg)`;
+    wrap.appendChild(svg);
+  }
+
+  // ── STEAM PUFFS ──
+  for(let i=0;i<10;i++){
+    const p=document.createElement('div');
+    p.className='steam-puff';
+    const size=60+Math.random()*100;
+    const dur=7+Math.random()*6;
+    p.style.cssText=`width:${size}px;height:${size}px;
+      left:${Math.random()*85}%;
+      animation-duration:${dur}s;animation-delay:-${Math.random()*dur}s`;
+    wrap.appendChild(p);
+  }
+}
+
+// ══════════════════════════════════════════════
+// START GAME
+// ══════════════════════════════════════════════
+// ── BAND / GRADE META ──────────────────────────────────────────────────────
+const BAND_META = {
+  band_1: { age: 5, emoji: '🌱', label: 'Ages 4–6',  grades: 'JK / SK',      cls: 'band1' },
+  band_2: { age: 7, emoji: '🌿', label: 'Ages 6–8',  grades: 'Grade 1 & 2',  cls: 'band2' },
+  band_3: { age: 9, emoji: '🌳', label: 'Ages 8–10', grades: 'Grade 3 & 4',  cls: 'band3' }
+};
+const GRADE_META = {
+  jk:      { label: 'JK',      band: 'band_1' },
+  sk:      { label: 'SK',      band: 'band_1' },
+  grade_1: { label: 'Grade 1', band: 'band_2' },
+  grade_2: { label: 'Grade 2', band: 'band_2' },
+  grade_3: { label: 'Grade 3', band: 'band_3' },
+  grade_4: { label: 'Grade 4', band: 'band_3' }
+};
+
+(async function initBand() {
+  const params    = new URLSearchParams(window.location.search);
+  const urlBand   = params.get('band');
+  const urlGrade  = params.get('grade');
+  const savedBand = localStorage.getItem('ck_band');
+
+  let resolvedBand  = null;
+  let resolvedGrade = null;
+  let source        = null;
+
+  if (urlBand && BAND_META[urlBand]) {
+    resolvedBand  = urlBand;
+    resolvedGrade = (urlGrade && GRADE_META[urlGrade] && GRADE_META[urlGrade].band === urlBand)
+                    ? urlGrade : null;
+    source = 'url';
+  } else if (savedBand && BAND_META[savedBand]) {
+    resolvedBand = savedBand;
+    source = 'saved';
+  }
+
+  if (resolvedBand) {
+    const meta = BAND_META[resolvedBand];
+    selectedAge = meta.age;
+    const btn = document.getElementById('startExpBtn');
+    if (btn) { btn.disabled = false; btn.classList.add('active'); }
+
+    let pillText = resolvedGrade
+      ? `${meta.emoji} ${GRADE_META[resolvedGrade].label} · ${meta.label}`
+      : `${meta.emoji} ${meta.label} · ${meta.grades}`;
+    const noteText = source === 'saved' ? '↩ continuing from last visit' : '';
+
+    document.getElementById('bandDisplay').innerHTML =
+      `<div class="band-pill ${meta.cls}">${pillText}</div>` +
+      (noteText ? `<div class="band-source-note">${noteText}</div>` : '');
+
+    // ── FETCH QUIZ POOL FROM JSON ───────────────────────────────────────────
+    try {
+      const resp = await fetch('/data/kitchen-lab-questions.json');
+      if (resp.ok) {
+        const data = JSON.parse(await resp.text());
+        // Collect all tap_select questions for this band (set-level or inline)
+        const qs = [];
+        for (const set of (data.question_sets || [])) {
+          if (set.band_id !== resolvedBand) continue;
+          for (const q of (set.questions || [])) {
+            const mech = q.mechanic || set.mechanic;
+            if (mech === 'tap_select' && q.answer && Array.isArray(q.distractors)) {
+              qs.push({ prompt: q.prompt, answer: q.answer, distractors: q.distractors });
+            }
+          }
+        }
+        if (qs.length > 0) {
+          // Shuffle
+          for (let i = qs.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [qs[i], qs[j]] = [qs[j], qs[i]];
+          }
+          quizPool = qs;
+          quizPoolIdx = 0;
+          console.log(`[KL] Loaded ${quizPool.length} quiz questions (${resolvedBand})`);
+        }
+      }
+    } catch(e) {
+      console.warn('[KL] Quiz JSON fetch failed', e);
+    }
+  } else {
+    document.getElementById('bandDisplay').innerHTML =
+      `<div class="band-no-info">
+        👉 <a href="/index.html#games">Visit the homepage</a> and pick your age group first for the best experience!
+       </div>`;
+  }
+})();
+
+function selectAge(age, btn){
+  selectedAge = age;
+  document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('selected'));
+  if (btn) btn.classList.add('selected');
+  const startBtn = document.getElementById('startExpBtn');
+  startBtn.disabled = false;
+  startBtn.classList.add('active');
+}
+
+function startGame(){
+  if(!selectedAge) return;
+  const age = selectedAge;
+  try{
+    if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    if(audioCtx.state==='suspended')audioCtx.resume();
+  }catch(e){}
+
+  experiments=[...EXPERIMENTS[age]].sort(()=>Math.random()-.5);
+  expIndex=0; score=0; lives=3; selected=[]; pipResults={};
+  gameRunning=true;
+
+  document.getElementById('startScreen').classList.add('hidden');
+  try { document.querySelector('.start-home-btn').style.display='none'; } catch(e){}
+  document.getElementById('hud').classList.remove('hidden');
+  document.getElementById('gameScreen').classList.remove('hidden');
+
+  buildProgressPips();
+  updateHUD();
+  loadExperiment();
+}
+
+function hudBack(){
+  gameRunning=false;
+  document.getElementById('hud').classList.add('hidden');
+  document.getElementById('gameScreen').classList.add('hidden');
+  document.getElementById('endScreen').classList.add('hidden');
+  document.getElementById('resultOverlay').classList.add('hidden');
+  document.getElementById('startScreen').classList.remove('hidden');
+  document.querySelector('.start-home-btn').style.display='';
+}
+
+// ══════════════════════════════════════════════
+// PROGRESS PIPS
+// ══════════════════════════════════════════════
+function buildProgressPips(){
+  const wrap=document.getElementById('progressPips');
+  wrap.innerHTML='';
+  experiments.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='pip'+(i===0?' current':'');
+    d.id=`pip-${i}`;
+    wrap.appendChild(d);
+  });
+}
+
+function updatePips(){
+  experiments.forEach((_,i)=>{
+    const d=document.getElementById(`pip-${i}`);
+    if(!d)return;
+    d.className='pip';
+    if(i===expIndex){
+      d.classList.add('current');
+    } else if(pipResults[i]!==undefined){
+      const lost=pipResults[i];
+      if(lost===0) d.classList.add('done');
+      else         d.classList.add('done-warn');
+    }
+  });
+}
+
+// ══════════════════════════════════════════════
+// HUD
+// ══════════════════════════════════════════════
+function updateHUD(){
+  const sv=document.getElementById('scoreVal');
+  if(sv)sv.textContent=score;
+  const hearts=['❤️❤️❤️','❤️❤️🖤','❤️🖤🖤','🖤🖤🖤'];
+  document.getElementById('livesVal').textContent=hearts[Math.max(0,3-lives)];
+}
+
+// ══════════════════════════════════════════════
+// LOAD EXPERIMENT
+// ══════════════════════════════════════════════
+function loadExperiment(){
+  if(expIndex>=experiments.length){endGame();return;}
+  currentExp=experiments[expIndex];
+  selected=[];
+  livesAtExpStart=lives;
+
+  document.getElementById('targetEmoji').textContent=currentExp.target.e;
+  document.getElementById('targetName').textContent=currentExp.target.n;
+
+  resetBeaker();
+  buildSlots();
+  buildShelf();
+
+  document.getElementById('mixBtn').disabled=true;
+  document.getElementById('mixBtn').classList.remove('pulse');
+
+  _hintUsed=false;
+  const hb=document.getElementById('hintBtn');
+  if(hb){hb.disabled=false;hb.textContent='💡 Hint';}
+
+  updatePips();
+}
+
+// ══════════════════════════════════════════════
+// BEAKER
+// ══════════════════════════════════════════════
+function resetBeaker(){
+  const rect=document.getElementById('liquidRect');
+  rect.setAttribute('y','138');
+  rect.setAttribute('height','0');
+  rect.setAttribute('fill','rgba(0,201,177,0.4)');
+  ['b1','b2','b3'].forEach(id=>{
+    const b=document.getElementById(id);
+    b.style.opacity='0';
+    b.style.animation='none';
+  });
+}
+
+function fillBeaker(){
+  const rect=document.getElementById('liquidRect');
+  const n=selected.length;
+  const maxFill=90; // px height inside beaker
+  const h=Math.min(n*30,maxFill);
+  const y=138-h;
+
+  rect.setAttribute('y',y);
+  rect.setAttribute('height',h);
+
+  // Blend colours of selected ingredients
+  if(n>0){
+    const colors=selected.map(id=>currentExp.ingredients.find(ing=>ing.id===id)?.color||'#00C9B1');
+    rect.setAttribute('fill',colors[colors.length-1]+'bb');
+  }
+
+  // Animate beaker bubbles when filling
+  if(n>0){
+    ['b1','b2','b3'].forEach((id,i)=>{
+      const b=document.getElementById(id);
+      b.setAttribute('cy',y+10+i*8);
+      b.style.opacity='.6';
+      b.style.animation=`bub ${.8+i*.3}s ease-in ${i*.2}s infinite`;
+    });
+    playSound('bubble');
+  }
+}
+
+// ══════════════════════════════════════════════
+// SLOTS
+// ══════════════════════════════════════════════
+function buildSlots(){
+  const row=document.getElementById('slotRow');
+  const needed=currentExp.correct.length;
+  row.innerHTML='';
+  for(let i=0;i<needed;i++){
+    const slot=document.createElement('div');
+    slot.className='ing-slot';
+    slot.id=`slot-${i}`;
+    slot.innerHTML='<span style="font-size:1.4rem;opacity:.3">+</span>';
+    slot.onclick=()=>removeFromSlot(i);
+    row.appendChild(slot);
+  }
+}
+
+function updateSlots(){
+  const needed=currentExp.correct.length;
+  for(let i=0;i<needed;i++){
+    const slot=document.getElementById(`slot-${i}`);
+    if(!slot)continue;
+    if(i<selected.length){
+      const ing=currentExp.ingredients.find(x=>x.id===selected[i]);
+      slot.className='ing-slot filled';
+      slot.innerHTML=`<span>${ing.e}</span><span class="slot-name">${ing.n}</span><span class="remove-x">✕</span>`;
+      slot.onclick=()=>removeFromSlot(i);
+    } else {
+      slot.className='ing-slot';
+      slot.innerHTML='<span style="font-size:1.4rem;opacity:.3">+</span>';
+      slot.onclick=null;
+    }
+  }
+}
+
+function removeFromSlot(i){
+  if(i<selected.length){
+    const id=selected[i];
+    selected.splice(i,1);
+    // Re-enable shelf button
+    const btn=document.querySelector(`.ing-btn[data-id="${id}"]`);
+    if(btn)btn.classList.remove('selected','used');
+    updateSlots();
+    fillBeaker();
+    updateMixBtn();
+  }
+}
+
+// ══════════════════════════════════════════════
+// INGREDIENT SHELF
+// ══════════════════════════════════════════════
+function buildShelf(){
+  const shelf=document.getElementById('ingredientShelf');
+  shelf.innerHTML='';
+  currentExp.ingredients.forEach(ing=>{
+    const btn=document.createElement('button');
+    btn.className='ing-btn';
+    btn.dataset.id=ing.id;
+    btn.innerHTML=`<span class="ing-em">${ing.e}</span><span class="ing-name">${ing.n}</span>`;
+    btn.onclick=()=>selectIngredient(ing.id,btn);
+    shelf.appendChild(btn);
+  });
+}
+
+function selectIngredient(id,btn){
+  if(btn.classList.contains('used')&&selected.includes(id)){
+    // Deselect — remove from selected
+    const i=selected.indexOf(id);
+    selected.splice(i,1);
+    btn.classList.remove('selected','used');
+    updateSlots();
+    fillBeaker();
+    updateMixBtn();
+    return;
+  }
+  if(btn.classList.contains('used'))return;
+
+  const needed=currentExp.correct.length;
+  if(selected.length>=needed)return;
+
+  selected.push(id);
+  btn.classList.add('selected','used');
+  playSound('tap');
+
+  updateSlots();
+  fillBeaker();
+  updateMixBtn();
+}
+
+function updateMixBtn(){
+  const needed=currentExp.correct.length;
+  const btn=document.getElementById('mixBtn');
+  const ready=selected.length===needed;
+  btn.disabled=!ready;
+  if(ready)btn.classList.add('pulse');
+  else btn.classList.remove('pulse');
+}
+
+let _hintUsed=false;
+
+function autoHint(){
+  const missing=currentExp.correct.filter(id=>!selected.includes(id));
+  if(!missing.length)return;
+  const reveal=missing[Math.floor(Math.random()*missing.length)];
+  const ing=currentExp.ingredients.find(x=>x.id===reveal);
+  if(!ing)return;
+  _highlightHint(reveal,ing,'💡 Hint — try');
+}
+
+function _highlightHint(id,ing,prefix){
+  const btn=document.querySelector(`.ing-btn[data-id="${id}"]`);
+  if(btn){
+    btn.style.boxShadow='0 0 0 4px var(--yellow), 0 0 24px rgba(255,217,61,.7)';
+    btn.style.borderColor='var(--yellow)';
+    btn.style.transform='translateY(-4px) scale(1.08)';
+    setTimeout(()=>{
+      if(btn){btn.style.boxShadow='';btn.style.borderColor='';btn.style.transform='';}
+    },4000);
+  }
+  const t=document.getElementById('hintToast');
+  document.getElementById('hintToastText').textContent=`${prefix} ${ing.e} ${ing.n}!`;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),4000);
+}
+
+function showHint(){
+  if(!currentExp||_hintUsed)return;
+  _hintUsed=true;
+  document.getElementById('hintBtn').disabled=true;
+  document.getElementById('hintBtn').textContent='💡 Used';
+  const missing=currentExp.correct.filter(id=>!selected.includes(id));
+  if(!missing.length)return;
+  const reveal=missing[0];
+  const ing=currentExp.ingredients.find(x=>x.id===reveal);
+  if(!ing)return;
+  _highlightHint(reveal,ing,'💡 Try adding');
+  playSound('tap');
+}
+
+// ══════════════════════════════════════════════
+// MIX!
+// ══════════════════════════════════════════════
+function doMix(){
+  if(!currentExp)return;
+  document.getElementById('mixBtn').disabled=true;
+  document.getElementById('mixBtn').classList.remove('pulse');
+
+  // Check correctness — order doesn't matter
+  const needed=new Set(currentExp.correct);
+  const got=new Set(selected);
+  const isCorrect=[...needed].every(id=>got.has(id))&&needed.size===got.size;
+
+  // Play bubbling immediately on click — result hidden until it completes
+  playBubbling(1.5);
+
+  setTimeout(()=>{
+    // Flash colour + visual FX + audio reveal after bubbling completes
+    flashBeaker(isCorrect?'#4ECB71':'#FF5C5C');
+    if(isCorrect){ fxCorrect(); playSound('correct'); } else { fxWrong(); playSound('wrong'); }
+
+    setTimeout(()=>{
+      if(isCorrect){
+        score++;
+        updateHUD();
+        pipResults[expIndex]=livesAtExpStart-lives;
+        spawnConfetti();
+        showResult(true);
+      } else {
+        lives=Math.max(0,lives-1);
+        updateHUD();
+        pipResults[expIndex]=livesAtExpStart-lives;
+        showResult(false, lives<=0);
+      }
+      updatePips();
+    }, 1500);
+  },1500);
+}
+
+function getBeakerCenter(){
+  const wrap=document.getElementById('beakerWrap');
+  const rect=wrap.getBoundingClientRect();
+  return{x:rect.left+rect.width/2, y:rect.top+rect.height*0.4};
+}
+
+function flashBeaker(color){
+  const flash=document.getElementById('mixFlash');
+  flash.style.background=color+'33';
+  flash.classList.add('on');
+  setTimeout(()=>flash.classList.remove('on'),300);
+}
+
+function shakeBeaker(){
+  const wrap=document.getElementById('beakerWrap');
+  wrap.style.animation='none';
+  requestAnimationFrame(()=>{
+    wrap.style.animation='shake .5s ease-out';
+  });
+  if(!document.getElementById('shakeKF')){
+    const s=document.createElement('style');
+    s.id='shakeKF';
+    s.textContent='@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-10px)}40%{transform:translateX(10px)}60%{transform:translateX(-8px)}80%{transform:translateX(6px)}}';
+    document.head.appendChild(s);
+  }
+}
+
+// ── CORRECT FX: fizz + sparkles + gentle smoke ──
+function fxCorrect(){
+  const canvas=document.getElementById('fx-canvas');
+  const ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+  const {x,y}=getBeakerCenter();
+  const particles=[];
+
+  // Fizz bubbles rising from beaker
+  for(let i=0;i<30;i++){
+    particles.push({
+      type:'bubble',
+      x:x+(Math.random()-.5)*40,
+      y:y+20+Math.random()*30,
+      vx:(Math.random()-.5)*1.5,
+      vy:-(1.5+Math.random()*2.5),
+      r:2+Math.random()*5,
+      life:1,
+      decay:.012+Math.random()*.01,
+      color:`hsla(${160+Math.random()*40},80%,70%,`
+    });
+  }
+  // Sparkles burst outward
+  for(let i=0;i<25;i++){
+    const angle=Math.random()*Math.PI*2;
+    const speed=2+Math.random()*5;
+    particles.push({
+      type:'spark',
+      x,y:y-10,
+      vx:Math.cos(angle)*speed,
+      vy:Math.sin(angle)*speed-2,
+      r:2+Math.random()*3,
+      life:1,
+      decay:.02+Math.random()*.015,
+      color:`hsla(${50+Math.random()*60},100%,70%,`
+    });
+  }
+  // Smoke puffs drifting up
+  for(let i=0;i<12;i++){
+    particles.push({
+      type:'smoke',
+      x:x+(Math.random()-.5)*30,
+      y:y-20,
+      vx:(Math.random()-.5)*.8,
+      vy:-(0.5+Math.random()*1.2),
+      r:8+Math.random()*14,
+      life:.7,
+      decay:.008+Math.random()*.006,
+      color:'rgba(200,255,220,'
+    });
+  }
+
+  runFX(canvas,ctx,particles,80);
+}
+
+// ── WRONG FX: boil over + heavy smoke + explosion ──
+function fxWrong(){
+  const canvas=document.getElementById('fx-canvas');
+  const ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+  const {x,y}=getBeakerCenter();
+  const particles=[];
+
+  // Explosion burst — large fast particles
+  for(let i=0;i<50;i++){
+    const angle=Math.random()*Math.PI*2;
+    const speed=3+Math.random()*9;
+    particles.push({
+      type:'explode',
+      x,y:y-10,
+      vx:Math.cos(angle)*speed,
+      vy:Math.sin(angle)*speed-3,
+      r:3+Math.random()*7,
+      life:1,
+      decay:.016+Math.random()*.018,
+      grav:.15,
+      color:`hsla(${Math.random()<.5?0:30},100%,${55+Math.random()*20}%,`
+    });
+  }
+  // Boil-over blobs rising then falling
+  for(let i=0;i<20;i++){
+    particles.push({
+      type:'blob',
+      x:x+(Math.random()-.5)*50,
+      y:y+10,
+      vx:(Math.random()-.5)*3,
+      vy:-(3+Math.random()*4),
+      r:4+Math.random()*8,
+      life:1,
+      decay:.014,
+      grav:.12,
+      color:`hsla(${10+Math.random()*20},90%,55%,`
+    });
+  }
+  // Heavy smoke clouds
+  for(let i=0;i<20;i++){
+    particles.push({
+      type:'smoke',
+      x:x+(Math.random()-.5)*60,
+      y:y-10+Math.random()*20,
+      vx:(Math.random()-.5)*2,
+      vy:-(0.8+Math.random()*2),
+      r:14+Math.random()*22,
+      life:.9,
+      decay:.006+Math.random()*.006,
+      color:'rgba(80,80,80,'
+    });
+  }
+  // Ember sparks
+  for(let i=0;i<35;i++){
+    const angle=Math.random()*Math.PI*2;
+    const speed=1+Math.random()*6;
+    particles.push({
+      type:'ember',
+      x,y:y-5,
+      vx:Math.cos(angle)*speed,
+      vy:Math.sin(angle)*speed-4,
+      r:1.5+Math.random()*2.5,
+      life:1,
+      decay:.02+Math.random()*.02,
+      grav:.08,
+      color:`hsla(${40+Math.random()*20},100%,70%,`
+    });
+  }
+
+  // Shake too
+  shakeBeaker();
+  runFX(canvas,ctx,particles,120);
+}
+
+function runFX(canvas,ctx,particles,maxFrames){
+  let frame=0;
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p=>{
+      p.x+=p.vx;
+      p.y+=p.vy;
+      if(p.grav)p.vy+=p.grav;
+      if(p.type==='smoke')p.r+=.3;
+      p.life-=p.decay;
+      if(p.life<=0)return;
+
+      ctx.save();
+      ctx.globalAlpha=Math.max(0,p.life);
+
+      if(p.type==='smoke'){
+        const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r);
+        g.addColorStop(0,p.color+'0.25)');
+        g.addColorStop(1,p.color+'0)');
+        ctx.fillStyle=g;
+        ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+      } else if(p.type==='bubble'){
+        ctx.strokeStyle=p.color+'0.8)';
+        ctx.lineWidth=1.5;
+        ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.stroke();
+      } else if(p.type==='spark'||p.type==='ember'){
+        ctx.fillStyle=p.color+'1)';
+        ctx.shadowColor=p.color+'1)';
+        ctx.shadowBlur=6;
+        ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+      } else {
+        // explode / blob
+        const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r);
+        g.addColorStop(0,p.color+'1)');
+        g.addColorStop(1,p.color+'0)');
+        ctx.fillStyle=g;
+        ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+      }
+      ctx.restore();
+    });
+    frame++;
+    if(frame<maxFrames)requestAnimationFrame(draw);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+  draw();
+}
+
+// ══════════════════════════════════════════════
+// RESULT OVERLAY
+// ══════════════════════════════════════════════
+function showResult(correct,outOfLives){
+  const overlay=document.getElementById('resultOverlay');
+  document.getElementById('resultEmoji').textContent=correct?currentExp.target.e:'💥';
+  document.getElementById('resultTitle').textContent=correct?currentExp.target.n:(outOfLives?'Game Over!':'Oops!');
+  const sub=document.getElementById('resultSubtitle');
+  sub.textContent=correct?'✅ Correct!':(outOfLives?'❌ Out of lives!':'❌ Wrong mixture');
+  sub.className='result-subtitle '+(correct?'correct':'wrong');
+
+  // Fact box — correct only
+  document.getElementById('factBox').style.display=correct?'':'none';
+  document.getElementById('factText').textContent=correct?currentExp.fact:'';
+
+  // Hint box — wrong only
+  const hintBox=document.getElementById('hintBox');
+  if(!correct){
+    const allCorrect=currentExp.correct;
+    const hintId=allCorrect[Math.floor(Math.random()*allCorrect.length)];
+    const hintIng=currentExp.ingredients.find(x=>x.id===hintId);
+    if(hintIng){
+      document.getElementById('hintBoxText').textContent=
+        'Try using '+hintIng.e+' '+hintIng.n+' next time — it\'s one of the ingredients needed to make '+currentExp.target.e+' '+currentExp.target.n+'!';
+    }
+    hintBox.style.display='';
+  } else {
+    hintBox.style.display='none';
+  }
+
+  const nextBtn=document.querySelector('#resultOverlay .btn-next');
+  if(outOfLives){
+    nextBtn.textContent='See Results →';
+    nextBtn.onclick=()=>{ overlay.classList.add('hidden'); endGame(); };
+    document.getElementById('quizCard').style.display='none';
+  } else if(correct && quizPool && quizPool.length > 0) {
+    // Show quiz card, defer Next button until answered
+    nextBtn.textContent='Next Experiment →';
+    nextBtn.onclick=nextExperiment;
+    nextBtn.disabled=true;
+    nextBtn.style.opacity='0.35';
+    nextBtn.style.cursor='not-allowed';
+
+    const q = quizPool[quizPoolIdx % quizPool.length];
+    quizPoolIdx++;
+    if(quizPoolIdx >= quizPool.length) {
+      // Reshuffle for next lap
+      for(let i=quizPool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[quizPool[i],quizPool[j]]=[quizPool[j],quizPool[i]];}
+      quizPoolIdx=0;
+    }
+
+    document.getElementById('qzPrompt').textContent = q.prompt;
+    const opts = [q.answer, ...q.distractors].sort(() => Math.random() - 0.5);
+    document.getElementById('qzOptions').innerHTML = opts.map(o =>
+      `<button class="qz-opt" onclick="answerQuiz(this,${o===q.answer})">${o}</button>`
+    ).join('');
+    document.getElementById('quizCard').style.display='';
+  } else {
+    nextBtn.textContent=correct?'Next Experiment →':'Next →';
+    nextBtn.disabled=false;
+    nextBtn.style.opacity='';
+    nextBtn.style.cursor='';
+    nextBtn.onclick=nextExperiment;
+    document.getElementById('quizCard').style.display='none';
+  }
+
+  overlay.classList.remove('hidden');
+}
+
+function answerQuiz(btn, correct) {
+  // Lock all options
+  document.querySelectorAll('.qz-opt').forEach(o => {
+    o.classList.add(o === btn ? (correct ? 'qz-correct' : 'qz-wrong') : 'qz-muted');
+  });
+  // If wrong, reveal the correct one
+  if (!correct) {
+    document.querySelectorAll('.qz-opt').forEach(o => {
+      if (o !== btn) o.classList.remove('qz-muted');
+    });
+    // The correct answer button needs to be highlighted —
+    // re-scan by checking onclick attribute
+    document.querySelectorAll('.qz-opt').forEach(o => {
+      if (o.getAttribute('onclick').includes('true')) {
+        o.classList.remove('qz-muted');
+        o.classList.add('qz-correct');
+      }
+    });
+  }
+  // Unlock Next button
+  const nextBtn = document.querySelector('#resultOverlay .btn-next');
+  nextBtn.disabled = false;
+  nextBtn.style.opacity = '';
+  nextBtn.style.cursor = '';
+}
+
+function retryExperiment(){
+  document.getElementById('resultOverlay').classList.add('hidden');
+  selected=[];
+  buildShelf();
+  buildSlots();
+  resetBeaker();
+  document.getElementById('mixBtn').disabled=true;
+  document.getElementById('mixBtn').classList.remove('pulse');
+}
+
+function nextExperiment(){
+  document.getElementById('resultOverlay').classList.add('hidden');
+  // Record result for this experiment if not already set
+  if(pipResults[expIndex]===undefined){
+    pipResults[expIndex]=livesAtExpStart-lives;
+  }
+  updatePips();
+  expIndex++;
+  if(expIndex>=experiments.length){endGame();}
+  else{loadExperiment();}
+}
+
+// ══════════════════════════════════════════════
+// END GAME
+// ══════════════════════════════════════════════
+function endGame(){
+  gameRunning=false;
+  document.getElementById('hud').classList.add('hidden');
+  document.getElementById('gameScreen').classList.add('hidden');
+
+  const total=experiments.length;
+  const pct=score/total;
+  const stars=pct===1?'⭐⭐⭐':pct>=.67?'⭐⭐':pct>=.34?'⭐':'';
+  document.getElementById('endTitle').textContent=pct===1?'Perfect Lab! 🎉':pct>=.5?'Great Science!':'Keep Experimenting!';
+  document.getElementById('endScore').textContent=`${score} / ${total} experiments correct`;
+  document.getElementById('endStars').textContent=stars;
+
+  const ne=[];
+  _incPlays('kitchenlab');
+  awardKitchenLabBadges(score,total,selectedAge,ne);
+  _crossCheck(ne);
+  ne.forEach(id=>_toast(id));
+
+  setTimeout(()=>renderEndBadges(ne),400);
+  document.getElementById('endScreen').classList.remove('hidden');
+  document.querySelector('.start-home-btn').style.display='';
+}
+
+function renderEndBadges(ne){
+  const wrap=document.getElementById('endBadgesWrap');
+  const row=document.getElementById('endBadgesRow');
+  const neF=ne.filter(id=>id.startsWith('kl_'));
+  const all=Object.keys(_lb()).filter(id=>id.startsWith('kl_'));
+  if(!all.length&&!neF.length){wrap.style.display='none';return;}
+  wrap.style.display='';
+  const show=neF.length?neF:all;
+  row.innerHTML=show.map(id=>{const b=BADGE_DEF[id];if(!b)return'';
+    return`<div class="badge-coin${neF.includes(id)?' new-badge':''}" title="${b.desc}">
+      <div class="badge-coin-em">${b.em}</div>
+      <div class="badge-coin-name">${b.name}</div></div>`;
+  }).join('');
+}
+
+function playAgain(){
+  document.getElementById('endScreen').classList.add('hidden');
+  document.getElementById('startScreen').classList.remove('hidden');
+  document.querySelector('.start-home-btn').style.display='';
+  selectedAge=null;
+  document.querySelectorAll('.age-btn').forEach(b=>b.classList.remove('selected'));
+  document.getElementById('startExpBtn').disabled=true;
+}
+
+// ══════════════════════════════════════════════
+// CONFETTI
+// ══════════════════════════════════════════════
+function spawnConfetti(){
+  const canvas=document.getElementById('confetti-canvas');
+  const ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  const particles=Array.from({length:60},()=>({
+    x:Math.random()*canvas.width,y:-10,
+    vx:(Math.random()-0.5)*4,vy:2+Math.random()*3,
+    color:['#00C9B1','#FFD93D','#FF5C5C','#A66CFF','#4ECB71'][Math.floor(Math.random()*5)],
+    size:4+Math.random()*6,rot:Math.random()*360,rv:(Math.random()-0.5)*8,life:1
+  }));
+  let frame=0;
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;p.vy+=0.07;p.rot+=p.rv;p.life-=0.015;
+      ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);
+      ctx.globalAlpha=Math.max(0,p.life);ctx.fillStyle=p.color;
+      ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size);ctx.restore();
+    });
+    frame++;
+    if(frame<120)requestAnimationFrame(draw);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+  draw();
+}
+
+// ══════════════════════════════════════════════
+// BADGE SYSTEM
+// ══════════════════════════════════════════════
+const BADGE_KEY='crabcake_badges_v1';
+const PLAYS_KEY='crabcake_plays_v1';
+
+const BADGE_DEF={
+  kl_first:     {game:'kitchenlab',em:'🧪',name:'First Experiment',desc:'Complete your first Kitchen Lab game'},
+  kl_sharp:     {game:'kitchenlab',em:'⭐',name:'Sharp Scientist',desc:'Score 6+ correct in one Kitchen Lab game'},
+  kl_perfect:   {game:'kitchenlab',em:'🏆',name:'Perfect Lab',desc:'Score 10/10 in Kitchen Lab'},
+  kl_chem:      {game:'kitchenlab',em:'⚗️',name:'Chemist',desc:'Complete the Ages 9–10 level'},
+  kl_noerror:   {game:'kitchenlab',em:'💎',name:'No Mistakes',desc:'Finish a Kitchen Lab game without losing a life'},
+  kl_curious:   {game:'kitchenlab',em:'🔬',name:'Curious Mind',desc:'Play Kitchen Lab 3 times'},
+  kl_juniorchef:{game:'kitchenlab',em:'🧑‍🍳',name:'Junior Chef',desc:'Play Kitchen Lab 5 times'},
+  kl_kaboom:    {game:'kitchenlab',em:'💥',name:'Kaboom!',desc:'Make an experiment go wrong'},
+  kl_masterchef:{game:'kitchenlab',em:'🌟',name:'Master Chef',desc:'Complete all 3 Kitchen Lab age levels'},
+  cg_fan:       {game:'crabcake', em:'🦀',name:'Crabcake Fan',desc:'Play all Crabcake games at least once'},
+  cg_earlybird: {game:'crabcake', em:'🌅',name:'Early Bird',desc:'Play any game before 8am'},
+  cg_returning: {game:'crabcake', em:'🔁',name:'Coming Back',desc:'Play on 3 different days'},
+  cg_collector: {game:'crabcake', em:'🏅',name:'Badge Collector',desc:'Earn 10 badges across all games'},
+  cg_allround:  {game:'crabcake', em:'🌟',name:'All-Rounder',desc:'Earn at least one badge in every game'},
+  cg_dedicated: {game:'crabcake', em:'🎮',name:'Dedicated',desc:'Play 10 games total across all games'},
+  cg_bughunter: {game:'crabcake', em:'🐛',name:'Bug Hunter',desc:'Reported a bug'},
+  cg_bigideas:  {game:'crabcake', em:'💡',name:'Big Ideas',desc:'Suggested a new game idea'},
+};
+
+function _lb(){try{return JSON.parse(localStorage.getItem(BADGE_KEY)||'{}')}catch{return{}}}
+function _sb(d){try{localStorage.setItem(BADGE_KEY,JSON.stringify(d))}catch{}}
+function _lp(){try{return JSON.parse(localStorage.getItem(PLAYS_KEY)||'{}')}catch{return{}}}
+function _sp(d){try{localStorage.setItem(PLAYS_KEY,JSON.stringify(d))}catch{}}
+function _award(id){const d=_lb();if(d[id])return false;d[id]=Date.now();_sb(d);return true}
+function _incPlays(game){const p=_lp();p[game]=(p[game]||0)+1;_sp(p)}
+function _toast(id){
+  const b=BADGE_DEF[id];if(!b)return;
+  const t=document.getElementById('toast');
+  document.getElementById('toastEm').textContent=b.em;
+  document.getElementById('toastName').textContent=b.name+' unlocked!';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+function _crossCheck(ne){
+  const p=_lp();
+  const games=['mathdive','junglewords','witchbrew','tubesort','kitchenlab'];
+  if(!_lb().cg_fan&&games.every(g=>(p[g]||0)>=1)){if(_award('cg_fan'))ne.push('cg_fan');}
+  const h=new Date().getHours();
+  if(h<8&&!_lb().cg_earlybird){if(_award('cg_earlybird'))ne.push('cg_earlybird');}
+  const totalPlays=Object.values(p).reduce((a,b)=>a+b,0);
+  if(totalPlays>=10&&!_lb().cg_dedicated){if(_award('cg_dedicated'))ne.push('cg_dedicated');}
+  const totalBadges=Object.keys(_lb()).length;
+  if(totalBadges>=10&&!_lb().cg_collector){if(_award('cg_collector'))ne.push('cg_collector');}
+}
+
+function awardKitchenLabBadges(score,total,age,ne){
+  if(_award('kl_first'))ne.push('kl_first');
+  if(score===total&&_award('kl_perfect'))ne.push('kl_perfect');
+  if(score>=6&&_award('kl_sharp'))ne.push('kl_sharp');
+  if(age===9&&_award('kl_chem'))ne.push('kl_chem');
+  // Check if all lives maintained
+  const anyLivesLost=Object.values(pipResults).some(v=>v>0);
+  if(!anyLivesLost&&_award('kl_noerror'))ne.push('kl_noerror');
+  // Check if any wrong answer
+  const anyWrong=Object.values(pipResults).some(v=>v>0);
+  if(anyWrong&&_award('kl_kaboom'))ne.push('kl_kaboom');
+  const p=_lp();
+  if((p['kitchenlab']||0)>=3&&_award('kl_curious'))ne.push('kl_curious');
+  if((p['kitchenlab']||0)>=5&&_award('kl_juniorchef'))ne.push('kl_juniorchef');
+  // Check all 3 age levels
+  try{
+    const KEY='crabcake_kl_levels_v1';
+    let lvls;try{lvls=JSON.parse(localStorage.getItem(KEY)||'[]')}catch{lvls=[];}
+    if(!lvls.includes(age)){lvls.push(age);localStorage.setItem(KEY,JSON.stringify(lvls));}
+    if(lvls.length>=3&&_award('kl_masterchef'))ne.push('kl_masterchef');
+  }catch{}
+}
+
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+initBgBubbles();
+</script>
+
+<script src="/crabcake-avatar.js?v=4" defer></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var hudEl = document.getElementById('kl-avatar-hud');
+    if (hudEl && typeof CrabcakeAvatar !== 'undefined') {
+      CrabcakeAvatar.injectHUD(hudEl, { size: 48, showPet: false });
+
+    }
+  });
+</script>
+</body>
+</html>
