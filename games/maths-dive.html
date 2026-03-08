@@ -1153,6 +1153,7 @@ function startGame() {
   generateQuestion();
 
   document.getElementById('hud').classList.remove('hidden');
+  if (typeof CrabcakeAvatar !== 'undefined') CrabcakeAvatar.refreshHUD();
   document.getElementById('questionBar').classList.remove('hidden');
   document.getElementById('gameCanvas').classList.remove('hidden');
   document.getElementById('gameCanvas').classList.add('active');
@@ -1883,7 +1884,7 @@ function claimFeedbackBadge(type) {
 }
 </script>
   
-  <script src="/crabcake-avatar.js?v=5" defer></script>
+  <script src="/crabcake-avatar.js?v=4" defer></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       if (typeof CrabcakeAvatar !== 'undefined') {
