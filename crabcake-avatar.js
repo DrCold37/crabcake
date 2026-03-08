@@ -384,10 +384,9 @@ const CrabcakeAvatar = (function(){
     }
 
     targetEl.innerHTML = `
-      <a href="avatar.html" title="Customise your avatar"
-         style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;cursor:pointer;">
+      <span style="display:inline-flex;align-items:center;gap:6px;">
         ${headImg}${petImg}
-      </a>`;
+      </span>`;
   }
 
   function refreshHUD() {
