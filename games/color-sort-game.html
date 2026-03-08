@@ -5,6 +5,10 @@
   <meta name="description" content="Sort coloured liquids into matching tubes in this satisfying free puzzle game for kids. Colour Sort challenges logic and problem-solving skills — fun for ages 4 and up!">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- PWA -->
+  <!-- Preload critical fonts -->
+  <link rel="preload" href="/fonts/Fredoka-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/Nunito-Bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/Nunito-ExtraBold.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#00C9B1">
   <meta name="mobile-web-app-capable" content="yes">
@@ -1299,7 +1303,7 @@ function claimFeedbackBadge(type) {
       });
     }
   </script>
-  <script src="/crabcake-avatar.js?v=7"></script>
+  <script src="/crabcake-avatar.js?v=7" defer></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       var hudEl = document.getElementById('ts-avatar-hud');

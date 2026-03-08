@@ -5,6 +5,10 @@
   <meta name="description" content="Dive deep and catch falling maths problems before they hit the ocean floor! Maths Dive is a free underwater maths game for kids ages 4–10 covering counting, addition, subtraction, multiplication and division.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <!-- PWA -->
+  <!-- Preload critical fonts -->
+  <link rel="preload" href="/fonts/Fredoka-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/Nunito-Bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/Nunito-ExtraBold.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#00C9B1">
   <meta name="mobile-web-app-capable" content="yes">
@@ -13,10 +17,7 @@
   <meta name="apple-mobile-web-app-title" content="Crabcake">
   <link rel="apple-touch-icon" href="/icons/icon-192.png">
   <title>Maths Dive 🤿 – Free Maths Game for Kids Ages 4–10 | Crabcake Kids</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@700;800;900&display=swap" media="print" onload="this.media='all'"/>
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@700;800;900&display=swap"/></noscript>
+      <noscript></noscript>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -609,7 +610,11 @@
   @keyframes claimPop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
   .feedback-claim-btn:hover{transform:scale(1.06);box-shadow:0 4px 16px rgba(255,215,0,.4);}
   .feedback-claim-btn:disabled{opacity:.5;cursor:default;transform:none;background:#555;}
-  </style>
+  
+  @font-face { font-family: 'Boogaloo'; src: url('/fonts/Fredoka-Regular.woff2') format('woff2'); font-display: swap; }
+  @font-face { font-family: 'Nunito'; font-weight: 700; src: url('/fonts/Nunito-Bold.woff2') format('woff2'); font-display: swap; }
+  @font-face { font-family: 'Nunito'; font-weight: 800 900; src: url('/fonts/Nunito-ExtraBold.woff2') format('woff2'); font-display: swap; }
+</style>
 </head>
 <body>
 
