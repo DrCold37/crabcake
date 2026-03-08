@@ -4,6 +4,11 @@
   <meta charset="UTF-8"/>
   <meta name="description" content="Kitchen Lab is a free science game for kids ages 5–10. Mix ingredients, trigger reactions and discover chemistry — from states of matter to chemical reactions. Play free on Crabcake Kids!"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- Preload critical assets -->
+  <link rel="preload" href="/fonts/Fredoka-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/Nunito-Bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/Nunito-ExtraBold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/data/kitchen-lab-questions.json" as="fetch" crossorigin>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#00C9B1">
   <meta name="mobile-web-app-capable" content="yes">
@@ -12,10 +17,7 @@
   <meta name="apple-mobile-web-app-title" content="Crabcake">
   <link rel="apple-touch-icon" href="/icons/icon-192.png">
   <title>[v2.4] Kitchen Lab 👨‍🔬 – Free Science Game for Kids Ages 5–10 | Crabcake Kids</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@700;800;900&display=swap" media="print" onload="this.media='all'"/>
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@700;800;900&display=swap"/></noscript>
+        <noscript></noscript>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
@@ -268,6 +270,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
   opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast-em{font-size:1.3rem}.toast-name{font-size:.75rem;font-weight:800;color:var(--yellow)}
+
+  @font-face { font-family: 'Boogaloo'; src: url('/fonts/Fredoka-Regular.woff2') format('woff2'); font-display: swap; }
+  @font-face { font-family: 'Nunito'; font-weight: 700; src: url('/fonts/Nunito-Bold.woff2') format('woff2'); font-display: swap; }
+  @font-face { font-family: 'Nunito'; font-weight: 800 900; src: url('/fonts/Nunito-ExtraBold.woff2') format('woff2'); font-display: swap; }
 </style>
 </head>
 <body>
@@ -882,7 +888,7 @@ function playBubbling(duration=1.5){
 function initBgBubbles(){
   const wrap=document.getElementById('bgBubbles');
   wrap.innerHTML='';
-  const W=window.innerWidth, H=window.innerHeight;
+  const W=window.screen.width || 390, H=window.screen.height || 844;
 
     // ── ELECTRIC ARCS (SVG zigzag lines that flicker) ──
   for(let i=0;i<5;i++){
