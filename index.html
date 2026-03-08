@@ -2076,9 +2076,8 @@
 // ─── UTILITY ─────────────────────────────────────────────────────────────────
 function initCanvas(id) {
   const canvas = document.getElementById(id);
-  const thumb  = canvas.parentElement;
-  canvas.width  = thumb.offsetWidth  || 280;
-  canvas.height = thumb.offsetHeight || 160;
+  canvas.width  = 280;
+  canvas.height = 160;
   return { canvas, ctx: canvas.getContext('2d'), W: canvas.width, H: canvas.height };
 }
 function rand(min, max) { return Math.random() * (max - min) + min; }
