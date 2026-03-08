@@ -303,38 +303,148 @@
 
     /* ── CATEGORIES ── */
     #categories { background: #0F1D36; }
+    /* ── CATEGORIES GRID ── */
     .categories-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-      max-width: 800px; margin: 0 auto;
-    }
-    @media(max-width: 1020px) {
-      .categories-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.1rem;
+      max-width: 860px;
+      margin: 0 auto;
     }
     .cat-card {
-      background: rgba(255,255,255,0.06);
-      border: 2px solid rgba(255,255,255,0.1);
-      border-radius: 24px;
-      padding: 2rem 1rem;
-      text-align: center;
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      padding: 1.2rem 1.4rem;
+      border-radius: 20px;
       cursor: pointer;
-      transition: transform 0.2s, border-color 0.2s, background 0.2s;
-      position: relative; overflow: hidden;
+      border: 2px solid rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.05);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.22s ease, border-color 0.22s ease;
+      text-decoration: none;
+      color: inherit;
     }
     .cat-card::before {
-      content: ''; position: absolute; inset: 0;
-      background: var(--accent); opacity: 0;
-      transition: opacity 0.2s; border-radius: 22px;
+      content: '';
+      position: absolute;
+      left: 0; top: 12%; bottom: 12%;
+      width: 4px;
+      background: var(--accent);
+      border-radius: 0 4px 4px 0;
+      opacity: 0.9;
+      transition: top 0.2s, bottom 0.2s, opacity 0.2s;
     }
-    .cat-card:hover { transform: translateY(-8px) scale(1.03); border-color: var(--accent); }
-    .cat-card:hover::before { opacity: 0.12; }
-    .cat-emoji { font-size: 3rem; display: block; margin-bottom: 0.8rem; }
+    .cat-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 0% 50%, var(--accent) 0%, transparent 60%);
+      opacity: 0.055;
+      transition: opacity 0.25s;
+      pointer-events: none;
+    }
+    .cat-card .shimmer {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.06) 50%, transparent 65%);
+      background-size: 200% 100%;
+      background-position: 200% 0;
+      transition: background-position 0s;
+      pointer-events: none;
+      border-radius: 18px;
+    }
+    .cat-card:hover { transform: translateX(5px); border-color: color-mix(in srgb, var(--accent) 60%, transparent); }
+    .cat-card:hover::before { top: 8%; bottom: 8%; opacity: 1; }
+    .cat-card:hover::after { opacity: 0.12; }
+    .cat-card:hover .shimmer { background-position: -200% 0; transition: background-position 0.55s ease; }
+    .emoji-bubble {
+      width: 58px; height: 58px;
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.75rem;
+      flex-shrink: 0;
+      position: relative; z-index: 1;
+      background: color-mix(in srgb, var(--accent) 20%, transparent);
+      border: 1.5px solid color-mix(in srgb, var(--accent) 35%, transparent);
+      animation: breathe 3.5s ease-in-out infinite;
+    }
+    .cat-card:nth-child(1) .emoji-bubble { animation-delay: 0s; }
+    .cat-card:nth-child(2) .emoji-bubble { animation-delay: 0.6s; }
+    .cat-card:nth-child(3) .emoji-bubble { animation-delay: 1.2s; }
+    .cat-card:nth-child(4) .emoji-bubble { animation-delay: 1.8s; }
+    .cat-card:nth-child(5) .emoji-bubble { animation-delay: 2.4s; }
+    .cat-card:nth-child(6) .emoji-bubble { animation-delay: 0.3s; }
+    @keyframes breathe {
+      0%, 100% { transform: scale(1); }
+      50%       { transform: scale(1.07); }
+    }
+    .cat-card:hover .emoji-bubble { animation: wiggle 0.4s ease forwards; }
+    @keyframes wiggle {
+      0%   { transform: rotate(0deg) scale(1); }
+      20%  { transform: rotate(-8deg) scale(1.1); }
+      40%  { transform: rotate(7deg) scale(1.1); }
+      60%  { transform: rotate(-5deg) scale(1.05); }
+      80%  { transform: rotate(3deg) scale(1.02); }
+      100% { transform: rotate(0deg) scale(1); }
+    }
     .cat-label {
       font-family: 'Arial Rounded MT Bold', cursive;
-      font-size: 1.3rem; color: var(--white);
+      font-size: 1.15rem;
+      color: var(--white);
+      font-weight: 800;
+      line-height: 1.2;
+      position: relative; z-index: 1;
     }
-    .cat-count { font-size: 0.8rem; color: rgba(255,255,255,0.5); font-weight: 700; margin-top: 0.3rem; }
+    .cat-count {
+      display: inline-block;
+      margin-top: 0.35rem;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      padding: 0.18rem 0.6rem;
+      border-radius: 100px;
+      background: color-mix(in srgb, var(--accent) 22%, transparent);
+      color: color-mix(in srgb, var(--accent) 90%, white);
+      border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+    }
+    .card-text { position: relative; z-index: 1; flex: 1; }
+    .cat-arrow {
+      margin-left: auto;
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.18);
+      position: relative; z-index: 1;
+      transition: color 0.2s, transform 0.2s;
+      flex-shrink: 0;
+    }
+    .cat-card:hover .cat-arrow { color: var(--accent); transform: translateX(4px); }
+    .coming-soon {
+      cursor: default;
+      background-image: repeating-linear-gradient(-45deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 2px, transparent 2px, transparent 10px);
+    }
+    .coming-soon .emoji-bubble { opacity: 0.35; animation: breathe 5s ease-in-out infinite; filter: grayscale(40%); }
+    .coming-soon .cat-label { opacity: 0.4; }
+    .coming-soon .cat-count { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.08); }
+    .coming-soon:hover { transform: none; border-color: rgba(255,255,255,0.07); }
+    .coming-soon:hover::after { opacity: 0.03; }
+    .coming-soon:hover .emoji-bubble { animation: breathe 5s ease-in-out infinite; }
+    .coming-soon .cat-arrow { display: none; }
+    .lock-badge {
+      margin-left: auto;
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 0.2rem 0.55rem;
+      border-radius: 100px;
+      background: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.3);
+      position: relative; z-index: 1;
+      flex-shrink: 0;
+      letter-spacing: 0.3px;
+    }
+    @media (max-width: 560px) {
+      .categories-grid { grid-template-columns: 1fr; }
+    }
 
     /* ── FEATURED GAMES ── */
     #games { background: #162238; }
@@ -349,6 +459,7 @@
       border: 2px solid rgba(255,255,255,0.08);
       transition: transform 0.25s, box-shadow 0.25s;
       cursor: pointer;
+      text-decoration: none;
     }
     .game-card:hover {
       transform: translateY(-10px);
@@ -360,6 +471,13 @@
       font-size: 5rem;
       position: relative; overflow: hidden;
     }
+    .game-thumb canvas {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+    }
+    .game-thumb .thumb-emoji {
+      position: relative; z-index: 2;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+    }
     .game-thumb::after {
       content: '▶ Play Now';
       position: absolute; inset: 0;
@@ -369,11 +487,12 @@
       font-size: 1.5rem; color: var(--white);
       opacity: 0; transition: opacity 0.2s;
     }
-    .game-card:hover .game-thumb::after { opacity: 1; }
+    /* .game-card:hover .game-thumb::after { opacity: 1; } */
     .game-info { padding: 1.2rem 1.4rem 1.6rem; }
     .game-info h3 {
       font-family: 'Arial Rounded MT Bold', cursive;
       font-size: 1.4rem; margin-bottom: 0.4rem;
+      color: #ffffff;
     }
     .game-info p { font-size: 0.9rem; color: rgba(255,255,255,0.65); line-height: 1.5; }
     .game-tags { display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.8rem; }
@@ -842,6 +961,9 @@
   .band-btn::before {
     content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity 0.2s;
   }
+  .band-btn[data-band="band_1"] { border-color: rgba(255,217,61,0.35); }
+  .band-btn[data-band="band_2"] { border-color: rgba(0,201,177,0.35); }
+  .band-btn[data-band="band_3"] { border-color: rgba(166,108,255,0.35); }
   .band-btn[data-band="band_1"]::before { background: radial-gradient(circle at 50% 0%, rgba(255,217,61,0.18), transparent 70%); }
   .band-btn[data-band="band_2"]::before { background: radial-gradient(circle at 50% 0%, rgba(0,201,177,0.18), transparent 70%); }
   .band-btn[data-band="band_3"]::before { background: radial-gradient(circle at 50% 0%, rgba(166,108,255,0.18), transparent 70%); }
@@ -854,7 +976,13 @@
   .band-btn[data-band="band_3"].active { border-color: var(--band-3-col); box-shadow: 0 0 0 3px rgba(166,108,255,0.2), 0 8px 24px rgba(166,108,255,0.15); }
   .band-btn .band-emoji { font-size: 2rem; line-height: 1; }
   .band-btn .band-age { font-size: 1.25rem; font-weight: 900; line-height: 1.1; }
-  .band-btn .band-label { font-size: 0.72rem; font-weight: 700; opacity: 0.65; text-transform: uppercase; letter-spacing: 0.5px; }
+  .band-btn .band-label {
+    font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    padding: 0.18rem 0.65rem; border-radius: 50px; border: 1.5px solid transparent;
+  }
+  .band-btn[data-band="band_1"] .band-label { color: var(--band-1-col); border-color: rgba(255,217,61,0.5); background: rgba(255,217,61,0.1); }
+  .band-btn[data-band="band_2"] .band-label { color: var(--band-2-col); border-color: rgba(0,201,177,0.5); background: rgba(0,201,177,0.1); }
+  .band-btn[data-band="band_3"] .band-label { color: var(--band-3-col); border-color: rgba(166,108,255,0.5); background: rgba(166,108,255,0.1); }
   .band-btn[data-band="band_1"] .band-age { color: var(--band-1-col); }
   .band-btn[data-band="band_2"] .band-age { color: var(--band-2-col); }
   .band-btn[data-band="band_3"] .band-age { color: var(--band-3-col); }
@@ -1081,35 +1209,59 @@
     <h2 class="section-title" style="color:var(--yellow)">🗂️ What Do You Want to Learn?</h2>
     <p class="section-sub">Pick a category to explore — every game teaches something amazing!</p>
     <div class="categories-grid">
-      <div class="cat-card" style="--accent:var(--teal);cursor:pointer;" onclick="document.getElementById('games').scrollIntoView({behavior:'smooth'})">
-        <span class="cat-emoji">🔢</span>
-        <div class="cat-label">Math</div>
-        <div class="cat-count">1 Game</div>
+      <div class="cat-card" style="--accent:var(--teal)" onclick="document.getElementById('games').scrollIntoView({behavior:'smooth'})">
+        <div class="shimmer"></div>
+        <div class="emoji-bubble">🔢</div>
+        <div class="card-text">
+          <div class="cat-label">Math</div>
+          <span class="cat-count">1 Game</span>
+        </div>
+        <span class="cat-arrow">→</span>
       </div>
-      <div class="cat-card" style="--accent:var(--coral);cursor:pointer;" onclick="document.getElementById('games').scrollIntoView({behavior:'smooth'})">
-        <span class="cat-emoji">📖</span>
-        <div class="cat-label">Reading</div>
-        <div class="cat-count">1 Game</div>
+      <div class="cat-card" style="--accent:var(--coral)" onclick="document.getElementById('games').scrollIntoView({behavior:'smooth'})">
+        <div class="shimmer"></div>
+        <div class="emoji-bubble">📖</div>
+        <div class="card-text">
+          <div class="cat-label">Language</div>
+          <span class="cat-count">1 Game</span>
+        </div>
+        <span class="cat-arrow">→</span>
       </div>
-      <div class="cat-card" style="--accent:var(--green);cursor:pointer;" onclick="location.href='#games'">
-        <span class="cat-emoji">🔬</span>
-        <div class="cat-label">Science</div>
-        <div class="cat-count">1 Game</div>
+      <div class="cat-card" style="--accent:var(--green)" onclick="document.getElementById('games').scrollIntoView({behavior:'smooth'})">
+        <div class="shimmer"></div>
+        <div class="emoji-bubble">🔬</div>
+        <div class="card-text">
+          <div class="cat-label">Science</div>
+          <span class="cat-count">1 Game</span>
+        </div>
+        <span class="cat-arrow">→</span>
       </div>
-      <div class="cat-card" style="--accent:var(--sky)" onclick="alert('Geography games coming soon! 🌍')">
-        <span class="cat-emoji">🌍</span>
-        <div class="cat-label">Geography</div>
-        <div class="cat-count">Coming Soon</div>
+      <div class="cat-card coming-soon" style="--accent:var(--orange)">
+        <div class="shimmer"></div>
+        <div class="emoji-bubble">🌎</div>
+        <div class="card-text">
+          <div class="cat-label">Social Studies</div>
+          <span class="cat-count">Coming Soon</span>
+        </div>
+        <span class="lock-badge">🔒 Soon</span>
       </div>
       <div class="cat-card" style="--accent:var(--purple)" onclick="document.getElementById('games').scrollIntoView({behavior:'smooth'})">
-        <span class="cat-emoji">🎨</span>
-        <div class="cat-label">Art & Music</div>
-        <div class="cat-count">1 Game</div>
+        <div class="shimmer"></div>
+        <div class="emoji-bubble">🧩</div>
+        <div class="card-text">
+          <div class="cat-label">Puzzles</div>
+          <span class="cat-count">1 Game</span>
+        </div>
+        <span class="cat-arrow">→</span>
       </div>
-      <div class="cat-card" style="--accent:var(--orange)" onclick="document.getElementById('games').scrollIntoView({behavior:'smooth'})">
-        <span class="cat-emoji">🧩</span>
-        <div class="cat-label">Puzzles</div>
-        <div class="cat-count">1 Game</div>
+      <div class="cat-card" style="--accent:var(--yellow)" onclick="document.getElementById('games').scrollIntoView({behavior:'smooth'})">
+        <div class="shimmer"></div>
+        <div class="emoji-bubble">✨</div>
+        <div class="card-text">
+          <div class="cat-label">Other</div>
+          <span class="cat-count">1 Game</span>
+        </div>
+        <span class="cat-arrow">→</span>
       </div>
     </div>
   </section>
@@ -1164,7 +1316,7 @@
          data-grades='{"band_1":"JK / SK","band_2":"Grade 1 &amp; 2","band_3":"Grade 3 &amp; 4"}'
          data-file="/games/maths-dive.html"
          href="/games/maths-dive.html">
-        <div class="game-thumb" style="background:linear-gradient(135deg,#0a3060,#0d2044)">🤿</div>
+        <div class="game-thumb" style="background:linear-gradient(135deg,#0a3060,#0d2044)"><canvas id="canvas-math"></canvas><span class="thumb-emoji">🤿</span></div>
         <div class="game-info">
           <h3>Math Dive</h3>
           <p>Dive into the ocean and catch the correct answers before time runs out! Three levels for ages 4–6, 6–8 and 8–10.</p>
@@ -1183,7 +1335,7 @@
          data-grades='{"band_1":"JK / SK","band_2":"Grade 1 &amp; 2","band_3":"Grade 3 &amp; 4"}'
          data-file="/games/jungle-words.html"
          href="/games/jungle-words.html">
-        <div class="game-thumb" style="background:linear-gradient(135deg,#0d2818,#1a4a2e)">🦁</div>
+        <div class="game-thumb" style="background:linear-gradient(135deg,#0d2818,#1a4a2e)"><canvas id="canvas-jungle"></canvas><span class="thumb-emoji">🦁</span></div>
         <div class="game-info">
           <h3>Jungle Words</h3>
           <p>Tap the words in the right order to build sentences in this wild jungle adventure! Three levels for ages 4–10.</p>
@@ -1202,7 +1354,7 @@
          data-grades='{"band_1":"JK / SK","band_2":"Grade 1 &amp; 2","band_3":"Grade 3 &amp; 4"}'
          data-file="/games/potion-game.html"
          href="/games/potion-game.html">
-        <div class="game-thumb" style="background:linear-gradient(135deg,#2a0a4a,#160d26)">🧙‍♀️</div>
+        <div class="game-thumb" style="background:linear-gradient(135deg,#2a0a4a,#160d26)"><canvas id="canvas-potion"></canvas><span class="thumb-emoji">🧙‍♀️</span></div>
         <div class="game-info">
           <h3>Witch's Brew Workshop</h3>
           <p>Mix magical potions, collect rare ingredients, and cast spells in this enchanting creative adventure!</p>
@@ -1221,7 +1373,7 @@
          data-grades='{"band_1":"JK / SK","band_2":"Grade 1 &amp; 2","band_3":"Grade 3 &amp; 4"}'
          data-file="/games/color-sort-game.html"
          href="/games/color-sort-game.html">
-        <div class="game-thumb" style="background:linear-gradient(135deg,#1a2a3e,#0d1826)">🧪</div>
+        <div class="game-thumb" style="background:linear-gradient(135deg,#1a2a3e,#0d1826)"><canvas id="canvas-tube"></canvas><span class="thumb-emoji">🧪</span></div>
         <div class="game-info">
           <h3>Tube Sort</h3>
           <p>Sort the coloured liquids into matching tubes — a satisfying and tricky colour puzzle for sharp minds!</p>
@@ -1240,7 +1392,7 @@
          data-grades='{"band_1":"JK / SK","band_2":"Grade 1 &amp; 2","band_3":"Grade 3 &amp; 4"}'
          data-file="/games/kitchen-lab.html"
          href="/games/kitchen-lab.html">
-        <div class="game-thumb" style="background:linear-gradient(135deg,#0a2a1a,#0d3320)">👨‍🔬</div>
+        <div class="game-thumb" style="background:linear-gradient(135deg,#0a2a1a,#0d3320)"><canvas id="canvas-kitchen"></canvas><span class="thumb-emoji">👨‍🔬</span></div>
         <div class="game-info">
           <h3>Kitchen Lab</h3>
           <p>Mix, react and discover! Explore states of matter, mixing reactions and chemical changes in your very own lab!</p>
@@ -1254,6 +1406,22 @@
       </a>
 
     </div><!-- /games-grid -->
+
+  <section style="padding:32px 24px 16px;max-width:600px;margin:0 auto;text-align:center;">
+    <div style="padding:18px 20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:16px;">
+      <p style="font-size:.9rem;color:rgba(255,255,255,.55);margin-bottom:12px;">💌 Found a bug or have an idea for a new game?</p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <a id="feedback-bug" onclick="hpShowClaim('bug')" style="font-size:.8rem;padding:9px 18px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:rgba(255,255,255,.75);text-decoration:none;transition:all .2s;cursor:pointer;">🐛 Report a Bug</a>
+        <a id="feedback-idea" onclick="hpShowClaim('idea')" style="font-size:.8rem;padding:9px 18px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:rgba(255,255,255,.75);text-decoration:none;transition:all .2s;cursor:pointer;">💡 Suggest a Game</a>
+      </div>
+      <div id="hp-claim-bug" style="display:none;margin-top:12px;">
+        <button onclick="hpClaimBadge('bug')" style="font-size:.8rem;padding:9px 20px;border-radius:20px;border:none;background:linear-gradient(135deg,#ffd700,#ff8800);color:#1a0a2e;font-weight:bold;cursor:pointer;animation:hpClaimPop .4s cubic-bezier(.34,1.56,.64,1);">✅ I sent it! Claim my 🐛 Bug Hunter badge</button>
+      </div>
+      <div id="hp-claim-idea" style="display:none;margin-top:12px;">
+        <button onclick="hpClaimBadge('idea')" style="font-size:.8rem;padding:9px 20px;border-radius:20px;border:none;background:linear-gradient(135deg,#ffd700,#ff8800);color:#1a0a2e;font-weight:bold;cursor:pointer;animation:hpClaimPop .4s cubic-bezier(.34,1.56,.64,1);">✅ I sent it! Claim my 💡 Big Ideas badge</button>
+      </div>
+    </div>
+  </section>
 
 
   <!-- STATS -->
@@ -1308,23 +1476,6 @@
 
     </div>
   
-  <section style="padding:40px 24px 48px;max-width:600px;margin:0 auto;text-align:center;">
-    <div style="padding:18px 20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:16px;">
-      <p style="font-size:.9rem;color:rgba(255,255,255,.55);margin-bottom:12px;">💌 Found a bug or have an idea for a new game?</p>
-      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-        <a id="feedback-bug" onclick="hpShowClaim('bug')" style="font-size:.8rem;padding:9px 18px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:rgba(255,255,255,.75);text-decoration:none;transition:all .2s;cursor:pointer;">🐛 Report a Bug</a>
-        <a id="feedback-idea" onclick="hpShowClaim('idea')" style="font-size:.8rem;padding:9px 18px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:rgba(255,255,255,.75);text-decoration:none;transition:all .2s;cursor:pointer;">💡 Suggest a Game</a>
-      </div>
-      <div id="hp-claim-bug" style="display:none;margin-top:12px;">
-        <button onclick="hpClaimBadge('bug')" style="font-size:.8rem;padding:9px 20px;border-radius:20px;border:none;background:linear-gradient(135deg,#ffd700,#ff8800);color:#1a0a2e;font-weight:bold;cursor:pointer;animation:hpClaimPop .4s cubic-bezier(.34,1.56,.64,1);">✅ I sent it! Claim my 🐛 Bug Hunter badge</button>
-      </div>
-      <div id="hp-claim-idea" style="display:none;margin-top:12px;">
-        <button onclick="hpClaimBadge('idea')" style="font-size:.8rem;padding:9px 20px;border-radius:20px;border:none;background:linear-gradient(135deg,#ffd700,#ff8800);color:#1a0a2e;font-weight:bold;cursor:pointer;animation:hpClaimPop .4s cubic-bezier(.34,1.56,.64,1);">✅ I sent it! Claim my 💡 Big Ideas badge</button>
-      </div>
-    </div>
-
-  </section>
-
   </section><!-- end seasonal -->
 
   <!-- MY BADGES -->
@@ -1915,6 +2066,791 @@
         document.getElementById('importStatus').className = 'transfer-status err';
       }
     }
+
+// ─── CARD ANIMATIONS ───────────────────────────────────────────────────────
+// ─── UTILITY ─────────────────────────────────────────────────────────────────
+function initCanvas(id) {
+  const canvas = document.getElementById(id);
+  const thumb  = canvas.parentElement;
+  canvas.width  = thumb.offsetWidth  || 280;
+  canvas.height = thumb.offsetHeight || 160;
+  return { canvas, ctx: canvas.getContext('2d'), W: canvas.width, H: canvas.height };
+}
+function rand(min, max) { return Math.random() * (max - min) + min; }
+
+function bindHoverPause(canvasId, startFn) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const card = canvas.closest('.game-card');
+  if (!card) return;
+  let running = false;
+  let rafId = null;
+
+  function start() {
+    if (running) return;
+    running = true;
+    startFn(() => running, id => { rafId = id; });
+  }
+  function stop() {
+    running = false;
+    if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+  }
+
+  card.addEventListener('mouseenter', start);
+  card.addEventListener('mouseleave', stop);
+}
+
+// ─── MATH DIVE: rising bubbles + sweeping searchlight ────────────────────────
+(function mathDive() {
+  const { canvas, ctx, W, H } = initCanvas('canvas-math');
+  let paused = true;
+  const bubbles = Array.from({ length: 9 }, () => ({
+    x: rand(0, W), y: rand(0, H),
+    r: rand(3, 10), speed: rand(0.3, 0.9),
+    wobble: rand(0, Math.PI * 2), wobbleSpeed: rand(0.02, 0.05),
+    alpha: rand(0.2, 0.55)
+  }));
+  let lightAngle = 0;
+  let lightAngle2 = Math.PI * 0.6; // offset phase for right light
+
+  // Floating number tiles
+  const MATH_SYMS = ['1','2','3','4','5','6','7','8','9','10','+','-','×','÷','='];
+  const numTiles = Array.from({ length: 8 }, () => ({
+    sym: MATH_SYMS[Math.floor(rand(0, MATH_SYMS.length))],
+    x: rand(0, W), y: rand(0, H),
+    vx: rand(-0.2, 0.2), vy: rand(-0.2, 0.2),
+    rot: rand(-0.2, 0.2), rotSpeed: rand(-0.003, 0.003),
+    alpha: rand(0.20, 0.42),
+    hue: rand(180, 220),
+    size: rand(9, 13)
+  }));
+
+  function drawNumTiles() {
+    numTiles.forEach(t => {
+      t.x += t.vx; t.y += t.vy; t.rot += t.rotSpeed;
+      if (t.x < -30) t.x = W + 30; if (t.x > W + 30) t.x = -30;
+      if (t.y < -30) t.y = H + 30; if (t.y > H + 30) t.y = -30;
+      ctx.save();
+      ctx.translate(t.x, t.y);
+      ctx.rotate(t.rot);
+      const br = t.size * 1.1; // bubble radius
+
+      // Outer bubble glow
+      const glow = ctx.createRadialGradient(0, 0, br * 0.3, 0, 0, br * 2);
+      glow.addColorStop(0, `hsla(${t.hue},100%,80%,${t.alpha * 0.15})`);
+      glow.addColorStop(1, `hsla(${t.hue},100%,70%,0)`);
+      ctx.beginPath();
+      ctx.arc(0, 0, br * 2, 0, Math.PI * 2);
+      ctx.fillStyle = glow;
+      ctx.fill();
+
+      // Bubble body — glassy fill
+      const bodyGrd = ctx.createRadialGradient(-br*0.2, -br*0.3, 0, 0, 0, br);
+      bodyGrd.addColorStop(0,   `hsla(${t.hue},60%,80%,${t.alpha * 0.25})`);
+      bodyGrd.addColorStop(0.6, `hsla(${t.hue},80%,40%,${t.alpha * 0.15})`);
+      bodyGrd.addColorStop(1,   `hsla(${t.hue},90%,60%,${t.alpha * 0.05})`);
+      ctx.beginPath();
+      ctx.arc(0, 0, br, 0, Math.PI * 2);
+      ctx.fillStyle = bodyGrd;
+      ctx.fill();
+
+      // Bubble rim
+      ctx.beginPath();
+      ctx.arc(0, 0, br, 0, Math.PI * 2);
+      ctx.strokeStyle = `hsla(${t.hue},90%,75%,${t.alpha * 0.85})`;
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+
+      // Shine highlight
+      ctx.beginPath();
+      ctx.arc(-br * 0.3, -br * 0.32, br * 0.28, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${t.alpha * 0.55})`;
+      ctx.fill();
+
+      // Number / operator text
+      ctx.globalAlpha = t.alpha * 1.4 > 1 ? 1 : t.alpha * 1.4;
+      ctx.font = `bold ${t.size}px monospace`;
+      ctx.fillStyle = `hsl(${t.hue},90%,90%)`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(t.sym, 0, 0);
+      ctx.restore();
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Searchlight — left
+    lightAngle += 0.014;
+    const cx = W * 0.1, cy = -10;
+    const beamDir = Math.PI / 4 + Math.sin(lightAngle) * 0.6;
+    const bx = cx + Math.cos(beamDir) * W * 1.5;
+    const by = cy + Math.sin(beamDir) * H * 1.5;
+    const beam = ctx.createLinearGradient(cx, cy, bx, by);
+    beam.addColorStop(0,   'rgba(150,210,255,0.18)');
+    beam.addColorStop(0.4, 'rgba(100,180,255,0.06)');
+    beam.addColorStop(1,   'rgba(0,0,0,0)');
+    ctx.save();
+    ctx.beginPath();
+    const spread = 0.25;
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + Math.cos(beamDir - spread) * W * 2, cy + Math.sin(beamDir - spread) * H * 2);
+    ctx.lineTo(cx + Math.cos(beamDir + spread) * W * 2, cy + Math.sin(beamDir + spread) * H * 2);
+    ctx.closePath();
+    ctx.fillStyle = beam;
+    ctx.fill();
+    ctx.restore();
+
+    // Searchlight — right
+    lightAngle2 += 0.012;
+    const cx2 = W * 0.9, cy2 = -10;
+    const beamDir2 = Math.PI * 3/4 + Math.sin(lightAngle2) * 0.6; // sweeps left from top-right
+    const bx2 = cx2 + Math.cos(beamDir2) * W * 1.5;
+    const by2 = cy2 + Math.sin(beamDir2) * H * 1.5;
+    const beam2 = ctx.createLinearGradient(cx2, cy2, bx2, by2);
+    beam2.addColorStop(0,   'rgba(150,210,255,0.18)');
+    beam2.addColorStop(0.4, 'rgba(100,180,255,0.06)');
+    beam2.addColorStop(1,   'rgba(0,0,0,0)');
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(cx2, cy2);
+    ctx.lineTo(cx2 + Math.cos(beamDir2 - spread) * W * 2, cy2 + Math.sin(beamDir2 - spread) * H * 2);
+    ctx.lineTo(cx2 + Math.cos(beamDir2 + spread) * W * 2, cy2 + Math.sin(beamDir2 + spread) * H * 2);
+    ctx.closePath();
+    ctx.fillStyle = beam2;
+    ctx.fill();
+    ctx.restore();
+
+    // Bubbles
+    bubbles.forEach(b => {
+      b.wobble += b.wobbleSpeed;
+      b.y -= b.speed;
+      b.x += Math.sin(b.wobble) * 0.4;
+      if (b.y + b.r < 0) { b.y = H + b.r; b.x = rand(0, W); }
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(150,210,255,${b.alpha})`;
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+      // Highlight
+      ctx.beginPath();
+      ctx.arc(b.x - b.r * 0.3, b.y - b.r * 0.3, b.r * 0.35, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${b.alpha * 0.6})`;
+      ctx.fill();
+    });
+
+    // Number tiles
+    drawNumTiles();
+
+    if (!paused) requestAnimationFrame(draw);
+  }
+  // Start on hover
+  const _canvas_canvas_math = document.getElementById('canvas-math');
+  if (_canvas_canvas_math) {
+    const _card_canvas_math = _canvas_canvas_math.closest('.game-card');
+    if (_card_canvas_math) {
+      draw(); // render one static frame on load
+      _card_canvas_math.addEventListener('mouseenter', () => { paused = false; draw(); });
+      _card_canvas_math.addEventListener('mouseleave', () => { paused = true; });
+    }
+  }
+})();
+
+// ─── JUNGLE WORDS: fireflies + laser beams ───────────────────────────────────
+(function jungleWords() {
+  const { canvas, ctx, W, H } = initCanvas('canvas-jungle');
+  let paused = true;
+
+  const fireflies = Array.from({ length: 8 }, () => ({
+    x: rand(0, W), y: rand(0, H),
+    vx: rand(-0.4, 0.4), vy: rand(-0.4, 0.4),
+    r: rand(2, 4.5),
+    phase: rand(0, Math.PI * 2), phaseSpeed: rand(0.03, 0.07),
+    hue: rand(60, 120)
+  }));
+
+  // Laser beams originating from top, sweeping down with angle variation
+  const lasers = [
+    { baseX: W * 0.25, sweepAmp: W * 0.20, angle: Math.PI/2 + 0.18,  angleAmp: 0.28, hue: 140, phase: 0,            phaseSpeed: 0.018, anglePhase: 0 },
+    { baseX: W * 0.55, sweepAmp: W * 0.18, angle: Math.PI/2 - 0.10,  angleAmp: 0.22, hue: 100, phase: Math.PI,       phaseSpeed: 0.015, anglePhase: 1.2 },
+    { baseX: W * 0.78, sweepAmp: W * 0.14, angle: Math.PI/2 + 0.28,  angleAmp: 0.30, hue: 180, phase: Math.PI * 0.5, phaseSpeed: 0.020, anglePhase: 2.4 },
+  ];
+
+  function drawLaser(l) {
+    l.phase += l.phaseSpeed;
+    // Sweep origin left/right along top edge
+    const originX = l.baseX + Math.sin(l.phase) * l.sweepAmp;
+    const originY = 0;
+    // Angle varies around downward direction
+    const angle = l.angle + Math.sin(l.phase * 0.8 + l.anglePhase) * l.angleAmp;
+    const alpha = 0.22 + Math.sin(l.phase * 1.5) * 0.10;
+    const endX = originX + Math.cos(angle) * H * 2;
+    const endY = originY + Math.sin(angle) * H * 2;
+    ctx.save();
+    const grad = ctx.createLinearGradient(originX, originY, endX, endY);
+    grad.addColorStop(0,   `hsla(${l.hue},100%,88%,${alpha * 1.2})`);
+    grad.addColorStop(0.3, `hsla(${l.hue},100%,75%,${alpha})`);
+    grad.addColorStop(0.7, `hsla(${l.hue},100%,65%,${alpha * 0.5})`);
+    grad.addColorStop(1,   `hsla(${l.hue},100%,60%,0)`);
+    ctx.beginPath();
+    ctx.moveTo(originX, originY);
+    ctx.lineTo(endX, endY);
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = 2.5;
+    ctx.shadowColor = `hsl(${l.hue},100%,70%)`;
+    ctx.shadowBlur = 12;
+    ctx.stroke();
+    // Glow halo
+    ctx.lineWidth = 9;
+    ctx.globalAlpha = alpha * 0.20;
+    ctx.strokeStyle = `hsl(${l.hue},100%,70%)`;
+    ctx.shadowBlur = 24;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // Floating jungle letters — alphabet + simple words
+  const JUNGLE_LETTERS = ['A','B','C','D','E','F','G','H','I','J','K','L','M',
+                          'N','O','P','R','S','T','U','W','cat','run','big','fun'];
+  const jungleLetters = Array.from({ length: 8 }, () => ({
+    sym: JUNGLE_LETTERS[Math.floor(rand(0, JUNGLE_LETTERS.length))],
+    x: rand(0, W), y: rand(0, H),
+    vx: rand(-0.18, 0.18), vy: rand(-0.18, 0.18),
+    rot: rand(-0.25, 0.25), rotSpeed: rand(-0.003, 0.003),
+    alpha: rand(0.20, 0.42),
+    hue: rand(60, 140),
+    size: rand(9, 13)
+  }));
+
+  function jrrect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.arcTo(x+w,y,x+w,y+r,r);
+    ctx.lineTo(x+w,y+h-r); ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+    ctx.lineTo(x+r,y+h); ctx.arcTo(x,y+h,x,y+h-r,r);
+    ctx.lineTo(x,y+r); ctx.arcTo(x,y,x+r,y,r);
+    ctx.closePath();
+  }
+
+  function drawJungleLetters() {
+    jungleLetters.forEach(t => {
+      t.x += t.vx; t.y += t.vy; t.rot += t.rotSpeed;
+      if (t.x < -30) t.x = W + 30; if (t.x > W + 30) t.x = -30;
+      if (t.y < -30) t.y = H + 30; if (t.y > H + 30) t.y = -30;
+      ctx.save();
+      ctx.translate(t.x, t.y);
+      ctx.rotate(t.rot);
+      ctx.globalAlpha = t.alpha;
+      const isWord = t.sym.length > 1;
+      const pad = 5, tw = t.size * (isWord ? t.sym.length * 0.75 : 1.2) + pad * 2, th = t.size + pad * 2;
+      jrrect(ctx, -tw/2, -th/2, tw, th, 4);
+      ctx.fillStyle = `hsla(${t.hue},60%,15%,0.85)`;
+      ctx.fill();
+      ctx.strokeStyle = `hsla(${t.hue},90%,60%,0.9)`;
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+      // Letter/word
+      ctx.font = `bold ${t.size}px monospace`;
+      ctx.fillStyle = `hsl(${t.hue},90%,78%)`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(t.sym, 0, 0);
+      ctx.restore();
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Laser beams
+    lasers.forEach(drawLaser);
+
+    // Fireflies
+    fireflies.forEach(f => {
+      f.phase += f.phaseSpeed;
+      f.x += f.vx + Math.sin(f.phase * 0.7) * 0.3;
+      f.y += f.vy + Math.cos(f.phase * 0.5) * 0.3;
+      if (f.x < 0) f.x = W; if (f.x > W) f.x = 0;
+      if (f.y < 0) f.y = H; if (f.y > H) f.y = 0;
+      const glow = (Math.sin(f.phase) + 1) / 2;
+      const alpha = 0.3 + glow * 0.7;
+      const grd = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.r * 3);
+      grd.addColorStop(0,   `hsla(${f.hue},100%,85%,${alpha})`);
+      grd.addColorStop(0.4, `hsla(${f.hue},100%,70%,${alpha * 0.5})`);
+      grd.addColorStop(1,   `hsla(${f.hue},100%,60%,0)`);
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, f.r * 3, 0, Math.PI * 2);
+      ctx.fillStyle = grd;
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, f.r * 0.6, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${f.hue},100%,95%,${alpha})`;
+      ctx.fill();
+    });
+
+    // Floating letters
+    drawJungleLetters();
+
+    if (!paused) requestAnimationFrame(draw);
+  }
+  // Start on hover
+  const _canvas_canvas_jungle = document.getElementById('canvas-jungle');
+  if (_canvas_canvas_jungle) {
+    const _card_canvas_jungle = _canvas_canvas_jungle.closest('.game-card');
+    if (_card_canvas_jungle) {
+      draw(); // render one static frame on load
+      _card_canvas_jungle.addEventListener('mouseenter', () => { paused = false; draw(); });
+      _card_canvas_jungle.addEventListener('mouseleave', () => { paused = true; });
+    }
+  }
+})();
+
+// ─── POTION: purple smoke + rising colour bubbles ────────────────────────────
+(function potionGame() {
+  const { canvas, ctx, W, H } = initCanvas('canvas-potion');
+  let paused = true;
+
+  const smokes = Array.from({ length: 10 }, () => ({
+    x: rand(W * 0.2, W * 0.8), y: H,
+    vx: rand(-0.3, 0.3), vy: rand(-0.4, -0.75),
+    r: rand(12, 24), alpha: rand(0.10, 0.20),
+    grow: rand(0.15, 0.35), life: rand(0, 1.5), maxLife: rand(1.2, 2.0)
+  }));
+
+  const potBubbles = Array.from({ length: 6 }, () => ({
+    x: rand(W * 0.25, W * 0.75), y: rand(H * 0.5, H),
+    r: rand(3, 8), speed: rand(0.4, 1.0),
+    wobble: rand(0, Math.PI * 2), wobbleSpeed: rand(0.03, 0.06),
+    hue: rand(260, 320), alpha: rand(0.4, 0.8)
+  }));
+
+  function resetSmoke(s) {
+    s.x = rand(W * 0.2, W * 0.8); s.y = H + 10;
+    s.vx = rand(-0.3, 0.3); s.vy = rand(-0.4, -0.75);
+    s.r = rand(12, 24); s.alpha = rand(0.10, 0.20);
+    s.life = 0; s.maxLife = rand(1.2, 2.0);
+  }
+
+  // Electric sparks (same as kitchen lab)
+  const potSparks = [];
+  function newPotSpark() {
+    return {
+      x: rand(W * 0.2, W * 0.8), y: rand(H * 0.2, H * 0.8),
+      segments: Array.from({ length: 4 + Math.floor(rand(0,4)) }, () => ({
+        dx: rand(-20, 20), dy: rand(-20, 20)
+      })),
+      life: 0, maxLife: rand(0.18, 0.35),
+      hue: rand(260, 320), alpha: rand(0.7, 1.0)
+    };
+  }
+  potSparks.push(newPotSpark());
+
+  // Floating fizz particles scattered across the card
+  const potFizz = Array.from({ length: 18 }, () => ({
+    x: rand(0, W), y: rand(0, H),
+    vx: rand(-0.2, 0.2), vy: rand(-0.5, -1.0),
+    r: rand(1.5, 4), life: rand(0, 1),
+    hue: rand(260, 320), alpha: rand(0.4, 0.85)
+  }));
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    smokes.forEach(s => {
+      s.life += 0.007;
+      if (s.life > s.maxLife) { resetSmoke(s); return; }
+      s.x += s.vx; s.y += s.vy; s.r += s.grow;
+      const fade = s.life < 0.2 ? s.life / 0.2 : s.life > s.maxLife * 0.7
+        ? 1 - (s.life - s.maxLife * 0.7) / (s.maxLife * 0.3) : 1;
+      const grd = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r);
+      grd.addColorStop(0, `rgba(180,100,255,${s.alpha * fade})`);
+      grd.addColorStop(1, `rgba(100,50,200,0)`);
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = grd;
+      ctx.fill();
+    });
+
+    potBubbles.forEach(b => {
+      b.wobble += b.wobbleSpeed;
+      b.y -= b.speed;
+      b.x += Math.sin(b.wobble) * 0.5;
+      if (b.y + b.r < 0) { b.y = H + b.r; b.x = rand(W * 0.25, W * 0.75); }
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+      ctx.strokeStyle = `hsla(${b.hue},100%,75%,${b.alpha})`;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    });
+
+    // Floating fizz
+    potFizz.forEach(f => {
+      f.life += 0.015;
+      f.x += f.vx;
+      f.y += f.vy;
+      if (f.life > 1 || f.y < -10) {
+        f.life = 0;
+        f.x = rand(0, W); f.y = H + 5;
+        f.vx = rand(-0.2, 0.2); f.vy = rand(-0.5, -1.0);
+        f.r = rand(1.5, 4);
+      }
+      const fade = f.life < 0.1 ? f.life / 0.1 : f.life > 0.75 ? 1 - (f.life - 0.75) / 0.25 : 1;
+      // Glow
+      const grd = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.r * 2.5);
+      grd.addColorStop(0, `hsla(${f.hue},100%,80%,${f.alpha * fade})`);
+      grd.addColorStop(1, `hsla(${f.hue},100%,70%,0)`);
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, f.r * 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = grd;
+      ctx.fill();
+      // Core dot
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${f.hue},100%,88%,${f.alpha * fade})`;
+      ctx.fill();
+    });
+
+    // Electric sparks
+    potSparks.forEach((sp, i) => {
+      sp.life += 0.018;
+      if (sp.life > sp.maxLife) { potSparks[i] = newPotSpark(); return; }
+      const fade = 1 - sp.life / sp.maxLife;
+      ctx.save();
+      ctx.globalAlpha = sp.alpha * fade;
+      ctx.strokeStyle = `hsl(${sp.hue},100%,80%)`;
+      ctx.shadowColor = `hsl(${sp.hue},100%,70%)`;
+      ctx.shadowBlur = 8;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(sp.x, sp.y);
+      let cx = sp.x, cy = sp.y;
+      sp.segments.forEach(seg => { cx += seg.dx; cy += seg.dy; ctx.lineTo(cx, cy); });
+      ctx.stroke();
+      ctx.restore();
+    });
+    if (Math.random() < 0.0005 && potSparks.length < 1) potSparks.push(newPotSpark());
+
+    if (!paused) requestAnimationFrame(draw);
+  }
+  // Start on hover
+  const _canvas_canvas_potion = document.getElementById('canvas-potion');
+  if (_canvas_canvas_potion) {
+    const _card_canvas_potion = _canvas_canvas_potion.closest('.game-card');
+    if (_card_canvas_potion) {
+      draw(); // render one static frame on load
+      _card_canvas_potion.addEventListener('mouseenter', () => { paused = false; draw(); });
+      _card_canvas_potion.addEventListener('mouseleave', () => { paused = true; });
+    }
+  }
+})();
+
+// ─── TUBE SORT: coloured fizz + rising smoke clouds ──────────────────────────
+(function tubeSort() {
+  const { canvas, ctx, W, H } = initCanvas('canvas-tube');
+  let paused = true;
+  const colors = ['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#c77dff'];
+  const cols = 5;
+
+  // Tiny fizz particles — lots of them, rising fast from bottom
+  const fizz = [];
+  for (let c = 0; c < cols; c++) {
+    const cx = (W / (cols + 1)) * (c + 1);
+    for (let i = 0; i < 12; i++) {
+      fizz.push({
+        col: c, color: colors[c], cx,
+        x: cx + rand(-10, 10),
+        y: rand(H * 0.5, H),
+        r: rand(1, 3.5),
+        speed: rand(0.6, 1.6),
+        wobble: rand(0, Math.PI * 2),
+        wobbleSpeed: rand(0.04, 0.09),
+        alpha: rand(0.5, 0.9),
+        life: rand(0, 1)
+      });
+    }
+  }
+
+  // Larger slow smoke puffs — coloured, rising from middle/bottom
+  const smokes = [];
+  for (let c = 0; c < cols; c++) {
+    const cx = (W / (cols + 1)) * (c + 1);
+    for (let i = 0; i < 3; i++) {
+      smokes.push({
+        col: c, color: colors[c], cx,
+        x: cx + rand(-8, 8),
+        y: rand(H * 0.4, H),
+        r: rand(10, 20),
+        vy: rand(0.25, 0.55),
+        vx: rand(-0.15, 0.15),
+        grow: rand(0.08, 0.2),
+        alpha: rand(0.08, 0.18),
+        life: rand(0, 1.5), maxLife: rand(1.2, 2.0)
+      });
+    }
+  }
+
+  function resetSmoke(s) {
+    s.x = s.cx + rand(-8, 8);
+    s.y = H + 5;
+    s.r = rand(10, 18);
+    s.vy = rand(0.25, 0.55);
+    s.vx = rand(-0.15, 0.15);
+    s.alpha = rand(0.08, 0.18);
+    s.life = 0; s.maxLife = rand(1.2, 2.0);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Smoke puffs
+    smokes.forEach(s => {
+      s.life += 0.007;
+      if (s.life > s.maxLife) { resetSmoke(s); return; }
+      s.x += s.vx; s.y -= s.vy; s.r += s.grow;
+      const fade = s.life < 0.25 ? s.life / 0.25
+        : s.life > s.maxLife * 0.65 ? 1 - (s.life - s.maxLife * 0.65) / (s.maxLife * 0.35) : 1;
+      const grd = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r);
+      grd.addColorStop(0, s.color + Math.round(s.alpha * fade * 255).toString(16).padStart(2,'0'));
+      grd.addColorStop(1, s.color + '00');
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = grd;
+      ctx.fill();
+    });
+
+    // Fizz particles
+    fizz.forEach(b => {
+      b.wobble += b.wobbleSpeed;
+      b.life += 0.02;
+      b.y -= b.speed;
+      b.x = b.cx + rand(-10, 10) * 0.05 + Math.sin(b.wobble) * 3;
+      if (b.y - b.r < 0 || b.life > 1) {
+        b.y = H * 0.5 + rand(0, H * 0.5);
+        b.x = b.cx + rand(-10, 10);
+        b.life = 0;
+        b.speed = rand(0.6, 1.6);
+        b.r = rand(1, 3.5);
+      }
+      const fade = b.life < 0.1 ? b.life / 0.1 : b.life > 0.8 ? 1 - (b.life - 0.8) / 0.2 : 1;
+      const grd = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r * 2.5);
+      grd.addColorStop(0, b.color + '55');
+      grd.addColorStop(1, b.color + '00');
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.r * 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = grd;
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+      ctx.fillStyle = b.color + Math.round(b.alpha * fade * 255).toString(16).padStart(2,'0');
+      ctx.fill();
+    });
+
+    if (!paused) requestAnimationFrame(draw);
+  }
+  // Start on hover
+  const _canvas_canvas_tube = document.getElementById('canvas-tube');
+  if (_canvas_canvas_tube) {
+    const _card_canvas_tube = _canvas_canvas_tube.closest('.game-card');
+    if (_card_canvas_tube) {
+      draw(); // render one static frame on load
+      _card_canvas_tube.addEventListener('mouseenter', () => { paused = false; draw(); });
+      _card_canvas_tube.addEventListener('mouseleave', () => { paused = true; });
+    }
+  }
+})();
+
+// ─── KITCHEN LAB: smoke + electric sparks ────────────────────────────────────
+(function kitchenLab() {
+  const { canvas, ctx, W, H } = initCanvas('canvas-kitchen');
+  let paused = true;
+
+  const smokes = Array.from({ length: 10 }, () => ({
+    x: rand(W * 0.2, W * 0.8), y: H,
+    vx: rand(-0.3, 0.3), vy: rand(-0.35, -0.65),
+    r: rand(12, 26), alpha: rand(0.10, 0.18),
+    grow: rand(0.15, 0.35), life: rand(0, 1.5), maxLife: rand(1.4, 2.2)
+  }));
+
+  // Floating molecules — small atom clusters drifting slowly
+  const MOL_SHAPES = [
+    // H2O-like: centre + 2 atoms
+    [ [0,0,5], [-10,-8,3.5], [10,-8,3.5] ],
+    // CO2-like: 3 in a line
+    [ [0,0,5], [-13,0,3.5], [13,0,3.5] ],
+    // Simple pair
+    [ [-7,0,4], [7,0,4] ],
+    // Triangle
+    [ [0,-9,3.5], [-8,5,3.5], [8,5,3.5] ],
+  ];
+  const molecules = Array.from({ length: 6 }, () => {
+    const shape = MOL_SHAPES[Math.floor(rand(0, MOL_SHAPES.length))];
+    return {
+      x: rand(0, W), y: rand(0, H),
+      vx: rand(-0.4, 0.4), vy: rand(-0.4, 0.4),
+      rot: rand(0, Math.PI * 2), rotSpeed: rand(-0.005, 0.005),
+      shape, alpha: rand(0.18, 0.38),
+      hue: rand(140, 200)
+    };
+  });
+
+  function drawMolecules() {
+    molecules.forEach(m => {
+      m.x += m.vx; m.y += m.vy; m.rot += m.rotSpeed;
+      if (m.x < -30) m.x = W + 30; if (m.x > W + 30) m.x = -30;
+      if (m.y < -30) m.y = H + 30; if (m.y > H + 30) m.y = -30;
+      ctx.save();
+      ctx.translate(m.x, m.y);
+      ctx.rotate(m.rot);
+      ctx.globalAlpha = m.alpha;
+      // Draw bonds first
+      for (let i = 1; i < m.shape.length; i++) {
+        const [cx, cy] = m.shape[0];
+        const [ax, ay] = m.shape[i];
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(ax, ay);
+        ctx.strokeStyle = `hsl(${m.hue},80%,70%)`;
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+      }
+      // Draw atoms
+      m.shape.forEach(([ax, ay, ar]) => {
+        ctx.beginPath();
+        ctx.arc(ax, ay, ar, 0, Math.PI * 2);
+        ctx.fillStyle = `hsl(${m.hue},90%,75%)`;
+        ctx.fill();
+      });
+      ctx.restore();
+    });
+  }
+
+  // Floating chemical symbol tiles
+  const CHEM_SYMBOLS = ['H','O','Na','K','Fe','CO₂','H₂O','Ca','Mg','Cl','N','Au'];
+  const chemTiles = Array.from({ length: 7 }, () => {
+    const sym = CHEM_SYMBOLS[Math.floor(rand(0, CHEM_SYMBOLS.length))];
+    return {
+      sym,
+      x: rand(0, W), y: rand(0, H),
+      vx: rand(-0.22, 0.22), vy: rand(-0.22, 0.22),
+      rot: rand(-0.3, 0.3), rotSpeed: rand(-0.004, 0.004),
+      alpha: rand(0.22, 0.45),
+      hue: rand(140, 200),
+      size: rand(9, 13)
+    };
+  });
+
+  function crrect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.arcTo(x+w,y,x+w,y+r,r);
+    ctx.lineTo(x+w,y+h-r); ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+    ctx.lineTo(x+r,y+h); ctx.arcTo(x,y+h,x,y+h-r,r);
+    ctx.lineTo(x,y+r); ctx.arcTo(x,y,x+r,y,r);
+    ctx.closePath();
+  }
+
+  function drawChemTiles() {
+    chemTiles.forEach(t => {
+      t.x += t.vx; t.y += t.vy; t.rot += t.rotSpeed;
+      if (t.x < -30) t.x = W + 30; if (t.x > W + 30) t.x = -30;
+      if (t.y < -30) t.y = H + 30; if (t.y > H + 30) t.y = -30;
+      ctx.save();
+      ctx.translate(t.x, t.y);
+      ctx.rotate(t.rot);
+      ctx.globalAlpha = t.alpha;
+      const pad = 5, tw = t.size * (t.sym.length > 1 ? 1.8 : 1.2) + pad * 2, th = t.size + pad * 2;
+      crrect(ctx, -tw/2, -th/2, tw, th, 4);
+      ctx.fillStyle = `hsla(${t.hue},70%,15%,0.85)`;
+      ctx.fill();
+      ctx.strokeStyle = `hsla(${t.hue},90%,65%,0.9)`;
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+      // Symbol text
+      ctx.font = `bold ${t.size}px monospace`;
+      ctx.fillStyle = `hsl(${t.hue},90%,80%)`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(t.sym, 0, 0);
+      ctx.restore();
+    });
+  }
+
+  function resetSmoke(s) {
+    s.x = rand(W * 0.2, W * 0.8); s.y = H + 10;
+    s.vx = rand(-0.3, 0.3); s.vy = rand(-0.35, -0.65);
+    s.r = rand(12, 26); s.alpha = rand(0.10, 0.18);
+    s.life = 0; s.maxLife = rand(1.4, 2.2);
+  }
+
+  // Floating fizz particles
+  const labFizz = Array.from({ length: 18 }, () => ({
+    x: rand(0, W), y: rand(0, H),
+    vx: rand(-0.2, 0.2), vy: rand(-0.5, -1.0),
+    r: rand(1.5, 4), life: rand(0, 1),
+    hue: rand(140, 200), alpha: rand(0.35, 0.75)
+  }));
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Smoke
+    smokes.forEach(s => {
+      s.life += 0.007;
+      if (s.life > s.maxLife) { resetSmoke(s); return; }
+      s.x += s.vx; s.y += s.vy; s.r += s.grow;
+      const fade = s.life < 0.2 ? s.life / 0.2 : s.life > s.maxLife * 0.7
+        ? 1 - (s.life - s.maxLife * 0.7) / (s.maxLife * 0.3) : 1;
+      const grd = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r);
+      grd.addColorStop(0, `rgba(100,200,140,${s.alpha * fade})`);
+      grd.addColorStop(1, `rgba(50,150,80,0)`);
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = grd;
+      ctx.fill();
+    });
+
+    // Molecules
+    drawMolecules();
+
+    // Chemical symbol tiles
+    drawChemTiles();
+
+    // Floating fizz
+    labFizz.forEach(f => {
+      f.life += 0.015;
+      f.x += f.vx; f.y += f.vy;
+      if (f.life > 1 || f.y < -10) {
+        f.life = 0;
+        f.x = rand(0, W); f.y = H + 5;
+        f.vx = rand(-0.2, 0.2); f.vy = rand(-0.5, -1.0);
+        f.r = rand(1.5, 4);
+      }
+      const fade = f.life < 0.1 ? f.life / 0.1 : f.life > 0.75 ? 1 - (f.life - 0.75) / 0.25 : 1;
+      const grd = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.r * 2.5);
+      grd.addColorStop(0, `hsla(${f.hue},90%,80%,${f.alpha * fade})`);
+      grd.addColorStop(1, `hsla(${f.hue},90%,70%,0)`);
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, f.r * 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = grd;
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${f.hue},100%,90%,${f.alpha * fade})`;
+      ctx.fill();
+    });
+
+    if (!paused) requestAnimationFrame(draw);
+  }
+  // Start on hover
+  const _canvas_canvas_kitchen = document.getElementById('canvas-kitchen');
+  if (_canvas_canvas_kitchen) {
+    const _card_canvas_kitchen = _canvas_canvas_kitchen.closest('.game-card');
+    if (_card_canvas_kitchen) {
+      draw(); // render one static frame on load
+      _card_canvas_kitchen.addEventListener('mouseenter', () => { paused = false; draw(); });
+      _card_canvas_kitchen.addEventListener('mouseleave', () => { paused = true; });
+    }
+  }
+})();
 </script>
 </body>
 </html>
