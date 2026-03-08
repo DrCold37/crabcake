@@ -383,10 +383,18 @@ const CrabcakeAvatar = (function(){
       petImg = svgToImg(petSVG, petSize);
     }
 
-    targetEl.innerHTML = `
+    if (options.linkToAvatar) {
+      targetEl.innerHTML = `
+      <a href="avatar.html" title="Customise your avatar"
+         style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;cursor:pointer;">
+        ${headImg}${petImg}
+      </a>`;
+    } else {
+      targetEl.innerHTML = `
       <span style="display:inline-flex;align-items:center;gap:6px;">
         ${headImg}${petImg}
       </span>`;
+    }
   }
 
   function refreshHUD() {
