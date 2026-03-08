@@ -1153,7 +1153,7 @@ function startGame() {
   generateQuestion();
 
   document.getElementById('hud').classList.remove('hidden');
-  if (typeof CrabcakeAvatar !== 'undefined') CrabcakeAvatar.refreshHUD();
+  if (typeof CrabcakeAvatar !== 'undefined') setTimeout(() => CrabcakeAvatar.refreshHUD(), 100);
   document.getElementById('questionBar').classList.remove('hidden');
   document.getElementById('gameCanvas').classList.remove('hidden');
   document.getElementById('gameCanvas').classList.add('active');
