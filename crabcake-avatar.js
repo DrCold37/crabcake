@@ -383,18 +383,15 @@ const CrabcakeAvatar = (function(){
       petImg = svgToImg(petSVG, petSize);
     }
 
-    if (options.linkToAvatar) {
-      targetEl.innerHTML = `
-      <a href="avatar.html" title="Customise your avatar"
-         style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;cursor:pointer;">
-        ${headImg}${petImg}
-      </a>`;
-    } else {
-      targetEl.innerHTML = `
-      <span style="display:inline-flex;align-items:center;gap:6px;">
-        ${headImg}${petImg}
-      </span>`;
-    }
+    const hudLink = targetEl.dataset.hudLink;
+    targetEl.innerHTML = hudLink
+      ? `<a href="${hudLink}" title="Customise your avatar"
+           style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;cursor:pointer;">
+           ${headImg}${petImg}
+         </a>`
+      : `<span style="display:inline-flex;align-items:center;gap:6px;">
+           ${headImg}${petImg}
+         </span>`;
   }
 
   function refreshHUD() {
