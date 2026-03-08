@@ -400,8 +400,6 @@
       font-weight: 800;
       line-height: 1.2;
       position: relative; z-index: 1;
-      text-shadow: none;
-      transition: text-shadow 0.3s ease;
     }
     .cat-count {
       display: inline-block;
@@ -431,12 +429,23 @@
     }
     .coming-soon .emoji-bubble { opacity: 0.35; animation: breathe 5s ease-in-out infinite; filter: grayscale(40%); }
     .coming-soon .cat-label { opacity: 0.4; }
-    .cat-card:hover .cat-label { text-shadow: 0 0 8px color-mix(in srgb, var(--accent) 25%, transparent), 0 0 16px color-mix(in srgb, var(--accent) 25%, transparent); }
     .coming-soon .cat-count { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.08); }
     .coming-soon:hover { transform: none; border-color: rgba(255,255,255,0.07); }
     .coming-soon:hover::after { opacity: 0.03; }
     .coming-soon:hover .emoji-bubble { animation: breathe 5s ease-in-out infinite; }
     .coming-soon .cat-arrow { display: none; }
+    .lock-badge {
+      margin-left: auto;
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 0.2rem 0.55rem;
+      border-radius: 100px;
+      background: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.3);
+      position: relative; z-index: 1;
+      flex-shrink: 0;
+      letter-spacing: 0.3px;
+    }
     @media (max-width: 560px) {
       .categories-grid { grid-template-columns: 1fr; }
     }
@@ -945,13 +954,13 @@
     text-align: center; font-size: 1rem; font-weight: 800;
     color: var(--teal); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 1rem;
   }
-  .band-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .band-buttons { display: flex; gap: 0.6rem; justify-content: center; flex-wrap: nowrap; }
   .band-btn {
     display: flex; flex-direction: column; align-items: center; gap: 0.45rem;
-    padding: 1rem 1.4rem 0.9rem; border-radius: 20px; border: 3px solid transparent;
+    padding: 0.85rem 0.75rem 0.8rem; border-radius: 20px; border: 3px solid transparent;
     background: rgba(255,255,255,0.06); cursor: pointer;
     transition: transform 0.15s, background 0.15s, border-color 0.15s, box-shadow 0.15s;
-    min-width: 130px; text-align: center; position: relative; overflow: hidden;
+    flex: 1; min-width: 0; text-align: center; position: relative; overflow: hidden;
     font-family: 'Nunito', sans-serif;
   }
   .band-btn::before {
@@ -970,8 +979,8 @@
   .band-btn[data-band="band_1"].active { border-color: var(--band-1-col); box-shadow: 0 0 0 3px rgba(255,217,61,0.2), 0 8px 24px rgba(255,217,61,0.15); }
   .band-btn[data-band="band_2"].active { border-color: var(--band-2-col); box-shadow: 0 0 0 3px rgba(0,201,177,0.2), 0 8px 24px rgba(0,201,177,0.15); }
   .band-btn[data-band="band_3"].active { border-color: var(--band-3-col); box-shadow: 0 0 0 3px rgba(166,108,255,0.2), 0 8px 24px rgba(166,108,255,0.15); }
-  .band-btn .band-emoji { font-size: 2rem; line-height: 1; }
-  .band-btn .band-age { font-size: 1.25rem; font-weight: 900; line-height: 1.1; color: var(--white); }
+  .band-btn .band-emoji { font-size: 1.6rem; line-height: 1; }
+  .band-btn .band-age { font-size: 1.05rem; font-weight: 900; line-height: 1.1; color: var(--white); }
   .band-btn .band-label {
     font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
     padding: 0.18rem 0.65rem; border-radius: 50px; border: 1.5px solid transparent;
@@ -1237,8 +1246,9 @@
         <div class="emoji-bubble">🌎</div>
         <div class="card-text" style="display:flex;align-items:center;flex-wrap:wrap;gap:0.3rem;">
           <div class="cat-label">Social Studies</div>
-          <span class="cat-count">Soon</span>
+          <span class="cat-count">Coming Soon</span>
         </div>
+        <span class="lock-badge">🔒 Soon</span>
       </div>
       <div class="cat-card" style="--accent:var(--purple)" onclick="document.getElementById('games').scrollIntoView({behavior:'smooth'})">
         <div class="shimmer"></div>
