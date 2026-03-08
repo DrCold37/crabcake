@@ -400,18 +400,20 @@
       font-weight: 800;
       line-height: 1.2;
       position: relative; z-index: 1;
+      text-shadow: none;
+      transition: text-shadow 0.3s ease;
     }
     .cat-count {
       display: inline-block;
-      margin-top: 0.35rem;
+      margin-left: 0.5rem;
       font-size: 0.7rem;
       font-weight: 800;
       letter-spacing: 0.3px;
       padding: 0.18rem 0.6rem;
       border-radius: 100px;
       background: transparent;
-      color: color-mix(in srgb, var(--accent) 90%, white);
-      border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+      color: rgba(255,255,255,0.8);
+      border: 1px solid rgba(255,255,255,0.4);
     }
     .card-text { position: relative; z-index: 1; flex: 1; }
     .cat-arrow {
@@ -429,23 +431,12 @@
     }
     .coming-soon .emoji-bubble { opacity: 0.35; animation: breathe 5s ease-in-out infinite; filter: grayscale(40%); }
     .coming-soon .cat-label { opacity: 0.4; }
+    .cat-card:hover .cat-label { text-shadow: 0 0 8px color-mix(in srgb, var(--accent) 25%, transparent), 0 0 16px color-mix(in srgb, var(--accent) 25%, transparent); }
     .coming-soon .cat-count { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.08); }
     .coming-soon:hover { transform: none; border-color: rgba(255,255,255,0.07); }
     .coming-soon:hover::after { opacity: 0.03; }
     .coming-soon:hover .emoji-bubble { animation: breathe 5s ease-in-out infinite; }
     .coming-soon .cat-arrow { display: none; }
-    .lock-badge {
-      margin-left: auto;
-      font-size: 0.68rem;
-      font-weight: 800;
-      padding: 0.2rem 0.55rem;
-      border-radius: 100px;
-      background: rgba(255,255,255,0.06);
-      color: rgba(255,255,255,0.3);
-      position: relative; z-index: 1;
-      flex-shrink: 0;
-      letter-spacing: 0.3px;
-    }
     @media (max-width: 560px) {
       .categories-grid { grid-template-columns: 1fr; }
     }
@@ -1217,7 +1208,7 @@
       <div class="cat-card" style="--accent:var(--teal)" onclick="document.getElementById('games').scrollIntoView({behavior:'smooth'})">
         <div class="shimmer"></div>
         <div class="emoji-bubble">🔢</div>
-        <div class="card-text">
+        <div class="card-text" style="display:flex;align-items:center;flex-wrap:wrap;gap:0.3rem;">
           <div class="cat-label">Math</div>
           <span class="cat-count">1 Game</span>
         </div>
@@ -1226,7 +1217,7 @@
       <div class="cat-card" style="--accent:var(--coral)" onclick="document.getElementById('games').scrollIntoView({behavior:'smooth'})">
         <div class="shimmer"></div>
         <div class="emoji-bubble">📖</div>
-        <div class="card-text">
+        <div class="card-text" style="display:flex;align-items:center;flex-wrap:wrap;gap:0.3rem;">
           <div class="cat-label">Language</div>
           <span class="cat-count">1 Game</span>
         </div>
@@ -1235,7 +1226,7 @@
       <div class="cat-card" style="--accent:var(--green)" onclick="document.getElementById('games').scrollIntoView({behavior:'smooth'})">
         <div class="shimmer"></div>
         <div class="emoji-bubble">🔬</div>
-        <div class="card-text">
+        <div class="card-text" style="display:flex;align-items:center;flex-wrap:wrap;gap:0.3rem;">
           <div class="cat-label">Science</div>
           <span class="cat-count">1 Game</span>
         </div>
@@ -1244,16 +1235,15 @@
       <div class="cat-card coming-soon" style="--accent:var(--orange)">
         <div class="shimmer"></div>
         <div class="emoji-bubble">🌎</div>
-        <div class="card-text">
+        <div class="card-text" style="display:flex;align-items:center;flex-wrap:wrap;gap:0.3rem;">
           <div class="cat-label">Social Studies</div>
-          <span class="cat-count">Coming Soon</span>
+          <span class="cat-count">Soon</span>
         </div>
-        <span class="lock-badge">🔒 Soon</span>
       </div>
       <div class="cat-card" style="--accent:var(--purple)" onclick="document.getElementById('games').scrollIntoView({behavior:'smooth'})">
         <div class="shimmer"></div>
         <div class="emoji-bubble">🧩</div>
-        <div class="card-text">
+        <div class="card-text" style="display:flex;align-items:center;flex-wrap:wrap;gap:0.3rem;">
           <div class="cat-label">Puzzles</div>
           <span class="cat-count">1 Game</span>
         </div>
@@ -1262,7 +1252,7 @@
       <div class="cat-card" style="--accent:var(--yellow)" onclick="document.getElementById('games').scrollIntoView({behavior:'smooth'})">
         <div class="shimmer"></div>
         <div class="emoji-bubble">✨</div>
-        <div class="card-text">
+        <div class="card-text" style="display:flex;align-items:center;flex-wrap:wrap;gap:0.3rem;">
           <div class="cat-label">Other</div>
           <span class="cat-count">1 Game</span>
         </div>
