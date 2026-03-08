@@ -318,7 +318,7 @@
   .preview-stage-bg {
     position: absolute;
     inset: 0;
-    background-image: url('/images/park-bg.jpg');
+    background-image: url('/images/park-bg.webp');
     background-size: cover;
     background-position: center center;
     opacity: 0.75;
@@ -397,7 +397,7 @@
   <div id="crewBarInner">
     <div id="crewBarPreview">
       <div class="preview-stage" id="crewStage">
-        <div class="preview-stage-bg" aria-hidden="true"></div>
+        <div class="preview-stage-bg" aria-hidden="true" style="content-visibility:auto"></div>
         <div class="preview-avatar-wrap">
           <svg id="previewAvatar" width="88" height="192" viewBox="0 0 88 192"></svg>
         </div>
@@ -2064,7 +2064,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 });
 </script>
 
-<script src="crabcake-avatar.js?v=7"></script>
+<script src="crabcake-avatar.js?v=7" defer></script>
 <script>
   (function(){
     var navHud = document.getElementById("nav-avatar-hud");
