@@ -335,9 +335,9 @@
       position: absolute;
       left: 0; top: 12%; bottom: 12%;
       width: 4px;
-      background: var(--accent);
+      background: transparent;
       border-radius: 0 4px 4px 0;
-      opacity: 0.9;
+      opacity: 0;
       transition: top 0.2s, bottom 0.2s, opacity 0.2s;
     }
     .cat-card::after {
@@ -359,8 +359,8 @@
       pointer-events: none;
       border-radius: 18px;
     }
-    .cat-card:hover { transform: translateX(5px); border-color: color-mix(in srgb, var(--accent) 60%, transparent); }
-    .cat-card:hover::before { top: 8%; bottom: 8%; opacity: 1; }
+    .cat-card:hover { transform: translateX(5px); border-color: rgba(255,255,255,0.12); }
+    .cat-card:hover::before { top: 8%; bottom: 8%; opacity: 0; }
     .cat-card:hover::after { opacity: 0.12; }
     .cat-card:hover .shimmer { background-position: -200% 0; transition: background-position 0.55s ease; }
     .emoji-bubble {
