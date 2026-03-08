@@ -2072,7 +2072,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 <script src="crabcake-avatar.js?v=8" defer></script>
 <script>
-  (function(){
+  document.addEventListener("DOMContentLoaded", function(){
     var navHud = document.getElementById("nav-avatar-hud");
     if(navHud && typeof CrabcakeAvatar !== 'undefined'){
       CrabcakeAvatar.injectHUD(navHud, {size:52, showPet:true});
@@ -2088,7 +2088,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
       applyHudLayout();
       window.addEventListener('resize', applyHudLayout);
     }
-  })();
+  });
 </script>
   <script>
     if ('serviceWorker' in navigator) {
