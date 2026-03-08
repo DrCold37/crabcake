@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- PWA -->
   <!-- Preload critical assets -->
-  <link rel="preload" href="/images/park-bg.webp" as="image" type="image/webp">
+  <link rel="preload" href="/images/park-bg.webp" as="image" type="image/webp" fetchpriority="high">
   <link rel="preload" href="/fonts/Fredoka-Regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/Nunito-Bold.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/Nunito-ExtraBold.woff2" as="font" type="font/woff2" crossorigin>
@@ -323,9 +323,10 @@
   .preview-stage-bg {
     position: absolute;
     inset: 0;
-    background-image: url('/images/park-bg.webp');
-    background-size: cover;
-    background-position: center center;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
     opacity: 0.75;
     z-index: 0;
   }
@@ -402,7 +403,7 @@
   <div id="crewBarInner">
     <div id="crewBarPreview">
       <div class="preview-stage" id="crewStage">
-        <div class="preview-stage-bg" aria-hidden="true" style="content-visibility:auto"></div>
+        <img src="/images/park-bg.webp" class="preview-stage-bg" aria-hidden="true" alt="" fetchpriority="high" decoding="async">
         <div class="preview-avatar-wrap">
           <svg id="previewAvatar" width="88" height="192" viewBox="0 0 88 192"></svg>
         </div>
