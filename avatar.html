@@ -2081,7 +2081,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
           navHud.style.cssText = "display:inline-flex;flex-shrink:0;";
         } else {
           navHud.style.cssText = "display:inline-flex;position:absolute;left:50%;transform:translateX(-50%);flex-shrink:0;pointer-events:none;z-index:50;";
-          navHud.querySelector("a").style.pointerEvents = "auto";
+          var hudChild = navHud.querySelector("a") || navHud.querySelector("span");
+          if (hudChild) hudChild.style.pointerEvents = "auto";
         }
       }
       applyHudLayout();
