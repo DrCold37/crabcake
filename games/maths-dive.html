@@ -610,6 +610,41 @@
   @keyframes claimPop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
   .feedback-claim-btn:hover{transform:scale(1.06);box-shadow:0 4px 16px rgba(255,215,0,.4);}
   .feedback-claim-btn:disabled{opacity:.5;cursor:default;transform:none;background:#555;}
+
+  /* ── LEVEL-UP TOAST ── */
+  .level-up-overlay {
+    position: fixed; inset: 0; z-index: 60;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(10,22,40,0.6); backdrop-filter: blur(6px);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+  .level-up-overlay.show { opacity: 1; pointer-events: auto; }
+  .level-up-inner {
+    display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+    animation: lvlPop 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+  .level-up-emoji { font-size: 4rem; filter: drop-shadow(0 0 20px rgba(255,215,0,0.7)); }
+  .level-up-title {
+    font-family: 'Boogaloo', cursive; font-size: 2.8rem; color: #FFD93D;
+    text-shadow: 0 0 30px rgba(255,217,61,0.5); letter-spacing: 1px;
+  }
+  .level-up-text {
+    font-size: 1.15rem; font-weight: 800; color: rgba(255,255,255,0.85);
+    letter-spacing: 0.5px;
+  }
+  @keyframes lvlPop {
+    0%   { transform: scale(0.3) translateY(40px); opacity: 0; }
+    60%  { transform: scale(1.08) translateY(-4px); opacity: 1; }
+    100% { transform: scale(1) translateY(0); }
+  }
+
+  /* ── PROMO LINE (end screen) ── */
+  .end-promo-line {
+    font-size: 0.92rem; font-weight: 800; color: #FFD93D;
+    text-align: center; letter-spacing: 0.3px;
+    margin-top: 0.2rem;
+  }
   
   @font-face { font-family: 'Boogaloo'; src: url('/fonts/Fredoka-Regular.woff2') format('woff2'); font-display: swap; }
   @font-face { font-family: 'Nunito'; font-weight: 700; src: url('/fonts/Nunito-Bold.woff2') format('woff2'); font-display: swap; }
@@ -692,6 +727,15 @@
 
 
 
+  <!-- LEVEL-UP TOAST -->
+  <div class="level-up-overlay" id="levelUpOverlay">
+    <div class="level-up-inner">
+      <div class="level-up-emoji">🎓</div>
+      <div class="level-up-title">Level Up!</div>
+      <div class="level-up-text" id="levelUpText"></div>
+    </div>
+  </div>
+
   <!-- END SCREEN -->
   <div class="screen hidden" id="endScreen">
     <div class="end-rating" id="endRating">⭐⭐⭐</div>
@@ -702,6 +746,7 @@
       <div class="end-score-sub" id="endScoreSub">correct answers</div>
     </div>
     <div class="end-message" id="endMessage">Great job!</div>
+    <div class="end-promo-line" id="endPromoLine" style="display:none"></div>
     <div class="end-badges-wrap" id="endBadgesWrap" style="display:none">
       <div class="badges-section-title">🏆 Badges Earned!</div>
       <div class="badges-earned-row" id="endBadgesRow"></div>
@@ -752,6 +797,27 @@ let frameCount = 0;
 let isMobile = false;
 let timerStarted = false;
 
+// ── PROGRESSION STATE ──────────────────────────────────────────────────────
+const MASTERY_WINDOW    = 10;   // rolling window size
+const MASTERY_THRESHOLD = 0.85; // 9/10 correct to promote
+const WARM_UP_RATIO     = 0.25; // 25 % warm-up from previous band
+
+const BAND_GRADES = {
+  band_1: ['jk', 'sk'],
+  band_2: ['grade_1', 'grade_2'],
+  band_3: ['grade_3', 'grade_4']
+};
+const PREV_BAND = { band_2: 'band_1', band_3: 'band_2' };
+const PROGRESS_KEY = 'ck_mathdive_progress';
+
+let poolsByGrade   = {};   // { grade_1: [...], grade_2: [...] }
+let warmUpPool     = [];   // previous band's top-tier questions
+let warmUpActive   = false;
+let answerHistory  = [];   // sliding window of booleans
+let resolvedBandG  = null; // stashed for use across functions
+let currentGrade   = null; // active grade tier within the band
+let didPromote     = false; // track if promotion happened this session
+
 // Object types pool
 const objTypes = ['bubble', 'bubble', 'bubble', 'fish', 'chest', 'jellyfish'];
 const objEmojis = {
@@ -778,10 +844,15 @@ function generateQuestion() {
   // ── Use JSON pool if loaded ──────────────────────────────────────────────
   if (questionPool && questionPool.length > 0) {
     if (poolIndex >= questionPool.length) {
-      // Reshuffle and loop
-      questionPool = shuffle(questionPool);
-      poolIndex = 0;
+      // Rebuild and reshuffle from current grade (+ warm-up if still active)
+      buildActivePool();
+      if (!questionPool || questionPool.length === 0) {
+        // Pool somehow empty after rebuild — fall through to hardcoded
+        questionPool = null;
+      }
     }
+  }
+  if (questionPool && questionPool.length > 0) {
     const item = questionPool[poolIndex++];
     ans = item.answer;
     q   = item.prompt;
@@ -978,8 +1049,76 @@ const GRADE_META = {
 // Question pool loaded from JSON (null = use hardcoded generator)
 // (declared at top of script with other game-state vars)
 
+// ── PROGRESSION HELPERS ────────────────────────────────────────────────────
+function _loadProgress() {
+  try { return JSON.parse(localStorage.getItem(PROGRESS_KEY) || '{}'); } catch { return {}; }
+}
+function _saveProgress(band, grade, mastered) {
+  try {
+    const p = _loadProgress();
+    p[band] = { current_grade: grade, mastered_grades: mastered || [] };
+    localStorage.setItem(PROGRESS_KEY, JSON.stringify(p));
+  } catch {}
+}
+
+// Normalise a question_set's questions into pool-ready objects
+function _normSet(s) {
+  const out = [];
+  (s.questions || []).forEach(q => {
+    const prompt = q.prompt || (q.prompt_type === 'dot_pattern' ? `Find the number: ${q.value}` : null);
+    if (!prompt) return;
+    const distractors = [...new Set(q.distractors)].filter(d => d !== q.answer);
+    if (distractors.length < 2) return;
+    out.push({ prompt, answer: q.answer, distractors, setId: s.set_id });
+  });
+  return out;
+}
+
+// Can the game render this mechanic?
+function _canHandle(s) {
+  if (s.mechanic === 'flash_recognition') return true;
+  if (s.mechanic === 'flash_card')        return true;
+  if (s.mechanic === 'sequence')          return true;
+  if (s.mechanic === 'tap_select') return s.questions.every(q => typeof q.answer === 'number');
+  return false;
+}
+
+// Build the active questionPool from poolsByGrade + optional warm-up, fully shuffled
+function buildActivePool() {
+  const gradeQs = poolsByGrade[currentGrade] || [];
+  let combined = [];
+
+  if (warmUpActive && warmUpPool.length > 0) {
+    // Interleave: for every 3 grade questions, 1 warm-up
+    // Shuffle both sources independently first
+    const gShuffled = shuffle([...gradeQs]);
+    const wShuffled = shuffle([...warmUpPool]);
+    let gi = 0, wi = 0;
+    while (gi < gShuffled.length) {
+      // Push up to 3 grade questions
+      for (let n = 0; n < 3 && gi < gShuffled.length; n++) {
+        combined.push(gShuffled[gi++]);
+      }
+      // Push 1 warm-up if available
+      if (wi < wShuffled.length) {
+        combined.push({ ...wShuffled[wi++], _warmUp: true });
+      }
+    }
+    // Append any remaining warm-up questions
+    while (wi < wShuffled.length) {
+      combined.push({ ...wShuffled[wi++], _warmUp: true });
+    }
+  } else {
+    combined = shuffle([...gradeQs]);
+  }
+
+  if (combined.length === 0) return; // no questions — fall back to generator
+  questionPool = combined;
+  poolIndex = 0;
+}
+
 // ── RESOLVE BAND + GRADE FROM URL → LOCALSTORAGE → NOTHING ────────────────
-(function initBand() {
+(async function initBand() {
   const params    = new URLSearchParams(window.location.search);
   const urlBand   = params.get('band');
   const urlGrade  = params.get('grade');
@@ -1000,6 +1139,7 @@ const GRADE_META = {
   }
 
   if (resolvedBand) {
+    resolvedBandG = resolvedBand;
     const meta = BAND_META[resolvedBand];
     selectedAge = meta.age;
 
@@ -1023,43 +1163,67 @@ const GRADE_META = {
       `<div class="band-pill ${meta.cls}">${pillText}</div>` +
       (noteText ? `<div class="band-source-note">${noteText}</div>` : '');
 
-    // Fetch and build question pool
-    fetch('/data/math-dive-questions.json')
-      .then(r => r.ok ? r.json() : null)
-      .then(data => {
-        if (!data) return;
-        const sets = data.question_sets.filter(s => {
-          if (s.band_id !== resolvedBand) return false;
-          if (resolvedGrade && s.grade_id !== resolvedGrade) return false;
-          // Skip mechanic types the game can't handle yet
-          if (s.mechanic === 'flash_recognition') return true; // dot_pattern handled below
-          if (s.mechanic === 'flash_card')        return true;
-          if (s.mechanic === 'sequence')          return true;
-          if (s.mechanic === 'tap_select') {
-            // Only include if all answers are numeric (skip even_odd strings)
-            return s.questions.every(q => typeof q.answer === 'number');
-          }
-          return false;
-        });
+    // ── FETCH AND BUILD GRADE-TIERED POOLS ─────────────────────────────────
+    try {
+      const resp = await fetch('/data/math-dive-questions.json');
+      if (!resp.ok) throw new Error('fetch failed');
+      const data = await resp.json();
 
-        // Flatten questions, normalise dot_pattern prompts
-        const flat = [];
-        sets.forEach(s => {
-          s.questions.forEach(q => {
-            const prompt = q.prompt || (q.prompt_type === 'dot_pattern' ? `Find the number: ${q.value}` : null);
-            if (!prompt) return;
-            // Filter distractors to deduplicate and exclude correct answer
-            const distractors = [...new Set(q.distractors)].filter(d => d !== q.answer);
-            if (distractors.length < 2) return; // safety check
-            flat.push({ prompt, answer: q.answer, distractors });
-          });
-        });
+      // ── 1. Group current band's questions by grade ──
+      const grades = BAND_GRADES[resolvedBand] || [];
+      poolsByGrade = {};
+      grades.forEach(g => { poolsByGrade[g] = []; });
 
-        if (flat.length === 0) return; // nothing usable — fall back to generator
-        questionPool = shuffle(flat);
-        poolIndex = 0;
-      })
-      .catch(() => { /* silently fall back to hardcoded generator */ });
+      data.question_sets.forEach(s => {
+        if (s.band_id !== resolvedBand) return;
+        if (!_canHandle(s)) return;
+        const gid = s.grade_id;
+        if (!poolsByGrade[gid]) poolsByGrade[gid] = [];
+        poolsByGrade[gid].push(..._normSet(s));
+      });
+
+      // ── 2. Build warm-up pool from previous band's top tier ──
+      warmUpPool = [];
+      const prevBand = PREV_BAND[resolvedBand];
+      if (prevBand) {
+        const prevGrades = BAND_GRADES[prevBand] || [];
+        const topTier = prevGrades[prevGrades.length - 1]; // upper grade of previous band
+        data.question_sets.forEach(s => {
+          if (s.band_id !== prevBand) return;
+          if (s.grade_id !== topTier) return;
+          if (!_canHandle(s)) return;
+          warmUpPool.push(..._normSet(s));
+        });
+      }
+
+      // ── 3. Determine starting grade from saved progress or URL ──
+      const progress = _loadProgress();
+      const bandProgress = progress[resolvedBand];
+      const lowerGrade = grades[0];
+      const upperGrade = grades[grades.length - 1];
+
+      if (resolvedGrade) {
+        // URL explicitly pinned a grade — honour it, no progression
+        currentGrade = resolvedGrade;
+        warmUpActive = false;
+      } else if (bandProgress && bandProgress.current_grade && poolsByGrade[bandProgress.current_grade]) {
+        // Resume from saved position
+        currentGrade = bandProgress.current_grade;
+        // Warm-up only if still on lower grade (haven't mastered it yet)
+        const mastered = bandProgress.mastered_grades || [];
+        warmUpActive = (currentGrade === lowerGrade) && !mastered.includes(lowerGrade) && warmUpPool.length > 0;
+      } else {
+        // First time in this band — start at lower grade with warm-up
+        currentGrade = lowerGrade;
+        warmUpActive = warmUpPool.length > 0;
+      }
+
+      // ── 4. Build initial active pool ──
+      buildActivePool();
+
+    } catch {
+      // Silently fall back to hardcoded generator
+    }
 
   } else {
     // No band info at all — show prompt, leave Dive In disabled
@@ -1077,6 +1241,86 @@ function shuffle(arr) {
     [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
+}
+
+// ── MASTERY & PROGRESSION ──────────────────────────────────────────────────
+function recordAnswer(correct) {
+  if (!resolvedBandG || !currentGrade) return; // no progression without band context
+  answerHistory.push(correct);
+  if (answerHistory.length > MASTERY_WINDOW) {
+    answerHistory = answerHistory.slice(-MASTERY_WINDOW);
+  }
+  checkMastery();
+}
+
+function checkMastery() {
+  if (answerHistory.length < MASTERY_WINDOW) return;
+  const correctCount = answerHistory.filter(Boolean).length;
+  if (correctCount / MASTERY_WINDOW < MASTERY_THRESHOLD) return;
+
+  // ── Mastery achieved! Attempt grade promotion ──
+  const grades = BAND_GRADES[resolvedBandG] || [];
+  const idx = grades.indexOf(currentGrade);
+  if (idx < 0 || idx >= grades.length - 1) {
+    // Already at top tier — nothing to promote to. Band mastery!
+    answerHistory = []; // reset so it doesn't keep firing
+    return;
+  }
+
+  const nextGrade = grades[idx + 1];
+  if (!poolsByGrade[nextGrade] || poolsByGrade[nextGrade].length === 0) return;
+
+  // Promote
+  const prevGrade = currentGrade;
+  currentGrade = nextGrade;
+  warmUpActive = false; // warm-up done once lower grade is mastered
+  answerHistory = [];   // reset window for new tier
+  didPromote = true;
+
+  // Save progress
+  const progress = _loadProgress();
+  const bp = progress[resolvedBandG] || { mastered_grades: [] };
+  if (!bp.mastered_grades) bp.mastered_grades = [];
+  if (!bp.mastered_grades.includes(prevGrade)) bp.mastered_grades.push(prevGrade);
+  _saveProgress(resolvedBandG, currentGrade, bp.mastered_grades);
+
+  // Rebuild the pool from the new grade, fully reshuffled
+  buildActivePool();
+
+  // Show level-up toast
+  showLevelUp(prevGrade, nextGrade);
+}
+
+function showLevelUp(from, to) {
+  const label = GRADE_META[to] ? GRADE_META[to].label : to;
+  const overlay = document.getElementById('levelUpOverlay');
+  const text = document.getElementById('levelUpText');
+  if (!overlay || !text) return;
+  text.textContent = `${label} unlocked!`;
+  overlay.classList.add('show');
+  // Confetti burst
+  if (typeof spawnConfetti === 'function') {
+    spawnConfetti(window.innerWidth / 2, window.innerHeight / 2);
+  }
+  // Play a celebratory sound
+  try {
+    const ac = getAudio();
+    if (ac.state === 'suspended') ac.resume();
+    // Rising arpeggio
+    [523, 659, 784, 1047].forEach((freq, i) => {
+      const osc = ac.createOscillator();
+      const gain = ac.createGain();
+      osc.connect(gain); gain.connect(ac.destination);
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, ac.currentTime + i * 0.12);
+      gain.gain.setValueAtTime(0.12, ac.currentTime + i * 0.12);
+      gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + i * 0.12 + 0.4);
+      osc.start(ac.currentTime + i * 0.12);
+      osc.stop(ac.currentTime + i * 0.12 + 0.4);
+    });
+  } catch {}
+  // Auto-hide after 2.5s
+  setTimeout(() => { overlay.classList.remove('show'); }, 2500);
 }
 
 function selectAge(age) {
@@ -1145,6 +1389,13 @@ function startGame() {
   fallingObjects = [];
   gameRunning = true;
   timerStarted = false;
+  answerHistory = [];
+  didPromote = false;
+
+  // Reshuffle question pool for this session
+  if (Object.keys(poolsByGrade).length > 0) {
+    buildActivePool();
+  }
 
   diver.x = canvas.width / 2;
   diver.y = canvas.height - 180;
@@ -1303,6 +1554,7 @@ function gameLoop() {
     streak++;
     if (streak > _maxStreak) _maxStreak = streak;
     if (streak >= 5 && _award('md_fire')) _toast('md_fire');
+    recordAnswer(true);
     updateHUD();
 
     if (streak % 5 === 0) {
@@ -1330,6 +1582,7 @@ function gameLoop() {
   } else if (catchIsCorrect === false) {
     startTimer();
     streak = 0;
+    recordAnswer(false);
     timeLeft = Math.max(0, timeLeft - 2);
     updateHUD();
     showFeedback(catchX, catchY, '✗ -2s', '#FF5C5C');
@@ -1687,6 +1940,31 @@ function endGame() {
   document.getElementById('endScoreNum').textContent = score;
   document.getElementById('endScoreSub').textContent = `correct ${cfg.label} answers`;
   document.getElementById('endMessage').textContent = message;
+
+  // ── Progression summary ──
+  const promoLine = document.getElementById('endPromoLine');
+  if (promoLine) {
+    if (didPromote && currentGrade && GRADE_META[currentGrade]) {
+      promoLine.textContent = `🎓 Levelled up to ${GRADE_META[currentGrade].label}!`;
+      promoLine.style.display = '';
+    } else if (currentGrade && GRADE_META[currentGrade]) {
+      const pct = answerHistory.length >= MASTERY_WINDOW
+        ? Math.round((answerHistory.filter(Boolean).length / MASTERY_WINDOW) * 100) + '%'
+        : '';
+      const tierLabel = GRADE_META[currentGrade].label;
+      promoLine.textContent = pct ? `📊 ${tierLabel} · ${pct} recent accuracy` : `📊 ${tierLabel}`;
+      promoLine.style.display = '';
+    } else {
+      promoLine.style.display = 'none';
+    }
+  }
+
+  // Save progression state
+  if (resolvedBandG && currentGrade) {
+    const progress = _loadProgress();
+    const bp = progress[resolvedBandG] || { mastered_grades: [] };
+    _saveProgress(resolvedBandG, currentGrade, bp.mastered_grades || []);
+  }
 
   document.getElementById('endScreen').classList.remove('hidden');
   document.querySelector('.sea-floor').style.display = 'none';
