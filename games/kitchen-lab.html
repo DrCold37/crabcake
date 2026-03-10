@@ -1225,7 +1225,7 @@ function checkMastery() {
   _saveProgress(resolvedBandG, currentGrade, bp.mastered_grades);
 
   buildActiveQuizPool();
-      renderGradeSelector();
+  renderGradeSelector();
   updateMasteryVisual();
   showLevelUp(prevGrade, nextGrade);
 }
@@ -1453,6 +1453,7 @@ const GRADE_META = {
 
       // 4. Build initial active quiz pool
       buildActiveQuizPool();
+      renderGradeSelector();
 
       if (quizPool && quizPool.length > 0) {
         console.log(`[KL] Loaded ${quizPool.length} quiz questions (${resolvedBand}/${currentGrade})`);
@@ -2165,7 +2166,7 @@ function endGame(){
   if (resolvedBandG && currentGrade) {
     const progress = _loadProgress();
     const bp = progress[resolvedBandG] || { mastered_grades: [] }
-  renderGradeSelector();;
+  renderGradeSelector();
     _saveProgress(resolvedBandG, currentGrade, bp.mastered_grades || []);
   }
 

@@ -982,9 +982,8 @@ function generateQuestion() {
   // ── Use JSON pool if loaded ──────────────────────────────────────────────
   if (questionPool && questionPool.length > 0) {
     if (poolIndex >= questionPool.length) {
-      // Rebuild and reshuffle from current grade (+ warm-up if still active)
+      // Rebuild and reshuffle from current grade
       buildActivePool();
-      renderGradeSelector();
       if (!questionPool || questionPool.length === 0) {
         // Pool somehow empty after rebuild — fall through to hardcoded
         questionPool = null;
@@ -1325,6 +1324,7 @@ function buildActivePool() {
 
       // ── 4. Build initial active pool ──
       buildActivePool();
+      renderGradeSelector();
 
     } catch {
       // Silently fall back to hardcoded generator
@@ -1372,7 +1372,7 @@ function checkMastery() {
 
   const prevGrade = currentGrade;
   currentGrade = nextGrade;
-  // answerHistory persists across play-again sessions within a page load
+  answerHistory = [];
   didPromote = true;
 
   const progress = _loadProgress();
@@ -1382,6 +1382,7 @@ function checkMastery() {
   _saveProgress(resolvedBandG, currentGrade, bp.mastered_grades);
 
   buildActivePool();
+  renderGradeSelector();
   updateMasteryVisual();
   showLevelUp(prevGrade, nextGrade);
 }
@@ -2153,7 +2154,7 @@ function endGame() {
   if (resolvedBandG && currentGrade) {
     const progress = _loadProgress();
     const bp = progress[resolvedBandG] || { mastered_grades: [] }
-  renderGradeSelector();;
+  renderGradeSelector();
     _saveProgress(resolvedBandG, currentGrade, bp.mastered_grades || []);
   }
 
