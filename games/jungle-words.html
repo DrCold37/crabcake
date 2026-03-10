@@ -595,6 +595,41 @@
   @keyframes claimPop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
   .feedback-claim-btn:hover{transform:scale(1.06);box-shadow:0 4px 16px rgba(255,215,0,.4);}
   .feedback-claim-btn:disabled{opacity:.5;cursor:default;transform:none;background:#555;}
+
+  /* ── LEVEL-UP TOAST ── */
+  .level-up-overlay {
+    position: fixed; inset: 0; z-index: 60;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(10,30,10,0.6); backdrop-filter: blur(6px);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+  .level-up-overlay.show { opacity: 1; pointer-events: auto; }
+  .level-up-inner {
+    display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+    animation: lvlPop 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+  .level-up-emoji { font-size: 4rem; filter: drop-shadow(0 0 20px rgba(57,255,20,0.7)); }
+  .level-up-title {
+    font-family: 'Boogaloo', cursive; font-size: 2.8rem; color: #39FF14;
+    text-shadow: 0 0 30px rgba(57,255,20,0.5); letter-spacing: 1px;
+  }
+  .level-up-text {
+    font-size: 1.15rem; font-weight: 800; color: rgba(255,255,255,0.85);
+    letter-spacing: 0.5px;
+  }
+  @keyframes lvlPop {
+    0%   { transform: scale(0.3) translateY(40px); opacity: 0; }
+    60%  { transform: scale(1.08) translateY(-4px); opacity: 1; }
+    100% { transform: scale(1) translateY(0); }
+  }
+
+  /* ── PROMO LINE (end screen) ── */
+  .end-promo-line {
+    font-size: 0.92rem; font-weight: 800; color: #39FF14;
+    text-align: center; letter-spacing: 0.3px;
+    margin-top: 0.2rem;
+  }
   </style>
 </head>
 <body>
@@ -680,6 +715,15 @@
     <div class="word-pool" id="wordPool"></div>
   </div>
 
+  <!-- LEVEL-UP TOAST -->
+  <div class="level-up-overlay" id="levelUpOverlay">
+    <div class="level-up-inner">
+      <div class="level-up-emoji">🎓</div>
+      <div class="level-up-title">Level Up!</div>
+      <div class="level-up-text" id="levelUpText"></div>
+    </div>
+  </div>
+
   <!-- END SCREEN -->
   <div class="screen hidden" id="endScreen">
     <div class="end-rating" id="endRating">⭐⭐⭐</div>
@@ -690,6 +734,7 @@
       <div class="end-score-sub" id="endScoreSub">correct sentences</div>
     </div>
     <div class="end-message" id="endMessage">Great exploring!</div>
+    <div class="end-promo-line" id="endPromoLine" style="display:none"></div>
     <div class="end-badges-wrap" id="endBadgesWrap" style="display:none">
       <div class="badges-section-title">🏆 Badges Earned!</div>
       <div class="badges-earned-row" id="endBadgesRow"></div>
@@ -773,11 +818,144 @@ const SENTENCES_PER_GAME = 8;
 let questionPool = null; // populated from JSON fetch
 let poolIndex    = 0;
 
+// ── PROGRESSION STATE ──────────────────────────────────────────────────────
+const MASTERY_WINDOW    = 10;
+const MASTERY_THRESHOLD = 0.85;
+const WARM_UP_RATIO     = 0.25;
+
+const BAND_GRADES = {
+  band_1: ['jk', 'sk'],
+  band_2: ['grade_1', 'grade_2'],
+  band_3: ['grade_3', 'grade_4']
+};
+const PREV_BAND = { band_2: 'band_1', band_3: 'band_2' };
+const PROGRESS_KEY = 'ck_junglewords_progress';
+
+let poolsByGrade   = {};
+let warmUpPool     = [];
+let warmUpActive   = false;
+let answerHistory  = [];
+let resolvedBandG  = null;
+let currentGrade   = null;
+let didPromote     = false;
+
 function shuffle(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
+}
+
+// Returns a new shuffled copy (non-mutating)
+function shuffled(arr) { const a = [...arr]; shuffle(a); return a; }
+
+// ── PROGRESSION HELPERS ────────────────────────────────────────────────────
+function _loadProgress() {
+  try { return JSON.parse(localStorage.getItem(PROGRESS_KEY) || '{}'); } catch { return {}; }
+}
+function _saveProgress(band, grade, mastered) {
+  try {
+    const p = _loadProgress();
+    p[band] = { current_grade: grade, mastered_grades: mastered || [] };
+    localStorage.setItem(PROGRESS_KEY, JSON.stringify(p));
+  } catch {}
+}
+
+// Can the game use this question set?
+function _canHandleJW(s) {
+  return s.domain === 'grammar' && s.mechanic === 'drag_and_drop';
+}
+
+// Normalise a question set into pool-ready { words, hint } objects
+function _normSetJW(s) {
+  return (s.questions || [])
+    .filter(q => Array.isArray(q.tiles) && Array.isArray(q.answer) && !q.mechanic)
+    .map(q => ({ words: q.answer, hint: q.prompt, setId: s.set_id }));
+}
+
+// Build the active questionPool from poolsByGrade + optional warm-up
+function buildActivePool() {
+  const gradeQs = poolsByGrade[currentGrade] || [];
+  let combined = [];
+
+  if (warmUpActive && warmUpPool.length > 0) {
+    const gShuffled = shuffled(gradeQs);
+    const wShuffled = shuffled(warmUpPool);
+    let gi = 0, wi = 0;
+    while (gi < gShuffled.length) {
+      for (let n = 0; n < 3 && gi < gShuffled.length; n++) combined.push(gShuffled[gi++]);
+      if (wi < wShuffled.length) combined.push({ ...wShuffled[wi++], _warmUp: true });
+    }
+    while (wi < wShuffled.length) combined.push({ ...wShuffled[wi++], _warmUp: true });
+  } else {
+    combined = shuffled(gradeQs);
+  }
+
+  if (combined.length === 0) return;
+  questionPool = combined;
+  poolIndex = 0;
+}
+
+// ── MASTERY & PROGRESSION ──────────────────────────────────────────────────
+function recordAnswer(correct) {
+  if (!resolvedBandG || !currentGrade) return;
+  answerHistory.push(correct);
+  if (answerHistory.length > MASTERY_WINDOW) answerHistory = answerHistory.slice(-MASTERY_WINDOW);
+  checkMastery();
+}
+
+function checkMastery() {
+  if (answerHistory.length < MASTERY_WINDOW) return;
+  const correctCount = answerHistory.filter(Boolean).length;
+  if (correctCount / MASTERY_WINDOW < MASTERY_THRESHOLD) return;
+
+  const grades = BAND_GRADES[resolvedBandG] || [];
+  const idx = grades.indexOf(currentGrade);
+  if (idx < 0 || idx >= grades.length - 1) { answerHistory = []; return; }
+
+  const nextGrade = grades[idx + 1];
+  if (!poolsByGrade[nextGrade] || poolsByGrade[nextGrade].length === 0) return;
+
+  const prevGrade = currentGrade;
+  currentGrade = nextGrade;
+  warmUpActive = false;
+  answerHistory = [];
+  didPromote = true;
+
+  const progress = _loadProgress();
+  const bp = progress[resolvedBandG] || { mastered_grades: [] };
+  if (!bp.mastered_grades) bp.mastered_grades = [];
+  if (!bp.mastered_grades.includes(prevGrade)) bp.mastered_grades.push(prevGrade);
+  _saveProgress(resolvedBandG, currentGrade, bp.mastered_grades);
+
+  buildActivePool();
+  showLevelUp(prevGrade, nextGrade);
+}
+
+function showLevelUp(from, to) {
+  const label = GRADE_META[to] ? GRADE_META[to].label : to;
+  const overlay = document.getElementById('levelUpOverlay');
+  const text = document.getElementById('levelUpText');
+  if (!overlay || !text) return;
+  text.textContent = `${label} unlocked!`;
+  overlay.classList.add('show');
+  if (typeof spawnConfetti === 'function') spawnConfetti();
+  try {
+    const ac = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    if (ac.state === 'suspended') ac.resume();
+    [523, 659, 784, 1047].forEach((freq, i) => {
+      const osc = ac.createOscillator();
+      const gain = ac.createGain();
+      osc.connect(gain); gain.connect(ac.destination);
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, ac.currentTime + i * 0.12);
+      gain.gain.setValueAtTime(0.12, ac.currentTime + i * 0.12);
+      gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + i * 0.12 + 0.4);
+      osc.start(ac.currentTime + i * 0.12);
+      osc.stop(ac.currentTime + i * 0.12 + 0.4);
+    });
+  } catch {}
+  setTimeout(() => { overlay.classList.remove('show'); }, 2500);
 }
 
 // ── AMBIENT ──
@@ -851,6 +1029,7 @@ const GRADE_META = {
   }
 
   if (resolvedBand) {
+    resolvedBandG = resolvedBand;
     const meta = BAND_META[resolvedBand];
     selectedAge = meta.age;
     const btn = document.getElementById('startBtn');
@@ -865,35 +1044,62 @@ const GRADE_META = {
       `<div class="band-pill ${meta.cls}">${pillText}</div>` +
       (noteText ? `<div class="band-source-note">${noteText}</div>` : '');
 
-    // ── FETCH QUESTION POOL FROM JSON ──────────────────────────────────────
+    // ── FETCH AND BUILD GRADE-TIERED POOLS ─────────────────────────────────
     try {
       const resp = await fetch('/data/jungle-words-questions.json');
-      if (resp.ok) {
-        const text = await resp.text();
-        // Strip JS-style line comments before parsing
-        const clean = text.replace(/\/\/[^\n]*/g, '');
-        const data = JSON.parse(clean);
+      if (!resp.ok) throw new Error('fetch failed');
+      const text = await resp.text();
+      const clean = text.replace(/\/\/[^\n]*/g, '');
+      const data = JSON.parse(clean);
 
-        // Filter: grammar domain, drag_and_drop mechanic, matching band
-        const usableSets = (data.question_sets || []).filter(s =>
-          s.band_id === resolvedBand &&
-          s.domain  === 'grammar' &&
-          s.mechanic === 'drag_and_drop'
-        );
+      // 1. Group current band's grammar/drag_and_drop questions by grade
+      const grades = BAND_GRADES[resolvedBand] || [];
+      poolsByGrade = {};
+      grades.forEach(g => { poolsByGrade[g] = []; });
 
-        // Extract questions that have tile+answer arrays (skip inline tap_select overrides)
-        const rawQuestions = usableSets.flatMap(s =>
-          (s.questions || []).filter(q =>
-            Array.isArray(q.tiles) && Array.isArray(q.answer) && !q.mechanic
-          )
-        );
+      (data.question_sets || []).forEach(s => {
+        if (s.band_id !== resolvedBand) return;
+        if (!_canHandleJW(s)) return;
+        const gid = s.grade_id;
+        if (!poolsByGrade[gid]) poolsByGrade[gid] = [];
+        poolsByGrade[gid].push(..._normSetJW(s));
+      });
 
-        if (rawQuestions.length > 0) {
-          questionPool = rawQuestions.map(q => ({ words: q.answer, hint: q.prompt }));
-          shuffle(questionPool);
-          poolIndex = 0;
-          console.log(`[JW] Loaded ${questionPool.length} sentences from JSON (${resolvedBand})`);
-        }
+      // 2. Build warm-up pool from previous band's top tier
+      warmUpPool = [];
+      const prevBand = PREV_BAND[resolvedBand];
+      if (prevBand) {
+        const prevGrades = BAND_GRADES[prevBand] || [];
+        const topTier = prevGrades[prevGrades.length - 1];
+        (data.question_sets || []).forEach(s => {
+          if (s.band_id !== prevBand || s.grade_id !== topTier) return;
+          if (!_canHandleJW(s)) return;
+          warmUpPool.push(..._normSetJW(s));
+        });
+      }
+
+      // 3. Determine starting grade
+      const progress = _loadProgress();
+      const bandProgress = progress[resolvedBand];
+      const lowerGrade = grades[0];
+
+      if (resolvedGrade) {
+        currentGrade = resolvedGrade;
+        warmUpActive = false;
+      } else if (bandProgress && bandProgress.current_grade && poolsByGrade[bandProgress.current_grade]) {
+        currentGrade = bandProgress.current_grade;
+        const mastered = bandProgress.mastered_grades || [];
+        warmUpActive = (currentGrade === lowerGrade) && !mastered.includes(lowerGrade) && warmUpPool.length > 0;
+      } else {
+        currentGrade = lowerGrade;
+        warmUpActive = warmUpPool.length > 0;
+      }
+
+      // 4. Build initial active pool
+      buildActivePool();
+
+      if (questionPool && questionPool.length > 0) {
+        console.log(`[JW] Loaded ${questionPool.length} sentences (${resolvedBand}/${currentGrade})`);
       }
     } catch (e) {
       console.warn('[JW] JSON fetch failed, using hardcoded sentences', e);
@@ -937,11 +1143,16 @@ function startGame() {
   sentencesDone = 0;
   _gameStartTime = Date.now();
   sentenceIndex = 0;
+  answerHistory = answerHistory.length >= MASTERY_WINDOW ? answerHistory : answerHistory; // preserve across games
+  didPromote    = false;
+
+  // Reshuffle pool for this session
+  if (Object.keys(poolsByGrade).length > 0) buildActivePool();
 
   // Build sentence queue — JSON pool first, fall back to hardcoded
   let pool;
   if (questionPool && questionPool.length > 0) {
-    if (poolIndex >= questionPool.length) { shuffle(questionPool); poolIndex = 0; }
+    if (poolIndex >= questionPool.length) { buildActivePool(); }
     pool = questionPool.slice(poolIndex, poolIndex + SENTENCES_PER_GAME);
     poolIndex += pool.length;
     // Top up with hardcoded if JSON pool doesn't have enough
@@ -1060,6 +1271,7 @@ function onWordTap(tile, word) {
   } else {
     // Wrong tap
     lives--;
+    recordAnswer(false);
     updateHUD();
     tile.style.animation = 'none';
     tile.offsetHeight;
@@ -1091,6 +1303,7 @@ function completeSentence() {
   _dotResults[sentenceIndex] = lostThisSentence;
   score++;
   sentencesDone++;
+  recordAnswer(true);
   updateHUD();
 
   // Flash all built words green
@@ -1272,6 +1485,32 @@ function endGame() {
   document.getElementById('endScoreNum').textContent = score;
   document.getElementById('endScoreSub').textContent = `out of ${Math.min(sentenceIndex, SENTENCES_PER_GAME)} sentences`;
   document.getElementById('endMessage').textContent  = message;
+
+  // ── Progression summary ──
+  const promoLine = document.getElementById('endPromoLine');
+  if (promoLine) {
+    if (didPromote && currentGrade && GRADE_META[currentGrade]) {
+      promoLine.textContent = `🎓 Levelled up to ${GRADE_META[currentGrade].label}!`;
+      promoLine.style.display = '';
+    } else if (currentGrade && GRADE_META[currentGrade]) {
+      const pct = answerHistory.length >= MASTERY_WINDOW
+        ? Math.round((answerHistory.filter(Boolean).length / MASTERY_WINDOW) * 100) + '%'
+        : '';
+      const tierLabel = GRADE_META[currentGrade].label;
+      promoLine.textContent = pct ? `📊 ${tierLabel} · ${pct} recent accuracy` : `📊 ${tierLabel}`;
+      promoLine.style.display = '';
+    } else {
+      promoLine.style.display = 'none';
+    }
+  }
+
+  // Save progression state
+  if (resolvedBandG && currentGrade) {
+    const progress = _loadProgress();
+    const bp = progress[resolvedBandG] || { mastered_grades: [] };
+    _saveProgress(resolvedBandG, currentGrade, bp.mastered_grades || []);
+  }
+
   document.getElementById('endScreen').classList.remove('hidden');
   document.querySelector('.jungle-floor').style.display = 'none';
   document.getElementById('backLink').style.display  = 'block';

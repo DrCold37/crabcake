@@ -271,6 +271,41 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast-em{font-size:1.3rem}.toast-name{font-size:.75rem;font-weight:800;color:var(--yellow)}
 
+/* ── LEVEL-UP TOAST ── */
+.level-up-overlay {
+  position: fixed; inset: 0; z-index: 60;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(20,10,30,0.6); backdrop-filter: blur(6px);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+.level-up-overlay.show { opacity: 1; pointer-events: auto; }
+.level-up-inner {
+  display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+  animation: lvlPop 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+.level-up-emoji { font-size: 4rem; filter: drop-shadow(0 0 20px rgba(0,201,177,0.7)); }
+.level-up-title {
+  font-family: 'Boogaloo', cursive; font-size: 2.8rem; color: var(--teal);
+  text-shadow: 0 0 30px rgba(0,201,177,0.5); letter-spacing: 1px;
+}
+.level-up-text {
+  font-size: 1.15rem; font-weight: 800; color: rgba(255,255,255,0.85);
+  letter-spacing: 0.5px;
+}
+@keyframes lvlPop {
+  0%   { transform: scale(0.3) translateY(40px); opacity: 0; }
+  60%  { transform: scale(1.08) translateY(-4px); opacity: 1; }
+  100% { transform: scale(1) translateY(0); }
+}
+
+/* ── PROMO LINE (end screen) ── */
+.end-promo-line {
+  font-size: 0.92rem; font-weight: 800; color: var(--teal);
+  text-align: center; letter-spacing: 0.3px;
+  margin-top: 0.2rem;
+}
+
   @font-face { font-family: 'Boogaloo'; src: url('/fonts/Fredoka-Regular.woff2') format('woff2'); font-display: swap; }
   @font-face { font-family: 'Nunito'; font-weight: 700; src: url('/fonts/Nunito-Bold.woff2') format('woff2'); font-display: swap; }
   @font-face { font-family: 'Nunito'; font-weight: 800 900; src: url('/fonts/Nunito-ExtraBold.woff2') format('woff2'); font-display: swap; }
@@ -413,11 +448,21 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 </div>
 
 <!-- ══ END SCREEN ══ -->
+<!-- LEVEL-UP TOAST -->
+<div class="level-up-overlay" id="levelUpOverlay">
+  <div class="level-up-inner">
+    <div class="level-up-emoji">🎓</div>
+    <div class="level-up-title">Level Up!</div>
+    <div class="level-up-text" id="levelUpText"></div>
+  </div>
+</div>
+
 <div class="screen hidden" id="endScreen">
   <div class="end-icon">🏆</div>
   <div class="end-title" id="endTitle">Lab Complete!</div>
   <div class="end-score" id="endScore"></div>
   <div class="end-stars" id="endStars">⭐⭐⭐</div>
+  <div class="end-promo-line" id="endPromoLine" style="display:none"></div>
   <div class="end-badges-wrap" id="endBadgesWrap" style="display:none">
     <div class="end-badges-title">🏆 Your Kitchen Lab Badges</div>
     <div class="end-badges-row" id="endBadgesRow"></div>
@@ -701,6 +746,27 @@ let audioCtx     = null;
 
 const MAX_SLOTS = 3;
 
+// ── PROGRESSION STATE ──────────────────────────────────────────────────────
+const MASTERY_WINDOW    = 10;
+const MASTERY_THRESHOLD = 0.85;
+const WARM_UP_RATIO     = 0.25;
+
+const BAND_GRADES = {
+  band_1: ['jk', 'sk'],
+  band_2: ['grade_1', 'grade_2'],
+  band_3: ['grade_3', 'grade_4']
+};
+const PREV_BAND = { band_2: 'band_1', band_3: 'band_2' };
+const PROGRESS_KEY = 'ck_kitchenlab_progress';
+
+let quizByGrade    = {};
+let quizWarmUpPool = [];
+let quizWarmUpActive = false;
+let answerHistory  = [];
+let resolvedBandG  = null;
+let currentGrade   = null;
+let didPromote     = false;
+
 // ══════════════════════════════════════════════
 // AUDIO
 // ══════════════════════════════════════════════
@@ -933,6 +999,126 @@ function initBgBubbles(){
   }
 }
 
+// ── PROGRESSION HELPERS ────────────────────────────────────────────────────
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+function shuffled(arr) { const a = [...arr]; shuffle(a); return a; }
+
+function _loadProgress() {
+  try { return JSON.parse(localStorage.getItem(PROGRESS_KEY) || '{}'); } catch { return {}; }
+}
+function _saveProgress(band, grade, mastered) {
+  try {
+    const p = _loadProgress();
+    p[band] = { current_grade: grade, mastered_grades: mastered || [] };
+    localStorage.setItem(PROGRESS_KEY, JSON.stringify(p));
+  } catch {}
+}
+
+// Can the game use this question set for quiz?
+function _canHandleKL(s) {
+  return true; // all mechanics accepted; individual Qs filtered for tap_select below
+}
+
+// Normalise a question set's tap_select questions into quiz-ready objects
+function _normSetKL(s) {
+  return (s.questions || [])
+    .filter(q => {
+      const mech = q.mechanic || s.mechanic;
+      return mech === 'tap_select' && q.answer && Array.isArray(q.distractors);
+    })
+    .map(q => ({ prompt: q.prompt, answer: q.answer, distractors: q.distractors, setId: s.set_id }));
+}
+
+// Build the active quizPool from quizByGrade + optional warm-up
+function buildActiveQuizPool() {
+  const gradeQs = quizByGrade[currentGrade] || [];
+  let combined = [];
+
+  if (quizWarmUpActive && quizWarmUpPool.length > 0) {
+    const gShuffled = shuffled(gradeQs);
+    const wShuffled = shuffled(quizWarmUpPool);
+    let gi = 0, wi = 0;
+    while (gi < gShuffled.length) {
+      for (let n = 0; n < 3 && gi < gShuffled.length; n++) combined.push(gShuffled[gi++]);
+      if (wi < wShuffled.length) combined.push({ ...wShuffled[wi++], _warmUp: true });
+    }
+    while (wi < wShuffled.length) combined.push({ ...wShuffled[wi++], _warmUp: true });
+  } else {
+    combined = shuffled(gradeQs);
+  }
+
+  if (combined.length === 0) return;
+  quizPool = combined;
+  quizPoolIdx = 0;
+}
+
+// ── MASTERY & PROGRESSION ──────────────────────────────────────────────────
+function recordAnswer(correct) {
+  if (!resolvedBandG || !currentGrade) return;
+  answerHistory.push(correct);
+  if (answerHistory.length > MASTERY_WINDOW) answerHistory = answerHistory.slice(-MASTERY_WINDOW);
+  checkMastery();
+}
+
+function checkMastery() {
+  if (answerHistory.length < MASTERY_WINDOW) return;
+  const correctCount = answerHistory.filter(Boolean).length;
+  if (correctCount / MASTERY_WINDOW < MASTERY_THRESHOLD) return;
+
+  const grades = BAND_GRADES[resolvedBandG] || [];
+  const idx = grades.indexOf(currentGrade);
+  if (idx < 0 || idx >= grades.length - 1) { answerHistory = []; return; }
+
+  const nextGrade = grades[idx + 1];
+  if (!quizByGrade[nextGrade] || quizByGrade[nextGrade].length === 0) return;
+
+  const prevGrade = currentGrade;
+  currentGrade = nextGrade;
+  quizWarmUpActive = false;
+  answerHistory = [];
+  didPromote = true;
+
+  const progress = _loadProgress();
+  const bp = progress[resolvedBandG] || { mastered_grades: [] };
+  if (!bp.mastered_grades) bp.mastered_grades = [];
+  if (!bp.mastered_grades.includes(prevGrade)) bp.mastered_grades.push(prevGrade);
+  _saveProgress(resolvedBandG, currentGrade, bp.mastered_grades);
+
+  buildActiveQuizPool();
+  showLevelUp(prevGrade, nextGrade);
+}
+
+function showLevelUp(from, to) {
+  const label = GRADE_META[to] ? GRADE_META[to].label : to;
+  const overlay = document.getElementById('levelUpOverlay');
+  const text = document.getElementById('levelUpText');
+  if (!overlay || !text) return;
+  text.textContent = `${label} unlocked!`;
+  overlay.classList.add('show');
+  if (typeof spawnConfetti === 'function') spawnConfetti();
+  try {
+    const ac = getAudio();
+    if (ac.state === 'suspended') ac.resume();
+    [523, 659, 784, 1047].forEach((freq, i) => {
+      const osc = ac.createOscillator();
+      const gain = ac.createGain();
+      osc.connect(gain); gain.connect(ac.destination);
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, ac.currentTime + i * 0.12);
+      gain.gain.setValueAtTime(0.12, ac.currentTime + i * 0.12);
+      gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + i * 0.12 + 0.4);
+      osc.start(ac.currentTime + i * 0.12);
+      osc.stop(ac.currentTime + i * 0.12 + 0.4);
+    });
+  } catch {}
+  setTimeout(() => { overlay.classList.remove('show'); }, 2500);
+}
+
 // ══════════════════════════════════════════════
 // START GAME
 // ══════════════════════════════════════════════
@@ -972,6 +1158,7 @@ const GRADE_META = {
   }
 
   if (resolvedBand) {
+    resolvedBandG = resolvedBand;
     const meta = BAND_META[resolvedBand];
     selectedAge = meta.age;
     const btn = document.getElementById('startExpBtn');
@@ -986,32 +1173,58 @@ const GRADE_META = {
       `<div class="band-pill ${meta.cls}">${pillText}</div>` +
       (noteText ? `<div class="band-source-note">${noteText}</div>` : '');
 
-    // ── FETCH QUIZ POOL FROM JSON ───────────────────────────────────────────
+    // ── FETCH AND BUILD GRADE-TIERED QUIZ POOLS ────────────────────────────
     try {
       const resp = await fetch('/data/kitchen-lab-questions.json');
-      if (resp.ok) {
-        const data = JSON.parse(await resp.text());
-        // Collect all tap_select questions for this band (set-level or inline)
-        const qs = [];
-        for (const set of (data.question_sets || [])) {
-          if (set.band_id !== resolvedBand) continue;
-          for (const q of (set.questions || [])) {
-            const mech = q.mechanic || set.mechanic;
-            if (mech === 'tap_select' && q.answer && Array.isArray(q.distractors)) {
-              qs.push({ prompt: q.prompt, answer: q.answer, distractors: q.distractors });
-            }
-          }
-        }
-        if (qs.length > 0) {
-          // Shuffle
-          for (let i = qs.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [qs[i], qs[j]] = [qs[j], qs[i]];
-          }
-          quizPool = qs;
-          quizPoolIdx = 0;
-          console.log(`[KL] Loaded ${quizPool.length} quiz questions (${resolvedBand})`);
-        }
+      if (!resp.ok) throw new Error('fetch failed');
+      const data = JSON.parse(await resp.text());
+
+      // 1. Group current band's quiz questions by grade
+      const grades = BAND_GRADES[resolvedBand] || [];
+      quizByGrade = {};
+      grades.forEach(g => { quizByGrade[g] = []; });
+
+      (data.question_sets || []).forEach(s => {
+        if (s.band_id !== resolvedBand) return;
+        const gid = s.grade_id;
+        if (!quizByGrade[gid]) quizByGrade[gid] = [];
+        quizByGrade[gid].push(..._normSetKL(s));
+      });
+
+      // 2. Build warm-up pool from previous band's top tier
+      quizWarmUpPool = [];
+      const prevBand = PREV_BAND[resolvedBand];
+      if (prevBand) {
+        const prevGrades = BAND_GRADES[prevBand] || [];
+        const topTier = prevGrades[prevGrades.length - 1];
+        (data.question_sets || []).forEach(s => {
+          if (s.band_id !== prevBand || s.grade_id !== topTier) return;
+          quizWarmUpPool.push(..._normSetKL(s));
+        });
+      }
+
+      // 3. Determine starting grade
+      const progress = _loadProgress();
+      const bandProgress = progress[resolvedBand];
+      const lowerGrade = grades[0];
+
+      if (resolvedGrade) {
+        currentGrade = resolvedGrade;
+        quizWarmUpActive = false;
+      } else if (bandProgress && bandProgress.current_grade && quizByGrade[bandProgress.current_grade]) {
+        currentGrade = bandProgress.current_grade;
+        const mastered = bandProgress.mastered_grades || [];
+        quizWarmUpActive = (currentGrade === lowerGrade) && !mastered.includes(lowerGrade) && quizWarmUpPool.length > 0;
+      } else {
+        currentGrade = lowerGrade;
+        quizWarmUpActive = quizWarmUpPool.length > 0;
+      }
+
+      // 4. Build initial active quiz pool
+      buildActiveQuizPool();
+
+      if (quizPool && quizPool.length > 0) {
+        console.log(`[KL] Loaded ${quizPool.length} quiz questions (${resolvedBand}/${currentGrade})`);
       }
     } catch(e) {
       console.warn('[KL] Quiz JSON fetch failed', e);
@@ -1044,6 +1257,10 @@ function startGame(){
   experiments=[...EXPERIMENTS[age]].sort(()=>Math.random()-.5);
   expIndex=0; score=0; lives=3; selected=[]; pipResults={};
   gameRunning=true;
+  didPromote=false;
+
+  // Reshuffle quiz pool for this session
+  if (Object.keys(quizByGrade).length > 0) buildActiveQuizPool();
 
   document.getElementById('startScreen').classList.add('hidden');
   try { document.querySelector('.start-home-btn').style.display='none'; } catch(e){}
@@ -1603,9 +1820,13 @@ function showResult(correct,outOfLives){
     const q = quizPool[quizPoolIdx % quizPool.length];
     quizPoolIdx++;
     if(quizPoolIdx >= quizPool.length) {
-      // Reshuffle for next lap
-      for(let i=quizPool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[quizPool[i],quizPool[j]]=[quizPool[j],quizPool[i]];}
-      quizPoolIdx=0;
+      // Rebuild and reshuffle from current grade
+      if (Object.keys(quizByGrade).length > 0) {
+        buildActiveQuizPool();
+      } else {
+        shuffle(quizPool);
+        quizPoolIdx=0;
+      }
     }
 
     document.getElementById('qzPrompt').textContent = q.prompt;
@@ -1627,6 +1848,7 @@ function showResult(correct,outOfLives){
 }
 
 function answerQuiz(btn, correct) {
+  recordAnswer(correct);
   // Lock all options
   document.querySelectorAll('.qz-opt').forEach(o => {
     o.classList.add(o === btn ? (correct ? 'qz-correct' : 'qz-wrong') : 'qz-muted');
@@ -1688,6 +1910,31 @@ function endGame(){
   document.getElementById('endTitle').textContent=pct===1?'Perfect Lab! 🎉':pct>=.5?'Great Science!':'Keep Experimenting!';
   document.getElementById('endScore').textContent=`${score} / ${total} experiments correct`;
   document.getElementById('endStars').textContent=stars;
+
+  // ── Progression summary ──
+  const promoLine = document.getElementById('endPromoLine');
+  if (promoLine) {
+    if (didPromote && currentGrade && GRADE_META[currentGrade]) {
+      promoLine.textContent = `🎓 Levelled up to ${GRADE_META[currentGrade].label}!`;
+      promoLine.style.display = '';
+    } else if (currentGrade && GRADE_META[currentGrade]) {
+      const accPct = answerHistory.length >= MASTERY_WINDOW
+        ? Math.round((answerHistory.filter(Boolean).length / MASTERY_WINDOW) * 100) + '%'
+        : '';
+      const tierLabel = GRADE_META[currentGrade].label;
+      promoLine.textContent = accPct ? `📊 ${tierLabel} · ${accPct} quiz accuracy` : `📊 ${tierLabel}`;
+      promoLine.style.display = '';
+    } else {
+      promoLine.style.display = 'none';
+    }
+  }
+
+  // Save progression state
+  if (resolvedBandG && currentGrade) {
+    const progress = _loadProgress();
+    const bp = progress[resolvedBandG] || { mastered_grades: [] };
+    _saveProgress(resolvedBandG, currentGrade, bp.mastered_grades || []);
+  }
 
   const ne=[];
   _incPlays('kitchenlab');
