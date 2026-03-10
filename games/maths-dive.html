@@ -1313,11 +1313,18 @@ function buildActivePool() {
         currentGrade = resolvedGrade;
         warmUpActive = false;
       } else if (bandProgress && bandProgress.current_grade && poolsByGrade[bandProgress.current_grade]) {
-        // Resume from saved position
-        currentGrade = bandProgress.current_grade;
-        // Warm-up only if still on lower grade (haven't mastered it yet)
         const mastered = bandProgress.mastered_grades || [];
-        warmUpActive = (currentGrade === lowerGrade) && !mastered.includes(lowerGrade) && warmUpPool.length > 0;
+        const savedGrade = bandProgress.current_grade;
+
+        // Validate: only allow upper grade if lower grade was genuinely mastered
+        if (savedGrade !== lowerGrade && !mastered.includes(lowerGrade)) {
+          // Lower grade wasn't mastered — reset to lower grade
+          currentGrade = lowerGrade;
+          warmUpActive = warmUpPool.length > 0;
+        } else {
+          currentGrade = savedGrade;
+          warmUpActive = (currentGrade === lowerGrade) && !mastered.includes(lowerGrade) && warmUpPool.length > 0;
+        }
       } else {
         // First time in this band — start at lower grade with warm-up
         currentGrade = lowerGrade;

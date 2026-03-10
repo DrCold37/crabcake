@@ -596,6 +596,106 @@
   .feedback-claim-btn:hover{transform:scale(1.06);box-shadow:0 4px 16px rgba(255,215,0,.4);}
   .feedback-claim-btn:disabled{opacity:.5;cursor:default;transform:none;background:#555;}
 
+  /* ── MASTERY STATUS BAR ── */
+  .mastery-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 420px;
+    padding: 0 0.5rem;
+  }
+  .mbar-grade {
+    font-size: 0.58rem;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 20px;
+    padding: 0.2rem 0.6rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: color 0.3s, border-color 0.3s, background 0.3s;
+  }
+  .mbar-grade.promoted {
+    color: var(--gold);
+    border-color: rgba(255,213,79,0.4);
+    background: rgba(255,213,79,0.1);
+  }
+  .mbar-spacer { flex: 1; }
+
+  /* ── MASTERY PROGRESS CIRCLE ── */
+  .mastery-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    flex-shrink: 0;
+  }
+  .mastery-ring {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .mastery-fill {
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%, rgba(76,175,80,0.9), rgba(46,125,50,0.7));
+    transform: scale(0);
+    transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
+    z-index: 1;
+  }
+  .mastery-fill.full {
+    background: radial-gradient(circle at 40% 35%, rgba(255,213,79,1), rgba(255,160,0,0.85));
+    box-shadow: 0 0 12px rgba(255,213,79,0.6);
+  }
+  .mastery-ring-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+    z-index: 2;
+  }
+  .mastery-track {
+    fill: none;
+    stroke: rgba(255,255,255,0.1);
+    stroke-width: 3;
+  }
+  .mastery-arc {
+    fill: none;
+    stroke: var(--leaf2);
+    stroke-width: 3;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.5s cubic-bezier(0.34,1.56,0.64,1), stroke 0.3s;
+  }
+  .mastery-arc.full {
+    stroke: var(--gold);
+    filter: drop-shadow(0 0 4px rgba(255,213,79,0.6));
+  }
+  .mastery-label {
+    font-size: 0.42rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 600px) {
+    .mastery-bar { max-width: 340px; }
+    .mbar-grade { font-size: 0.48rem; padding: 0.15rem 0.45rem; }
+    .mastery-ring { width: 28px; height: 28px; }
+    .mastery-label { font-size: 0.38rem; }
+  }
+
   /* ── LEVEL-UP TOAST ── */
   .level-up-overlay {
     position: fixed; inset: 0; z-index: 60;
@@ -695,6 +795,23 @@
   <div id="gameArea" class="hidden">
     <!-- Progress dots -->
     <div class="progress-dots" id="progressDots"></div>
+
+    <!-- Mastery status bar -->
+    <div class="mastery-bar" id="masteryBar">
+      <div class="mbar-grade" id="mbarGrade"></div>
+      <div class="mbar-spacer"></div>
+      <div class="mastery-wrap" id="masteryWrap">
+        <div class="mastery-ring">
+          <div class="mastery-fill" id="masteryFill"></div>
+          <svg class="mastery-ring-svg" viewBox="0 0 40 40">
+            <circle class="mastery-track" cx="20" cy="20" r="17" />
+            <circle class="mastery-arc" id="masteryArc" cx="20" cy="20" r="17"
+              stroke-dasharray="106.81" stroke-dashoffset="106.81" />
+          </svg>
+        </div>
+        <div class="mastery-label" id="masteryLabel"></div>
+      </div>
+    </div>
 
     <!-- Character -->
     <div class="character-wrap">
@@ -901,6 +1018,7 @@ function recordAnswer(correct) {
   if (!resolvedBandG || !currentGrade) return;
   answerHistory.push(correct);
   if (answerHistory.length > MASTERY_WINDOW) answerHistory = answerHistory.slice(-MASTERY_WINDOW);
+  updateMasteryVisual();
   checkMastery();
 }
 
@@ -929,6 +1047,7 @@ function checkMastery() {
   _saveProgress(resolvedBandG, currentGrade, bp.mastered_grades);
 
   buildActivePool();
+  updateMasteryVisual();
   showLevelUp(prevGrade, nextGrade);
 }
 
@@ -956,6 +1075,63 @@ function showLevelUp(from, to) {
     });
   } catch {}
   setTimeout(() => { overlay.classList.remove('show'); }, 2500);
+}
+
+// ── MASTERY VISUAL ─────────────────────────────────────────────────────────
+const MASTERY_REQUIRED = Math.ceil(MASTERY_THRESHOLD * MASTERY_WINDOW); // 9
+const MASTERY_CIRCUMFERENCE = 2 * Math.PI * 17; // ~106.81 matches SVG r=17
+
+function updateMasteryVisual() {
+  const fill  = document.getElementById('masteryFill');
+  const arc   = document.getElementById('masteryArc');
+  const label = document.getElementById('masteryLabel');
+  const gradeEl = document.getElementById('mbarGrade');
+  const wrap  = document.getElementById('masteryWrap');
+  const bar   = document.getElementById('masteryBar');
+  if (!fill || !arc) return;
+
+  // Update grade label
+  if (gradeEl && currentGrade && GRADE_META[currentGrade]) {
+    gradeEl.textContent = GRADE_META[currentGrade].label;
+    gradeEl.classList.toggle('promoted', didPromote);
+  } else if (gradeEl) {
+    gradeEl.textContent = '';
+  }
+
+  // If no progression active, hide the entire bar
+  if (!resolvedBandG || !currentGrade) {
+    if (bar) bar.style.display = 'none';
+    return;
+  }
+  if (bar) bar.style.display = '';
+
+  // Check if already at top tier
+  const grades = BAND_GRADES[resolvedBandG] || [];
+  const isTopTier = grades.indexOf(currentGrade) >= grades.length - 1;
+  if (isTopTier) {
+    if (wrap) wrap.style.display = 'none';
+    if (gradeEl) gradeEl.classList.add('promoted');
+    return;
+  }
+  if (wrap) wrap.style.display = '';
+
+  // Calculate progress
+  const correctCount = answerHistory.filter(Boolean).length;
+  const progress = Math.min(correctCount / MASTERY_REQUIRED, 1);
+
+  // Update the inner fill circle
+  fill.style.transform = `scale(${progress})`;
+  fill.classList.toggle('full', progress >= 1);
+
+  // Update the SVG arc stroke
+  const offset = MASTERY_CIRCUMFERENCE * (1 - progress);
+  arc.style.strokeDashoffset = offset;
+  arc.classList.toggle('full', progress >= 1);
+
+  // Update label
+  if (label) {
+    label.textContent = progress >= 1 ? '✓ READY' : `${correctCount}/${MASTERY_REQUIRED}`;
+  }
 }
 
 // ── AMBIENT ──
@@ -1087,9 +1263,16 @@ const GRADE_META = {
         currentGrade = resolvedGrade;
         warmUpActive = false;
       } else if (bandProgress && bandProgress.current_grade && poolsByGrade[bandProgress.current_grade]) {
-        currentGrade = bandProgress.current_grade;
         const mastered = bandProgress.mastered_grades || [];
-        warmUpActive = (currentGrade === lowerGrade) && !mastered.includes(lowerGrade) && warmUpPool.length > 0;
+        const savedGrade = bandProgress.current_grade;
+
+        if (savedGrade !== lowerGrade && !mastered.includes(lowerGrade)) {
+          currentGrade = lowerGrade;
+          warmUpActive = warmUpPool.length > 0;
+        } else {
+          currentGrade = savedGrade;
+          warmUpActive = (currentGrade === lowerGrade) && !mastered.includes(lowerGrade) && warmUpPool.length > 0;
+        }
       } else {
         currentGrade = lowerGrade;
         warmUpActive = warmUpPool.length > 0;
@@ -1176,6 +1359,7 @@ function startGame() {
 
   document.getElementById('hud').classList.remove('hidden');
   document.getElementById('gameArea').classList.remove('hidden');
+  updateMasteryVisual();
 
   loadSentence();
 }
