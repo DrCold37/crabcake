@@ -399,11 +399,12 @@
       background: rgba(10,22,40,0.9);
       border: 2px solid rgba(0,201,177,0.4);
       border-radius: 50px;
-      padding: 0.5rem 2rem;
+      padding: 0.35rem 0.6rem 0.35rem 1rem;
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 0.7rem;
       backdrop-filter: blur(8px);
+      max-width: calc(100vw - 24px);
     }
     .question-bar.hidden { display: none; }
     @keyframes qFlash {
@@ -412,10 +413,103 @@
       100% { border-color: rgba(0,201,177,0.4); box-shadow: none; transform: translateX(-50%) scale(1); }
     }
     .question-bar.q-flash { animation: qFlash 0.5s ease-out forwards; }
+
+    /* Grade pill in question bar */
+    .qbar-grade {
+      font-size: 0.58rem;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 0.2rem 0.6rem;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: color 0.3s, border-color 0.3s, background 0.3s;
+    }
+    .qbar-grade.promoted {
+      color: var(--yellow);
+      border-color: rgba(255,217,61,0.4);
+      background: rgba(255,217,61,0.1);
+    }
+    .qbar-question { flex: 1; min-width: 0; text-align: center; }
+
     .question-text {
       font-family: 'Boogaloo', cursive;
       font-size: clamp(1.2rem, 4vw, 1.8rem);
       color: white;
+    }
+
+    /* ── MASTERY PROGRESS CIRCLE ── */
+    .mastery-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      flex-shrink: 0;
+    }
+    .mastery-ring {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .mastery-fill {
+      position: absolute;
+      inset: 4px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 35%, rgba(0,201,177,0.9), rgba(0,150,130,0.7));
+      transform: scale(0);
+      transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
+      z-index: 1;
+    }
+    .mastery-fill.full {
+      background: radial-gradient(circle at 40% 35%, rgba(255,217,61,1), rgba(255,160,0,0.85));
+      box-shadow: 0 0 12px rgba(255,217,61,0.6);
+    }
+    .mastery-ring-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+      z-index: 2;
+    }
+    .mastery-track {
+      fill: none;
+      stroke: rgba(255,255,255,0.1);
+      stroke-width: 3;
+    }
+    .mastery-arc {
+      fill: none;
+      stroke: var(--teal);
+      stroke-width: 3;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.5s cubic-bezier(0.34,1.56,0.64,1), stroke 0.3s;
+    }
+    .mastery-arc.full {
+      stroke: var(--yellow);
+      filter: drop-shadow(0 0 4px rgba(255,217,61,0.6));
+    }
+    .mastery-label {
+      font-size: 0.42rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 600px) {
+      .question-bar { padding: 0.3rem 0.5rem 0.3rem 0.7rem; gap: 0.4rem; top: 58px; }
+      .qbar-grade { font-size: 0.48rem; padding: 0.15rem 0.45rem; }
+      .mastery-ring { width: 32px; height: 32px; }
+      .mastery-label { font-size: 0.38rem; }
     }
     .question-label {
       font-size: 0.65rem;
@@ -717,8 +811,20 @@
 
   <!-- QUESTION BAR -->
   <div id="questionBar" class="question-bar hidden">
-    <div>
+    <div class="qbar-grade" id="qbarGrade"></div>
+    <div class="qbar-question">
       <div class="question-text" id="questionText">?</div>
+    </div>
+    <div class="mastery-wrap" id="masteryWrap">
+      <div class="mastery-ring">
+        <div class="mastery-fill" id="masteryFill"></div>
+        <svg class="mastery-ring-svg" viewBox="0 0 40 40">
+          <circle class="mastery-track" cx="20" cy="20" r="17" />
+          <circle class="mastery-arc" id="masteryArc" cx="20" cy="20" r="17"
+            stroke-dasharray="106.81" stroke-dashoffset="106.81" />
+        </svg>
+      </div>
+      <div class="mastery-label" id="masteryLabel"></div>
     </div>
   </div>
 
@@ -1250,6 +1356,7 @@ function recordAnswer(correct) {
   if (answerHistory.length > MASTERY_WINDOW) {
     answerHistory = answerHistory.slice(-MASTERY_WINDOW);
   }
+  updateMasteryVisual();
   checkMastery();
 }
 
@@ -1287,6 +1394,9 @@ function checkMastery() {
   // Rebuild the pool from the new grade, fully reshuffled
   buildActivePool();
 
+  // Update the mastery visual (reset circle, update grade label)
+  updateMasteryVisual();
+
   // Show level-up toast
   showLevelUp(prevGrade, nextGrade);
 }
@@ -1321,6 +1431,61 @@ function showLevelUp(from, to) {
   } catch {}
   // Auto-hide after 2.5s
   setTimeout(() => { overlay.classList.remove('show'); }, 2500);
+}
+
+// ── MASTERY VISUAL ─────────────────────────────────────────────────────────
+const MASTERY_REQUIRED = Math.ceil(MASTERY_THRESHOLD * MASTERY_WINDOW); // 9
+const MASTERY_CIRCUMFERENCE = 2 * Math.PI * 17; // ~106.81 matches SVG r=17
+
+function updateMasteryVisual() {
+  const fill  = document.getElementById('masteryFill');
+  const arc   = document.getElementById('masteryArc');
+  const label = document.getElementById('masteryLabel');
+  const gradeEl = document.getElementById('qbarGrade');
+  const wrap  = document.getElementById('masteryWrap');
+  if (!fill || !arc) return;
+
+  // Update grade label
+  if (gradeEl && currentGrade && GRADE_META[currentGrade]) {
+    gradeEl.textContent = GRADE_META[currentGrade].label;
+    gradeEl.classList.toggle('promoted', didPromote);
+  } else if (gradeEl) {
+    gradeEl.textContent = '';
+  }
+
+  // If no progression active, hide the mastery indicator
+  if (!resolvedBandG || !currentGrade) {
+    if (wrap) wrap.style.display = 'none';
+    return;
+  }
+
+  // Check if already at top tier (nothing to promote to)
+  const grades = BAND_GRADES[resolvedBandG] || [];
+  const isTopTier = grades.indexOf(currentGrade) >= grades.length - 1;
+  if (isTopTier) {
+    if (wrap) wrap.style.display = 'none';
+    if (gradeEl) gradeEl.classList.add('promoted');
+    return;
+  }
+  if (wrap) wrap.style.display = '';
+
+  // Calculate progress
+  const correctCount = answerHistory.filter(Boolean).length;
+  const progress = Math.min(correctCount / MASTERY_REQUIRED, 1);
+
+  // Update the inner fill circle (scales from center)
+  fill.style.transform = `scale(${progress})`;
+  fill.classList.toggle('full', progress >= 1);
+
+  // Update the SVG arc stroke
+  const offset = MASTERY_CIRCUMFERENCE * (1 - progress);
+  arc.style.strokeDashoffset = offset;
+  arc.classList.toggle('full', progress >= 1);
+
+  // Update label
+  if (label) {
+    label.textContent = progress >= 1 ? '✓ READY' : `${correctCount}/${MASTERY_REQUIRED}`;
+  }
 }
 
 function selectAge(age) {
@@ -1411,6 +1576,7 @@ function startGame() {
   document.getElementById('hud').classList.remove('hidden');
   if (typeof CrabcakeAvatar !== 'undefined') setTimeout(() => CrabcakeAvatar.refreshHUD(), 100);
   document.getElementById('questionBar').classList.remove('hidden');
+  updateMasteryVisual();
   document.getElementById('gameCanvas').classList.remove('hidden');
   document.getElementById('gameCanvas').classList.add('active');
 
