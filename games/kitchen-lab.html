@@ -1389,20 +1389,14 @@ const GRADE_META = {
       if (resolvedGrade) {
         currentGrade = resolvedGrade;
         quizWarmUpActive = false;
-      } else if (bandProgress && bandProgress.current_grade && quizByGrade[bandProgress.current_grade]) {
-        const mastered = bandProgress.mastered_grades || [];
-        const savedGrade = bandProgress.current_grade;
-
-        if (savedGrade !== lowerGrade && !mastered.includes(lowerGrade)) {
-          currentGrade = lowerGrade;
-          quizWarmUpActive = quizWarmUpPool.length > 0;
-        } else {
-          currentGrade = savedGrade;
-          quizWarmUpActive = (currentGrade === lowerGrade) && !mastered.includes(lowerGrade) && quizWarmUpPool.length > 0;
-        }
       } else {
+        // Always start at the lower grade of the band.
+        // Promotion to upper grade happens only during active play via checkMastery.
         currentGrade = lowerGrade;
-        quizWarmUpActive = quizWarmUpPool.length > 0;
+
+        // Warm-up from previous band only if lower grade hasn't been mastered before
+        const mastered = (bandProgress && bandProgress.mastered_grades) || [];
+        quizWarmUpActive = !mastered.includes(lowerGrade) && quizWarmUpPool.length > 0;
       }
 
       // 4. Build initial active quiz pool

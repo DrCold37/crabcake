@@ -1312,23 +1312,14 @@ function buildActivePool() {
         // URL explicitly pinned a grade — honour it, no progression
         currentGrade = resolvedGrade;
         warmUpActive = false;
-      } else if (bandProgress && bandProgress.current_grade && poolsByGrade[bandProgress.current_grade]) {
-        const mastered = bandProgress.mastered_grades || [];
-        const savedGrade = bandProgress.current_grade;
-
-        // Validate: only allow upper grade if lower grade was genuinely mastered
-        if (savedGrade !== lowerGrade && !mastered.includes(lowerGrade)) {
-          // Lower grade wasn't mastered — reset to lower grade
-          currentGrade = lowerGrade;
-          warmUpActive = warmUpPool.length > 0;
-        } else {
-          currentGrade = savedGrade;
-          warmUpActive = (currentGrade === lowerGrade) && !mastered.includes(lowerGrade) && warmUpPool.length > 0;
-        }
       } else {
-        // First time in this band — start at lower grade with warm-up
+        // Always start at the lower grade of the band.
+        // Promotion to upper grade happens only during active play via checkMastery.
         currentGrade = lowerGrade;
-        warmUpActive = warmUpPool.length > 0;
+
+        // Warm-up from previous band only if lower grade hasn't been mastered before
+        const mastered = (bandProgress && bandProgress.mastered_grades) || [];
+        warmUpActive = !mastered.includes(lowerGrade) && warmUpPool.length > 0;
       }
 
       // ── 4. Build initial active pool ──
