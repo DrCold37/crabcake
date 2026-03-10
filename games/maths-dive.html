@@ -734,7 +734,30 @@
   }
 
   /* ── PROMO LINE (end screen) ── */
-  .end-promo-line {
+  
+  /* ── GRADE SELECTOR ── */
+  .grade-status { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; margin: 0.3rem 0; }
+  .grade-next-label { font-size: 0.72rem; font-weight: 800; color: rgba(255,255,255,0.5); letter-spacing: 0.5px; }
+  .grade-next-label.grade-all-done { color: #FFD93D; }
+  .grade-pills { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+  .gpill {
+    font-size: 0.65rem; font-weight: 900; letter-spacing: 1px; text-transform: uppercase;
+    padding: 0.25rem 0.7rem; border-radius: 20px; border: 2px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.35);
+    cursor: default; transition: all 0.2s; font-family: 'Nunito', sans-serif;
+  }
+  .gpill-done {
+    border-color: rgba(78,203,113,0.5); background: rgba(78,203,113,0.1);
+    color: #4ECB71; cursor: pointer;
+  }
+  .gpill-done:hover { background: rgba(78,203,113,0.2); transform: translateY(-1px); }
+  .gpill-current {
+    border-color: rgba(255,217,61,0.5); background: rgba(255,217,61,0.12);
+    color: #FFD93D; box-shadow: 0 0 8px rgba(255,217,61,0.2);
+  }
+  .gpill-locked { opacity: 0.4; }
+
+.end-promo-line {
     font-size: 0.92rem; font-weight: 800; color: #FFD93D;
     text-align: center; letter-spacing: 0.3px;
     margin-top: 0.2rem;
@@ -766,6 +789,7 @@
     <div class="game-title">Math Dive!</div>
     <!-- Band info injected by JS -->
     <div id="bandDisplay"></div>
+    <div id="gradeSelector"></div>
 
     <button class="start-btn" id="startBtn" onclick="startCountdown()">🫧 Dive In!</button>
   </div>
@@ -904,24 +928,32 @@ let isMobile = false;
 let timerStarted = false;
 
 // ── PROGRESSION STATE ──────────────────────────────────────────────────────
-const MASTERY_WINDOW    = 10;   // rolling window size
-const MASTERY_THRESHOLD = 0.85; // 9/10 correct to promote
-const WARM_UP_RATIO     = 0.25; // 25 % warm-up from previous band
+const MASTERY_WINDOW    = 10;
+const MASTERY_THRESHOLD = 0.85;
 
+// Full progression chain per band — includes previous band's top grade
+const PLAY_CHAIN = {
+  band_1: ['jk', 'sk'],
+  band_2: ['sk', 'grade_1', 'grade_2'],
+  band_3: ['grade_2', 'grade_3', 'grade_4']
+};
+// Which cross-band grade to load from which band
+const CROSS_BAND = {
+  band_2: { prevBand: 'band_1', prevGrade: 'sk' },
+  band_3: { prevBand: 'band_2', prevGrade: 'grade_2' }
+};
 const BAND_GRADES = {
   band_1: ['jk', 'sk'],
   band_2: ['grade_1', 'grade_2'],
   band_3: ['grade_3', 'grade_4']
 };
-const PREV_BAND = { band_2: 'band_1', band_3: 'band_2' };
 const PROGRESS_KEY = 'ck_mathdive_progress';
 
-let poolsByGrade   = {};   // { grade_1: [...], grade_2: [...] }
-let warmUpPool     = [];   // previous band's top-tier questions
-let warmUpActive   = false;
-let answerHistory  = [];   // sliding window of booleans
-let resolvedBandG  = null; // stashed for use across functions
-let currentGrade   = null; // active grade tier within the band
+let poolsByGrade   = {};
+let playGrades   = [];   // runtime-filtered PLAY_CHAIN (only grades with content)
+let answerHistory  = [];
+let resolvedBandG  = null;
+let currentGrade   = null;
 let didPromote     = false; // track if promotion happened this session
 
 // Object types pool
@@ -952,6 +984,7 @@ function generateQuestion() {
     if (poolIndex >= questionPool.length) {
       // Rebuild and reshuffle from current grade (+ warm-up if still active)
       buildActivePool();
+      renderGradeSelector();
       if (!questionPool || questionPool.length === 0) {
         // Pool somehow empty after rebuild — fall through to hardcoded
         questionPool = null;
@@ -1192,34 +1225,8 @@ function _canHandle(s) {
 // Build the active questionPool from poolsByGrade + optional warm-up, fully shuffled
 function buildActivePool() {
   const gradeQs = poolsByGrade[currentGrade] || [];
-  let combined = [];
-
-  if (warmUpActive && warmUpPool.length > 0) {
-    // Interleave: for every 3 grade questions, 1 warm-up
-    // Shuffle both sources independently first
-    const gShuffled = shuffle([...gradeQs]);
-    const wShuffled = shuffle([...warmUpPool]);
-    let gi = 0, wi = 0;
-    while (gi < gShuffled.length) {
-      // Push up to 3 grade questions
-      for (let n = 0; n < 3 && gi < gShuffled.length; n++) {
-        combined.push(gShuffled[gi++]);
-      }
-      // Push 1 warm-up if available
-      if (wi < wShuffled.length) {
-        combined.push({ ...wShuffled[wi++], _warmUp: true });
-      }
-    }
-    // Append any remaining warm-up questions
-    while (wi < wShuffled.length) {
-      combined.push({ ...wShuffled[wi++], _warmUp: true });
-    }
-  } else {
-    combined = shuffle([...gradeQs]);
-  }
-
-  if (combined.length === 0) return; // no questions — fall back to generator
-  questionPool = combined;
+  if (gradeQs.length === 0) return;
+  questionPool = shuffle([...gradeQs]);
   poolIndex = 0;
 }
 
@@ -1280,7 +1287,7 @@ function buildActivePool() {
       poolsByGrade = {};
       grades.forEach(g => { poolsByGrade[g] = []; });
 
-      data.question_sets.forEach(s => {
+      (data.question_sets || []).forEach(s => {
         if (s.band_id !== resolvedBand) return;
         if (!_canHandle(s)) return;
         const gid = s.grade_id;
@@ -1288,38 +1295,32 @@ function buildActivePool() {
         poolsByGrade[gid].push(..._normSet(s));
       });
 
-      // ── 2. Build warm-up pool from previous band's top tier ──
-      warmUpPool = [];
-      const prevBand = PREV_BAND[resolvedBand];
-      if (prevBand) {
-        const prevGrades = BAND_GRADES[prevBand] || [];
-        const topTier = prevGrades[prevGrades.length - 1]; // upper grade of previous band
-        data.question_sets.forEach(s => {
-          if (s.band_id !== prevBand) return;
-          if (s.grade_id !== topTier) return;
+      // ── 2. Load cross-band prerequisite grade ──
+      const xb = CROSS_BAND[resolvedBand];
+      if (xb) {
+        poolsByGrade[xb.prevGrade] = [];
+        (data.question_sets || []).forEach(s => {
+          if (s.band_id !== xb.prevBand || s.grade_id !== xb.prevGrade) return;
           if (!_canHandle(s)) return;
-          warmUpPool.push(..._normSet(s));
+          poolsByGrade[xb.prevGrade].push(..._normSet(s));
         });
       }
 
-      // ── 3. Determine starting grade from saved progress or URL ──
+      // ── 3. Build playGrades — only grades that have content ──
+      const fullChain = PLAY_CHAIN[resolvedBand] || [];
+      playGrades = fullChain.filter(g => (poolsByGrade[g] || []).length > 0);
+
+      // ── 3b. Determine starting grade ──
       const progress = _loadProgress();
       const bandProgress = progress[resolvedBand];
-      const lowerGrade = grades[0];
-      const upperGrade = grades[grades.length - 1];
+      const mastered = (bandProgress && bandProgress.mastered_grades) || [];
 
-      if (resolvedGrade) {
-        // URL explicitly pinned a grade — honour it, no progression
+      if (resolvedGrade && playGrades.includes(resolvedGrade)) {
+        // URL explicitly pinned a grade
         currentGrade = resolvedGrade;
-        warmUpActive = false;
       } else {
-        // Always start at the lower grade of the band.
-        // Promotion to upper grade happens only during active play via checkMastery.
-        currentGrade = lowerGrade;
-
-        // Warm-up from previous band only if lower grade hasn't been mastered before
-        const mastered = (bandProgress && bandProgress.mastered_grades) || [];
-        warmUpActive = !mastered.includes(lowerGrade) && warmUpPool.length > 0;
+        // Start at the first non-mastered grade in the chain
+        currentGrade = playGrades.find(g => !mastered.includes(g)) || playGrades[playGrades.length - 1] || null;
       }
 
       // ── 4. Build initial active pool ──
@@ -1363,39 +1364,25 @@ function checkMastery() {
   const correctCount = answerHistory.filter(Boolean).length;
   if (correctCount / MASTERY_WINDOW < MASTERY_THRESHOLD) return;
 
-  // ── Mastery achieved! Attempt grade promotion ──
-  const grades = BAND_GRADES[resolvedBandG] || [];
-  const idx = grades.indexOf(currentGrade);
-  if (idx < 0 || idx >= grades.length - 1) {
-    // Already at top tier — nothing to promote to. Band mastery!
-    answerHistory = []; // reset so it doesn't keep firing
-    return;
-  }
+  const idx = playGrades.indexOf(currentGrade);
+  if (idx < 0 || idx >= playGrades.length - 1) { answerHistory = []; return; }
 
-  const nextGrade = grades[idx + 1];
+  const nextGrade = playGrades[idx + 1];
   if (!poolsByGrade[nextGrade] || poolsByGrade[nextGrade].length === 0) return;
 
-  // Promote
   const prevGrade = currentGrade;
   currentGrade = nextGrade;
-  warmUpActive = false; // warm-up done once lower grade is mastered
-  answerHistory = [];   // reset window for new tier
+  // answerHistory persists across play-again sessions within a page load
   didPromote = true;
 
-  // Save progress
   const progress = _loadProgress();
   const bp = progress[resolvedBandG] || { mastered_grades: [] };
   if (!bp.mastered_grades) bp.mastered_grades = [];
   if (!bp.mastered_grades.includes(prevGrade)) bp.mastered_grades.push(prevGrade);
   _saveProgress(resolvedBandG, currentGrade, bp.mastered_grades);
 
-  // Rebuild the pool from the new grade, fully reshuffled
   buildActivePool();
-
-  // Update the mastery visual (reset circle, update grade label)
   updateMasteryVisual();
-
-  // Show level-up toast
   showLevelUp(prevGrade, nextGrade);
 }
 
@@ -1458,8 +1445,7 @@ function updateMasteryVisual() {
   }
 
   // Check if already at top tier (nothing to promote to)
-  const grades = BAND_GRADES[resolvedBandG] || [];
-  const isTopTier = grades.indexOf(currentGrade) >= grades.length - 1;
+  const isTopTier = playGrades.indexOf(currentGrade) >= playGrades.length - 1;
   if (isTopTier) {
     if (wrap) wrap.style.display = 'none';
     if (gradeEl) gradeEl.classList.add('promoted');
@@ -1471,19 +1457,59 @@ function updateMasteryVisual() {
   const correctCount = answerHistory.filter(Boolean).length;
   const progress = Math.min(correctCount / MASTERY_REQUIRED, 1);
 
-  // Update the inner fill circle (scales from center)
   fill.style.transform = `scale(${progress})`;
   fill.classList.toggle('full', progress >= 1);
 
-  // Update the SVG arc stroke
   const offset = MASTERY_CIRCUMFERENCE * (1 - progress);
   arc.style.strokeDashoffset = offset;
   arc.classList.toggle('full', progress >= 1);
 
-  // Update label
   if (label) {
     label.textContent = progress >= 1 ? '✓ READY' : `${correctCount}/${MASTERY_REQUIRED}`;
   }
+}
+
+
+// ── GRADE SELECTOR (start screen) ───────────────────────────────────────
+function renderGradeSelector() {
+  const el = document.getElementById('gradeSelector');
+  if (!el || playGrades.length === 0) { if (el) el.innerHTML = ''; return; }
+
+  const mastered = ((_loadProgress()[resolvedBandG] || {}).mastered_grades) || [];
+
+  let html = '<div class="grade-status">';
+  // Next-to-master label
+  const nextGrade = playGrades.find(g => !mastered.includes(g));
+  if (nextGrade) {
+    html += `<div class="grade-next-label">Next to master: ${GRADE_META[nextGrade].label}</div>`;
+  } else {
+    html += '<div class="grade-next-label grade-all-done">All grades mastered! ⭐</div>';
+  }
+  // Grade pills
+  html += '<div class="grade-pills">';
+  playGrades.forEach(g => {
+    const isMastered = mastered.includes(g);
+    const isCurrent = g === currentGrade;
+    const isLocked = !isMastered && !isCurrent;
+    let cls = 'gpill';
+    if (isMastered) cls += ' gpill-done';
+    if (isCurrent)  cls += ' gpill-current';
+    if (isLocked)   cls += ' gpill-locked';
+    const clickable = isMastered ? `onclick="selectStartGrade('${g}')"` : '';
+    const label = GRADE_META[g] ? GRADE_META[g].label : g;
+    html += `<button class="${cls}" ${clickable}>${label}${isMastered ? ' ✓' : ''}</button>`;
+  });
+  html += '</div></div>';
+  el.innerHTML = html;
+}
+
+function selectStartGrade(grade) {
+  if (!playGrades.includes(grade)) return;
+  currentGrade = grade;
+  buildActivePool();
+  // Re-render to update current highlight
+  renderGradeSelector();
+  updateMasteryVisual();
 }
 
 function selectAge(age) {
@@ -1552,7 +1578,7 @@ function startGame() {
   fallingObjects = [];
   gameRunning = true;
   timerStarted = false;
-  answerHistory = [];
+  // answerHistory persists across play-again sessions within a page load
   didPromote = false;
 
   // Reshuffle question pool for this session
@@ -2126,7 +2152,8 @@ function endGame() {
   // Save progression state
   if (resolvedBandG && currentGrade) {
     const progress = _loadProgress();
-    const bp = progress[resolvedBandG] || { mastered_grades: [] };
+    const bp = progress[resolvedBandG] || { mastered_grades: [] }
+  renderGradeSelector();;
     _saveProgress(resolvedBandG, currentGrade, bp.mastered_grades || []);
   }
 
