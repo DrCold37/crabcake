@@ -803,7 +803,60 @@
   }
   .gpill-locked { opacity: 0.4; }
 
-.end-promo-line {
+
+  /* ── BAND MASTERY OVERLAY ── */
+  .band-mastery-overlay {
+    position: fixed; inset: 0; z-index: 65;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(10,30,10,0.75); backdrop-filter: blur(8px);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+  .band-mastery-overlay.show { opacity: 1; pointer-events: auto; }
+  .band-mastery-inner {
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    animation: bandPop 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+  .band-mastery-emoji { font-size: 5rem; filter: drop-shadow(0 0 24px rgba(255,217,61,0.5)); }
+  .band-mastery-title {
+    font-family: 'Boogaloo', cursive; font-size: 3.2rem; color: #FFD93D;
+    text-shadow: 0 0 40px rgba(255,217,61,0.5); letter-spacing: 2px;
+  }
+  .band-mastery-text {
+    font-size: 1.3rem; font-weight: 800; color: rgba(255,255,255,0.9);
+    letter-spacing: 0.5px;
+  }
+  .band-mastery-stars {
+    font-size: 2.5rem; letter-spacing: 8px;
+    animation: starPulse 1.2s ease-in-out infinite alternate;
+  }
+  @keyframes bandPop {
+    0%   { transform: scale(0.2) translateY(60px); opacity: 0; }
+    60%  { transform: scale(1.1) translateY(-8px); opacity: 1; }
+    100% { transform: scale(1) translateY(0); }
+  }
+  @keyframes starPulse {
+    0%   { filter: drop-shadow(0 0 6px rgba(255,217,61,0.3)); }
+    100% { filter: drop-shadow(0 0 20px rgba(255,217,61,0.8)); }
+  }
+
+  /* ── BAND MASTERY CIRCLE COLOURS ── */
+  .mastery-fill.band-mastery {
+    background: radial-gradient(circle at 40% 35%, rgba(255,217,61,0.9), rgba(255,160,0,0.7));
+  }
+  .mastery-fill.band-mastery.full {
+    background: radial-gradient(circle at 40% 35%, rgba(255,217,61,1), rgba(255,160,0,0.9));
+    box-shadow: 0 0 16px rgba(255,217,61,0.7);
+  }
+  .mastery-arc.band-mastery {
+    stroke: #FFD93D;
+  }
+  .mastery-arc.band-mastery.full {
+    stroke: #FFD93D;
+    filter: drop-shadow(0 0 6px rgba(255,217,61,0.8));
+  }
+
+  .end-promo-line {
     font-size: 0.92rem; font-weight: 800; color: #39FF14;
     text-align: center; letter-spacing: 0.3px;
     margin-top: 0.2rem;
@@ -925,6 +978,16 @@
     </div>
   </div>
 
+  <!-- BAND MASTERY CELEBRATION -->
+  <div class="band-mastery-overlay" id="bandMasteryOverlay">
+    <div class="band-mastery-inner">
+      <div class="band-mastery-emoji">🏆</div>
+      <div class="band-mastery-title">Band Mastered!</div>
+      <div class="band-mastery-text" id="bandMasteryText"></div>
+      <div class="band-mastery-stars">⭐⭐⭐</div>
+    </div>
+  </div>
+
   <!-- END SCREEN -->
   <div class="screen hidden" id="endScreen">
     <div class="end-rating" id="endRating">⭐⭐⭐</div>
@@ -1023,6 +1086,8 @@ let _isLetterMode = false;
 // ── PROGRESSION STATE ──────────────────────────────────────────────────────
 const MASTERY_WINDOW    = 10;
 const MASTERY_THRESHOLD = 0.85;
+const BAND_MASTERY_WINDOW   = 20;
+const BAND_MASTERY_REQUIRED = 19;
 
 // Full progression chain per band — includes previous band's top grade
 const PLAY_CHAIN = {
@@ -1048,6 +1113,8 @@ let answerHistory  = [];
 let resolvedBandG  = null;
 let currentGrade   = null;
 let didPromote     = false;
+let bandAnswerHistory = [];
+let bandMastered   = false;
 
 function shuffle(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
@@ -1066,7 +1133,7 @@ function _loadProgress() {
 function _saveProgress(band, grade, mastered) {
   try {
     const p = _loadProgress();
-    p[band] = { current_grade: grade, mastered_grades: mastered || [] };
+    p[band] = { current_grade: grade, mastered_grades: mastered || [], band_mastered: !!bandMastered };
     localStorage.setItem(PROGRESS_KEY, JSON.stringify(p));
   } catch {}
 }
@@ -1103,6 +1170,14 @@ function recordAnswer(correct) {
   if (!resolvedBandG || !currentGrade) return;
   answerHistory.push(correct);
   if (answerHistory.length > MASTERY_WINDOW) answerHistory = answerHistory.slice(-MASTERY_WINDOW);
+  // Feed band mastery window when on top tier
+  const atTop = playGrades.indexOf(currentGrade) >= playGrades.length - 1;
+  if (atTop && !bandMastered) {
+    bandAnswerHistory.push(correct);
+    if (bandAnswerHistory.length > BAND_MASTERY_WINDOW) {
+      bandAnswerHistory = bandAnswerHistory.slice(-BAND_MASTERY_WINDOW);
+    }
+  }
   updateMasteryVisual();
   checkMastery();
 }
@@ -1113,7 +1188,13 @@ function checkMastery() {
   if (correctCount / MASTERY_WINDOW < MASTERY_THRESHOLD) return;
 
   const idx = playGrades.indexOf(currentGrade);
-  if (idx < 0 || idx >= playGrades.length - 1) { answerHistory = []; return; }
+  if (idx < 0) return;
+  if (idx >= playGrades.length - 1) {
+    // At top tier — grade mastery achieved, check for band mastery
+    if (!bandMastered) checkBandMastery();
+    answerHistory = [];
+    return;
+  }
 
   const nextGrade = playGrades[idx + 1];
   if (!poolsByGrade[nextGrade] || poolsByGrade[nextGrade].length === 0) return;
@@ -1162,6 +1243,63 @@ function showLevelUp(from, to) {
 }
 
 // ── MASTERY VISUAL ─────────────────────────────────────────────────────────
+
+// ── BAND MASTERY (19/20 on top grade) ──────────────────────────────────
+function checkBandMastery() {
+  if (bandMastered) return;
+  if (bandAnswerHistory.length < BAND_MASTERY_WINDOW) return;
+  const correct = bandAnswerHistory.filter(Boolean).length;
+  if (correct < BAND_MASTERY_REQUIRED) return;
+
+  // Band mastery achieved!
+  bandMastered = true;
+  bandAnswerHistory = [];
+
+  // Save to localStorage
+  const progress = _loadProgress();
+  const bp = progress[resolvedBandG] || { mastered_grades: [] };
+  bp.band_mastered = true;
+  _saveProgress(resolvedBandG, currentGrade, bp.mastered_grades || []);
+
+  updateMasteryVisual();
+  renderGradeSelector();
+  showBandMastery();
+}
+
+function showBandMastery() {
+  const overlay = document.getElementById('bandMasteryOverlay');
+  const text = document.getElementById('bandMasteryText');
+  if (!overlay || !text) return;
+  const bandLabel = resolvedBandG === 'band_1' ? 'Ages 4–6'
+                  : resolvedBandG === 'band_2' ? 'Ages 6–8'
+                  : 'Ages 8–10';
+  text.textContent = `${bandLabel} Mastered!`;
+  overlay.classList.add('show');
+  // Big confetti
+  if (typeof spawnConfetti === 'function') {
+    spawnConfetti(window.innerWidth / 2, window.innerHeight / 2);
+    setTimeout(() => spawnConfetti(window.innerWidth / 3, window.innerHeight / 3), 400);
+    setTimeout(() => spawnConfetti(window.innerWidth * 0.7, window.innerHeight / 3), 800);
+  }
+  // Fanfare sound
+  try {
+    const ac = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    if (ac.state === 'suspended') ac.resume();
+    // Triumphant rising arpeggio
+    [523, 659, 784, 988, 1047, 1319].forEach((freq, i) => {
+      const osc = ac.createOscillator();
+      const gain = ac.createGain();
+      osc.connect(gain); gain.connect(ac.destination);
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, ac.currentTime + i * 0.15);
+      gain.gain.setValueAtTime(0.15, ac.currentTime + i * 0.15);
+      gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + i * 0.15 + 0.5);
+      osc.start(ac.currentTime + i * 0.15);
+      osc.stop(ac.currentTime + i * 0.15 + 0.5);
+    });
+  } catch {}
+  setTimeout(() => { overlay.classList.remove('show'); }, 4000);
+}
 const MASTERY_REQUIRED = Math.ceil(MASTERY_THRESHOLD * MASTERY_WINDOW); // 9
 const MASTERY_CIRCUMFERENCE = 2 * Math.PI * 17; // ~106.81 matches SVG r=17
 
@@ -1189,12 +1327,38 @@ function updateMasteryVisual() {
 
   // Check if already at top tier (nothing to promote to)
   const isTopTier = playGrades.indexOf(currentGrade) >= playGrades.length - 1;
-  if (isTopTier) {
+  if (isTopTier && bandMastered) {
+    // Band fully mastered — hide circle, show gold grade label
     if (wrap) wrap.style.display = 'none';
+    if (gradeEl) { gradeEl.classList.add('promoted'); gradeEl.textContent += ' ⭐'; }
+    return;
+  }
+  if (isTopTier && !bandMastered) {
+    // Band mastery phase — show gold circle tracking 19/20
+    if (wrap) wrap.style.display = '';
     if (gradeEl) gradeEl.classList.add('promoted');
+    const bCorrect = bandAnswerHistory.filter(Boolean).length;
+    const bProgress = Math.min(bCorrect / BAND_MASTERY_REQUIRED, 1);
+
+    fill.style.transform = `scale(${bProgress})`;
+    fill.classList.add('band-mastery');
+    fill.classList.toggle('full', bProgress >= 1);
+
+    const offset = MASTERY_CIRCUMFERENCE * (1 - bProgress);
+    arc.style.strokeDashoffset = offset;
+    arc.classList.add('band-mastery');
+    arc.classList.toggle('full', bProgress >= 1);
+
+    if (label) {
+      label.textContent = bProgress >= 1 ? '⭐ MASTER' : `${bCorrect}/${BAND_MASTERY_REQUIRED}`;
+    }
     return;
   }
   if (wrap) wrap.style.display = '';
+
+  // Remove band-mastery classes for normal grade progress
+  fill.classList.remove('band-mastery');
+  arc.classList.remove('band-mastery');
 
   // Calculate progress
   const correctCount = answerHistory.filter(Boolean).length;
@@ -1345,6 +1509,7 @@ const GRADE_META = {
       } else {
         // Start at the first non-mastered grade in the chain
         currentGrade = playGrades.find(g => !mastered.includes(g)) || playGrades[playGrades.length - 1] || null;
+        bandMastered = !!(bandProgress && bandProgress.band_mastered);
       }
 
       // 4. Build initial active pool
@@ -1379,7 +1544,11 @@ function renderGradeSelector() {
   if (nextGrade) {
     html += `<div class="grade-next-label">Next to master: ${GRADE_META[nextGrade].label}</div>`;
   } else {
-    html += '<div class="grade-next-label grade-all-done">All grades mastered! ⭐</div>';
+    if (bandMastered) {
+      html += '<div class="grade-next-label grade-all-done">Band Mastered! 🏆⭐</div>';
+    } else {
+      html += '<div class="grade-next-label grade-all-done">Master top grade (19/20) for band mastery!</div>';
+    }
   }
   // Grade pills
   html += '<div class="grade-pills">';
@@ -1808,7 +1977,10 @@ function endGame() {
   // ── Progression summary ──
   const promoLine = document.getElementById('endPromoLine');
   if (promoLine) {
-    if (didPromote && currentGrade && GRADE_META[currentGrade]) {
+    if (bandMastered && playGrades.indexOf(currentGrade) >= playGrades.length - 1) {
+      promoLine.textContent = '🏆 Band Mastered! ⭐';
+      promoLine.style.display = '';
+    } else if (didPromote && currentGrade && GRADE_META[currentGrade]) {
       promoLine.textContent = `🎓 Levelled up to ${GRADE_META[currentGrade].label}!`;
       promoLine.style.display = '';
     } else if (currentGrade && GRADE_META[currentGrade]) {
@@ -1826,10 +1998,10 @@ function endGame() {
   // Save progression state
   if (resolvedBandG && currentGrade) {
     const progress = _loadProgress();
-    const bp = progress[resolvedBandG] || { mastered_grades: [] }
-  renderGradeSelector();
+    const bp = progress[resolvedBandG] || { mastered_grades: [] };
     _saveProgress(resolvedBandG, currentGrade, bp.mastered_grades || []);
   }
+  renderGradeSelector();
 
   document.getElementById('endScreen').classList.remove('hidden');
   document.querySelector('.jungle-floor').style.display = 'none';
