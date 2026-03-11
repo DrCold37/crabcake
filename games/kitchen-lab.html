@@ -1232,7 +1232,17 @@ function _loadProgress() {
 function _saveProgress(band, grade, mastered) {
   try {
     const p = _loadProgress();
-    p[band] = { current_grade: grade, mastered_grades: mastered || [], band_mastered: !!bandMastered };
+    p[band] = { current_grade: grade, mastered_grades: mastered || [], band_mastered: !!bandMastered, answer_history: answerHistory, band_answer_history: bandAnswerHistory };
+    localStorage.setItem(PROGRESS_KEY, JSON.stringify(p));
+  } catch {}
+}
+function _saveHistories() {
+  if (!resolvedBandG) return;
+  try {
+    const p = _loadProgress();
+    if (!p[resolvedBandG]) return;
+    p[resolvedBandG].answer_history = answerHistory;
+    p[resolvedBandG].band_answer_history = bandAnswerHistory;
     localStorage.setItem(PROGRESS_KEY, JSON.stringify(p));
   } catch {}
 }
@@ -1273,6 +1283,7 @@ function recordAnswer(correct) {
       bandAnswerHistory = bandAnswerHistory.slice(-BAND_MASTERY_WINDOW);
     }
   }
+  _saveHistories();
   updateMasteryVisual();
   checkMastery();
 }
@@ -1285,7 +1296,10 @@ function checkMastery() {
   const idx = playGrades.indexOf(currentGrade);
   if (idx < 0) return;
   if (idx >= playGrades.length - 1) {
-    // At top tier — grade mastery achieved, check for band mastery
+    // At top tier — grade mastery threshold met
+    const _topGradeBadges = {'jk': 'kl_g_jk', 'sk': 'kl_g_sk', 'grade_1': 'kl_g_gr1', 'grade_2': 'kl_g_gr2', 'grade_3': 'kl_g_gr3', 'grade_4': 'kl_g_gr4'};
+    const _tgbId = _topGradeBadges[currentGrade];
+    if (_tgbId && _award(_tgbId)) _toast(_tgbId);
     if (!bandMastered) checkBandMastery();
     answerHistory = [];
     return;
@@ -1304,6 +1318,11 @@ function checkMastery() {
   if (!bp.mastered_grades) bp.mastered_grades = [];
   if (!bp.mastered_grades.includes(prevGrade)) bp.mastered_grades.push(prevGrade);
   _saveProgress(resolvedBandG, currentGrade, bp.mastered_grades);
+
+  // Award grade mastery badge for the grade just mastered
+  const _gmBadges = {'jk': 'kl_g_jk', 'sk': 'kl_g_sk', 'grade_1': 'kl_g_gr1', 'grade_2': 'kl_g_gr2', 'grade_3': 'kl_g_gr3', 'grade_4': 'kl_g_gr4'};
+  const _gmId = _gmBadges[prevGrade];
+  if (_gmId && _award(_gmId)) _toast(_gmId);
 
   buildActiveQuizPool();
   renderGradeSelector();
@@ -1349,6 +1368,11 @@ function checkBandMastery() {
   // Band mastery achieved!
   bandMastered = true;
   bandAnswerHistory = [];
+
+  // Award band mastery badge
+  const _bandBadges = {'band_1': 'kl_band_1', 'band_2': 'kl_band_2', 'band_3': 'kl_band_3'};
+  const _bbId = _bandBadges[resolvedBandG];
+  if (_bbId && _award(_bbId)) _toast(_bbId);
 
   // Save to localStorage
   const progress = _loadProgress();
@@ -1618,6 +1642,14 @@ const GRADE_META = {
         // Start at the first non-mastered grade in the chain
         currentGrade = playGrades.find(g => !mastered.includes(g)) || playGrades[playGrades.length - 1] || null;
         bandMastered = !!(bandProgress && bandProgress.band_mastered);
+
+        // Restore mastery progress histories from localStorage
+        if (bandProgress && Array.isArray(bandProgress.answer_history)) {
+          answerHistory = bandProgress.answer_history;
+        }
+        if (bandProgress && Array.isArray(bandProgress.band_answer_history)) {
+          bandAnswerHistory = bandProgress.band_answer_history;
+        }
       }
 
       // 4. Build initial active quiz pool
@@ -2455,6 +2487,16 @@ const BADGE_DEF={
   cg_dedicated: {game:'crabcake', em:'🎮',name:'Dedicated',desc:'Play 10 games total across all games'},
   cg_bughunter: {game:'crabcake', em:'🐛',name:'Bug Hunter',desc:'Reported a bug'},
   cg_bigideas:  {game:'crabcake', em:'💡',name:'Big Ideas',desc:'Suggested a new game idea'},
+  // ── Grade & Band Mastery Badges ──
+  kl_g_jk:{game:'kitchenlab',em:'🌱',name:'JK Scientist',desc:'Mastered JK grade in Kitchen Lab',hint:'Master JK grade'},
+  kl_g_sk:{game:'kitchenlab',em:'🌿',name:'SK Scientist',desc:'Mastered SK grade in Kitchen Lab',hint:'Master SK grade'},
+  kl_g_gr1:{game:'kitchenlab',em:'📗',name:'Grade 1 Scientist',desc:'Mastered Grade 1 in Kitchen Lab',hint:'Master Grade 1 grade'},
+  kl_g_gr2:{game:'kitchenlab',em:'📘',name:'Grade 2 Scientist',desc:'Mastered Grade 2 in Kitchen Lab',hint:'Master Grade 2 grade'},
+  kl_g_gr3:{game:'kitchenlab',em:'📙',name:'Grade 3 Scientist',desc:'Mastered Grade 3 in Kitchen Lab',hint:'Master Grade 3 grade'},
+  kl_g_gr4:{game:'kitchenlab',em:'📕',name:'Grade 4 Scientist',desc:'Mastered Grade 4 in Kitchen Lab',hint:'Master Grade 4 grade'},
+  kl_band_1:{game:'kitchenlab',em:'🥉',name:'Ages 4–6 Champion',desc:'Achieved band mastery for Ages 4–6 in Kitchen Lab',hint:'Master all grades in band 1'},
+  kl_band_2:{game:'kitchenlab',em:'🥈',name:'Ages 6–8 Champion',desc:'Achieved band mastery for Ages 6–8 in Kitchen Lab',hint:'Master all grades in band 2'},
+  kl_band_3:{game:'kitchenlab',em:'🥇',name:'Ages 8–10 Champion',desc:'Achieved band mastery for Ages 8–10 in Kitchen Lab',hint:'Master all grades in band 3'},
 };
 
 function _lb(){try{return JSON.parse(localStorage.getItem(BADGE_KEY)||'{}')}catch{return{}}}

@@ -1133,7 +1133,17 @@ function _loadProgress() {
 function _saveProgress(band, grade, mastered) {
   try {
     const p = _loadProgress();
-    p[band] = { current_grade: grade, mastered_grades: mastered || [], band_mastered: !!bandMastered };
+    p[band] = { current_grade: grade, mastered_grades: mastered || [], band_mastered: !!bandMastered, answer_history: answerHistory, band_answer_history: bandAnswerHistory };
+    localStorage.setItem(PROGRESS_KEY, JSON.stringify(p));
+  } catch {}
+}
+function _saveHistories() {
+  if (!resolvedBandG) return;
+  try {
+    const p = _loadProgress();
+    if (!p[resolvedBandG]) return;
+    p[resolvedBandG].answer_history = answerHistory;
+    p[resolvedBandG].band_answer_history = bandAnswerHistory;
     localStorage.setItem(PROGRESS_KEY, JSON.stringify(p));
   } catch {}
 }
@@ -1178,6 +1188,7 @@ function recordAnswer(correct) {
       bandAnswerHistory = bandAnswerHistory.slice(-BAND_MASTERY_WINDOW);
     }
   }
+  _saveHistories();
   updateMasteryVisual();
   checkMastery();
 }
@@ -1190,7 +1201,10 @@ function checkMastery() {
   const idx = playGrades.indexOf(currentGrade);
   if (idx < 0) return;
   if (idx >= playGrades.length - 1) {
-    // At top tier — grade mastery achieved, check for band mastery
+    // At top tier — grade mastery threshold met
+    const _topGradeBadges = {'jk': 'jw_g_jk', 'sk': 'jw_g_sk', 'grade_1': 'jw_g_gr1', 'grade_2': 'jw_g_gr2', 'grade_3': 'jw_g_gr3', 'grade_4': 'jw_g_gr4'};
+    const _tgbId = _topGradeBadges[currentGrade];
+    if (_tgbId && _award(_tgbId)) _toast(_tgbId);
     if (!bandMastered) checkBandMastery();
     answerHistory = [];
     return;
@@ -1209,6 +1223,11 @@ function checkMastery() {
   if (!bp.mastered_grades) bp.mastered_grades = [];
   if (!bp.mastered_grades.includes(prevGrade)) bp.mastered_grades.push(prevGrade);
   _saveProgress(resolvedBandG, currentGrade, bp.mastered_grades);
+
+  // Award grade mastery badge for the grade just mastered
+  const _gmBadges = {'jk': 'jw_g_jk', 'sk': 'jw_g_sk', 'grade_1': 'jw_g_gr1', 'grade_2': 'jw_g_gr2', 'grade_3': 'jw_g_gr3', 'grade_4': 'jw_g_gr4'};
+  const _gmId = _gmBadges[prevGrade];
+  if (_gmId && _award(_gmId)) _toast(_gmId);
 
   buildActivePool();
   renderGradeSelector();
@@ -1254,6 +1273,11 @@ function checkBandMastery() {
   // Band mastery achieved!
   bandMastered = true;
   bandAnswerHistory = [];
+
+  // Award band mastery badge
+  const _bandBadges = {'band_1': 'jw_band_1', 'band_2': 'jw_band_2', 'band_3': 'jw_band_3'};
+  const _bbId = _bandBadges[resolvedBandG];
+  if (_bbId && _award(_bbId)) _toast(_bbId);
 
   // Save to localStorage
   const progress = _loadProgress();
@@ -1510,6 +1534,14 @@ const GRADE_META = {
         // Start at the first non-mastered grade in the chain
         currentGrade = playGrades.find(g => !mastered.includes(g)) || playGrades[playGrades.length - 1] || null;
         bandMastered = !!(bandProgress && bandProgress.band_mastered);
+
+        // Restore mastery progress histories from localStorage
+        if (bandProgress && Array.isArray(bandProgress.answer_history)) {
+          answerHistory = bandProgress.answer_history;
+        }
+        if (bandProgress && Array.isArray(bandProgress.band_answer_history)) {
+          bandAnswerHistory = bandProgress.band_answer_history;
+        }
       }
 
       // 4. Build initial active pool
@@ -2102,6 +2134,17 @@ const BADGE_DEF={
   cg_dedicated:{game:'crabcake',em:'🎮',name:'Dedicated',desc:'Play 10 games total across all games'},
   cg_bughunter:{game:'crabcake',em:'🐛',name:'Bug Hunter',desc:'Reported a bug to help improve Crabcake'},
   cg_bigideas:{game:'crabcake',em:'💡',name:'Big Ideas',desc:'Suggested a new game idea for Crabcake'},
+
+  // ── Grade & Band Mastery Badges ──
+  jw_g_jk:{game:'junglewords',em:'🌱',name:'JK Speller',desc:'Mastered JK grade in Jungle Words',hint:'Master Jk grade'},
+  jw_g_sk:{game:'junglewords',em:'🌿',name:'SK Speller',desc:'Mastered SK grade in Jungle Words',hint:'Master Sk grade'},
+  jw_g_gr1:{game:'junglewords',em:'📗',name:'Grade 1 Writer',desc:'Mastered Grade 1 in Jungle Words',hint:'Master Grade 1 grade'},
+  jw_g_gr2:{game:'junglewords',em:'📘',name:'Grade 2 Writer',desc:'Mastered Grade 2 in Jungle Words',hint:'Master Grade 2 grade'},
+  jw_g_gr3:{game:'junglewords',em:'📙',name:'Grade 3 Writer',desc:'Mastered Grade 3 in Jungle Words',hint:'Master Grade 3 grade'},
+  jw_g_gr4:{game:'junglewords',em:'📕',name:'Grade 4 Writer',desc:'Mastered Grade 4 in Jungle Words',hint:'Master Grade 4 grade'},
+  jw_band_1:{game:'junglewords',em:'🥉',name:'Ages 4–6 Champion',desc:'Achieved band mastery for Ages 4–6 in Jungle Words',hint:'Master all grades in band 1'},
+  jw_band_2:{game:'junglewords',em:'🥈',name:'Ages 6–8 Champion',desc:'Achieved band mastery for Ages 6–8 in Jungle Words',hint:'Master all grades in band 2'},
+  jw_band_3:{game:'junglewords',em:'🥇',name:'Ages 8–10 Champion',desc:'Achieved band mastery for Ages 8–10 in Jungle Words',hint:'Master all grades in band 3'},
 };
 const BADGE_KEY='crabcake_badges_v1';
 const PLAYS_KEY='crabcake_plays_v1';

@@ -1261,7 +1261,17 @@ function _loadProgress() {
 function _saveProgress(band, grade, mastered) {
   try {
     const p = _loadProgress();
-    p[band] = { current_grade: grade, mastered_grades: mastered || [], band_mastered: !!bandMastered };
+    p[band] = { current_grade: grade, mastered_grades: mastered || [], band_mastered: !!bandMastered, answer_history: answerHistory, band_answer_history: bandAnswerHistory };
+    localStorage.setItem(PROGRESS_KEY, JSON.stringify(p));
+  } catch {}
+}
+function _saveHistories() {
+  if (!resolvedBandG) return;
+  try {
+    const p = _loadProgress();
+    if (!p[resolvedBandG]) return;
+    p[resolvedBandG].answer_history = answerHistory;
+    p[resolvedBandG].band_answer_history = bandAnswerHistory;
     localStorage.setItem(PROGRESS_KEY, JSON.stringify(p));
   } catch {}
 }
@@ -1388,6 +1398,14 @@ function buildActivePool() {
         // Start at the first non-mastered grade in the chain
         currentGrade = playGrades.find(g => !mastered.includes(g)) || playGrades[playGrades.length - 1] || null;
         bandMastered = !!(bandProgress && bandProgress.band_mastered);
+
+        // Restore mastery progress histories from localStorage
+        if (bandProgress && Array.isArray(bandProgress.answer_history)) {
+          answerHistory = bandProgress.answer_history;
+        }
+        if (bandProgress && Array.isArray(bandProgress.band_answer_history)) {
+          bandAnswerHistory = bandProgress.band_answer_history;
+        }
       }
 
       // ── 4. Build initial active pool ──
@@ -1431,6 +1449,7 @@ function recordAnswer(correct) {
       bandAnswerHistory = bandAnswerHistory.slice(-BAND_MASTERY_WINDOW);
     }
   }
+  _saveHistories();
   updateMasteryVisual();
   checkMastery();
 }
@@ -1443,7 +1462,10 @@ function checkMastery() {
   const idx = playGrades.indexOf(currentGrade);
   if (idx < 0) return;
   if (idx >= playGrades.length - 1) {
-    // At top tier — grade mastery achieved, check for band mastery
+    // At top tier — grade mastery threshold met
+    const _topGradeBadges = {'jk': 'md_g_jk', 'sk': 'md_g_sk', 'grade_1': 'md_g_gr1', 'grade_2': 'md_g_gr2', 'grade_3': 'md_g_gr3', 'grade_4': 'md_g_gr4'};
+    const _tgbId = _topGradeBadges[currentGrade];
+    if (_tgbId && _award(_tgbId)) _toast(_tgbId);
     if (!bandMastered) checkBandMastery();
     answerHistory = [];
     return;
@@ -1462,6 +1484,11 @@ function checkMastery() {
   if (!bp.mastered_grades) bp.mastered_grades = [];
   if (!bp.mastered_grades.includes(prevGrade)) bp.mastered_grades.push(prevGrade);
   _saveProgress(resolvedBandG, currentGrade, bp.mastered_grades);
+
+  // Award grade mastery badge for the grade just mastered
+  const _gmBadges = {'jk': 'md_g_jk', 'sk': 'md_g_sk', 'grade_1': 'md_g_gr1', 'grade_2': 'md_g_gr2', 'grade_3': 'md_g_gr3', 'grade_4': 'md_g_gr4'};
+  const _gmId = _gmBadges[prevGrade];
+  if (_gmId && _award(_gmId)) _toast(_gmId);
 
   buildActivePool();
   renderGradeSelector();
@@ -1513,6 +1540,11 @@ function checkBandMastery() {
   // Band mastery achieved!
   bandMastered = true;
   bandAnswerHistory = [];
+
+  // Award band mastery badge
+  const _bandBadges = {'band_1': 'md_band_1', 'band_2': 'md_band_2', 'band_3': 'md_band_3'};
+  const _bbId = _bandBadges[resolvedBandG];
+  if (_bbId && _award(_bbId)) _toast(_bbId);
 
   // Save to localStorage
   const progress = _loadProgress();
@@ -2489,6 +2521,17 @@ const BADGE_DEF={
   cg_dedicated:{game:'crabcake',em:'🎮',name:'Dedicated',desc:'Play 10 games total across all games'},
   cg_bughunter:{game:'crabcake',em:'🐛',name:'Bug Hunter',desc:'Reported a bug to help improve Crabcake'},
   cg_bigideas:{game:'crabcake',em:'💡',name:'Big Ideas',desc:'Suggested a new game idea for Crabcake'},
+
+  // ── Grade & Band Mastery Badges ──
+  md_g_jk:{game:'mathdive',em:'🌱',name:'JK Master',desc:'Mastered JK grade in Math Dive',hint:'Master Jk grade'},
+  md_g_sk:{game:'mathdive',em:'🌿',name:'SK Master',desc:'Mastered SK grade in Math Dive',hint:'Master Sk grade'},
+  md_g_gr1:{game:'mathdive',em:'📗',name:'Grade 1 Master',desc:'Mastered Grade 1 in Math Dive',hint:'Master Grade 1 grade'},
+  md_g_gr2:{game:'mathdive',em:'📘',name:'Grade 2 Master',desc:'Mastered Grade 2 in Math Dive',hint:'Master Grade 2 grade'},
+  md_g_gr3:{game:'mathdive',em:'📙',name:'Grade 3 Master',desc:'Mastered Grade 3 in Math Dive',hint:'Master Grade 3 grade'},
+  md_g_gr4:{game:'mathdive',em:'📕',name:'Grade 4 Master',desc:'Mastered Grade 4 in Math Dive',hint:'Master Grade 4 grade'},
+  md_band_1:{game:'mathdive',em:'🥉',name:'Ages 4–6 Champion',desc:'Achieved band mastery for Ages 4–6 in Math Dive',hint:'Master all grades in band 1'},
+  md_band_2:{game:'mathdive',em:'🥈',name:'Ages 6–8 Champion',desc:'Achieved band mastery for Ages 6–8 in Math Dive',hint:'Master all grades in band 2'},
+  md_band_3:{game:'mathdive',em:'🥇',name:'Ages 8–10 Champion',desc:'Achieved band mastery for Ages 8–10 in Math Dive',hint:'Master all grades in band 3'},
 };
 const BADGE_KEY='crabcake_badges_v1';
 const PLAYS_KEY='crabcake_plays_v1';
