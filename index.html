@@ -483,6 +483,15 @@
       position: relative; z-index: 2;
       filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
     }
+    .card-ca-badge {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      z-index: 3;
+      border-radius: 50%;
+      opacity: 0.85;
+      filter: drop-shadow(0 1px 3px rgba(0,0,0,0.5));
+    }
     .game-thumb::after {
       content: '▶ Play Now';
       position: absolute; inset: 0;
@@ -1189,7 +1198,7 @@
       <!-- CURRICULUM BADGE -->
       <div class="curriculum-badge" style="margin-top:1.5rem;">
         <div class="curriculum-badge-inner">
-          <div class="curriculum-flag">🍁</div>
+          <div class="curriculum-flag">🍁 <img src="/images/ca-logo.webp" width="28" height="28" alt="Canadian curriculum" style="vertical-align:middle;margin-left:2px;border-radius:50%;" /></div>
           <div class="curriculum-text">
             <div class="curriculum-title">Ontario Curriculum Aligned</div>
             <div class="curriculum-body">All game content is designed to reflect the Ontario, Canada Ministry of Education standards — covering Mathematics, Language, and Science &amp; Technology from Kindergarten through Grade 4.</div>
@@ -1320,7 +1329,7 @@
          data-grades='{"band_1":"JK / SK","band_2":"Grade 1 &amp; 2","band_3":"Grade 3 &amp; 4"}'
          data-file="/games/maths-dive.html"
          href="/games/maths-dive.html">
-        <div class="game-thumb" style="background:linear-gradient(135deg,#0a3060,#0d2044)"><canvas id="canvas-math"></canvas><span class="thumb-emoji">🤿</span></div>
+        <div class="game-thumb" style="background:linear-gradient(135deg,#0a3060,#0d2044)"><canvas id="canvas-math"></canvas><span class="thumb-emoji">🤿</span><img class="card-ca-badge" src="/images/ca-logo.webp" width="24" height="24" alt="" /></div>
         <div class="game-info">
           <h3>Math Dive</h3>
           <p>Dive into the ocean and catch the correct answers before time runs out!</p>
@@ -1339,7 +1348,7 @@
          data-grades='{"band_1":"JK / SK","band_2":"Grade 1 &amp; 2","band_3":"Grade 3 &amp; 4"}'
          data-file="/games/jungle-words.html"
          href="/games/jungle-words.html">
-        <div class="game-thumb" style="background:linear-gradient(135deg,#0d2818,#1a4a2e)"><canvas id="canvas-jungle"></canvas><span class="thumb-emoji">🦁</span></div>
+        <div class="game-thumb" style="background:linear-gradient(135deg,#0d2818,#1a4a2e)"><canvas id="canvas-jungle"></canvas><span class="thumb-emoji">🦁</span><img class="card-ca-badge" src="/images/ca-logo.webp" width="24" height="24" alt="" /></div>
         <div class="game-info">
           <h3>Jungle Words</h3>
           <p>Tap the words in the right order to build sentences in this wild jungle adventure!</p>
@@ -1396,7 +1405,7 @@
          data-grades='{"band_1":"JK / SK","band_2":"Grade 1 &amp; 2","band_3":"Grade 3 &amp; 4"}'
          data-file="/games/kitchen-lab.html"
          href="/games/kitchen-lab.html">
-        <div class="game-thumb" style="background:linear-gradient(135deg,#0a2a1a,#0d3320)"><canvas id="canvas-kitchen"></canvas><span class="thumb-emoji">👨‍🔬</span></div>
+        <div class="game-thumb" style="background:linear-gradient(135deg,#0a2a1a,#0d3320)"><canvas id="canvas-kitchen"></canvas><span class="thumb-emoji">👨‍🔬</span><img class="card-ca-badge" src="/images/ca-logo.webp" width="24" height="24" alt="" /></div>
         <div class="game-info">
           <h3>Kitchen Lab</h3>
           <p>Mix, react and discover! Explore states of matter, mixing reactions and chemical changes in your very own lab!</p>
