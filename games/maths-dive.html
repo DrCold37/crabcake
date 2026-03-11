@@ -1858,13 +1858,24 @@ function drawObject(obj, wx) {
   // Flash green briefly when correctly caught
   const isFlashing = obj.flashGreen && (Date.now() - obj.flashGreen < 200);
 
-  // Circle background — identical for all items unless flashing green
+  // JK bomb pulse — red flash every 3 seconds
+  const isJK = currentGrade === 'jk';
+  const isBomb = isJK && !obj.isCorrect;
+  const bombPulse = isBomb ? Math.max(0, Math.sin(Date.now() / 300)) : 0; // peaks every ~1.9s cycle
+  const bombFlash = bombPulse > 0.85; // sharp flash at the peak
+
+  // Circle background
   const gradient = ctx.createRadialGradient(wx, obj.y, 0, wx, obj.y, obj.size / 2);
   if (isFlashing) {
     gradient.addColorStop(0, 'rgba(78,203,113,0.5)');
     gradient.addColorStop(1, 'rgba(78,203,113,0.15)');
     ctx.shadowColor = '#4ECB71';
     ctx.shadowBlur = 24;
+  } else if (bombFlash) {
+    gradient.addColorStop(0, 'rgba(255,60,60,0.45)');
+    gradient.addColorStop(1, 'rgba(255,60,60,0.1)');
+    ctx.shadowColor = '#FF3C3C';
+    ctx.shadowBlur = 18;
   } else {
     gradient.addColorStop(0, 'rgba(255,255,255,0.12)');
     gradient.addColorStop(1, 'rgba(255,255,255,0.02)');
@@ -1873,20 +1884,22 @@ function drawObject(obj, wx) {
   ctx.arc(wx, obj.y, obj.size / 2, 0, Math.PI * 2);
   ctx.fillStyle = gradient;
   ctx.fill();
-  ctx.strokeStyle = isFlashing ? 'rgba(78,203,113,0.8)' : 'rgba(255,255,255,0.15)';
+  ctx.strokeStyle = isFlashing ? 'rgba(78,203,113,0.8)'
+                   : bombFlash ? 'rgba(255,60,60,0.7)'
+                   : 'rgba(255,255,255,0.15)';
   ctx.lineWidth = 2;
   ctx.stroke();
 
   ctx.shadowBlur = 0;
 
-  // Emoji — show bomb for wrong answers in JK
-  const displayEmoji = (currentGrade === 'jk' && !obj.isCorrect) ? '💣' : obj.emoji;
+  // Emoji — JK: bubbles for correct, bomb for wrong
+  const displayEmoji = isJK ? (obj.isCorrect ? '🫧' : '💣') : obj.emoji;
   ctx.font = `${obj.size * 0.5}px serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText(displayEmoji, wx, obj.y - obj.size * 0.12);
 
-  // Value — same colour for all
+  // Value
   ctx.font = `900 ${obj.size * 0.32}px 'Boogaloo', cursive`;
   ctx.fillStyle = isFlashing ? '#4ECB71' : 'rgba(255,255,255,0.85)';
   ctx.shadowColor = 'rgba(0,0,0,0.5)';
