@@ -1879,11 +1879,12 @@ function drawObject(obj, wx) {
 
   ctx.shadowBlur = 0;
 
-  // Emoji
+  // Emoji — show bomb for wrong answers in JK
+  const displayEmoji = (currentGrade === 'jk' && !obj.isCorrect) ? '💣' : obj.emoji;
   ctx.font = `${obj.size * 0.5}px serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText(obj.emoji, wx, obj.y - obj.size * 0.12);
+  ctx.fillText(displayEmoji, wx, obj.y - obj.size * 0.12);
 
   // Value — same colour for all
   ctx.font = `900 ${obj.size * 0.32}px 'Boogaloo', cursive`;

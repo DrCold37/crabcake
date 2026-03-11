@@ -2,7 +2,7 @@
   "schema_version": "1.1",
   "game_id": "kitchen-lab",
   "version": "1.0",
-  "last_updated": "2026-03-06",
+  "last_updated": "2026-03-10",
   "description": "Question sets for Kitchen Lab. Covers science inquiry skills, material properties, states of matter, mixing and reactions, the water cycle, forces, soil, habitats, and light and sound. The game engine presents virtual experiments — the child predicts, observes, and records outcomes. Question types lean heavily on predict_observe_record and drag_and_drop to mirror the hands-on inquiry model in the Ontario Science curriculum.",
   "progression_rules": {
     "warm_up_from_previous_band": true,
@@ -26,39 +26,75 @@
           "id": "kl001",
           "experiment": "Drop a heavy rock and a feather at the same time.",
           "predict_prompt": "Which will land first?",
-          "predict_options": ["rock", "feather", "same time"],
+          "predict_options": [
+            "rock",
+            "feather",
+            "same time"
+          ],
           "correct_prediction": "rock",
           "observe_prompt": "What happened?",
-          "observe_options": ["The rock landed first.", "The feather landed first.", "They landed at the same time."],
+          "observe_options": [
+            "The rock landed first.",
+            "The feather landed first.",
+            "They landed at the same time."
+          ],
           "correct_observation": "The rock landed first.",
           "explain_prompt": "Why did this happen?",
-          "explain_options": ["The rock is heavier.", "The feather is prettier.", "The rock is bigger."],
+          "explain_options": [
+            "The rock is heavier.",
+            "The feather is prettier.",
+            "The rock is bigger."
+          ],
           "correct_explanation": "The rock is heavier."
         },
         {
           "id": "kl002",
           "experiment": "Put an ice cube on a warm plate.",
           "predict_prompt": "What will happen to the ice cube?",
-          "predict_options": ["It will melt.", "It will get bigger.", "Nothing will happen."],
+          "predict_options": [
+            "It will melt.",
+            "It will get bigger.",
+            "Nothing will happen."
+          ],
           "correct_prediction": "It will melt.",
           "observe_prompt": "What happened to the ice cube?",
-          "observe_options": ["It melted into water.", "It got bigger.", "It turned into a rock."],
+          "observe_options": [
+            "It melted into water.",
+            "It got bigger.",
+            "It turned into a rock."
+          ],
           "correct_observation": "It melted into water.",
           "explain_prompt": "Why did the ice melt?",
-          "explain_options": ["The heat from the plate made it melt.", "Ice always melts by itself.", "The plate was wet."],
+          "explain_options": [
+            "The heat from the plate made it melt.",
+            "Ice always melts by itself.",
+            "The plate was wet."
+          ],
           "correct_explanation": "The heat from the plate made it melt."
         },
         {
           "id": "kl003",
           "experiment": "Shine a torch at a wall in a dark room.",
           "predict_prompt": "What will you see on the wall?",
-          "predict_options": ["A bright spot of light.", "Nothing — light disappears.", "A rainbow."],
+          "predict_options": [
+            "A bright spot of light.",
+            "Nothing — light disappears.",
+            "A rainbow."
+          ],
           "correct_prediction": "A bright spot of light.",
           "observe_prompt": "What did you see?",
-          "observe_options": ["A bright spot of light appeared.", "The wall turned off.", "The torch went out."],
+          "observe_options": [
+            "A bright spot of light appeared.",
+            "The wall turned off.",
+            "The torch went out."
+          ],
           "correct_observation": "A bright spot of light appeared.",
           "explain_prompt": "Where did the light come from?",
-          "explain_options": ["From the torch.", "From the wall.", "From the dark."],
+          "explain_options": [
+            "From the torch.",
+            "From the wall.",
+            "From the dark."
+          ],
           "correct_explanation": "From the torch."
         }
       ]
@@ -76,14 +112,41 @@
         {
           "id": "kl010",
           "prompt": "Sort these things into Living or Non-Living.",
-          "bins": ["living", "non-living"],
+          "bins": [
+            "living",
+            "non-living"
+          ],
           "items": [
-            { "item_id": "i1", "name": "butterfly",  "category": "living" },
-            { "item_id": "i2", "name": "rock",       "category": "non-living" },
-            { "item_id": "i3", "name": "sunflower",  "category": "living" },
-            { "item_id": "i4", "name": "plastic cup","category": "non-living" },
-            { "item_id": "i5", "name": "puppy",      "category": "living" },
-            { "item_id": "i6", "name": "bicycle",    "category": "non-living" }
+            {
+              "item_id": "i1",
+              "name": "butterfly",
+              "category": "living"
+            },
+            {
+              "item_id": "i2",
+              "name": "rock",
+              "category": "non-living"
+            },
+            {
+              "item_id": "i3",
+              "name": "sunflower",
+              "category": "living"
+            },
+            {
+              "item_id": "i4",
+              "name": "plastic cup",
+              "category": "non-living"
+            },
+            {
+              "item_id": "i5",
+              "name": "puppy",
+              "category": "living"
+            },
+            {
+              "item_id": "i6",
+              "name": "bicycle",
+              "category": "non-living"
+            }
           ]
         },
         {
@@ -113,7 +176,11 @@
           "id": "kl020",
           "experiment": "Plant one seed with water and one seed without water for a week.",
           "predict_prompt": "Which plant will grow taller?",
-          "predict_options": ["The one with water.", "The one without water.", "They will be the same."],
+          "predict_options": [
+            "The one with water.",
+            "The one without water.",
+            "They will be the same."
+          ],
           "correct_prediction": "The one with water.",
           "observe_prompt": "After one week, what did you observe?",
           "observe_options": [
@@ -153,20 +220,77 @@
       "mechanic": "tap_select",
       "instructions": "Tap the correct form of energy.",
       "questions": [
-        { "id": "kl030", "prompt": "A lamp lights up a room. What type of energy is this?",       "answer": "light energy",    "distractors": ["heat energy", "sound energy", "movement energy"] },
-        { "id": "kl031", "prompt": "A drum makes a loud bang. What type of energy is this?",      "answer": "sound energy",    "distractors": ["light energy", "heat energy", "movement energy"] },
-        { "id": "kl032", "prompt": "A campfire warms your hands. What type of energy is this?",   "answer": "heat energy",     "distractors": ["light energy", "sound energy", "movement energy"] },
-        { "id": "kl033", "prompt": "A spinning top spins across the floor. What type of energy?", "answer": "movement energy", "distractors": ["heat energy", "sound energy", "light energy"] },
+        {
+          "id": "kl030",
+          "prompt": "A lamp lights up a room. What type of energy is this?",
+          "answer": "light energy",
+          "distractors": [
+            "heat energy",
+            "sound energy",
+            "movement energy"
+          ]
+        },
+        {
+          "id": "kl031",
+          "prompt": "A drum makes a loud bang. What type of energy is this?",
+          "answer": "sound energy",
+          "distractors": [
+            "light energy",
+            "heat energy",
+            "movement energy"
+          ]
+        },
+        {
+          "id": "kl032",
+          "prompt": "A campfire warms your hands. What type of energy is this?",
+          "answer": "heat energy",
+          "distractors": [
+            "light energy",
+            "sound energy",
+            "movement energy"
+          ]
+        },
+        {
+          "id": "kl033",
+          "prompt": "A spinning top spins across the floor. What type of energy?",
+          "answer": "movement energy",
+          "distractors": [
+            "heat energy",
+            "sound energy",
+            "light energy"
+          ]
+        },
         {
           "id": "kl034",
           "prompt": "Sort these into the correct energy type.",
           "mechanic": "drag_and_drop",
-          "bins": ["light", "heat", "sound", "movement"],
+          "bins": [
+            "light",
+            "heat",
+            "sound",
+            "movement"
+          ],
           "items": [
-            { "item_id": "i1", "name": "a ringing bell",  "category": "sound" },
-            { "item_id": "i2", "name": "a burning candle","category": "heat" },
-            { "item_id": "i3", "name": "a rainbow",       "category": "light" },
-            { "item_id": "i4", "name": "a rolling ball",  "category": "movement" }
+            {
+              "item_id": "i1",
+              "name": "a ringing bell",
+              "category": "sound"
+            },
+            {
+              "item_id": "i2",
+              "name": "a burning candle",
+              "category": "heat"
+            },
+            {
+              "item_id": "i3",
+              "name": "a rainbow",
+              "category": "light"
+            },
+            {
+              "item_id": "i4",
+              "name": "a rolling ball",
+              "category": "movement"
+            }
           ]
         }
       ]
@@ -184,14 +308,41 @@
         {
           "id": "kl040",
           "prompt": "Sort these materials: Which are HARD and which are SOFT?",
-          "bins": ["hard", "soft"],
+          "bins": [
+            "hard",
+            "soft"
+          ],
           "items": [
-            { "item_id": "i1", "name": "rock",     "category": "hard" },
-            { "item_id": "i2", "name": "pillow",   "category": "soft" },
-            { "item_id": "i3", "name": "metal spoon","category": "hard" },
-            { "item_id": "i4", "name": "cotton ball","category": "soft" },
-            { "item_id": "i5", "name": "brick",    "category": "hard" },
-            { "item_id": "i6", "name": "sponge",   "category": "soft" }
+            {
+              "item_id": "i1",
+              "name": "rock",
+              "category": "hard"
+            },
+            {
+              "item_id": "i2",
+              "name": "pillow",
+              "category": "soft"
+            },
+            {
+              "item_id": "i3",
+              "name": "metal spoon",
+              "category": "hard"
+            },
+            {
+              "item_id": "i4",
+              "name": "cotton ball",
+              "category": "soft"
+            },
+            {
+              "item_id": "i5",
+              "name": "brick",
+              "category": "hard"
+            },
+            {
+              "item_id": "i6",
+              "name": "sponge",
+              "category": "soft"
+            }
           ]
         },
         {
@@ -210,14 +361,22 @@
           "prompt": "Which material is ABSORBENT?",
           "mechanic": "tap_select",
           "answer": "sponge",
-          "distractors": ["glass", "metal", "plastic"]
+          "distractors": [
+            "glass",
+            "metal",
+            "plastic"
+          ]
         },
         {
           "id": "kl043",
           "prompt": "Which material is FLEXIBLE (can bend without breaking)?",
           "mechanic": "tap_select",
           "answer": "rubber",
-          "distractors": ["glass", "rock", "brick"]
+          "distractors": [
+            "glass",
+            "rock",
+            "brick"
+          ]
         }
       ]
     },
@@ -231,12 +390,54 @@
       "mechanic": "tap_select",
       "instructions": "Is it a liquid or a solid? Tap your answer.",
       "questions": [
-        { "id": "kl050", "prompt": "Orange juice",     "answer": "liquid", "distractors": ["solid"] },
-        { "id": "kl051", "prompt": "A wooden block",   "answer": "solid",  "distractors": ["liquid"] },
-        { "id": "kl052", "prompt": "Honey",            "answer": "liquid", "distractors": ["solid"] },
-        { "id": "kl053", "prompt": "An ice cube",      "answer": "solid",  "distractors": ["liquid"] },
-        { "id": "kl054", "prompt": "Shampoo",          "answer": "liquid", "distractors": ["solid"] },
-        { "id": "kl055", "prompt": "A chocolate bar",  "answer": "solid",  "distractors": ["liquid"] },
+        {
+          "id": "kl050",
+          "prompt": "Orange juice",
+          "answer": "liquid",
+          "distractors": [
+            "solid"
+          ]
+        },
+        {
+          "id": "kl051",
+          "prompt": "A wooden block",
+          "answer": "solid",
+          "distractors": [
+            "liquid"
+          ]
+        },
+        {
+          "id": "kl052",
+          "prompt": "Honey",
+          "answer": "liquid",
+          "distractors": [
+            "solid"
+          ]
+        },
+        {
+          "id": "kl053",
+          "prompt": "An ice cube",
+          "answer": "solid",
+          "distractors": [
+            "liquid"
+          ]
+        },
+        {
+          "id": "kl054",
+          "prompt": "Shampoo",
+          "answer": "liquid",
+          "distractors": [
+            "solid"
+          ]
+        },
+        {
+          "id": "kl055",
+          "prompt": "A chocolate bar",
+          "answer": "solid",
+          "distractors": [
+            "liquid"
+          ]
+        },
         {
           "id": "kl056",
           "prompt": "What is the main difference between a liquid and a solid?",
@@ -263,13 +464,25 @@
           "id": "kl060",
           "experiment": "Put a tray of liquid water in the freezer.",
           "predict_prompt": "What will happen to the water?",
-          "predict_options": ["It will freeze into ice.", "It will evaporate.", "Nothing will happen."],
+          "predict_options": [
+            "It will freeze into ice.",
+            "It will evaporate.",
+            "Nothing will happen."
+          ],
           "correct_prediction": "It will freeze into ice.",
           "observe_prompt": "After two hours, what do you see?",
-          "observe_options": ["Solid ice has formed.", "The water is still liquid.", "The tray is empty."],
+          "observe_options": [
+            "Solid ice has formed.",
+            "The water is still liquid.",
+            "The tray is empty."
+          ],
           "correct_observation": "Solid ice has formed.",
           "explain_prompt": "What caused the water to freeze?",
-          "explain_options": ["The cold temperature removed heat from the water.", "The freezer is magic.", "Water always becomes ice."],
+          "explain_options": [
+            "The cold temperature removed heat from the water.",
+            "The freezer is magic.",
+            "Water always becomes ice."
+          ],
           "correct_explanation": "The cold temperature removed heat from the water."
         },
         {
@@ -277,7 +490,11 @@
           "prompt": "At what temperature does water freeze?",
           "mechanic": "tap_select",
           "answer": "0°C",
-          "distractors": ["100°C", "50°C", "-100°C"]
+          "distractors": [
+            "100°C",
+            "50°C",
+            "-100°C"
+          ]
         },
         {
           "id": "kl062",
@@ -305,38 +522,82 @@
           "id": "kl070",
           "experiment": "Add salt to water and stir.",
           "predict_prompt": "What will happen to the salt?",
-          "predict_options": ["It will dissolve — you won't be able to see it.", "It will float on top.", "It will turn the water red."],
+          "predict_options": [
+            "It will dissolve — you won't be able to see it.",
+            "It will float on top.",
+            "It will turn the water red."
+          ],
           "correct_prediction": "It will dissolve — you won't be able to see it.",
           "observe_prompt": "After stirring, what do you see?",
-          "observe_options": ["The salt dissolved and the water looks clear.", "The salt is still sitting at the bottom.", "The water turned salty-coloured."],
+          "observe_options": [
+            "The salt dissolved and the water looks clear.",
+            "The salt is still sitting at the bottom.",
+            "The water turned salty-coloured."
+          ],
           "correct_observation": "The salt dissolved and the water looks clear.",
           "explain_prompt": "What is the mixture of salt dissolved in water called?",
-          "explain_options": ["A solution", "A suspension", "A solid", "A gas"],
+          "explain_options": [
+            "A solution",
+            "A suspension",
+            "A solid",
+            "A gas"
+          ],
           "correct_explanation": "A solution"
         },
         {
           "id": "kl071",
           "experiment": "Add sand to water and stir.",
           "predict_prompt": "What will the sand do?",
-          "predict_options": ["It will stay mixed for a bit, then settle at the bottom.", "It will dissolve completely.", "It will turn the water blue."],
+          "predict_options": [
+            "It will stay mixed for a bit, then settle at the bottom.",
+            "It will dissolve completely.",
+            "It will turn the water blue."
+          ],
           "correct_prediction": "It will stay mixed for a bit, then settle at the bottom.",
           "observe_prompt": "After waiting, what do you see?",
-          "observe_options": ["Sand settled at the bottom — it did not dissolve.", "The sand dissolved like salt.", "The water disappeared."],
+          "observe_options": [
+            "Sand settled at the bottom — it did not dissolve.",
+            "The sand dissolved like salt.",
+            "The water disappeared."
+          ],
           "correct_observation": "Sand settled at the bottom — it did not dissolve.",
           "explain_prompt": "Why is a sand-water mixture different from salt water?",
-          "explain_options": ["Sand does not dissolve — it forms a suspension, not a solution.", "Sand is heavier than salt.", "Sand is alive."],
+          "explain_options": [
+            "Sand does not dissolve — it forms a suspension, not a solution.",
+            "Sand is heavier than salt.",
+            "Sand is alive."
+          ],
           "correct_explanation": "Sand does not dissolve — it forms a suspension, not a solution."
         },
         {
           "id": "kl072",
           "prompt": "Sort these mixtures: Which are SOLUTIONS (dissolved completely) and which are SUSPENSIONS (do not dissolve)?",
           "mechanic": "drag_and_drop",
-          "bins": ["solution", "suspension"],
+          "bins": [
+            "solution",
+            "suspension"
+          ],
           "items": [
-            { "item_id": "i1", "name": "sugar in water",    "category": "solution" },
-            { "item_id": "i2", "name": "sand in water",     "category": "suspension" },
-            { "item_id": "i3", "name": "salt in water",     "category": "solution" },
-            { "item_id": "i4", "name": "flour in water",    "category": "suspension" }
+            {
+              "item_id": "i1",
+              "name": "sugar in water",
+              "category": "solution"
+            },
+            {
+              "item_id": "i2",
+              "name": "sand in water",
+              "category": "suspension"
+            },
+            {
+              "item_id": "i3",
+              "name": "salt in water",
+              "category": "solution"
+            },
+            {
+              "item_id": "i4",
+              "name": "flour in water",
+              "category": "suspension"
+            }
           ]
         }
       ]
@@ -351,13 +612,59 @@
       "mechanic": "tap_select",
       "instructions": "Tap the correct meaning of the safety symbol shown.",
       "questions": [
-        { "id": "kl080", "symbol": "skull_and_crossbones", "prompt": "What does this symbol mean?",    "answer": "Poison — do not swallow",      "distractors": ["Danger of fire", "Electrical hazard", "Wear gloves"] },
-        { "id": "kl081", "symbol": "flame",                "prompt": "What does this symbol mean?",    "answer": "Flammable — can catch fire",   "distractors": ["Hot surface", "Poison", "Electrical hazard"] },
-        { "id": "kl082", "symbol": "lightning_bolt",       "prompt": "What does this symbol mean?",    "answer": "Electrical hazard",            "distractors": ["Flammable", "Poison", "Wear goggles"] },
-        { "id": "kl083", "symbol": "goggles",              "prompt": "What does this symbol tell you to do?", "answer": "Wear eye protection",  "distractors": ["Wear gloves", "No eating", "Wash hands"] },
-        { "id": "kl084", "prompt": "You see a skull-and-crossbones symbol on a bottle under the kitchen sink. What should you do?",
+        {
+          "id": "kl080",
+          "symbol": "skull_and_crossbones",
+          "prompt": "What does this symbol mean?",
+          "answer": "Poison — do not swallow",
+          "distractors": [
+            "Danger of fire",
+            "Electrical hazard",
+            "Wear gloves"
+          ]
+        },
+        {
+          "id": "kl081",
+          "symbol": "flame",
+          "prompt": "What does this symbol mean?",
+          "answer": "Flammable — can catch fire",
+          "distractors": [
+            "Hot surface",
+            "Poison",
+            "Electrical hazard"
+          ]
+        },
+        {
+          "id": "kl082",
+          "symbol": "lightning_bolt",
+          "prompt": "What does this symbol mean?",
+          "answer": "Electrical hazard",
+          "distractors": [
+            "Flammable",
+            "Poison",
+            "Wear goggles"
+          ]
+        },
+        {
+          "id": "kl083",
+          "symbol": "goggles",
+          "prompt": "What does this symbol tell you to do?",
+          "answer": "Wear eye protection",
+          "distractors": [
+            "Wear gloves",
+            "No eating",
+            "Wash hands"
+          ]
+        },
+        {
+          "id": "kl084",
+          "prompt": "You see a skull-and-crossbones symbol on a bottle under the kitchen sink. What should you do?",
           "answer": "Do not touch it — tell an adult.",
-          "distractors": ["Open it and smell it.", "Pour it down the drain.", "Taste a little bit to see what it is."]
+          "distractors": [
+            "Open it and smell it.",
+            "Pour it down the drain.",
+            "Taste a little bit to see what it is."
+          ]
         }
       ]
     },
@@ -374,18 +681,58 @@
         {
           "id": "kl090",
           "prompt": "Put the water cycle stages in order, starting from the sun heating a lake.",
-          "stages": ["evaporation", "condensation", "precipitation", "collection"],
-          "answer": ["evaporation", "condensation", "precipitation", "collection"],
+          "stages": [
+            "evaporation",
+            "condensation",
+            "precipitation",
+            "collection"
+          ],
+          "answer": [
+            "evaporation",
+            "condensation",
+            "precipitation",
+            "collection"
+          ],
           "descriptions": {
-            "evaporation":   "Water heats up and becomes water vapour that rises into the air.",
-            "condensation":  "Water vapour cools and forms clouds.",
+            "evaporation": "Water heats up and becomes water vapour that rises into the air.",
+            "condensation": "Water vapour cools and forms clouds.",
             "precipitation": "Water falls from clouds as rain, snow, or hail.",
-            "collection":    "Water collects in lakes, rivers, and oceans."
+            "collection": "Water collects in lakes, rivers, and oceans."
           }
         },
-        { "id": "kl091", "prompt": "What happens to water when the sun heats it?",       "mechanic": "tap_select", "answer": "It evaporates into water vapour.",    "distractors": ["It freezes.", "It becomes a solid.", "It disappears forever."] },
-        { "id": "kl092", "prompt": "What causes clouds to form?",                        "mechanic": "tap_select", "answer": "Water vapour cools and condenses.",  "distractors": ["Wind pushes water up.", "Rain falls upward.", "Evaporation stops."] },
-        { "id": "kl093", "prompt": "What is precipitation?",                             "mechanic": "tap_select", "answer": "Water falling from clouds as rain, snow, sleet, or hail.", "distractors": ["Water rising from lakes.", "Clouds forming from vapour.", "Water flowing in rivers."] }
+        {
+          "id": "kl091",
+          "prompt": "What happens to water when the sun heats it?",
+          "mechanic": "tap_select",
+          "answer": "It evaporates into water vapour.",
+          "distractors": [
+            "It freezes.",
+            "It becomes a solid.",
+            "It disappears forever."
+          ]
+        },
+        {
+          "id": "kl092",
+          "prompt": "What causes clouds to form?",
+          "mechanic": "tap_select",
+          "answer": "Water vapour cools and condenses.",
+          "distractors": [
+            "Wind pushes water up.",
+            "Rain falls upward.",
+            "Evaporation stops."
+          ]
+        },
+        {
+          "id": "kl093",
+          "prompt": "What is precipitation?",
+          "mechanic": "tap_select",
+          "answer": "Water falling from clouds as rain, snow, sleet, or hail.",
+          "distractors": [
+            "Water rising from lakes.",
+            "Clouds forming from vapour.",
+            "Water flowing in rivers."
+          ]
+        }
       ]
     },
     {
@@ -397,20 +744,68 @@
       "assessment_type": "formative",
       "mechanic": "tap_select",
       "questions": [
-        { "id": "kl100", "prompt": "Ice is water in what state?",          "answer": "solid",  "distractors": ["liquid", "gas"] },
-        { "id": "kl101", "prompt": "Steam is water in what state?",        "answer": "gas",    "distractors": ["solid", "liquid"] },
-        { "id": "kl102", "prompt": "A puddle of water is in what state?",  "answer": "liquid", "distractors": ["solid", "gas"] },
+        {
+          "id": "kl100",
+          "prompt": "Ice is water in what state?",
+          "answer": "solid",
+          "distractors": [
+            "liquid",
+            "gas"
+          ]
+        },
+        {
+          "id": "kl101",
+          "prompt": "Steam is water in what state?",
+          "answer": "gas",
+          "distractors": [
+            "solid",
+            "liquid"
+          ]
+        },
+        {
+          "id": "kl102",
+          "prompt": "A puddle of water is in what state?",
+          "answer": "liquid",
+          "distractors": [
+            "solid",
+            "gas"
+          ]
+        },
         {
           "id": "kl103",
           "prompt": "Sort these into the correct state of water.",
           "mechanic": "drag_and_drop",
-          "bins": ["solid", "liquid", "gas"],
+          "bins": [
+            "solid",
+            "liquid",
+            "gas"
+          ],
           "items": [
-            { "item_id": "i1", "name": "iceberg",       "category": "solid" },
-            { "item_id": "i2", "name": "rain",          "category": "liquid" },
-            { "item_id": "i3", "name": "water vapour",  "category": "gas" },
-            { "item_id": "i4", "name": "snow",          "category": "solid" },
-            { "item_id": "i5", "name": "river water",   "category": "liquid" }
+            {
+              "item_id": "i1",
+              "name": "iceberg",
+              "category": "solid"
+            },
+            {
+              "item_id": "i2",
+              "name": "rain",
+              "category": "liquid"
+            },
+            {
+              "item_id": "i3",
+              "name": "water vapour",
+              "category": "gas"
+            },
+            {
+              "item_id": "i4",
+              "name": "snow",
+              "category": "solid"
+            },
+            {
+              "item_id": "i5",
+              "name": "river water",
+              "category": "liquid"
+            }
           ]
         }
       ]
@@ -427,23 +822,74 @@
         {
           "id": "kl110",
           "prompt": "Sort these into the components found IN soil.",
-          "bins": ["found in soil", "not found in soil"],
+          "bins": [
+            "found in soil",
+            "not found in soil"
+          ],
           "items": [
-            { "item_id": "i1", "name": "sand",          "category": "found in soil" },
-            { "item_id": "i2", "name": "dead leaves",   "category": "found in soil" },
-            { "item_id": "i3", "name": "plastic bottle","category": "not found in soil" },
-            { "item_id": "i4", "name": "clay",          "category": "found in soil" },
-            { "item_id": "i5", "name": "worms",         "category": "found in soil" },
-            { "item_id": "i6", "name": "glass",         "category": "not found in soil" }
+            {
+              "item_id": "i1",
+              "name": "sand",
+              "category": "found in soil"
+            },
+            {
+              "item_id": "i2",
+              "name": "dead leaves",
+              "category": "found in soil"
+            },
+            {
+              "item_id": "i3",
+              "name": "plastic bottle",
+              "category": "not found in soil"
+            },
+            {
+              "item_id": "i4",
+              "name": "clay",
+              "category": "found in soil"
+            },
+            {
+              "item_id": "i5",
+              "name": "worms",
+              "category": "found in soil"
+            },
+            {
+              "item_id": "i6",
+              "name": "glass",
+              "category": "not found in soil"
+            }
           ]
         },
-        { "id": "kl111", "prompt": "What is HUMUS?",                      "mechanic": "tap_select", "answer": "Decomposed plant and animal material that makes soil rich in nutrients.", "distractors": ["A type of sand.", "A type of rock.", "A type of water."] },
-        { "id": "kl112", "prompt": "Why do gardeners add compost to soil?", "mechanic": "tap_select", "answer": "To add nutrients that help plants grow.", "distractors": ["To make the soil harder.", "To remove water from the soil.", "To make the soil a different colour."] },
+        {
+          "id": "kl111",
+          "prompt": "What is HUMUS?",
+          "mechanic": "tap_select",
+          "answer": "Decomposed plant and animal material that makes soil rich in nutrients.",
+          "distractors": [
+            "A type of sand.",
+            "A type of rock.",
+            "A type of water."
+          ]
+        },
+        {
+          "id": "kl112",
+          "prompt": "Why do gardeners add compost to soil?",
+          "mechanic": "tap_select",
+          "answer": "To add nutrients that help plants grow.",
+          "distractors": [
+            "To make the soil harder.",
+            "To remove water from the soil.",
+            "To make the soil a different colour."
+          ]
+        },
         {
           "id": "kl113",
           "experiment": "Mix sandy soil, clay, and dead leaves together.",
           "predict_prompt": "What type of soil are you making?",
-          "predict_options": ["Loam — a rich mixture good for growing plants.", "Pure sand — good for desert plants.", "Pure clay — too dense for most plants."],
+          "predict_options": [
+            "Loam — a rich mixture good for growing plants.",
+            "Pure sand — good for desert plants.",
+            "Pure clay — too dense for most plants."
+          ],
           "mechanic": "predict_observe_record",
           "correct_prediction": "Loam — a rich mixture good for growing plants."
         }
@@ -458,22 +904,85 @@
       "assessment_type": "formative",
       "mechanic": "tap_select",
       "questions": [
-        { "id": "kl120", "prompt": "You kick a ball. What type of force is this?",               "answer": "push",     "distractors": ["pull", "gravity", "friction"] },
-        { "id": "kl121", "prompt": "A magnet attracts a paperclip toward it. What force?",       "answer": "magnetic", "distractors": ["push", "friction", "gravity"] },
-        { "id": "kl122", "prompt": "A dropped ball falls to the ground. What force caused this?","answer": "gravity",  "distractors": ["push", "magnetic", "friction"] },
-        { "id": "kl123", "prompt": "You slide a book across a rough table and it slows down. What force slowed it?", "answer": "friction", "distractors": ["gravity", "magnetic", "push"] },
+        {
+          "id": "kl120",
+          "prompt": "You kick a ball. What type of force is this?",
+          "answer": "push",
+          "distractors": [
+            "pull",
+            "gravity",
+            "friction"
+          ]
+        },
+        {
+          "id": "kl121",
+          "prompt": "A magnet attracts a paperclip toward it. What force?",
+          "answer": "magnetic",
+          "distractors": [
+            "push",
+            "friction",
+            "gravity"
+          ]
+        },
+        {
+          "id": "kl122",
+          "prompt": "A dropped ball falls to the ground. What force caused this?",
+          "answer": "gravity",
+          "distractors": [
+            "push",
+            "magnetic",
+            "friction"
+          ]
+        },
+        {
+          "id": "kl123",
+          "prompt": "You slide a book across a rough table and it slows down. What force slowed it?",
+          "answer": "friction",
+          "distractors": [
+            "gravity",
+            "magnetic",
+            "push"
+          ]
+        },
         {
           "id": "kl124",
           "prompt": "Sort these actions into PUSH or PULL.",
           "mechanic": "drag_and_drop",
-          "bins": ["push", "pull"],
+          "bins": [
+            "push",
+            "pull"
+          ],
           "items": [
-            { "item_id": "i1", "name": "opening a drawer",      "category": "pull" },
-            { "item_id": "i2", "name": "closing a door",        "category": "push" },
-            { "item_id": "i3", "name": "squeezing toothpaste",  "category": "push" },
-            { "item_id": "i4", "name": "pulling a rope",        "category": "pull" },
-            { "item_id": "i5", "name": "pressing a button",     "category": "push" },
-            { "item_id": "i6", "name": "reeling in a fishing rod","category": "pull" }
+            {
+              "item_id": "i1",
+              "name": "opening a drawer",
+              "category": "pull"
+            },
+            {
+              "item_id": "i2",
+              "name": "closing a door",
+              "category": "push"
+            },
+            {
+              "item_id": "i3",
+              "name": "squeezing toothpaste",
+              "category": "push"
+            },
+            {
+              "item_id": "i4",
+              "name": "pulling a rope",
+              "category": "pull"
+            },
+            {
+              "item_id": "i5",
+              "name": "pressing a button",
+              "category": "push"
+            },
+            {
+              "item_id": "i6",
+              "name": "reeling in a fishing rod",
+              "category": "pull"
+            }
           ]
         }
       ]
@@ -490,19 +999,77 @@
         {
           "id": "kl130",
           "prompt": "Sort these organisms into PRODUCER, CONSUMER, or DECOMPOSER.",
-          "bins": ["producer", "consumer", "decomposer"],
+          "bins": [
+            "producer",
+            "consumer",
+            "decomposer"
+          ],
           "items": [
-            { "item_id": "i1", "name": "oak tree",      "category": "producer" },
-            { "item_id": "i2", "name": "rabbit",        "category": "consumer" },
-            { "item_id": "i3", "name": "mushroom",      "category": "decomposer" },
-            { "item_id": "i4", "name": "grass",         "category": "producer" },
-            { "item_id": "i5", "name": "fox",           "category": "consumer" },
-            { "item_id": "i6", "name": "earthworm",     "category": "decomposer" }
+            {
+              "item_id": "i1",
+              "name": "oak tree",
+              "category": "producer"
+            },
+            {
+              "item_id": "i2",
+              "name": "rabbit",
+              "category": "consumer"
+            },
+            {
+              "item_id": "i3",
+              "name": "mushroom",
+              "category": "decomposer"
+            },
+            {
+              "item_id": "i4",
+              "name": "grass",
+              "category": "producer"
+            },
+            {
+              "item_id": "i5",
+              "name": "fox",
+              "category": "consumer"
+            },
+            {
+              "item_id": "i6",
+              "name": "earthworm",
+              "category": "decomposer"
+            }
           ]
         },
-        { "id": "kl131", "prompt": "What do PRODUCERS use to make their own food?",                   "mechanic": "tap_select", "answer": "Sunlight, water, and carbon dioxide (photosynthesis).", "distractors": ["Other animals.", "Dead leaves only.", "Rainwater only."] },
-        { "id": "kl132", "prompt": "What role do DECOMPOSERS play in an ecosystem?",                  "mechanic": "tap_select", "answer": "They break down dead organisms and return nutrients to the soil.", "distractors": ["They eat live animals.", "They make food from sunlight.", "They store water."] },
-        { "id": "kl133", "prompt": "In this food chain: Grass → Rabbit → Fox, what is the RABBIT?", "mechanic": "tap_select", "answer": "A consumer (it eats the grass and is eaten by the fox).", "distractors": ["A producer.", "A decomposer.", "A plant."] }
+        {
+          "id": "kl131",
+          "prompt": "What do PRODUCERS use to make their own food?",
+          "mechanic": "tap_select",
+          "answer": "Sunlight, water, and carbon dioxide (photosynthesis).",
+          "distractors": [
+            "Other animals.",
+            "Dead leaves only.",
+            "Rainwater only."
+          ]
+        },
+        {
+          "id": "kl132",
+          "prompt": "What role do DECOMPOSERS play in an ecosystem?",
+          "mechanic": "tap_select",
+          "answer": "They break down dead organisms and return nutrients to the soil.",
+          "distractors": [
+            "They eat live animals.",
+            "They make food from sunlight.",
+            "They store water."
+          ]
+        },
+        {
+          "id": "kl133",
+          "prompt": "In this food chain: Grass → Rabbit → Fox, what is the RABBIT?",
+          "mechanic": "tap_select",
+          "answer": "A consumer (it eats the grass and is eaten by the fox).",
+          "distractors": [
+            "A producer.",
+            "A decomposer.",
+            "A plant."
+          ]
+        }
       ]
     },
     {
@@ -514,9 +1081,36 @@
       "assessment_type": "summative",
       "mechanic": "tap_select",
       "questions": [
-        { "id": "kl140", "prompt": "A food web is different from a food chain because...", "answer": "A food web shows that most organisms eat and are eaten by many different organisms, not just one.", "distractors": ["A food web is always shorter than a food chain.", "A food web only includes plants.", "A food web shows only decomposers."] },
-        { "id": "kl141", "prompt": "If rabbits were removed from a food web that includes: Grass → Rabbit → Fox and Grass → Rabbit → Hawk, what would likely happen to the fox?", "answer": "The fox population would decrease because its food source is gone.", "distractors": ["The fox would eat more grass.", "The fox population would increase.", "Nothing would change."] },
-        { "id": "kl142", "prompt": "What does the ARROW mean in a food chain? (e.g. Grass → Rabbit)", "answer": "Energy flows from the grass to the rabbit — the rabbit eats the grass.", "distractors": ["The rabbit turns into grass.", "The grass is bigger than the rabbit.", "The rabbit and grass are the same organism."] }
+        {
+          "id": "kl140",
+          "prompt": "A food web is different from a food chain because...",
+          "answer": "A food web shows that most organisms eat and are eaten by many different organisms, not just one.",
+          "distractors": [
+            "A food web is always shorter than a food chain.",
+            "A food web only includes plants.",
+            "A food web shows only decomposers."
+          ]
+        },
+        {
+          "id": "kl141",
+          "prompt": "If rabbits were removed from a food web that includes: Grass → Rabbit → Fox and Grass → Rabbit → Hawk, what would likely happen to the fox?",
+          "answer": "The fox population would decrease because its food source is gone.",
+          "distractors": [
+            "The fox would eat more grass.",
+            "The fox population would increase.",
+            "Nothing would change."
+          ]
+        },
+        {
+          "id": "kl142",
+          "prompt": "What does the ARROW mean in a food chain? (e.g. Grass → Rabbit)",
+          "answer": "Energy flows from the grass to the rabbit — the rabbit eats the grass.",
+          "distractors": [
+            "The rabbit turns into grass.",
+            "The grass is bigger than the rabbit.",
+            "The rabbit and grass are the same organism."
+          ]
+        }
       ]
     },
     {
@@ -532,38 +1126,83 @@
           "id": "kl150",
           "experiment": "Shine a torch at a mirror.",
           "predict_prompt": "What will happen to the light beam?",
-          "predict_options": ["It will bounce off the mirror at an angle.", "It will be absorbed.", "It will pass straight through."],
+          "predict_options": [
+            "It will bounce off the mirror at an angle.",
+            "It will be absorbed.",
+            "It will pass straight through."
+          ],
           "correct_prediction": "It will bounce off the mirror at an angle.",
           "observe_prompt": "What did you observe?",
-          "observe_options": ["The light reflected off the mirror.", "The mirror absorbed all the light.", "The light bent through the mirror."],
+          "observe_options": [
+            "The light reflected off the mirror.",
+            "The mirror absorbed all the light.",
+            "The light bent through the mirror."
+          ],
           "correct_observation": "The light reflected off the mirror.",
           "explain_prompt": "What is the bouncing of light off a surface called?",
-          "explain_options": ["Reflection", "Refraction", "Absorption", "Diffusion"],
+          "explain_options": [
+            "Reflection",
+            "Refraction",
+            "Absorption",
+            "Diffusion"
+          ],
           "correct_explanation": "Reflection"
         },
         {
           "id": "kl151",
           "experiment": "Shine a torch through a glass of water onto a white wall.",
           "predict_prompt": "What will you see on the wall?",
-          "predict_options": ["The light will bend and the beam will change direction.", "The light will stop.", "The beam will get smaller."],
+          "predict_options": [
+            "The light will bend and the beam will change direction.",
+            "The light will stop.",
+            "The beam will get smaller."
+          ],
           "correct_prediction": "The light will bend and the beam will change direction.",
           "observe_prompt": "What happened to the light?",
-          "observe_options": ["It bent as it passed through the water — refraction.", "It stopped at the glass.", "It came out the same direction."],
+          "observe_options": [
+            "It bent as it passed through the water — refraction.",
+            "It stopped at the glass.",
+            "It came out the same direction."
+          ],
           "correct_observation": "It bent as it passed through the water — refraction.",
           "explain_prompt": "What is the bending of light as it passes through a different material called?",
-          "explain_options": ["Refraction", "Reflection", "Absorption", "Diffusion"],
+          "explain_options": [
+            "Refraction",
+            "Reflection",
+            "Absorption",
+            "Diffusion"
+          ],
           "correct_explanation": "Refraction"
         },
         {
           "id": "kl152",
           "prompt": "Sort these materials: which let light THROUGH and which BLOCK light?",
           "mechanic": "drag_and_drop",
-          "bins": ["transparent (lets light through)", "opaque (blocks light)"],
+          "bins": [
+            "transparent (lets light through)",
+            "opaque (blocks light)"
+          ],
           "items": [
-            { "item_id": "i1", "name": "clear glass",  "category": "transparent (lets light through)" },
-            { "item_id": "i2", "name": "wooden door",  "category": "opaque (blocks light)" },
-            { "item_id": "i3", "name": "clear water",  "category": "transparent (lets light through)" },
-            { "item_id": "i4", "name": "cardboard box","category": "opaque (blocks light)" }
+            {
+              "item_id": "i1",
+              "name": "clear glass",
+              "category": "transparent (lets light through)"
+            },
+            {
+              "item_id": "i2",
+              "name": "wooden door",
+              "category": "opaque (blocks light)"
+            },
+            {
+              "item_id": "i3",
+              "name": "clear water",
+              "category": "transparent (lets light through)"
+            },
+            {
+              "item_id": "i4",
+              "name": "cardboard box",
+              "category": "opaque (blocks light)"
+            }
           ]
         }
       ]
@@ -581,18 +1220,875 @@
           "id": "kl160",
           "experiment": "Pluck a thick rubber band, then a thin rubber band.",
           "predict_prompt": "Which rubber band will make a higher pitch sound?",
-          "predict_options": ["The thin rubber band.", "The thick rubber band.", "They will sound the same."],
+          "predict_options": [
+            "The thin rubber band.",
+            "The thick rubber band.",
+            "They will sound the same."
+          ],
           "correct_prediction": "The thin rubber band.",
           "observe_prompt": "What did you hear?",
-          "observe_options": ["The thin band made a higher pitch sound.", "The thick band made a higher pitch sound.", "Both bands sounded the same."],
+          "observe_options": [
+            "The thin band made a higher pitch sound.",
+            "The thick band made a higher pitch sound.",
+            "Both bands sounded the same."
+          ],
           "correct_observation": "The thin band made a higher pitch sound.",
           "explain_prompt": "Why does the thin band have a higher pitch?",
-          "explain_options": ["It vibrates faster, creating more frequent sound waves.", "It is lighter.", "It is stretched more tightly."],
+          "explain_options": [
+            "It vibrates faster, creating more frequent sound waves.",
+            "It is lighter.",
+            "It is stretched more tightly."
+          ],
           "correct_explanation": "It vibrates faster, creating more frequent sound waves."
         },
-        { "id": "kl161", "prompt": "What causes sound?",                                    "mechanic": "tap_select", "answer": "Vibrations — objects moving back and forth rapidly.", "distractors": ["Air moving in one direction.", "Light bouncing off objects.", "Objects getting hot."] },
-        { "id": "kl162", "prompt": "How is a loud sound different from a soft sound?",      "mechanic": "tap_select", "answer": "A loud sound has a greater amplitude (bigger vibrations).", "distractors": ["A loud sound travels faster.", "A loud sound has a higher pitch.", "A loud sound only travels in water."] },
-        { "id": "kl163", "prompt": "How is a high-pitched sound different from a low-pitched sound?", "mechanic": "tap_select", "answer": "A high pitch has faster vibrations (higher frequency).", "distractors": ["A high pitch is always louder.", "A high pitch travels slower.", "A high pitch is made only by big objects."] }
+        {
+          "id": "kl161",
+          "prompt": "What causes sound?",
+          "mechanic": "tap_select",
+          "answer": "Vibrations — objects moving back and forth rapidly.",
+          "distractors": [
+            "Air moving in one direction.",
+            "Light bouncing off objects.",
+            "Objects getting hot."
+          ]
+        },
+        {
+          "id": "kl162",
+          "prompt": "How is a loud sound different from a soft sound?",
+          "mechanic": "tap_select",
+          "answer": "A loud sound has a greater amplitude (bigger vibrations).",
+          "distractors": [
+            "A loud sound travels faster.",
+            "A loud sound has a higher pitch.",
+            "A loud sound only travels in water."
+          ]
+        },
+        {
+          "id": "kl163",
+          "prompt": "How is a high-pitched sound different from a low-pitched sound?",
+          "mechanic": "tap_select",
+          "answer": "A high pitch has faster vibrations (higher frequency).",
+          "distractors": [
+            "A high pitch is always louder.",
+            "A high pitch travels slower.",
+            "A high pitch is made only by big objects."
+          ]
+        }
+      ]
+    },
+    {
+      "set_id": "predict_and_observe_ext",
+      "curriculum_alias": "predict_and_observe",
+      "grade_id": "jk",
+      "band_id": "band_1",
+      "cognitive_level": "understand",
+      "assessment_type": "formative",
+      "mechanic": "tap_select",
+      "questions": [
+        {
+          "id": "jk_q01",
+          "prompt": "What do plants need to grow?",
+          "answer": "Water and sunlight",
+          "distractors": [
+            "Darkness",
+            "Rocks",
+            "Ice"
+          ]
+        },
+        {
+          "id": "jk_q02",
+          "prompt": "What happens when ice gets warm?",
+          "answer": "It melts",
+          "distractors": [
+            "It freezes",
+            "It gets bigger",
+            "It turns red"
+          ]
+        },
+        {
+          "id": "jk_q03",
+          "prompt": "What do we use our eyes for?",
+          "answer": "Seeing",
+          "distractors": [
+            "Hearing",
+            "Tasting",
+            "Smelling"
+          ]
+        },
+        {
+          "id": "jk_q04",
+          "prompt": "What do we use our ears for?",
+          "answer": "Hearing",
+          "distractors": [
+            "Seeing",
+            "Touching",
+            "Tasting"
+          ]
+        },
+        {
+          "id": "jk_q05",
+          "prompt": "Which one is a living thing?",
+          "answer": "A tree",
+          "distractors": [
+            "A rock",
+            "A chair",
+            "A spoon"
+          ]
+        },
+        {
+          "id": "jk_q06",
+          "prompt": "Which one is NOT a living thing?",
+          "answer": "A table",
+          "distractors": [
+            "A cat",
+            "A flower",
+            "A fish"
+          ]
+        },
+        {
+          "id": "jk_q07",
+          "prompt": "What season comes after winter?",
+          "answer": "Spring",
+          "distractors": [
+            "Summer",
+            "Fall",
+            "Winter"
+          ]
+        },
+        {
+          "id": "jk_q08",
+          "prompt": "What falls from clouds when it rains?",
+          "answer": "Water",
+          "distractors": [
+            "Sand",
+            "Snow",
+            "Leaves"
+          ]
+        },
+        {
+          "id": "jk_q09",
+          "prompt": "What colour are most leaves in summer?",
+          "answer": "Green",
+          "distractors": [
+            "Brown",
+            "White",
+            "Blue"
+          ]
+        },
+        {
+          "id": "jk_q10",
+          "prompt": "What do fish live in?",
+          "answer": "Water",
+          "distractors": [
+            "Sand",
+            "Air",
+            "Trees"
+          ]
+        },
+        {
+          "id": "jk_q11",
+          "prompt": "Which animal has feathers?",
+          "answer": "A bird",
+          "distractors": [
+            "A dog",
+            "A fish",
+            "A frog"
+          ]
+        },
+        {
+          "id": "jk_q12",
+          "prompt": "What do you feel when you touch ice?",
+          "answer": "Cold",
+          "distractors": [
+            "Hot",
+            "Soft",
+            "Loud"
+          ]
+        },
+        {
+          "id": "jk_q13",
+          "prompt": "What gives us light during the day?",
+          "answer": "The sun",
+          "distractors": [
+            "The moon",
+            "Stars",
+            "A lamp"
+          ]
+        },
+        {
+          "id": "jk_q14",
+          "prompt": "Where do apples grow?",
+          "answer": "On trees",
+          "distractors": [
+            "Under water",
+            "In the ground",
+            "On the roof"
+          ]
+        },
+        {
+          "id": "jk_q15",
+          "prompt": "What happens when you push a ball?",
+          "answer": "It rolls",
+          "distractors": [
+            "It flies up",
+            "It disappears",
+            "It grows"
+          ]
+        },
+        {
+          "id": "jk_q16",
+          "prompt": "Which one can fly?",
+          "answer": "A butterfly",
+          "distractors": [
+            "A snail",
+            "A worm",
+            "A rock"
+          ]
+        },
+        {
+          "id": "jk_q17",
+          "prompt": "What do we breathe?",
+          "answer": "Air",
+          "distractors": [
+            "Water",
+            "Sand",
+            "Juice"
+          ]
+        },
+        {
+          "id": "jk_q18",
+          "prompt": "What covers a fish's body?",
+          "answer": "Scales",
+          "distractors": [
+            "Fur",
+            "Feathers",
+            "Leaves"
+          ]
+        },
+        {
+          "id": "jk_q19",
+          "prompt": "What shape is a ball?",
+          "answer": "Round",
+          "distractors": [
+            "Square",
+            "Triangle",
+            "Flat"
+          ]
+        }
+      ]
+    },
+    {
+      "set_id": "communicate_findings_ext",
+      "curriculum_alias": "communicate_findings",
+      "grade_id": "sk",
+      "band_id": "band_1",
+      "cognitive_level": "understand",
+      "assessment_type": "formative",
+      "mechanic": "tap_select",
+      "questions": [
+        {
+          "id": "sk_q01",
+          "prompt": "What happens to a puddle on a hot day?",
+          "answer": "It dries up",
+          "distractors": [
+            "It freezes",
+            "It gets bigger",
+            "It turns green"
+          ]
+        },
+        {
+          "id": "sk_q02",
+          "prompt": "What do seeds need to sprout?",
+          "answer": "Water and warmth",
+          "distractors": [
+            "Ice and darkness",
+            "Rocks and sand",
+            "Wind and snow"
+          ]
+        },
+        {
+          "id": "sk_q03",
+          "prompt": "What makes a shadow?",
+          "answer": "Blocking light",
+          "distractors": [
+            "Making noise",
+            "Getting wet",
+            "Being cold"
+          ]
+        },
+        {
+          "id": "sk_q04",
+          "prompt": "What happens to butter on a hot pan?",
+          "answer": "It melts",
+          "distractors": [
+            "It freezes",
+            "It bounces",
+            "It grows"
+          ]
+        },
+        {
+          "id": "sk_q05",
+          "prompt": "Which material is hard?",
+          "answer": "A rock",
+          "distractors": [
+            "A pillow",
+            "A sponge",
+            "A feather"
+          ]
+        },
+        {
+          "id": "sk_q06",
+          "prompt": "Which material is soft?",
+          "answer": "Cotton",
+          "distractors": [
+            "Glass",
+            "Metal",
+            "Wood"
+          ]
+        },
+        {
+          "id": "sk_q07",
+          "prompt": "What season do leaves fall off trees?",
+          "answer": "Autumn",
+          "distractors": [
+            "Spring",
+            "Summer",
+            "Winter"
+          ]
+        },
+        {
+          "id": "sk_q08",
+          "prompt": "Which animal lives underground?",
+          "answer": "A worm",
+          "distractors": [
+            "A bird",
+            "A fish",
+            "A monkey"
+          ]
+        },
+        {
+          "id": "sk_q09",
+          "prompt": "What happens when you mix red and yellow paint?",
+          "answer": "You get orange",
+          "distractors": [
+            "You get green",
+            "You get purple",
+            "You get blue"
+          ]
+        },
+        {
+          "id": "sk_q10",
+          "prompt": "What do caterpillars turn into?",
+          "answer": "Butterflies",
+          "distractors": [
+            "Fish",
+            "Frogs",
+            "Snails"
+          ]
+        },
+        {
+          "id": "sk_q11",
+          "prompt": "What do roots do for a plant?",
+          "answer": "Absorb water",
+          "distractors": [
+            "Make flowers",
+            "Catch sunlight",
+            "Produce seeds"
+          ]
+        },
+        {
+          "id": "sk_q12",
+          "prompt": "Which is the fastest: walking, running, or crawling?",
+          "answer": "Running",
+          "distractors": [
+            "Walking",
+            "Crawling",
+            "Standing"
+          ]
+        },
+        {
+          "id": "sk_q13",
+          "prompt": "What do magnets attract?",
+          "answer": "Metal",
+          "distractors": [
+            "Wood",
+            "Plastic",
+            "Paper"
+          ]
+        },
+        {
+          "id": "sk_q14",
+          "prompt": "What happens when you drop a stone in water?",
+          "answer": "It sinks",
+          "distractors": [
+            "It floats",
+            "It flies",
+            "It melts"
+          ]
+        },
+        {
+          "id": "sk_q15",
+          "prompt": "What does a thermometer measure?",
+          "answer": "Temperature",
+          "distractors": [
+            "Weight",
+            "Length",
+            "Speed"
+          ]
+        },
+        {
+          "id": "sk_q16",
+          "prompt": "Which sense do you use to taste food?",
+          "answer": "Tongue",
+          "distractors": [
+            "Eyes",
+            "Ears",
+            "Hands"
+          ]
+        },
+        {
+          "id": "sk_q17",
+          "prompt": "What happens to water when it gets very cold?",
+          "answer": "It turns to ice",
+          "distractors": [
+            "It boils",
+            "It disappears",
+            "It turns green"
+          ]
+        },
+        {
+          "id": "sk_q18",
+          "prompt": "What do bees collect from flowers?",
+          "answer": "Nectar",
+          "distractors": [
+            "Leaves",
+            "Rocks",
+            "Water"
+          ]
+        },
+        {
+          "id": "sk_q19",
+          "prompt": "Where does rain come from?",
+          "answer": "Clouds",
+          "distractors": [
+            "Trees",
+            "Mountains",
+            "The ground"
+          ]
+        }
+      ]
+    },
+    {
+      "set_id": "energy_materials_gr1_ext",
+      "curriculum_alias": "identify_energy_forms",
+      "grade_id": "grade_1",
+      "band_id": "band_2",
+      "cognitive_level": "understand",
+      "assessment_type": "formative",
+      "mechanic": "tap_select",
+      "questions": [
+        {
+          "id": "g1q01",
+          "prompt": "Which gives off heat?",
+          "answer": "A campfire",
+          "distractors": [
+            "A snowball",
+            "An ice cube",
+            "A fan"
+          ]
+        },
+        {
+          "id": "g1q02",
+          "prompt": "Which is a source of light?",
+          "answer": "A lamp",
+          "distractors": [
+            "A blanket",
+            "A shoe",
+            "A rock"
+          ]
+        },
+        {
+          "id": "g1q03",
+          "prompt": "What type of energy makes things move?",
+          "answer": "Kinetic energy",
+          "distractors": [
+            "Sound energy",
+            "Light energy",
+            "Heat energy"
+          ]
+        },
+        {
+          "id": "g1q04",
+          "prompt": "Which material bends easily?",
+          "answer": "Rubber",
+          "distractors": [
+            "Glass",
+            "Stone",
+            "Metal"
+          ]
+        },
+        {
+          "id": "g1q05",
+          "prompt": "Which material is transparent?",
+          "answer": "Glass",
+          "distractors": [
+            "Wood",
+            "Metal",
+            "Cardboard"
+          ]
+        },
+        {
+          "id": "g1q06",
+          "prompt": "What energy does a guitar make?",
+          "answer": "Sound energy",
+          "distractors": [
+            "Light energy",
+            "Heat energy",
+            "Wind energy"
+          ]
+        },
+        {
+          "id": "g1q07",
+          "prompt": "Which object is magnetic?",
+          "answer": "A paper clip",
+          "distractors": [
+            "A pencil",
+            "An eraser",
+            "A leaf"
+          ]
+        },
+        {
+          "id": "g1q08",
+          "prompt": "What material is a window made of?",
+          "answer": "Glass",
+          "distractors": [
+            "Wood",
+            "Fabric",
+            "Paper"
+          ]
+        },
+        {
+          "id": "g1q09",
+          "prompt": "Which is heavier: a feather or a brick?",
+          "answer": "A brick",
+          "distractors": [
+            "A feather",
+            "They weigh the same",
+            "Neither"
+          ]
+        },
+        {
+          "id": "g1q10",
+          "prompt": "What material keeps you warm in winter?",
+          "answer": "Wool",
+          "distractors": [
+            "Ice",
+            "Tin foil",
+            "Glass"
+          ]
+        },
+        {
+          "id": "g1q11",
+          "prompt": "What happens when you stretch a rubber band?",
+          "answer": "It gets longer",
+          "distractors": [
+            "It breaks in half",
+            "It gets shorter",
+            "It melts"
+          ]
+        },
+        {
+          "id": "g1q12",
+          "prompt": "Which floats on water?",
+          "answer": "A cork",
+          "distractors": [
+            "A coin",
+            "A marble",
+            "A key"
+          ]
+        },
+        {
+          "id": "g1q13",
+          "prompt": "Which material is waterproof?",
+          "answer": "Plastic",
+          "distractors": [
+            "Paper",
+            "Cardboard",
+            "Cotton"
+          ]
+        }
+      ]
+    },
+    {
+      "set_id": "forces_soil_gr3_ext",
+      "curriculum_alias": "push_pull_effects",
+      "grade_id": "grade_3",
+      "band_id": "band_3",
+      "cognitive_level": "understand",
+      "assessment_type": "formative",
+      "mechanic": "tap_select",
+      "questions": [
+        {
+          "id": "g3q01",
+          "prompt": "What force pulls things to the ground?",
+          "answer": "Gravity",
+          "distractors": [
+            "Magnetism",
+            "Friction",
+            "Wind"
+          ]
+        },
+        {
+          "id": "g3q02",
+          "prompt": "What slows down a sliding object?",
+          "answer": "Friction",
+          "distractors": [
+            "Gravity",
+            "Magnetism",
+            "Light"
+          ]
+        },
+        {
+          "id": "g3q03",
+          "prompt": "What happens to soil when you add water?",
+          "answer": "It gets muddy",
+          "distractors": [
+            "It disappears",
+            "It gets lighter",
+            "It floats away"
+          ]
+        },
+        {
+          "id": "g3q04",
+          "prompt": "Which type of soil holds the most water?",
+          "answer": "Clay",
+          "distractors": [
+            "Sand",
+            "Gravel",
+            "Pebbles"
+          ]
+        },
+        {
+          "id": "g3q05",
+          "prompt": "What lives in soil and helps plants grow?",
+          "answer": "Worms",
+          "distractors": [
+            "Fish",
+            "Birds",
+            "Frogs"
+          ]
+        },
+        {
+          "id": "g3q06",
+          "prompt": "What is a push?",
+          "answer": "Moving something away from you",
+          "distractors": [
+            "Pulling something closer",
+            "Lifting something up",
+            "Spinning in a circle"
+          ]
+        },
+        {
+          "id": "g3q07",
+          "prompt": "What is a pull?",
+          "answer": "Moving something toward you",
+          "distractors": [
+            "Pushing something away",
+            "Throwing something up",
+            "Dropping something"
+          ]
+        },
+        {
+          "id": "g3q08",
+          "prompt": "Which surface has the most friction?",
+          "answer": "Sandpaper",
+          "distractors": [
+            "Ice",
+            "Glass",
+            "Wet tile"
+          ]
+        },
+        {
+          "id": "g3q09",
+          "prompt": "What makes soil dark and rich?",
+          "answer": "Decomposed plants and animals",
+          "distractors": [
+            "Rocks",
+            "Salt",
+            "Sunlight"
+          ]
+        },
+        {
+          "id": "g3q10",
+          "prompt": "What is the top layer of earth called?",
+          "answer": "Soil",
+          "distractors": [
+            "Lava",
+            "Ocean",
+            "Air"
+          ]
+        },
+        {
+          "id": "g3q11",
+          "prompt": "What force do magnets use?",
+          "answer": "Magnetic force",
+          "distractors": [
+            "Gravity",
+            "Friction",
+            "Elastic force"
+          ]
+        },
+        {
+          "id": "g3q12",
+          "prompt": "What happens when you kick a ball harder?",
+          "answer": "It goes farther",
+          "distractors": [
+            "It stops sooner",
+            "It gets heavier",
+            "It shrinks"
+          ]
+        },
+        {
+          "id": "g3q13",
+          "prompt": "What do earthworms do to soil?",
+          "answer": "They mix and aerate it",
+          "distractors": [
+            "They eat all the soil",
+            "They freeze the soil",
+            "They dry it out"
+          ]
+        },
+        {
+          "id": "g3q14",
+          "prompt": "What type of force does a spring use?",
+          "answer": "Elastic force",
+          "distractors": [
+            "Gravity",
+            "Friction",
+            "Magnetic force"
+          ]
+        }
+      ]
+    },
+    {
+      "set_id": "habitats_light_sound_gr4_ext",
+      "curriculum_alias": "light_properties",
+      "grade_id": "grade_4",
+      "band_id": "band_3",
+      "cognitive_level": "understand",
+      "assessment_type": "formative",
+      "mechanic": "tap_select",
+      "questions": [
+        {
+          "id": "g4q01",
+          "prompt": "What does light travel in?",
+          "answer": "Straight lines",
+          "distractors": [
+            "Circles",
+            "Zigzags",
+            "Curves"
+          ]
+        },
+        {
+          "id": "g4q02",
+          "prompt": "What happens when light hits a mirror?",
+          "answer": "It reflects",
+          "distractors": [
+            "It disappears",
+            "It slows down",
+            "It melts"
+          ]
+        },
+        {
+          "id": "g4q03",
+          "prompt": "Which material lets light pass through?",
+          "answer": "Clear glass",
+          "distractors": [
+            "Cardboard",
+            "Metal",
+            "Wood"
+          ]
+        },
+        {
+          "id": "g4q04",
+          "prompt": "What causes an echo?",
+          "answer": "Sound bouncing off a surface",
+          "distractors": [
+            "Light reflecting",
+            "Wind blowing",
+            "Water flowing"
+          ]
+        },
+        {
+          "id": "g4q05",
+          "prompt": "Sound travels fastest through which material?",
+          "answer": "Metal",
+          "distractors": [
+            "Air",
+            "Water",
+            "Cotton"
+          ]
+        },
+        {
+          "id": "g4q06",
+          "prompt": "What role does a producer have in a food web?",
+          "answer": "Makes its own food from sunlight",
+          "distractors": [
+            "Eats other animals",
+            "Breaks down dead matter",
+            "Hunts for prey"
+          ]
+        },
+        {
+          "id": "g4q07",
+          "prompt": "What is a decomposer?",
+          "answer": "An organism that breaks down dead matter",
+          "distractors": [
+            "An animal that hunts prey",
+            "A plant that grows tall",
+            "A bird that flies south"
+          ]
+        },
+        {
+          "id": "g4q08",
+          "prompt": "Which is a consumer?",
+          "answer": "A rabbit",
+          "distractors": [
+            "A tree",
+            "Grass",
+            "A sunflower"
+          ]
+        },
+        {
+          "id": "g4q09",
+          "prompt": "What happens if one animal disappears from a food web?",
+          "answer": "Other animals are affected",
+          "distractors": [
+            "Nothing changes",
+            "The web gets stronger",
+            "Plants disappear too"
+          ]
+        },
+        {
+          "id": "g4q10",
+          "prompt": "Which is an example of a producer?",
+          "answer": "Grass",
+          "distractors": [
+            "A fox",
+            "A mushroom",
+            "A hawk"
+          ]
+        },
+        {
+          "id": "g4q11",
+          "prompt": "What vibrates to make sound?",
+          "answer": "Objects",
+          "distractors": [
+            "Light",
+            "Shadows",
+            "Colours"
+          ]
+        }
       ]
     }
   ]
