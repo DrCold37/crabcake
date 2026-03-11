@@ -1493,7 +1493,7 @@
 
   <!-- CTA -->
   <section class="cta-section">
-    <h2>Ready to Dive In? <img src="/images/crab-abc.webp" width="64" height="64" alt="Crabcake" style="vertical-align:middle;margin-left:8px;"/></h2>
+    <h2>Ready to Dive In? <img src="/images/crab-abc.webp" width="64" height="64" alt="Crabcake" loading="lazy" decoding="async" style="vertical-align:middle;margin-left:8px;"/></h2>
     <p>Join other kids already playing and learning on Crabcake every day!</p>
   </section>
 
@@ -1833,11 +1833,13 @@
       if(navHud){
         CrabcakeAvatar.injectHUD(navHud, {size:52, showPet:true});
         function applyHudLayout() {
-          if(window.innerWidth <= 600) {
-            navHud.style.cssText = "display:inline-flex;flex-shrink:0;";
-          } else {
-            navHud.style.cssText = "display:inline-flex;position:absolute;left:50%;transform:translateX(-50%);flex-shrink:0;";
-          }
+          requestAnimationFrame(function(){
+            if(window.innerWidth <= 600) {
+              navHud.style.cssText = "display:inline-flex;flex-shrink:0;";
+            } else {
+              navHud.style.cssText = "display:inline-flex;position:absolute;left:50%;transform:translateX(-50%);flex-shrink:0;";
+            }
+          });
         }
         applyHudLayout();
         window.addEventListener('resize', applyHudLayout);
