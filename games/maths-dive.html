@@ -1354,7 +1354,7 @@ function buildActivePool() {
 
     // ── FETCH AND BUILD GRADE-TIERED POOLS ─────────────────────────────────
     try {
-      const resp = await fetch('/data/math-dive-questions.json');
+      const resp = await fetch('/data/math-dive-questions.json?v=2');
       if (!resp.ok) throw new Error('fetch failed');
       const data = await resp.json();
 
