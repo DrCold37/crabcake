@@ -1899,8 +1899,10 @@ function drawObject(obj, wx) {
   ctx.textBaseline = 'middle';
   ctx.fillText(displayEmoji, wx, obj.y - obj.size * 0.12);
 
-  // Value
-  ctx.font = `900 ${obj.size * 0.32}px 'Boogaloo', cursive`;
+  // Value — larger for single digits
+  const isSingleDigit = String(obj.value).length === 1;
+  const valSize = isSingleDigit ? obj.size * 0.44 : obj.size * 0.32;
+  ctx.font = `900 ${valSize}px 'Boogaloo', cursive`;
   ctx.fillStyle = isFlashing ? '#4ECB71' : 'rgba(255,255,255,0.85)';
   ctx.shadowColor = 'rgba(0,0,0,0.5)';
   ctx.shadowBlur = 4;
