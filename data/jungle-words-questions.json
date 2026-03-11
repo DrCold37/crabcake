@@ -2,9 +2,12 @@
   "schema_version": "1.1",
   "game_id": "jungle-words",
   "version": "1.0",
-  "last_updated": "2026-03-06",
+  "last_updated": "2026-03-10",
   "description": "Question sets for Jungle Words. Covers both phonics (Science of Reading scope sequence) and grammar/sentence building. The game engine uses the 'domain' field on each set to determine session type — phonics sessions, grammar sessions, or a mixed mode. All sets follow the Ontario Language 2023 curriculum scope and prerequisite chain.",
-  "domains": ["phonics", "grammar"],
+  "domains": [
+    "phonics",
+    "grammar"
+  ],
   "progression_rules": {
     "warm_up_from_previous_band": true,
     "warm_up_percentage": 0.25,
@@ -13,9 +16,670 @@
     "note": "Phonics sets must be served in scope sequence — the prerequisite_alias chain in the curriculum file enforces this. Grammar sets follow the same prerequisite logic. The game engine should respect both chains independently per domain."
   },
   "question_sets": [
-
-    // ─── DOMAIN: PHONICS ───────────────────────────────────────────────────────
-
+    {
+      "set_id": "spell_cvc_jk",
+      "curriculum_alias": "concepts_of_print_jk",
+      "grade_id": "jk",
+      "band_id": "band_1",
+      "cognitive_level": "remember",
+      "assessment_type": "formative",
+      "domain": "phonics",
+      "mechanic": "drag_and_drop",
+      "questions": [
+        {
+          "id": "jk_sp001",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/cat.webp",
+          "tiles": [
+            "T",
+            "C",
+            "A"
+          ],
+          "answer": [
+            "C",
+            "A",
+            "T"
+          ]
+        },
+        {
+          "id": "jk_sp002",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/dog.webp",
+          "tiles": [
+            "O",
+            "D",
+            "G"
+          ],
+          "answer": [
+            "D",
+            "O",
+            "G"
+          ]
+        },
+        {
+          "id": "jk_sp003",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/sun.webp",
+          "tiles": [
+            "N",
+            "S",
+            "U"
+          ],
+          "answer": [
+            "S",
+            "U",
+            "N"
+          ]
+        },
+        {
+          "id": "jk_sp004",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/hat.webp",
+          "tiles": [
+            "A",
+            "H",
+            "T"
+          ],
+          "answer": [
+            "H",
+            "A",
+            "T"
+          ]
+        },
+        {
+          "id": "jk_sp005",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/cup.webp",
+          "tiles": [
+            "U",
+            "C",
+            "P"
+          ],
+          "answer": [
+            "C",
+            "U",
+            "P"
+          ]
+        },
+        {
+          "id": "jk_sp006",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/bus.webp",
+          "tiles": [
+            "S",
+            "B",
+            "U"
+          ],
+          "answer": [
+            "B",
+            "U",
+            "S"
+          ]
+        },
+        {
+          "id": "jk_sp007",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/pig.webp",
+          "tiles": [
+            "G",
+            "P",
+            "I"
+          ],
+          "answer": [
+            "P",
+            "I",
+            "G"
+          ]
+        },
+        {
+          "id": "jk_sp008",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/bed.webp",
+          "tiles": [
+            "E",
+            "B",
+            "D"
+          ],
+          "answer": [
+            "B",
+            "E",
+            "D"
+          ]
+        },
+        {
+          "id": "jk_sp009",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/box.webp",
+          "tiles": [
+            "X",
+            "B",
+            "O"
+          ],
+          "answer": [
+            "B",
+            "O",
+            "X"
+          ]
+        },
+        {
+          "id": "jk_sp010",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/map.webp",
+          "tiles": [
+            "P",
+            "M",
+            "A"
+          ],
+          "answer": [
+            "M",
+            "A",
+            "P"
+          ]
+        },
+        {
+          "id": "jk_sp011",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/bat.webp",
+          "tiles": [
+            "A",
+            "T",
+            "B"
+          ],
+          "answer": [
+            "B",
+            "A",
+            "T"
+          ]
+        },
+        {
+          "id": "jk_sp012",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/hen.webp",
+          "tiles": [
+            "N",
+            "H",
+            "E"
+          ],
+          "answer": [
+            "H",
+            "E",
+            "N"
+          ]
+        },
+        {
+          "id": "jk_sp013",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/fox.webp",
+          "tiles": [
+            "O",
+            "X",
+            "F"
+          ],
+          "answer": [
+            "F",
+            "O",
+            "X"
+          ]
+        },
+        {
+          "id": "jk_sp014",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/rug.webp",
+          "tiles": [
+            "G",
+            "R",
+            "U"
+          ],
+          "answer": [
+            "R",
+            "U",
+            "G"
+          ]
+        },
+        {
+          "id": "jk_sp015",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/jam.webp",
+          "tiles": [
+            "M",
+            "J",
+            "A"
+          ],
+          "answer": [
+            "J",
+            "A",
+            "M"
+          ]
+        },
+        {
+          "id": "jk_sp016",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/net.webp",
+          "tiles": [
+            "T",
+            "N",
+            "E"
+          ],
+          "answer": [
+            "N",
+            "E",
+            "T"
+          ]
+        },
+        {
+          "id": "jk_sp017",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/van.webp",
+          "tiles": [
+            "N",
+            "V",
+            "A"
+          ],
+          "answer": [
+            "V",
+            "A",
+            "N"
+          ]
+        },
+        {
+          "id": "jk_sp018",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/log.webp",
+          "tiles": [
+            "G",
+            "L",
+            "O"
+          ],
+          "answer": [
+            "L",
+            "O",
+            "G"
+          ]
+        },
+        {
+          "id": "jk_sp019",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/mop.webp",
+          "tiles": [
+            "P",
+            "M",
+            "O"
+          ],
+          "answer": [
+            "M",
+            "O",
+            "P"
+          ]
+        },
+        {
+          "id": "jk_sp020",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/pan.webp",
+          "tiles": [
+            "N",
+            "P",
+            "A"
+          ],
+          "answer": [
+            "P",
+            "A",
+            "N"
+          ]
+        }
+      ]
+    },
+    {
+      "set_id": "spell_4letter_sk",
+      "curriculum_alias": "letter_name_sound_sk",
+      "grade_id": "sk",
+      "band_id": "band_1",
+      "cognitive_level": "remember",
+      "assessment_type": "formative",
+      "domain": "phonics",
+      "mechanic": "drag_and_drop",
+      "questions": [
+        {
+          "id": "sk_sp001",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/fish.webp",
+          "tiles": [
+            "S",
+            "F",
+            "H",
+            "I"
+          ],
+          "answer": [
+            "F",
+            "I",
+            "S",
+            "H"
+          ]
+        },
+        {
+          "id": "sk_sp002",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/duck.webp",
+          "tiles": [
+            "C",
+            "D",
+            "K",
+            "U"
+          ],
+          "answer": [
+            "D",
+            "U",
+            "C",
+            "K"
+          ]
+        },
+        {
+          "id": "sk_sp003",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/frog.webp",
+          "tiles": [
+            "O",
+            "F",
+            "G",
+            "R"
+          ],
+          "answer": [
+            "F",
+            "R",
+            "O",
+            "G"
+          ]
+        },
+        {
+          "id": "sk_sp004",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/tree.webp",
+          "tiles": [
+            "E",
+            "T",
+            "E",
+            "R"
+          ],
+          "answer": [
+            "T",
+            "R",
+            "E",
+            "E"
+          ]
+        },
+        {
+          "id": "sk_sp005",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/cake.webp",
+          "tiles": [
+            "K",
+            "C",
+            "E",
+            "A"
+          ],
+          "answer": [
+            "C",
+            "A",
+            "K",
+            "E"
+          ]
+        },
+        {
+          "id": "sk_sp006",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/star.webp",
+          "tiles": [
+            "T",
+            "S",
+            "R",
+            "A"
+          ],
+          "answer": [
+            "S",
+            "T",
+            "A",
+            "R"
+          ]
+        },
+        {
+          "id": "sk_sp007",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/bear.webp",
+          "tiles": [
+            "A",
+            "B",
+            "R",
+            "E"
+          ],
+          "answer": [
+            "B",
+            "E",
+            "A",
+            "R"
+          ]
+        },
+        {
+          "id": "sk_sp008",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/moon.webp",
+          "tiles": [
+            "O",
+            "M",
+            "N",
+            "O"
+          ],
+          "answer": [
+            "M",
+            "O",
+            "O",
+            "N"
+          ]
+        },
+        {
+          "id": "sk_sp009",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/book.webp",
+          "tiles": [
+            "O",
+            "B",
+            "K",
+            "O"
+          ],
+          "answer": [
+            "B",
+            "O",
+            "O",
+            "K"
+          ]
+        },
+        {
+          "id": "sk_sp010",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/drum.webp",
+          "tiles": [
+            "U",
+            "D",
+            "M",
+            "R"
+          ],
+          "answer": [
+            "D",
+            "R",
+            "U",
+            "M"
+          ]
+        },
+        {
+          "id": "sk_sp011",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/lamp.webp",
+          "tiles": [
+            "M",
+            "L",
+            "P",
+            "A"
+          ],
+          "answer": [
+            "L",
+            "A",
+            "M",
+            "P"
+          ]
+        },
+        {
+          "id": "sk_sp012",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/nest.webp",
+          "tiles": [
+            "S",
+            "N",
+            "T",
+            "E"
+          ],
+          "answer": [
+            "N",
+            "E",
+            "S",
+            "T"
+          ]
+        },
+        {
+          "id": "sk_sp013",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/ship.webp",
+          "tiles": [
+            "H",
+            "S",
+            "P",
+            "I"
+          ],
+          "answer": [
+            "S",
+            "H",
+            "I",
+            "P"
+          ]
+        },
+        {
+          "id": "sk_sp014",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/ring.webp",
+          "tiles": [
+            "N",
+            "R",
+            "G",
+            "I"
+          ],
+          "answer": [
+            "R",
+            "I",
+            "N",
+            "G"
+          ]
+        },
+        {
+          "id": "sk_sp015",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/wolf.webp",
+          "tiles": [
+            "L",
+            "W",
+            "F",
+            "O"
+          ],
+          "answer": [
+            "W",
+            "O",
+            "L",
+            "F"
+          ]
+        },
+        {
+          "id": "sk_sp016",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/kite.webp",
+          "tiles": [
+            "T",
+            "K",
+            "E",
+            "I"
+          ],
+          "answer": [
+            "K",
+            "I",
+            "T",
+            "E"
+          ]
+        },
+        {
+          "id": "sk_sp017",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/leaf.webp",
+          "tiles": [
+            "A",
+            "L",
+            "F",
+            "E"
+          ],
+          "answer": [
+            "L",
+            "E",
+            "A",
+            "F"
+          ]
+        },
+        {
+          "id": "sk_sp018",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/corn.webp",
+          "tiles": [
+            "R",
+            "C",
+            "N",
+            "O"
+          ],
+          "answer": [
+            "C",
+            "O",
+            "R",
+            "N"
+          ]
+        },
+        {
+          "id": "sk_sp019",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/bell.webp",
+          "tiles": [
+            "L",
+            "B",
+            "L",
+            "E"
+          ],
+          "answer": [
+            "B",
+            "E",
+            "L",
+            "L"
+          ]
+        },
+        {
+          "id": "sk_sp020",
+          "prompt": "Spell the word!",
+          "image": "/images/jungle-words/sock.webp",
+          "tiles": [
+            "C",
+            "S",
+            "K",
+            "O"
+          ],
+          "answer": [
+            "S",
+            "O",
+            "C",
+            "K"
+          ]
+        }
+      ]
+    },
     {
       "set_id": "rhyme_syllable_rhythm",
       "domain": "phonics",
@@ -27,15 +691,96 @@
       "mechanic": "tap_select",
       "instructions": "Tap the word that rhymes.",
       "questions": [
-        { "id": "jw001", "prompt": "Which word rhymes with CAT?",  "answer": "hat",  "distractors": ["dog", "cup", "tree"] },
-        { "id": "jw002", "prompt": "Which word rhymes with BIG?",  "answer": "pig",  "distractors": ["cat", "run", "sun"] },
-        { "id": "jw003", "prompt": "Which word rhymes with SUN?",  "answer": "fun",  "distractors": ["hat", "big", "cat"] },
-        { "id": "jw004", "prompt": "Which word rhymes with HOP?",  "answer": "top",  "distractors": ["sit", "bag", "hen"] },
-        { "id": "jw005", "prompt": "Which word rhymes with CAKE?", "answer": "lake", "distractors": ["dog", "run", "hop"] },
-        { "id": "jw006", "prompt": "Clap the syllables. How many syllables does BUTTERFLY have?", "answer": 3, "distractors": [1, 2, 4] },
-        { "id": "jw007", "prompt": "How many syllables does ELEPHANT have?",                       "answer": 3, "distractors": [1, 2, 4] },
-        { "id": "jw008", "prompt": "How many syllables does DOG have?",                            "answer": 1, "distractors": [2, 3, 4] },
-        { "id": "jw009", "prompt": "How many syllables does RAINBOW have?",                        "answer": 2, "distractors": [1, 3, 4] }
+        {
+          "id": "jw001",
+          "prompt": "Which word rhymes with CAT?",
+          "answer": "hat",
+          "distractors": [
+            "dog",
+            "cup",
+            "tree"
+          ]
+        },
+        {
+          "id": "jw002",
+          "prompt": "Which word rhymes with BIG?",
+          "answer": "pig",
+          "distractors": [
+            "cat",
+            "run",
+            "sun"
+          ]
+        },
+        {
+          "id": "jw003",
+          "prompt": "Which word rhymes with SUN?",
+          "answer": "fun",
+          "distractors": [
+            "hat",
+            "big",
+            "cat"
+          ]
+        },
+        {
+          "id": "jw004",
+          "prompt": "Which word rhymes with HOP?",
+          "answer": "top",
+          "distractors": [
+            "sit",
+            "bag",
+            "hen"
+          ]
+        },
+        {
+          "id": "jw005",
+          "prompt": "Which word rhymes with CAKE?",
+          "answer": "lake",
+          "distractors": [
+            "dog",
+            "run",
+            "hop"
+          ]
+        },
+        {
+          "id": "jw006",
+          "prompt": "Clap the syllables. How many syllables does BUTTERFLY have?",
+          "answer": 3,
+          "distractors": [
+            1,
+            2,
+            4
+          ]
+        },
+        {
+          "id": "jw007",
+          "prompt": "How many syllables does ELEPHANT have?",
+          "answer": 3,
+          "distractors": [
+            1,
+            2,
+            4
+          ]
+        },
+        {
+          "id": "jw008",
+          "prompt": "How many syllables does DOG have?",
+          "answer": 1,
+          "distractors": [
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "id": "jw009",
+          "prompt": "How many syllables does RAINBOW have?",
+          "answer": 2,
+          "distractors": [
+            1,
+            3,
+            4
+          ]
+        }
       ]
     },
     {
@@ -49,15 +794,96 @@
       "mechanic": "tap_select",
       "instructions": "Tap the letter that makes this sound, or tap the sound that this letter makes.",
       "questions": [
-        { "id": "jw020", "prompt": "What sound does the letter S make?",   "answer": "/s/",  "distractors": ["/t/", "/m/", "/f/"] },
-        { "id": "jw021", "prompt": "What sound does the letter M make?",   "answer": "/m/",  "distractors": ["/s/", "/p/", "/b/"] },
-        { "id": "jw022", "prompt": "What sound does the letter T make?",   "answer": "/t/",  "distractors": ["/d/", "/s/", "/p/"] },
-        { "id": "jw023", "prompt": "Which letter makes the /f/ sound?",    "answer": "f",    "distractors": ["v", "p", "t"] },
-        { "id": "jw024", "prompt": "Which letter makes the /b/ sound?",    "answer": "b",    "distractors": ["d", "p", "q"] },
-        { "id": "jw025", "prompt": "Which letter makes the /k/ sound?",    "answer": "c",    "distractors": ["g", "s", "q"] },
-        { "id": "jw026", "prompt": "What sound does the letter R make?",   "answer": "/r/",  "distractors": ["/w/", "/l/", "/n/"] },
-        { "id": "jw027", "prompt": "Which word begins with the letter D?", "answer": "duck", "distractors": ["frog", "bear", "cat"] },
-        { "id": "jw028", "prompt": "Which word begins with the letter H?", "answer": "hat",  "distractors": ["mat", "bat", "cat"] }
+        {
+          "id": "jw020",
+          "prompt": "What sound does the letter S make?",
+          "answer": "/s/",
+          "distractors": [
+            "/t/",
+            "/m/",
+            "/f/"
+          ]
+        },
+        {
+          "id": "jw021",
+          "prompt": "What sound does the letter M make?",
+          "answer": "/m/",
+          "distractors": [
+            "/s/",
+            "/p/",
+            "/b/"
+          ]
+        },
+        {
+          "id": "jw022",
+          "prompt": "What sound does the letter T make?",
+          "answer": "/t/",
+          "distractors": [
+            "/d/",
+            "/s/",
+            "/p/"
+          ]
+        },
+        {
+          "id": "jw023",
+          "prompt": "Which letter makes the /f/ sound?",
+          "answer": "f",
+          "distractors": [
+            "v",
+            "p",
+            "t"
+          ]
+        },
+        {
+          "id": "jw024",
+          "prompt": "Which letter makes the /b/ sound?",
+          "answer": "b",
+          "distractors": [
+            "d",
+            "p",
+            "q"
+          ]
+        },
+        {
+          "id": "jw025",
+          "prompt": "Which letter makes the /k/ sound?",
+          "answer": "c",
+          "distractors": [
+            "g",
+            "s",
+            "q"
+          ]
+        },
+        {
+          "id": "jw026",
+          "prompt": "What sound does the letter R make?",
+          "answer": "/r/",
+          "distractors": [
+            "/w/",
+            "/l/",
+            "/n/"
+          ]
+        },
+        {
+          "id": "jw027",
+          "prompt": "Which word begins with the letter D?",
+          "answer": "duck",
+          "distractors": [
+            "frog",
+            "bear",
+            "cat"
+          ]
+        },
+        {
+          "id": "jw028",
+          "prompt": "Which word begins with the letter H?",
+          "answer": "hat",
+          "distractors": [
+            "mat",
+            "bat",
+            "cat"
+          ]
+        }
       ]
     },
     {
@@ -71,16 +897,106 @@
       "mechanic": "tap_select",
       "instructions": "Listen to the word. Answer the question about its sounds.",
       "questions": [
-        { "id": "jw030", "prompt": "What is the FIRST sound in SIT?",                               "answer": "/s/", "distractors": ["/i/", "/t/", "/a/"] },
-        { "id": "jw031", "prompt": "What is the LAST sound in CUP?",                                "answer": "/p/", "distractors": ["/c/", "/u/", "/t/"] },
-        { "id": "jw032", "prompt": "What is the MIDDLE sound in PIG?",                              "answer": "/i/", "distractors": ["/p/", "/g/", "/a/"] },
-        { "id": "jw033", "prompt": "What is the FIRST sound in FAN?",                               "answer": "/f/", "distractors": ["/a/", "/n/", "/v/"] },
-        { "id": "jw034", "prompt": "What is the LAST sound in HAT?",                                "answer": "/t/", "distractors": ["/h/", "/a/", "/d/"] },
-        { "id": "jw035", "prompt": "Blend these sounds: /d/ /o/ /g/. What word do they make?",      "answer": "dog",  "distractors": ["dig", "dug", "log"] },
-        { "id": "jw036", "prompt": "Blend these sounds: /c/ /a/ /t/. What word do they make?",      "answer": "cat",  "distractors": ["bat", "cup", "cot"] },
-        { "id": "jw037", "prompt": "Blend these sounds: /s/ /u/ /n/. What word do they make?",      "answer": "sun",  "distractors": ["son", "run", "fun"] },
-        { "id": "jw038", "prompt": "How many sounds are in the word MAN?",                          "answer": 3, "distractors": [1, 2, 4] },
-        { "id": "jw039", "prompt": "How many sounds are in the word SHIP?",                         "answer": 3, "distractors": [2, 4, 5] }
+        {
+          "id": "jw030",
+          "prompt": "What is the FIRST sound in SIT?",
+          "answer": "/s/",
+          "distractors": [
+            "/i/",
+            "/t/",
+            "/a/"
+          ]
+        },
+        {
+          "id": "jw031",
+          "prompt": "What is the LAST sound in CUP?",
+          "answer": "/p/",
+          "distractors": [
+            "/c/",
+            "/u/",
+            "/t/"
+          ]
+        },
+        {
+          "id": "jw032",
+          "prompt": "What is the MIDDLE sound in PIG?",
+          "answer": "/i/",
+          "distractors": [
+            "/p/",
+            "/g/",
+            "/a/"
+          ]
+        },
+        {
+          "id": "jw033",
+          "prompt": "What is the FIRST sound in FAN?",
+          "answer": "/f/",
+          "distractors": [
+            "/a/",
+            "/n/",
+            "/v/"
+          ]
+        },
+        {
+          "id": "jw034",
+          "prompt": "What is the LAST sound in HAT?",
+          "answer": "/t/",
+          "distractors": [
+            "/h/",
+            "/a/",
+            "/d/"
+          ]
+        },
+        {
+          "id": "jw035",
+          "prompt": "Blend these sounds: /d/ /o/ /g/. What word do they make?",
+          "answer": "dog",
+          "distractors": [
+            "dig",
+            "dug",
+            "log"
+          ]
+        },
+        {
+          "id": "jw036",
+          "prompt": "Blend these sounds: /c/ /a/ /t/. What word do they make?",
+          "answer": "cat",
+          "distractors": [
+            "bat",
+            "cup",
+            "cot"
+          ]
+        },
+        {
+          "id": "jw037",
+          "prompt": "Blend these sounds: /s/ /u/ /n/. What word do they make?",
+          "answer": "sun",
+          "distractors": [
+            "son",
+            "run",
+            "fun"
+          ]
+        },
+        {
+          "id": "jw038",
+          "prompt": "How many sounds are in the word MAN?",
+          "answer": 3,
+          "distractors": [
+            1,
+            2,
+            4
+          ]
+        },
+        {
+          "id": "jw039",
+          "prompt": "How many sounds are in the word SHIP?",
+          "answer": 3,
+          "distractors": [
+            2,
+            4,
+            5
+          ]
+        }
       ]
     },
     {
@@ -94,14 +1010,142 @@
       "mechanic": "drag_and_drop",
       "instructions": "Drag the letter tiles to build the word you hear.",
       "questions": [
-        { "id": "jw040", "prompt": "Build the word: CAT",  "letters": ["c","a","t","s","m"],     "answer": ["c","a","t"] },
-        { "id": "jw041", "prompt": "Build the word: RUN",  "letters": ["r","u","n","a","p"],     "answer": ["r","u","n"] },
-        { "id": "jw042", "prompt": "Build the word: HIT",  "letters": ["h","i","t","e","b"],     "answer": ["h","i","t"] },
-        { "id": "jw043", "prompt": "Build the word: MOP",  "letters": ["m","o","p","a","n"],     "answer": ["m","o","p"] },
-        { "id": "jw044", "prompt": "Build the word: FROG", "letters": ["f","r","o","g","l","a"], "answer": ["f","r","o","g"] },
-        { "id": "jw045", "prompt": "Build the word: SLIM", "letters": ["s","l","i","m","a","p"], "answer": ["s","l","i","m"] },
-        { "id": "jw046", "prompt": "Build the word: CLAP", "letters": ["c","l","a","p","t","e"], "answer": ["c","l","a","p"] },
-        { "id": "jw047", "prompt": "Build the word: BEND", "letters": ["b","e","n","d","i","s"], "answer": ["b","e","n","d"] }
+        {
+          "id": "jw040",
+          "prompt": "Build the word: CAT",
+          "letters": [
+            "c",
+            "a",
+            "t",
+            "s",
+            "m"
+          ],
+          "answer": [
+            "c",
+            "a",
+            "t"
+          ]
+        },
+        {
+          "id": "jw041",
+          "prompt": "Build the word: RUN",
+          "letters": [
+            "r",
+            "u",
+            "n",
+            "a",
+            "p"
+          ],
+          "answer": [
+            "r",
+            "u",
+            "n"
+          ]
+        },
+        {
+          "id": "jw042",
+          "prompt": "Build the word: HIT",
+          "letters": [
+            "h",
+            "i",
+            "t",
+            "e",
+            "b"
+          ],
+          "answer": [
+            "h",
+            "i",
+            "t"
+          ]
+        },
+        {
+          "id": "jw043",
+          "prompt": "Build the word: MOP",
+          "letters": [
+            "m",
+            "o",
+            "p",
+            "a",
+            "n"
+          ],
+          "answer": [
+            "m",
+            "o",
+            "p"
+          ]
+        },
+        {
+          "id": "jw044",
+          "prompt": "Build the word: FROG",
+          "letters": [
+            "f",
+            "r",
+            "o",
+            "g",
+            "l",
+            "a"
+          ],
+          "answer": [
+            "f",
+            "r",
+            "o",
+            "g"
+          ]
+        },
+        {
+          "id": "jw045",
+          "prompt": "Build the word: SLIM",
+          "letters": [
+            "s",
+            "l",
+            "i",
+            "m",
+            "a",
+            "p"
+          ],
+          "answer": [
+            "s",
+            "l",
+            "i",
+            "m"
+          ]
+        },
+        {
+          "id": "jw046",
+          "prompt": "Build the word: CLAP",
+          "letters": [
+            "c",
+            "l",
+            "a",
+            "p",
+            "t",
+            "e"
+          ],
+          "answer": [
+            "c",
+            "l",
+            "a",
+            "p"
+          ]
+        },
+        {
+          "id": "jw047",
+          "prompt": "Build the word: BEND",
+          "letters": [
+            "b",
+            "e",
+            "n",
+            "d",
+            "i",
+            "s"
+          ],
+          "answer": [
+            "b",
+            "e",
+            "n",
+            "d"
+          ]
+        }
       ]
     },
     {
@@ -115,17 +1159,132 @@
       "mechanic": "drag_and_drop",
       "instructions": "Drag the correct letters to complete the word.",
       "questions": [
-        { "id": "jw050", "prompt": "Complete the word: _AT (short a)", "answer": "c",  "distractors": ["k","g","t"], "word_shell": "_at",  "phonics_focus": "short_a" },
-        { "id": "jw051", "prompt": "Complete the word: _IP (short i)", "answer": "s",  "distractors": ["k","z","b"], "word_shell": "_ip",  "phonics_focus": "short_i" },
-        { "id": "jw052", "prompt": "Complete the word: _OT (short o)", "answer": "h",  "distractors": ["s","m","t"], "word_shell": "_ot",  "phonics_focus": "short_o" },
-        { "id": "jw053", "prompt": "Complete the word: _UN (short u)", "answer": "r",  "distractors": ["k","z","b"], "word_shell": "_un",  "phonics_focus": "short_u" },
-        { "id": "jw054", "prompt": "Complete the word: _EN (short e)", "answer": "h",  "distractors": ["m","t","b"], "word_shell": "_en",  "phonics_focus": "short_e" },
-        { "id": "jw055", "prompt": "Which letters make the /ch/ sound?",               "answer": "ch", "distractors": ["sh","th","wh"], "phonics_focus": "digraph_ch" },
-        { "id": "jw056", "prompt": "Which letters make the /sh/ sound?",               "answer": "sh", "distractors": ["ch","th","wh"], "phonics_focus": "digraph_sh" },
-        { "id": "jw057", "prompt": "Which letters make the /th/ sound?",               "answer": "th", "distractors": ["ch","sh","wh"], "phonics_focus": "digraph_th" },
-        { "id": "jw058", "prompt": "Read the word. Which digraph do you see? SHIP",    "answer": "sh", "distractors": ["ch","th","wh"], "phonics_focus": "digraph_sh" },
-        { "id": "jw059", "prompt": "Read the word. Which digraph do you see? CHAT",    "answer": "ch", "distractors": ["sh","th","wh"], "phonics_focus": "digraph_ch" },
-        { "id": "jw060", "prompt": "What sound does CK make in DUCK?",                 "answer": "/k/", "distractors": ["/ch/","/s/","/d/"], "phonics_focus": "digraph_ck" }
+        {
+          "id": "jw050",
+          "prompt": "Complete the word: _AT (short a)",
+          "answer": "c",
+          "distractors": [
+            "k",
+            "g",
+            "t"
+          ],
+          "word_shell": "_at",
+          "phonics_focus": "short_a"
+        },
+        {
+          "id": "jw051",
+          "prompt": "Complete the word: _IP (short i)",
+          "answer": "s",
+          "distractors": [
+            "k",
+            "z",
+            "b"
+          ],
+          "word_shell": "_ip",
+          "phonics_focus": "short_i"
+        },
+        {
+          "id": "jw052",
+          "prompt": "Complete the word: _OT (short o)",
+          "answer": "h",
+          "distractors": [
+            "s",
+            "m",
+            "t"
+          ],
+          "word_shell": "_ot",
+          "phonics_focus": "short_o"
+        },
+        {
+          "id": "jw053",
+          "prompt": "Complete the word: _UN (short u)",
+          "answer": "r",
+          "distractors": [
+            "k",
+            "z",
+            "b"
+          ],
+          "word_shell": "_un",
+          "phonics_focus": "short_u"
+        },
+        {
+          "id": "jw054",
+          "prompt": "Complete the word: _EN (short e)",
+          "answer": "h",
+          "distractors": [
+            "m",
+            "t",
+            "b"
+          ],
+          "word_shell": "_en",
+          "phonics_focus": "short_e"
+        },
+        {
+          "id": "jw055",
+          "prompt": "Which letters make the /ch/ sound?",
+          "answer": "ch",
+          "distractors": [
+            "sh",
+            "th",
+            "wh"
+          ],
+          "phonics_focus": "digraph_ch"
+        },
+        {
+          "id": "jw056",
+          "prompt": "Which letters make the /sh/ sound?",
+          "answer": "sh",
+          "distractors": [
+            "ch",
+            "th",
+            "wh"
+          ],
+          "phonics_focus": "digraph_sh"
+        },
+        {
+          "id": "jw057",
+          "prompt": "Which letters make the /th/ sound?",
+          "answer": "th",
+          "distractors": [
+            "ch",
+            "sh",
+            "wh"
+          ],
+          "phonics_focus": "digraph_th"
+        },
+        {
+          "id": "jw058",
+          "prompt": "Read the word. Which digraph do you see? SHIP",
+          "answer": "sh",
+          "distractors": [
+            "ch",
+            "th",
+            "wh"
+          ],
+          "phonics_focus": "digraph_sh"
+        },
+        {
+          "id": "jw059",
+          "prompt": "Read the word. Which digraph do you see? CHAT",
+          "answer": "ch",
+          "distractors": [
+            "sh",
+            "th",
+            "wh"
+          ],
+          "phonics_focus": "digraph_ch"
+        },
+        {
+          "id": "jw060",
+          "prompt": "What sound does CK make in DUCK?",
+          "answer": "/k/",
+          "distractors": [
+            "/ch/",
+            "/s/",
+            "/d/"
+          ],
+          "phonics_focus": "digraph_ck"
+        }
       ]
     },
     {
@@ -139,13 +1298,83 @@
       "mechanic": "fill_in_blank",
       "instructions": "Look at the picture. Select the correct spelling.",
       "questions": [
-        { "id": "jw070", "image_hint": "a red hat",       "prompt": "Spell the word for this picture.", "answer": "hat",  "distractors": ["het","hut","hot"] },
-        { "id": "jw071", "image_hint": "a black cat",     "prompt": "Spell the word for this picture.", "answer": "cat",  "distractors": ["cut","cot","bat"] },
-        { "id": "jw072", "image_hint": "the sun shining", "prompt": "Spell the word for this picture.", "answer": "sun",  "distractors": ["son","sin","san"] },
-        { "id": "jw073", "image_hint": "a brown dog",     "prompt": "Spell the word for this picture.", "answer": "dog",  "distractors": ["dig","dug","bag"] },
-        { "id": "jw074", "image_hint": "a red bus",       "prompt": "Spell the word for this picture.", "answer": "bus",  "distractors": ["bos","bis","but"] },
-        { "id": "jw075", "image_hint": "a blue fish",     "prompt": "Spell the word for this picture.", "answer": "fish", "distractors": ["fash","fush","dish"] },
-        { "id": "jw076", "image_hint": "a white chip",    "prompt": "Spell the word for this picture.", "answer": "chip", "distractors": ["chap","chop","ship"] }
+        {
+          "id": "jw070",
+          "image_hint": "a red hat",
+          "prompt": "Spell the word for this picture.",
+          "answer": "hat",
+          "distractors": [
+            "het",
+            "hut",
+            "hot"
+          ]
+        },
+        {
+          "id": "jw071",
+          "image_hint": "a black cat",
+          "prompt": "Spell the word for this picture.",
+          "answer": "cat",
+          "distractors": [
+            "cut",
+            "cot",
+            "bat"
+          ]
+        },
+        {
+          "id": "jw072",
+          "image_hint": "the sun shining",
+          "prompt": "Spell the word for this picture.",
+          "answer": "sun",
+          "distractors": [
+            "son",
+            "sin",
+            "san"
+          ]
+        },
+        {
+          "id": "jw073",
+          "image_hint": "a brown dog",
+          "prompt": "Spell the word for this picture.",
+          "answer": "dog",
+          "distractors": [
+            "dig",
+            "dug",
+            "bag"
+          ]
+        },
+        {
+          "id": "jw074",
+          "image_hint": "a red bus",
+          "prompt": "Spell the word for this picture.",
+          "answer": "bus",
+          "distractors": [
+            "bos",
+            "bis",
+            "but"
+          ]
+        },
+        {
+          "id": "jw075",
+          "image_hint": "a blue fish",
+          "prompt": "Spell the word for this picture.",
+          "answer": "fish",
+          "distractors": [
+            "fash",
+            "fush",
+            "dish"
+          ]
+        },
+        {
+          "id": "jw076",
+          "image_hint": "a white chip",
+          "prompt": "Spell the word for this picture.",
+          "answer": "chip",
+          "distractors": [
+            "chap",
+            "chop",
+            "ship"
+          ]
+        }
       ]
     },
     {
@@ -159,12 +1388,66 @@
       "mechanic": "drag_and_drop",
       "instructions": "Match each word to its opposite.",
       "questions": [
-        { "id": "jw080", "prompt": "What is the opposite of HOT?",   "answer": "cold",  "distractors": ["warm","cool","ice"] },
-        { "id": "jw081", "prompt": "What is the opposite of ON?",    "answer": "off",   "distractors": ["up","away","below"] },
-        { "id": "jw082", "prompt": "What is the opposite of BIG?",   "answer": "small", "distractors": ["tiny","huge","medium"] },
-        { "id": "jw083", "prompt": "What is the opposite of FAST?",  "answer": "slow",  "distractors": ["quick","quiet","soft"] },
-        { "id": "jw084", "prompt": "What is the opposite of DAY?",   "answer": "night", "distractors": ["dark","dusk","moon"] },
-        { "id": "jw085", "prompt": "What is the opposite of HAPPY?", "answer": "sad",   "distractors": ["mad","tired","scared"] }
+        {
+          "id": "jw080",
+          "prompt": "What is the opposite of HOT?",
+          "answer": "cold",
+          "distractors": [
+            "warm",
+            "cool",
+            "ice"
+          ]
+        },
+        {
+          "id": "jw081",
+          "prompt": "What is the opposite of ON?",
+          "answer": "off",
+          "distractors": [
+            "up",
+            "away",
+            "below"
+          ]
+        },
+        {
+          "id": "jw082",
+          "prompt": "What is the opposite of BIG?",
+          "answer": "small",
+          "distractors": [
+            "tiny",
+            "huge",
+            "medium"
+          ]
+        },
+        {
+          "id": "jw083",
+          "prompt": "What is the opposite of FAST?",
+          "answer": "slow",
+          "distractors": [
+            "quick",
+            "quiet",
+            "soft"
+          ]
+        },
+        {
+          "id": "jw084",
+          "prompt": "What is the opposite of DAY?",
+          "answer": "night",
+          "distractors": [
+            "dark",
+            "dusk",
+            "moon"
+          ]
+        },
+        {
+          "id": "jw085",
+          "prompt": "What is the opposite of HAPPY?",
+          "answer": "sad",
+          "distractors": [
+            "mad",
+            "tired",
+            "scared"
+          ]
+        }
       ]
     },
     {
@@ -178,12 +1461,78 @@
       "mechanic": "drag_and_drop",
       "instructions": "Drag the syllables into the correct order to build the word.",
       "questions": [
-        { "id": "jw090", "image_hint": "a pine cone",      "syllables": ["cone","pine"],  "answer": ["pine","cone"],  "target_word": "pinecone" },
-        { "id": "jw091", "image_hint": "a birthday cake",  "syllables": ["day","birth"],  "answer": ["birth","day"], "target_word": "birthday" },
-        { "id": "jw092", "image_hint": "a cupcake",        "syllables": ["cake","cup"],   "answer": ["cup","cake"],  "target_word": "cupcake"  },
-        { "id": "jw093", "prompt": "Which word uses the CVCe pattern (silent e)?", "mechanic": "tap_select", "answer": "bike",  "distractors": ["bit","bin","big"]   },
-        { "id": "jw094", "prompt": "Which word uses the CVCe pattern (silent e)?", "mechanic": "tap_select", "answer": "flute", "distractors": ["flat","flip","flog"] },
-        { "id": "jw095", "prompt": "Which word uses the CVCe pattern (silent e)?", "mechanic": "tap_select", "answer": "hope",  "distractors": ["hop","hot","hob"]   }
+        {
+          "id": "jw090",
+          "image_hint": "a pine cone",
+          "syllables": [
+            "cone",
+            "pine"
+          ],
+          "answer": [
+            "pine",
+            "cone"
+          ],
+          "target_word": "pinecone"
+        },
+        {
+          "id": "jw091",
+          "image_hint": "a birthday cake",
+          "syllables": [
+            "day",
+            "birth"
+          ],
+          "answer": [
+            "birth",
+            "day"
+          ],
+          "target_word": "birthday"
+        },
+        {
+          "id": "jw092",
+          "image_hint": "a cupcake",
+          "syllables": [
+            "cake",
+            "cup"
+          ],
+          "answer": [
+            "cup",
+            "cake"
+          ],
+          "target_word": "cupcake"
+        },
+        {
+          "id": "jw093",
+          "prompt": "Which word uses the CVCe pattern (silent e)?",
+          "mechanic": "tap_select",
+          "answer": "bike",
+          "distractors": [
+            "bit",
+            "bin",
+            "big"
+          ]
+        },
+        {
+          "id": "jw094",
+          "prompt": "Which word uses the CVCe pattern (silent e)?",
+          "mechanic": "tap_select",
+          "answer": "flute",
+          "distractors": [
+            "flat",
+            "flip",
+            "flog"
+          ]
+        },
+        {
+          "id": "jw095",
+          "prompt": "Which word uses the CVCe pattern (silent e)?",
+          "mechanic": "tap_select",
+          "answer": "hope",
+          "distractors": [
+            "hop",
+            "hot",
+            "hob"
+          ]
+        }
       ]
     },
     {
@@ -197,18 +1546,106 @@
       "mechanic": "drag_and_drop",
       "instructions": "Drag the correct vowel team to complete the word.",
       "questions": [
-        { "id": "jw100", "prompt": "R_N  (long a, ai)",   "answer": "ai", "word_shell": "r_n",   "target": "rain",  "phonics_focus": "vowel_team_ai" },
-        { "id": "jw101", "prompt": "PL_  (long a, ay)",   "answer": "ay", "word_shell": "pl_",   "target": "play",  "phonics_focus": "vowel_team_ay" },
-        { "id": "jw102", "prompt": "TR__ (long e, ee)",   "answer": "ee", "word_shell": "tr__",  "target": "tree",  "phonics_focus": "vowel_team_ee" },
-        { "id": "jw103", "prompt": "B__CH (long e, ea)",  "answer": "ea", "word_shell": "b__ch", "target": "beach", "phonics_focus": "vowel_team_ea" },
-        { "id": "jw104", "prompt": "C__T (long o, oa)",   "answer": "oa", "word_shell": "c__t",  "target": "coat",  "phonics_focus": "vowel_team_oa" },
-        { "id": "jw105", "prompt": "C_R  (r-controlled)", "answer": "ar", "word_shell": "c_r",   "target": "car",   "phonics_focus": "r_controlled_ar" },
-        { "id": "jw106", "prompt": "F_M  (r-controlled)", "answer": "or", "word_shell": "f_m",   "target": "form",  "phonics_focus": "r_controlled_or" },
-        { "id": "jw107", "prompt": "B_D  (r-controlled)", "answer": "ir", "word_shell": "b_d",   "target": "bird",  "phonics_focus": "r_controlled_ir" },
-        { "id": "jw108", "prompt": "B_L  (diphthong oi)", "answer": "oi", "word_shell": "b_l",   "target": "boil",  "phonics_focus": "diphthong_oi"   },
-        { "id": "jw109", "prompt": "T_   (diphthong oy)", "answer": "oy", "word_shell": "t_",    "target": "toy",   "phonics_focus": "diphthong_oy"   },
-        { "id": "jw110", "prompt": "CL_D (diphthong ou)", "answer": "ou", "word_shell": "cl_d",  "target": "cloud", "phonics_focus": "diphthong_ou"   },
-        { "id": "jw111", "prompt": "What does the silent K do in KNOCK?", "mechanic": "tap_select", "answer": "Nothing — the K is silent, only /n/ is heard.", "distractors": ["It makes a /k/ sound.","It makes a /kn/ sound.","It changes the vowel."], "phonics_focus": "silent_kn" }
+        {
+          "id": "jw100",
+          "prompt": "R_N  (long a, ai)",
+          "answer": "ai",
+          "word_shell": "r_n",
+          "target": "rain",
+          "phonics_focus": "vowel_team_ai"
+        },
+        {
+          "id": "jw101",
+          "prompt": "PL_  (long a, ay)",
+          "answer": "ay",
+          "word_shell": "pl_",
+          "target": "play",
+          "phonics_focus": "vowel_team_ay"
+        },
+        {
+          "id": "jw102",
+          "prompt": "TR__ (long e, ee)",
+          "answer": "ee",
+          "word_shell": "tr__",
+          "target": "tree",
+          "phonics_focus": "vowel_team_ee"
+        },
+        {
+          "id": "jw103",
+          "prompt": "B__CH (long e, ea)",
+          "answer": "ea",
+          "word_shell": "b__ch",
+          "target": "beach",
+          "phonics_focus": "vowel_team_ea"
+        },
+        {
+          "id": "jw104",
+          "prompt": "C__T (long o, oa)",
+          "answer": "oa",
+          "word_shell": "c__t",
+          "target": "coat",
+          "phonics_focus": "vowel_team_oa"
+        },
+        {
+          "id": "jw105",
+          "prompt": "C_R  (r-controlled)",
+          "answer": "ar",
+          "word_shell": "c_r",
+          "target": "car",
+          "phonics_focus": "r_controlled_ar"
+        },
+        {
+          "id": "jw106",
+          "prompt": "F_M  (r-controlled)",
+          "answer": "or",
+          "word_shell": "f_m",
+          "target": "form",
+          "phonics_focus": "r_controlled_or"
+        },
+        {
+          "id": "jw107",
+          "prompt": "B_D  (r-controlled)",
+          "answer": "ir",
+          "word_shell": "b_d",
+          "target": "bird",
+          "phonics_focus": "r_controlled_ir"
+        },
+        {
+          "id": "jw108",
+          "prompt": "B_L  (diphthong oi)",
+          "answer": "oi",
+          "word_shell": "b_l",
+          "target": "boil",
+          "phonics_focus": "diphthong_oi"
+        },
+        {
+          "id": "jw109",
+          "prompt": "T_   (diphthong oy)",
+          "answer": "oy",
+          "word_shell": "t_",
+          "target": "toy",
+          "phonics_focus": "diphthong_oy"
+        },
+        {
+          "id": "jw110",
+          "prompt": "CL_D (diphthong ou)",
+          "answer": "ou",
+          "word_shell": "cl_d",
+          "target": "cloud",
+          "phonics_focus": "diphthong_ou"
+        },
+        {
+          "id": "jw111",
+          "prompt": "What does the silent K do in KNOCK?",
+          "mechanic": "tap_select",
+          "answer": "Nothing — the K is silent, only /n/ is heard.",
+          "distractors": [
+            "It makes a /k/ sound.",
+            "It makes a /kn/ sound.",
+            "It changes the vowel."
+          ],
+          "phonics_focus": "silent_kn"
+        }
       ]
     },
     {
@@ -222,16 +1659,113 @@
       "mechanic": "drag_and_drop",
       "instructions": "Drag the correct prefix or suffix to change the word.",
       "questions": [
-        { "id": "jw120", "prompt": "Add a prefix to HAPPY to mean NOT happy.",              "base": "happy", "answer": "un-",  "distractors": ["re-","in-","dis-"] },
-        { "id": "jw121", "prompt": "Add a prefix to DO to mean DO AGAIN.",                  "base": "do",    "answer": "re-",  "distractors": ["un-","in-","dis-"] },
-        { "id": "jw122", "prompt": "Add a prefix to AGREE to mean NOT agree.",              "base": "agree", "answer": "dis-", "distractors": ["un-","re-","in-"]  },
-        { "id": "jw123", "prompt": "Add a suffix to JUMP to show it is happening now.",     "base": "jump",  "answer": "-ing", "distractors": ["-ed","-er","-est"] },
-        { "id": "jw124", "prompt": "Add a suffix to FAST to compare two things.",           "base": "fast",  "answer": "-er",  "distractors": ["-ing","-est","-ly"] },
-        { "id": "jw125", "prompt": "Add a suffix to FAST to say it is the most.",           "base": "fast",  "answer": "-est", "distractors": ["-er","-ing","-ly"]  },
-        { "id": "jw126", "prompt": "Add a suffix to QUICK to describe how something is done.", "base": "quick","answer": "-ly", "distractors": ["-er","-est","-ing"] },
-        { "id": "jw127", "prompt": "RUN + -ING. Do you double the N?",   "answer": "Yes — running", "distractors": ["No — runing","Only sometimes","Only with long vowels"] },
-        { "id": "jw128", "prompt": "HOPE + -ING. Do you drop the E?",    "answer": "Yes — hoping",  "distractors": ["No — hopeing","Only for -ed","Only for long words"] },
-        { "id": "jw129", "prompt": "HAPPY + -ER. Change the Y to I?",    "answer": "Yes — happier", "distractors": ["No — happyer","Only for -est","Only for short words"] }
+        {
+          "id": "jw120",
+          "prompt": "Add a prefix to HAPPY to mean NOT happy.",
+          "base": "happy",
+          "answer": "un-",
+          "distractors": [
+            "re-",
+            "in-",
+            "dis-"
+          ]
+        },
+        {
+          "id": "jw121",
+          "prompt": "Add a prefix to DO to mean DO AGAIN.",
+          "base": "do",
+          "answer": "re-",
+          "distractors": [
+            "un-",
+            "in-",
+            "dis-"
+          ]
+        },
+        {
+          "id": "jw122",
+          "prompt": "Add a prefix to AGREE to mean NOT agree.",
+          "base": "agree",
+          "answer": "dis-",
+          "distractors": [
+            "un-",
+            "re-",
+            "in-"
+          ]
+        },
+        {
+          "id": "jw123",
+          "prompt": "Add a suffix to JUMP to show it is happening now.",
+          "base": "jump",
+          "answer": "-ing",
+          "distractors": [
+            "-ed",
+            "-er",
+            "-est"
+          ]
+        },
+        {
+          "id": "jw124",
+          "prompt": "Add a suffix to FAST to compare two things.",
+          "base": "fast",
+          "answer": "-er",
+          "distractors": [
+            "-ing",
+            "-est",
+            "-ly"
+          ]
+        },
+        {
+          "id": "jw125",
+          "prompt": "Add a suffix to FAST to say it is the most.",
+          "base": "fast",
+          "answer": "-est",
+          "distractors": [
+            "-er",
+            "-ing",
+            "-ly"
+          ]
+        },
+        {
+          "id": "jw126",
+          "prompt": "Add a suffix to QUICK to describe how something is done.",
+          "base": "quick",
+          "answer": "-ly",
+          "distractors": [
+            "-er",
+            "-est",
+            "-ing"
+          ]
+        },
+        {
+          "id": "jw127",
+          "prompt": "RUN + -ING. Do you double the N?",
+          "answer": "Yes — running",
+          "distractors": [
+            "No — runing",
+            "Only sometimes",
+            "Only with long vowels"
+          ]
+        },
+        {
+          "id": "jw128",
+          "prompt": "HOPE + -ING. Do you drop the E?",
+          "answer": "Yes — hoping",
+          "distractors": [
+            "No — hopeing",
+            "Only for -ed",
+            "Only for long words"
+          ]
+        },
+        {
+          "id": "jw129",
+          "prompt": "HAPPY + -ER. Change the Y to I?",
+          "answer": "Yes — happier",
+          "distractors": [
+            "No — happyer",
+            "Only for -est",
+            "Only for short words"
+          ]
+        }
       ]
     },
     {
@@ -245,19 +1779,92 @@
       "mechanic": "drag_and_drop",
       "instructions": "Split the word into its root and affixes, or identify how the affix changes the word's meaning.",
       "questions": [
-        { "id": "jw130", "prompt": "Split UNHELPFUL into its parts.",                       "answer": ["un-","help","-ful"], "distractors": ["unhelpf + ul","un + helpful","unhelp + ful"] },
-        { "id": "jw131", "prompt": "What part of speech is TEACHER? (-er suffix)",         "answer": "noun (a person who teaches)",               "distractors": ["adjective","verb","adverb"] },
-        { "id": "jw132", "prompt": "What part of speech is QUICKLY? (-ly suffix)",         "answer": "adverb (describes how something is done)",  "distractors": ["noun","verb","adjective"] },
-        { "id": "jw133", "prompt": "What does the prefix MIS- mean in MISTAKE?",           "answer": "wrongly or badly",    "distractors": ["again","not","too much"] },
-        { "id": "jw134", "prompt": "What does the prefix PRE- mean in PREVIEW?",           "answer": "before",              "distractors": ["after","again","not"]    },
-        { "id": "jw135", "prompt": "What does the suffix -TION mean in CELEBRATION?",      "answer": "the act or result of (makes a noun)",       "distractors": ["someone who does something","full of","in a way"] },
-        { "id": "jw136", "prompt": "What does the suffix -FUL mean in COLOURFUL?",         "answer": "full of",  "distractors": ["without","the act of","too much"] },
-        { "id": "jw137", "prompt": "What does the suffix -LESS mean in HOPELESS?",         "answer": "without",  "distractors": ["full of","again","before"]        }
+        {
+          "id": "jw130",
+          "prompt": "Split UNHELPFUL into its parts.",
+          "answer": [
+            "un-",
+            "help",
+            "-ful"
+          ],
+          "distractors": [
+            "unhelpf + ul",
+            "un + helpful",
+            "unhelp + ful"
+          ]
+        },
+        {
+          "id": "jw131",
+          "prompt": "What part of speech is TEACHER? (-er suffix)",
+          "answer": "noun (a person who teaches)",
+          "distractors": [
+            "adjective",
+            "verb",
+            "adverb"
+          ]
+        },
+        {
+          "id": "jw132",
+          "prompt": "What part of speech is QUICKLY? (-ly suffix)",
+          "answer": "adverb (describes how something is done)",
+          "distractors": [
+            "noun",
+            "verb",
+            "adjective"
+          ]
+        },
+        {
+          "id": "jw133",
+          "prompt": "What does the prefix MIS- mean in MISTAKE?",
+          "answer": "wrongly or badly",
+          "distractors": [
+            "again",
+            "not",
+            "too much"
+          ]
+        },
+        {
+          "id": "jw134",
+          "prompt": "What does the prefix PRE- mean in PREVIEW?",
+          "answer": "before",
+          "distractors": [
+            "after",
+            "again",
+            "not"
+          ]
+        },
+        {
+          "id": "jw135",
+          "prompt": "What does the suffix -TION mean in CELEBRATION?",
+          "answer": "the act or result of (makes a noun)",
+          "distractors": [
+            "someone who does something",
+            "full of",
+            "in a way"
+          ]
+        },
+        {
+          "id": "jw136",
+          "prompt": "What does the suffix -FUL mean in COLOURFUL?",
+          "answer": "full of",
+          "distractors": [
+            "without",
+            "the act of",
+            "too much"
+          ]
+        },
+        {
+          "id": "jw137",
+          "prompt": "What does the suffix -LESS mean in HOPELESS?",
+          "answer": "without",
+          "distractors": [
+            "full of",
+            "again",
+            "before"
+          ]
+        }
       ]
     },
-
-    // ─── DOMAIN: GRAMMAR ──────────────────────────────────────────────────────
-
     {
       "set_id": "simple_sentences_gr1",
       "domain": "grammar",
@@ -269,14 +1876,148 @@
       "mechanic": "drag_and_drop",
       "instructions": "Drag the word tiles into the correct order to make a sentence.",
       "questions": [
-        { "id": "gr001", "sentence_type": "declarative",   "tiles": ["The","cat","sat","on","the","mat","."],  "answer": ["The","cat","sat","on","the","mat","."],  "prompt": "Make a sentence using all the tiles." },
-        { "id": "gr002", "sentence_type": "declarative",   "tiles": ["My","dog","ran","fast","."],             "answer": ["My","dog","ran","fast","."],             "prompt": "Make a sentence using all the tiles." },
-        { "id": "gr003", "sentence_type": "interrogative", "tiles": ["Can","you","see","the","bird","?"],      "answer": ["Can","you","see","the","bird","?"],      "prompt": "Make a question using all the tiles." },
-        { "id": "gr004", "sentence_type": "interrogative", "tiles": ["Is","the","sun","hot","?"],              "answer": ["Is","the","sun","hot","?"],              "prompt": "Make a question using all the tiles." },
-        { "id": "gr005", "sentence_type": "imperative",    "tiles": ["Sit","down","please","."],               "answer": ["Sit","down","please","."],               "prompt": "Make a command using all the tiles." },
-        { "id": "gr006", "sentence_type": "exclamatory",   "tiles": ["What","a","big","fish","!"],             "answer": ["What","a","big","fish","!"],             "prompt": "Make an exclamation using all the tiles." },
-        { "id": "gr007", "sentence_type": "identify",      "prompt": "Is this a statement, question, command, or exclamation? — 'Look out!'", "mechanic": "tap_select", "answer": "exclamation", "distractors": ["statement","question","command"] },
-        { "id": "gr008", "sentence_type": "identify",      "prompt": "Is this a statement, question, command, or exclamation? — 'The leaves are green.'", "mechanic": "tap_select", "answer": "statement", "distractors": ["question","command","exclamation"] }
+        {
+          "id": "gr001",
+          "sentence_type": "declarative",
+          "tiles": [
+            "The",
+            "cat",
+            "sat",
+            "on",
+            "the",
+            "mat",
+            "."
+          ],
+          "answer": [
+            "The",
+            "cat",
+            "sat",
+            "on",
+            "the",
+            "mat",
+            "."
+          ],
+          "prompt": "Make a sentence using all the tiles."
+        },
+        {
+          "id": "gr002",
+          "sentence_type": "declarative",
+          "tiles": [
+            "My",
+            "dog",
+            "ran",
+            "fast",
+            "."
+          ],
+          "answer": [
+            "My",
+            "dog",
+            "ran",
+            "fast",
+            "."
+          ],
+          "prompt": "Make a sentence using all the tiles."
+        },
+        {
+          "id": "gr003",
+          "sentence_type": "interrogative",
+          "tiles": [
+            "Can",
+            "you",
+            "see",
+            "the",
+            "bird",
+            "?"
+          ],
+          "answer": [
+            "Can",
+            "you",
+            "see",
+            "the",
+            "bird",
+            "?"
+          ],
+          "prompt": "Make a question using all the tiles."
+        },
+        {
+          "id": "gr004",
+          "sentence_type": "interrogative",
+          "tiles": [
+            "Is",
+            "the",
+            "sun",
+            "hot",
+            "?"
+          ],
+          "answer": [
+            "Is",
+            "the",
+            "sun",
+            "hot",
+            "?"
+          ],
+          "prompt": "Make a question using all the tiles."
+        },
+        {
+          "id": "gr005",
+          "sentence_type": "imperative",
+          "tiles": [
+            "Sit",
+            "down",
+            "please",
+            "."
+          ],
+          "answer": [
+            "Sit",
+            "down",
+            "please",
+            "."
+          ],
+          "prompt": "Make a command using all the tiles."
+        },
+        {
+          "id": "gr006",
+          "sentence_type": "exclamatory",
+          "tiles": [
+            "What",
+            "a",
+            "big",
+            "fish",
+            "!"
+          ],
+          "answer": [
+            "What",
+            "a",
+            "big",
+            "fish",
+            "!"
+          ],
+          "prompt": "Make an exclamation using all the tiles."
+        },
+        {
+          "id": "gr007",
+          "sentence_type": "identify",
+          "prompt": "Is this a statement, question, command, or exclamation? — 'Look out!'",
+          "mechanic": "tap_select",
+          "answer": "exclamation",
+          "distractors": [
+            "statement",
+            "question",
+            "command"
+          ]
+        },
+        {
+          "id": "gr008",
+          "sentence_type": "identify",
+          "prompt": "Is this a statement, question, command, or exclamation? — 'The leaves are green.'",
+          "mechanic": "tap_select",
+          "answer": "statement",
+          "distractors": [
+            "question",
+            "command",
+            "exclamation"
+          ]
+        }
       ]
     },
     {
@@ -290,13 +2031,83 @@
       "mechanic": "tap_select",
       "instructions": "Tap the correct word to complete the sentence.",
       "questions": [
-        { "id": "gr010", "grammar_focus": "singular_plural",  "prompt": "There are three ___ in the tree.",                   "answer": "birds",    "distractors": ["bird","birdes","birding"]          },
-        { "id": "gr011", "grammar_focus": "verb_tense_past",  "prompt": "Yesterday, she ___ to school.",                     "answer": "walked",   "distractors": ["walk","walks","walking"]           },
-        { "id": "gr012", "grammar_focus": "verb_tense_present","prompt": "Every day, he ___ his teeth.",                     "answer": "brushes",  "distractors": ["brush","brushed","brushing"]       },
-        { "id": "gr013", "grammar_focus": "verb_tense_future", "prompt": "Tomorrow, we ___ to the park.",                    "answer": "will go",  "distractors": ["went","go","going"]               },
-        { "id": "gr014", "grammar_focus": "adjective",        "prompt": "Pick the adjective: 'The tiny rabbit hopped away.'", "answer": "tiny",    "distractors": ["rabbit","hopped","away"]           },
-        { "id": "gr015", "grammar_focus": "pronoun",          "prompt": "Replace 'Sam': 'Sam is my friend. ___ is funny.'",  "answer": "He",       "distractors": ["It","They","She"]                 },
-        { "id": "gr016", "grammar_focus": "conjunction",      "prompt": "Join with a conjunction: 'I like cats.' 'I like dogs.'", "answer": "I like cats and dogs.", "distractors": ["I like cats but dogs.","I like cats or I like dogs.","I like cats so dogs."] }
+        {
+          "id": "gr010",
+          "grammar_focus": "singular_plural",
+          "prompt": "There are three ___ in the tree.",
+          "answer": "birds",
+          "distractors": [
+            "bird",
+            "birdes",
+            "birding"
+          ]
+        },
+        {
+          "id": "gr011",
+          "grammar_focus": "verb_tense_past",
+          "prompt": "Yesterday, she ___ to school.",
+          "answer": "walked",
+          "distractors": [
+            "walk",
+            "walks",
+            "walking"
+          ]
+        },
+        {
+          "id": "gr012",
+          "grammar_focus": "verb_tense_present",
+          "prompt": "Every day, he ___ his teeth.",
+          "answer": "brushes",
+          "distractors": [
+            "brush",
+            "brushed",
+            "brushing"
+          ]
+        },
+        {
+          "id": "gr013",
+          "grammar_focus": "verb_tense_future",
+          "prompt": "Tomorrow, we ___ to the park.",
+          "answer": "will go",
+          "distractors": [
+            "went",
+            "go",
+            "going"
+          ]
+        },
+        {
+          "id": "gr014",
+          "grammar_focus": "adjective",
+          "prompt": "Pick the adjective: 'The tiny rabbit hopped away.'",
+          "answer": "tiny",
+          "distractors": [
+            "rabbit",
+            "hopped",
+            "away"
+          ]
+        },
+        {
+          "id": "gr015",
+          "grammar_focus": "pronoun",
+          "prompt": "Replace 'Sam': 'Sam is my friend. ___ is funny.'",
+          "answer": "He",
+          "distractors": [
+            "It",
+            "They",
+            "She"
+          ]
+        },
+        {
+          "id": "gr016",
+          "grammar_focus": "conjunction",
+          "prompt": "Join with a conjunction: 'I like cats.' 'I like dogs.'",
+          "answer": "I like cats and dogs.",
+          "distractors": [
+            "I like cats but dogs.",
+            "I like cats or I like dogs.",
+            "I like cats so dogs."
+          ]
+        }
       ]
     },
     {
@@ -310,12 +2121,61 @@
       "mechanic": "tap_select",
       "instructions": "Tap the correct punctuation mark to end the sentence.",
       "questions": [
-        { "id": "gr020", "prompt": "The sky is blue ___",          "answer": ".", "distractors": ["?","!"] },
-        { "id": "gr021", "prompt": "Where is my hat ___",          "answer": "?", "distractors": [".","!"] },
-        { "id": "gr022", "prompt": "Watch out for the car ___",    "answer": "!", "distractors": [".","?"] },
-        { "id": "gr023", "prompt": "Did you eat lunch ___",        "answer": "?", "distractors": [".","!"] },
-        { "id": "gr024", "prompt": "What a beautiful rainbow ___", "answer": "!", "distractors": [".","?"] },
-        { "id": "gr025", "prompt": "Which sentence has the WRONG capital letter?", "answer": "my dog is big.", "distractors": ["My dog is big.","The cat ran away.","She has a red hat."] }
+        {
+          "id": "gr020",
+          "prompt": "The sky is blue ___",
+          "answer": ".",
+          "distractors": [
+            "?",
+            "!"
+          ]
+        },
+        {
+          "id": "gr021",
+          "prompt": "Where is my hat ___",
+          "answer": "?",
+          "distractors": [
+            ".",
+            "!"
+          ]
+        },
+        {
+          "id": "gr022",
+          "prompt": "Watch out for the car ___",
+          "answer": "!",
+          "distractors": [
+            ".",
+            "?"
+          ]
+        },
+        {
+          "id": "gr023",
+          "prompt": "Did you eat lunch ___",
+          "answer": "?",
+          "distractors": [
+            ".",
+            "!"
+          ]
+        },
+        {
+          "id": "gr024",
+          "prompt": "What a beautiful rainbow ___",
+          "answer": "!",
+          "distractors": [
+            ".",
+            "?"
+          ]
+        },
+        {
+          "id": "gr025",
+          "prompt": "Which sentence has the WRONG capital letter?",
+          "answer": "my dog is big.",
+          "distractors": [
+            "My dog is big.",
+            "The cat ran away.",
+            "She has a red hat."
+          ]
+        }
       ]
     },
     {
@@ -329,12 +2189,119 @@
       "mechanic": "drag_and_drop",
       "instructions": "Drag the tiles to build a correct compound sentence.",
       "questions": [
-        { "id": "gr030", "prompt": "Join with AND.",  "tiles": ["I","like","pizza","and","I","like","pasta","."],                                        "answer": ["I","like","pizza","and","I","like","pasta","."] },
-        { "id": "gr031", "prompt": "Join with BUT.",  "tiles": ["She","wanted","to","go","out","but","it","was","raining","."],                          "answer": ["She","wanted","to","go","out","but","it","was","raining","."] },
-        { "id": "gr032", "prompt": "Join with OR.",   "tiles": ["We","can","play","inside","or","we","can","play","outside","."],                        "answer": ["We","can","play","inside","or","we","can","play","outside","."] },
-        { "id": "gr033", "prompt": "Best conjunction: 'She was tired ___ she went to bed early.'", "mechanic": "tap_select", "answer": "so",  "distractors": ["but","or","and"] },
-        { "id": "gr034", "prompt": "Best conjunction: 'He studied hard ___ he still failed.'",     "mechanic": "tap_select", "answer": "but", "distractors": ["so","or","and"]  },
-        { "id": "gr035", "prompt": "Which is a compound sentence?", "mechanic": "tap_select", "answer": "I wanted cake but there was none left.", "distractors": ["I wanted cake.","The big fluffy cat sat down.","Running through the park happily."] }
+        {
+          "id": "gr030",
+          "prompt": "Join with AND.",
+          "tiles": [
+            "I",
+            "like",
+            "pizza",
+            "and",
+            "I",
+            "like",
+            "pasta",
+            "."
+          ],
+          "answer": [
+            "I",
+            "like",
+            "pizza",
+            "and",
+            "I",
+            "like",
+            "pasta",
+            "."
+          ]
+        },
+        {
+          "id": "gr031",
+          "prompt": "Join with BUT.",
+          "tiles": [
+            "She",
+            "wanted",
+            "to",
+            "go",
+            "out",
+            "but",
+            "it",
+            "was",
+            "raining",
+            "."
+          ],
+          "answer": [
+            "She",
+            "wanted",
+            "to",
+            "go",
+            "out",
+            "but",
+            "it",
+            "was",
+            "raining",
+            "."
+          ]
+        },
+        {
+          "id": "gr032",
+          "prompt": "Join with OR.",
+          "tiles": [
+            "We",
+            "can",
+            "play",
+            "inside",
+            "or",
+            "we",
+            "can",
+            "play",
+            "outside",
+            "."
+          ],
+          "answer": [
+            "We",
+            "can",
+            "play",
+            "inside",
+            "or",
+            "we",
+            "can",
+            "play",
+            "outside",
+            "."
+          ]
+        },
+        {
+          "id": "gr033",
+          "prompt": "Best conjunction: 'She was tired ___ she went to bed early.'",
+          "mechanic": "tap_select",
+          "answer": "so",
+          "distractors": [
+            "but",
+            "or",
+            "and"
+          ]
+        },
+        {
+          "id": "gr034",
+          "prompt": "Best conjunction: 'He studied hard ___ he still failed.'",
+          "mechanic": "tap_select",
+          "answer": "but",
+          "distractors": [
+            "so",
+            "or",
+            "and"
+          ]
+        },
+        {
+          "id": "gr035",
+          "prompt": "Which is a compound sentence?",
+          "mechanic": "tap_select",
+          "answer": "I wanted cake but there was none left.",
+          "distractors": [
+            "I wanted cake.",
+            "The big fluffy cat sat down.",
+            "Running through the park happily."
+          ]
+        }
       ]
     },
     {
@@ -348,13 +2315,83 @@
       "mechanic": "tap_select",
       "instructions": "Tap the correct word to complete the sentence.",
       "questions": [
-        { "id": "gr040", "grammar_focus": "comparative",   "prompt": "My dog is ___ than your dog.",                          "answer": "bigger",     "distractors": ["biggest","more big","big"]        },
-        { "id": "gr041", "grammar_focus": "superlative",   "prompt": "That is the ___ mountain I have ever seen.",            "answer": "tallest",    "distractors": ["taller","most tall","tall"]        },
-        { "id": "gr042", "grammar_focus": "pronoun",       "prompt": "'___ are going to the store.' (me and my friend)",      "answer": "We",         "distractors": ["Us","They","I"]                    },
-        { "id": "gr043", "grammar_focus": "verb_to_be",    "prompt": "Yesterday, she ___ at home.",                          "answer": "was",        "distractors": ["is","are","were"]                  },
-        { "id": "gr044", "grammar_focus": "verb_to_be",    "prompt": "Right now, they ___ playing outside.",                 "answer": "are",        "distractors": ["is","was","were"]                  },
-        { "id": "gr045", "grammar_focus": "abstract_noun", "prompt": "Which word is an abstract noun?",                      "answer": "happiness",  "distractors": ["table","dog","apple"]              },
-        { "id": "gr046", "grammar_focus": "collective_noun","prompt": "What is the collective noun for a group of wolves?",   "answer": "a pack",     "distractors": ["a flock","a herd","a school"]      }
+        {
+          "id": "gr040",
+          "grammar_focus": "comparative",
+          "prompt": "My dog is ___ than your dog.",
+          "answer": "bigger",
+          "distractors": [
+            "biggest",
+            "more big",
+            "big"
+          ]
+        },
+        {
+          "id": "gr041",
+          "grammar_focus": "superlative",
+          "prompt": "That is the ___ mountain I have ever seen.",
+          "answer": "tallest",
+          "distractors": [
+            "taller",
+            "most tall",
+            "tall"
+          ]
+        },
+        {
+          "id": "gr042",
+          "grammar_focus": "pronoun",
+          "prompt": "'___ are going to the store.' (me and my friend)",
+          "answer": "We",
+          "distractors": [
+            "Us",
+            "They",
+            "I"
+          ]
+        },
+        {
+          "id": "gr043",
+          "grammar_focus": "verb_to_be",
+          "prompt": "Yesterday, she ___ at home.",
+          "answer": "was",
+          "distractors": [
+            "is",
+            "are",
+            "were"
+          ]
+        },
+        {
+          "id": "gr044",
+          "grammar_focus": "verb_to_be",
+          "prompt": "Right now, they ___ playing outside.",
+          "answer": "are",
+          "distractors": [
+            "is",
+            "was",
+            "were"
+          ]
+        },
+        {
+          "id": "gr045",
+          "grammar_focus": "abstract_noun",
+          "prompt": "Which word is an abstract noun?",
+          "answer": "happiness",
+          "distractors": [
+            "table",
+            "dog",
+            "apple"
+          ]
+        },
+        {
+          "id": "gr046",
+          "grammar_focus": "collective_noun",
+          "prompt": "What is the collective noun for a group of wolves?",
+          "answer": "a pack",
+          "distractors": [
+            "a flock",
+            "a herd",
+            "a school"
+          ]
+        }
       ]
     },
     {
@@ -368,10 +2405,50 @@
       "mechanic": "tap_select",
       "instructions": "Tap the correctly punctuated sentence.",
       "questions": [
-        { "id": "gr050", "grammar_focus": "comma_list",         "prompt": "Which uses commas correctly?",                  "answer": "I need eggs, milk, and bread.",       "distractors": ["I need eggs milk and bread.","I need eggs, milk and, bread.","I need, eggs, milk, and bread."] },
-        { "id": "gr051", "grammar_focus": "apostrophe_possess", "prompt": "Which shows the book belongs to Mia?",          "answer": "Mia's book",                          "distractors": ["Mias book","Mias' book","the book Mia"] },
-        { "id": "gr052", "grammar_focus": "apostrophe_possess", "prompt": "Toys belonging to more than one child?",        "answer": "the children's toys",                 "distractors": ["the childrens toys","the children toys'","the childrens' toys"] },
-        { "id": "gr053", "grammar_focus": "quotation_marks",    "prompt": "Which correctly punctuates direct speech?",     "answer": "\"Let's go,\" said Maya.",             "distractors": ["Let's go, said Maya.","\"Let's go, said Maya.\"","Let's \"go,\" said Maya."] }
+        {
+          "id": "gr050",
+          "grammar_focus": "comma_list",
+          "prompt": "Which uses commas correctly?",
+          "answer": "I need eggs, milk, and bread.",
+          "distractors": [
+            "I need eggs milk and bread.",
+            "I need eggs, milk and, bread.",
+            "I need, eggs, milk, and bread."
+          ]
+        },
+        {
+          "id": "gr051",
+          "grammar_focus": "apostrophe_possess",
+          "prompt": "Which shows the book belongs to Mia?",
+          "answer": "Mia's book",
+          "distractors": [
+            "Mias book",
+            "Mias' book",
+            "the book Mia"
+          ]
+        },
+        {
+          "id": "gr052",
+          "grammar_focus": "apostrophe_possess",
+          "prompt": "Toys belonging to more than one child?",
+          "answer": "the children's toys",
+          "distractors": [
+            "the childrens toys",
+            "the children toys'",
+            "the childrens' toys"
+          ]
+        },
+        {
+          "id": "gr053",
+          "grammar_focus": "quotation_marks",
+          "prompt": "Which correctly punctuates direct speech?",
+          "answer": "\"Let's go,\" said Maya.",
+          "distractors": [
+            "Let's go, said Maya.",
+            "\"Let's go, said Maya.\"",
+            "Let's \"go,\" said Maya."
+          ]
+        }
       ]
     },
     {
@@ -385,11 +2462,123 @@
       "mechanic": "drag_and_drop",
       "instructions": "Drag tiles to build a complex sentence using the conjunction shown.",
       "questions": [
-        { "id": "gr060", "conjunction": "because", "tiles": ["She","stayed","inside","because","it","was","raining","."],                        "answer": ["She","stayed","inside","because","it","was","raining","."],                        "prompt": "Build a complex sentence using BECAUSE." },
-        { "id": "gr061", "conjunction": "when",    "tiles": ["When","the","bell","rang",",","everyone","cheered","."],                          "answer": ["When","the","bell","rang",",","everyone","cheered","."],                          "prompt": "Build a complex sentence using WHEN." },
-        { "id": "gr062", "conjunction": "after",   "tiles": ["After","she","finished","lunch",",","she","went","outside","."],                  "answer": ["After","she","finished","lunch",",","she","went","outside","."],                  "prompt": "Build a complex sentence using AFTER." },
-        { "id": "gr063", "conjunction": "although","tiles": ["Although","it","was","cold",",","he","wore","no","coat","."],                     "answer": ["Although","it","was","cold",",","he","wore","no","coat","."],                     "prompt": "Build a complex sentence using ALTHOUGH." },
-        { "id": "gr064", "prompt": "Which part is the dependent clause? 'She smiled when she saw her gift.'", "mechanic": "tap_select", "answer": "when she saw her gift", "distractors": ["She smiled","she saw her gift","She smiled when"] }
+        {
+          "id": "gr060",
+          "conjunction": "because",
+          "tiles": [
+            "She",
+            "stayed",
+            "inside",
+            "because",
+            "it",
+            "was",
+            "raining",
+            "."
+          ],
+          "answer": [
+            "She",
+            "stayed",
+            "inside",
+            "because",
+            "it",
+            "was",
+            "raining",
+            "."
+          ],
+          "prompt": "Build a complex sentence using BECAUSE."
+        },
+        {
+          "id": "gr061",
+          "conjunction": "when",
+          "tiles": [
+            "When",
+            "the",
+            "bell",
+            "rang",
+            ",",
+            "everyone",
+            "cheered",
+            "."
+          ],
+          "answer": [
+            "When",
+            "the",
+            "bell",
+            "rang",
+            ",",
+            "everyone",
+            "cheered",
+            "."
+          ],
+          "prompt": "Build a complex sentence using WHEN."
+        },
+        {
+          "id": "gr062",
+          "conjunction": "after",
+          "tiles": [
+            "After",
+            "she",
+            "finished",
+            "lunch",
+            ",",
+            "she",
+            "went",
+            "outside",
+            "."
+          ],
+          "answer": [
+            "After",
+            "she",
+            "finished",
+            "lunch",
+            ",",
+            "she",
+            "went",
+            "outside",
+            "."
+          ],
+          "prompt": "Build a complex sentence using AFTER."
+        },
+        {
+          "id": "gr063",
+          "conjunction": "although",
+          "tiles": [
+            "Although",
+            "it",
+            "was",
+            "cold",
+            ",",
+            "he",
+            "wore",
+            "no",
+            "coat",
+            "."
+          ],
+          "answer": [
+            "Although",
+            "it",
+            "was",
+            "cold",
+            ",",
+            "he",
+            "wore",
+            "no",
+            "coat",
+            "."
+          ],
+          "prompt": "Build a complex sentence using ALTHOUGH."
+        },
+        {
+          "id": "gr064",
+          "prompt": "Which part is the dependent clause? 'She smiled when she saw her gift.'",
+          "mechanic": "tap_select",
+          "answer": "when she saw her gift",
+          "distractors": [
+            "She smiled",
+            "she saw her gift",
+            "She smiled when"
+          ]
+        }
       ]
     },
     {
@@ -403,10 +2592,50 @@
       "mechanic": "tap_select",
       "instructions": "Choose the correct word or identify the grammar feature.",
       "questions": [
-        { "id": "gr070", "grammar_focus": "possessive_noun",   "prompt": "Which is the possessive noun? 'The dog's bowl was empty.'",           "answer": "dog's",   "distractors": ["dog","bowl","empty"]             },
-        { "id": "gr071", "grammar_focus": "progressive_tense", "prompt": "Which uses the progressive tense?",                                    "answer": "She is reading a book.", "distractors": ["She reads a book.","She read a book.","She will read a book."] },
-        { "id": "gr072", "grammar_focus": "preposition",       "prompt": "Choose the correct preposition: 'The cat sat ___ the table.'",         "answer": "under",  "distractors": ["because","and","slowly"]         },
-        { "id": "gr073", "grammar_focus": "interjection",      "prompt": "Which word is an interjection? 'Wow! That was amazing!'",              "answer": "Wow",    "distractors": ["That","amazing","was"]           }
+        {
+          "id": "gr070",
+          "grammar_focus": "possessive_noun",
+          "prompt": "Which is the possessive noun? 'The dog's bowl was empty.'",
+          "answer": "dog's",
+          "distractors": [
+            "dog",
+            "bowl",
+            "empty"
+          ]
+        },
+        {
+          "id": "gr071",
+          "grammar_focus": "progressive_tense",
+          "prompt": "Which uses the progressive tense?",
+          "answer": "She is reading a book.",
+          "distractors": [
+            "She reads a book.",
+            "She read a book.",
+            "She will read a book."
+          ]
+        },
+        {
+          "id": "gr072",
+          "grammar_focus": "preposition",
+          "prompt": "Choose the correct preposition: 'The cat sat ___ the table.'",
+          "answer": "under",
+          "distractors": [
+            "because",
+            "and",
+            "slowly"
+          ]
+        },
+        {
+          "id": "gr073",
+          "grammar_focus": "interjection",
+          "prompt": "Which word is an interjection? 'Wow! That was amazing!'",
+          "answer": "Wow",
+          "distractors": [
+            "That",
+            "amazing",
+            "was"
+          ]
+        }
       ]
     },
     {
@@ -420,10 +2649,50 @@
       "mechanic": "tap_select",
       "instructions": "Tap the correctly punctuated sentence.",
       "questions": [
-        { "id": "gr080", "grammar_focus": "dialogue",      "prompt": "Which correctly punctuates dialogue?",     "answer": "\"Stop!\" she yelled. \"You forgot your bag!\"", "distractors": ["\"Stop! she yelled. You forgot your bag!\"","Stop! She yelled, \"You forgot your bag\"","She yelled Stop you forgot your bag."] },
-        { "id": "gr081", "grammar_focus": "contraction",   "prompt": "Contraction for 'they are'?",              "answer": "they're", "distractors": ["their","there","theyre"]     },
-        { "id": "gr082", "grammar_focus": "contraction",   "prompt": "Contraction for 'do not'?",                "answer": "don't",   "distractors": ["dont","do'nt","donn't"]      },
-        { "id": "gr083", "grammar_focus": "title_caps",    "prompt": "Which book title is capitalised correctly?","answer": "Charlotte's Web", "distractors": ["charlotte's web","Charlotte's web","CHARLOTTE'S WEB"] }
+        {
+          "id": "gr080",
+          "grammar_focus": "dialogue",
+          "prompt": "Which correctly punctuates dialogue?",
+          "answer": "\"Stop!\" she yelled. \"You forgot your bag!\"",
+          "distractors": [
+            "\"Stop! she yelled. You forgot your bag!\"",
+            "Stop! She yelled, \"You forgot your bag\"",
+            "She yelled Stop you forgot your bag."
+          ]
+        },
+        {
+          "id": "gr081",
+          "grammar_focus": "contraction",
+          "prompt": "Contraction for 'they are'?",
+          "answer": "they're",
+          "distractors": [
+            "their",
+            "there",
+            "theyre"
+          ]
+        },
+        {
+          "id": "gr082",
+          "grammar_focus": "contraction",
+          "prompt": "Contraction for 'do not'?",
+          "answer": "don't",
+          "distractors": [
+            "dont",
+            "do'nt",
+            "donn't"
+          ]
+        },
+        {
+          "id": "gr083",
+          "grammar_focus": "title_caps",
+          "prompt": "Which book title is capitalised correctly?",
+          "answer": "Charlotte's Web",
+          "distractors": [
+            "charlotte's web",
+            "Charlotte's web",
+            "CHARLOTTE'S WEB"
+          ]
+        }
       ]
     },
     {
@@ -437,9 +2706,81 @@
       "mechanic": "drag_and_drop",
       "instructions": "Drag the tiles to build a sentence with a prepositional phrase or dependent clause.",
       "questions": [
-        { "id": "gr090", "tiles": ["The","treasure","was","hidden","beneath","the","old","oak","tree","."], "answer": ["The","treasure","was","hidden","beneath","the","old","oak","tree","."], "prompt": "Build a sentence with a prepositional phrase using BENEATH." },
-        { "id": "gr091", "tiles": ["Before","the","storm","hit",",","she","closed","the","windows","and","locked","the","door","."], "answer": ["Before","the","storm","hit",",","she","closed","the","windows","and","locked","the","door","."], "prompt": "Build a compound-complex sentence." },
-        { "id": "gr092", "prompt": "Identify the prepositional phrase: 'During the game, he scored three goals.'", "mechanic": "tap_select", "answer": "During the game", "distractors": ["he scored","three goals","During the game, he scored"] }
+        {
+          "id": "gr090",
+          "tiles": [
+            "The",
+            "treasure",
+            "was",
+            "hidden",
+            "beneath",
+            "the",
+            "old",
+            "oak",
+            "tree",
+            "."
+          ],
+          "answer": [
+            "The",
+            "treasure",
+            "was",
+            "hidden",
+            "beneath",
+            "the",
+            "old",
+            "oak",
+            "tree",
+            "."
+          ],
+          "prompt": "Build a sentence with a prepositional phrase using BENEATH."
+        },
+        {
+          "id": "gr091",
+          "tiles": [
+            "Before",
+            "the",
+            "storm",
+            "hit",
+            ",",
+            "she",
+            "closed",
+            "the",
+            "windows",
+            "and",
+            "locked",
+            "the",
+            "door",
+            "."
+          ],
+          "answer": [
+            "Before",
+            "the",
+            "storm",
+            "hit",
+            ",",
+            "she",
+            "closed",
+            "the",
+            "windows",
+            "and",
+            "locked",
+            "the",
+            "door",
+            "."
+          ],
+          "prompt": "Build a compound-complex sentence."
+        },
+        {
+          "id": "gr092",
+          "prompt": "Identify the prepositional phrase: 'During the game, he scored three goals.'",
+          "mechanic": "tap_select",
+          "answer": "During the game",
+          "distractors": [
+            "he scored",
+            "three goals",
+            "During the game, he scored"
+          ]
+        }
       ]
     },
     {
@@ -453,11 +2794,61 @@
       "mechanic": "tap_select",
       "instructions": "Choose the correct word or identify the grammar feature.",
       "questions": [
-        { "id": "gr100", "grammar_focus": "relative_pronoun", "prompt": "'The girl ___ won the race was thrilled.' (person)",     "answer": "who",  "distractors": ["which","that","whose"] },
-        { "id": "gr101", "grammar_focus": "relative_pronoun", "prompt": "'The book ___ she borrowed was overdue.' (thing)",       "answer": "that", "distractors": ["who","whom","whose"]   },
-        { "id": "gr102", "grammar_focus": "perfect_tense",    "prompt": "Which uses the perfect tense?",                          "answer": "She has finished her homework.", "distractors": ["She finishes her homework.","She finished her homework.","She is finishing her homework."] },
-        { "id": "gr103", "grammar_focus": "perfect_tense",    "prompt": "'By the time we arrived, he ___ already eaten.'",        "answer": "had",  "distractors": ["was","is","did"]       },
-        { "id": "gr104", "grammar_focus": "possessive_pronoun","prompt": "Which word is a possessive pronoun? 'That bag is mine.'","answer": "mine", "distractors": ["that","bag","is"]      }
+        {
+          "id": "gr100",
+          "grammar_focus": "relative_pronoun",
+          "prompt": "'The girl ___ won the race was thrilled.' (person)",
+          "answer": "who",
+          "distractors": [
+            "which",
+            "that",
+            "whose"
+          ]
+        },
+        {
+          "id": "gr101",
+          "grammar_focus": "relative_pronoun",
+          "prompt": "'The book ___ she borrowed was overdue.' (thing)",
+          "answer": "that",
+          "distractors": [
+            "who",
+            "whom",
+            "whose"
+          ]
+        },
+        {
+          "id": "gr102",
+          "grammar_focus": "perfect_tense",
+          "prompt": "Which uses the perfect tense?",
+          "answer": "She has finished her homework.",
+          "distractors": [
+            "She finishes her homework.",
+            "She finished her homework.",
+            "She is finishing her homework."
+          ]
+        },
+        {
+          "id": "gr103",
+          "grammar_focus": "perfect_tense",
+          "prompt": "'By the time we arrived, he ___ already eaten.'",
+          "answer": "had",
+          "distractors": [
+            "was",
+            "is",
+            "did"
+          ]
+        },
+        {
+          "id": "gr104",
+          "grammar_focus": "possessive_pronoun",
+          "prompt": "Which word is a possessive pronoun? 'That bag is mine.'",
+          "answer": "mine",
+          "distractors": [
+            "that",
+            "bag",
+            "is"
+          ]
+        }
       ]
     },
     {
@@ -471,12 +2862,1613 @@
       "mechanic": "tap_select",
       "instructions": "Tap the correctly punctuated sentence or choose the correct answer.",
       "questions": [
-        { "id": "gr110", "grammar_focus": "proper_adjective",  "prompt": "Which uses a proper adjective correctly?",           "answer": "She loved Italian food.",       "distractors": ["She loved italian food.","She loved ITALIAN food.","She loved a italian food."] },
-        { "id": "gr111", "grammar_focus": "direct_address",    "prompt": "Which correctly uses a comma for direct address?",   "answer": "Please sit down, everyone.",    "distractors": ["Please sit down everyone.","Please, sit, down, everyone.","Please sit, down everyone."] },
-        { "id": "gr112", "grammar_focus": "quotes_titles",     "prompt": "Which correctly shows the title of a short story?",  "answer": "\"The Gift of the Magi\"",      "distractors": ["The Gift of the Magi","*The Gift of the Magi*","(The Gift of the Magi)"] },
-        { "id": "gr113", "grammar_focus": "direct_address",    "prompt": "Add the missing comma: 'Are you coming with us Alex?'","answer": "Are you coming with us, Alex?","distractors": ["Are you, coming with us Alex?","Are you coming with, us Alex?","Are, you coming with us Alex?"] }
+        {
+          "id": "gr110",
+          "grammar_focus": "proper_adjective",
+          "prompt": "Which uses a proper adjective correctly?",
+          "answer": "She loved Italian food.",
+          "distractors": [
+            "She loved italian food.",
+            "She loved ITALIAN food.",
+            "She loved a italian food."
+          ]
+        },
+        {
+          "id": "gr111",
+          "grammar_focus": "direct_address",
+          "prompt": "Which correctly uses a comma for direct address?",
+          "answer": "Please sit down, everyone.",
+          "distractors": [
+            "Please sit down everyone.",
+            "Please, sit, down, everyone.",
+            "Please sit, down everyone."
+          ]
+        },
+        {
+          "id": "gr112",
+          "grammar_focus": "quotes_titles",
+          "prompt": "Which correctly shows the title of a short story?",
+          "answer": "\"The Gift of the Magi\"",
+          "distractors": [
+            "The Gift of the Magi",
+            "*The Gift of the Magi*",
+            "(The Gift of the Magi)"
+          ]
+        },
+        {
+          "id": "gr113",
+          "grammar_focus": "direct_address",
+          "prompt": "Add the missing comma: 'Are you coming with us Alex?'",
+          "answer": "Are you coming with us, Alex?",
+          "distractors": [
+            "Are you, coming with us Alex?",
+            "Are you coming with, us Alex?",
+            "Are, you coming with us Alex?"
+          ]
+        }
+      ]
+    },
+    {
+      "set_id": "simple_sentences_gr1_ext",
+      "curriculum_alias": "simple_sentences_gr1",
+      "grade_id": "grade_1",
+      "band_id": "band_2",
+      "cognitive_level": "apply",
+      "assessment_type": "formative",
+      "domain": "grammar",
+      "mechanic": "drag_and_drop",
+      "questions": [
+        {
+          "id": "g1_e01",
+          "prompt": "Make a sentence using all the tiles.",
+          "tiles": [
+            "big",
+            "is",
+            "The",
+            "dog",
+            "."
+          ],
+          "answer": [
+            "The",
+            "dog",
+            "is",
+            "big",
+            "."
+          ]
+        },
+        {
+          "id": "g1_e02",
+          "prompt": "Make a sentence using all the tiles.",
+          "tiles": [
+            "see",
+            "I",
+            "two",
+            "can",
+            "birds",
+            "."
+          ],
+          "answer": [
+            "I",
+            "can",
+            "see",
+            "two",
+            "birds",
+            "."
+          ]
+        },
+        {
+          "id": "g1_e03",
+          "prompt": "Make a sentence using all the tiles.",
+          "tiles": [
+            "is",
+            "red",
+            "My",
+            "hat",
+            "."
+          ],
+          "answer": [
+            "My",
+            "hat",
+            "is",
+            "red",
+            "."
+          ]
+        },
+        {
+          "id": "g1_e04",
+          "prompt": "Make a sentence using all the tiles.",
+          "tiles": [
+            "ran",
+            "The",
+            "fox",
+            "away",
+            "."
+          ],
+          "answer": [
+            "The",
+            "fox",
+            "ran",
+            "away",
+            "."
+          ]
+        },
+        {
+          "id": "g1_e05",
+          "prompt": "Make a sentence using all the tiles.",
+          "tiles": [
+            "a",
+            "She",
+            "has",
+            "pet",
+            "fish",
+            "."
+          ],
+          "answer": [
+            "She",
+            "has",
+            "a",
+            "pet",
+            "fish",
+            "."
+          ]
+        },
+        {
+          "id": "g1_e06",
+          "prompt": "Make a sentence using all the tiles.",
+          "tiles": [
+            "on",
+            "We",
+            "the",
+            "sat",
+            "bus",
+            "."
+          ],
+          "answer": [
+            "We",
+            "sat",
+            "on",
+            "the",
+            "bus",
+            "."
+          ]
+        },
+        {
+          "id": "g1_e07",
+          "prompt": "Make a sentence using all the tiles.",
+          "tiles": [
+            "likes",
+            "He",
+            "to",
+            "run",
+            "."
+          ],
+          "answer": [
+            "He",
+            "likes",
+            "to",
+            "run",
+            "."
+          ]
+        },
+        {
+          "id": "g1_e08",
+          "prompt": "Make a question using all the tiles.",
+          "tiles": [
+            "the",
+            "is",
+            "frog",
+            "Where",
+            "?"
+          ],
+          "answer": [
+            "Where",
+            "is",
+            "the",
+            "frog",
+            "?"
+          ]
+        },
+        {
+          "id": "g1_e09",
+          "prompt": "Make a question using all the tiles.",
+          "tiles": [
+            "you",
+            "Do",
+            "a",
+            "have",
+            "pet",
+            "?"
+          ],
+          "answer": [
+            "Do",
+            "you",
+            "have",
+            "a",
+            "pet",
+            "?"
+          ]
+        },
+        {
+          "id": "g1_e10",
+          "prompt": "Make a question using all the tiles.",
+          "tiles": [
+            "What",
+            "your",
+            "is",
+            "name",
+            "?"
+          ],
+          "answer": [
+            "What",
+            "is",
+            "your",
+            "name",
+            "?"
+          ]
+        },
+        {
+          "id": "g1_e11",
+          "prompt": "Make a command using all the tiles.",
+          "tiles": [
+            "the",
+            "Open",
+            "door",
+            "please",
+            "."
+          ],
+          "answer": [
+            "Open",
+            "the",
+            "door",
+            "please",
+            "."
+          ]
+        },
+        {
+          "id": "g1_e12",
+          "prompt": "Make a command using all the tiles.",
+          "tiles": [
+            "your",
+            "Wash",
+            "hands",
+            "now",
+            "."
+          ],
+          "answer": [
+            "Wash",
+            "your",
+            "hands",
+            "now",
+            "."
+          ]
+        },
+        {
+          "id": "g1_e13",
+          "prompt": "Make an exclamation using all the tiles.",
+          "tiles": [
+            "a",
+            "What",
+            "day",
+            "great",
+            "!"
+          ],
+          "answer": [
+            "What",
+            "a",
+            "great",
+            "day",
+            "!"
+          ]
+        },
+        {
+          "id": "g1_e14",
+          "prompt": "Make an exclamation using all the tiles.",
+          "tiles": [
+            "fast",
+            "How",
+            "you",
+            "are",
+            "!"
+          ],
+          "answer": [
+            "How",
+            "fast",
+            "you",
+            "are",
+            "!"
+          ]
+        },
+        {
+          "id": "g1_e15",
+          "prompt": "Make a sentence using all the tiles.",
+          "tiles": [
+            "The",
+            "up",
+            "went",
+            "cat",
+            "tree",
+            "the",
+            "."
+          ],
+          "answer": [
+            "The",
+            "cat",
+            "went",
+            "up",
+            "the",
+            "tree",
+            "."
+          ]
+        }
+      ]
+    },
+    {
+      "set_id": "compound_sentences_gr2_ext",
+      "curriculum_alias": "compound_sentences_gr2",
+      "grade_id": "grade_2",
+      "band_id": "band_2",
+      "cognitive_level": "apply",
+      "assessment_type": "formative",
+      "domain": "grammar",
+      "mechanic": "drag_and_drop",
+      "questions": [
+        {
+          "id": "g2_e01",
+          "prompt": "Join with AND.",
+          "tiles": [
+            "I",
+            "read",
+            "a",
+            "book",
+            "and",
+            "drew",
+            "a",
+            "picture",
+            "."
+          ],
+          "answer": [
+            "I",
+            "read",
+            "a",
+            "book",
+            "and",
+            "drew",
+            "a",
+            "picture",
+            "."
+          ]
+        },
+        {
+          "id": "g2_e02",
+          "prompt": "Join with BUT.",
+          "tiles": [
+            "He",
+            "tried",
+            "hard",
+            "but",
+            "he",
+            "did",
+            "not",
+            "win",
+            "."
+          ],
+          "answer": [
+            "He",
+            "tried",
+            "hard",
+            "but",
+            "he",
+            "did",
+            "not",
+            "win",
+            "."
+          ]
+        },
+        {
+          "id": "g2_e03",
+          "prompt": "Join with OR.",
+          "tiles": [
+            "You",
+            "can",
+            "have",
+            "milk",
+            "or",
+            "you",
+            "can",
+            "have",
+            "juice",
+            "."
+          ],
+          "answer": [
+            "You",
+            "can",
+            "have",
+            "milk",
+            "or",
+            "you",
+            "can",
+            "have",
+            "juice",
+            "."
+          ]
+        },
+        {
+          "id": "g2_e04",
+          "prompt": "Join with AND.",
+          "tiles": [
+            "She",
+            "sang",
+            "a",
+            "song",
+            "and",
+            "we",
+            "all",
+            "danced",
+            "."
+          ],
+          "answer": [
+            "She",
+            "sang",
+            "a",
+            "song",
+            "and",
+            "we",
+            "all",
+            "danced",
+            "."
+          ]
+        },
+        {
+          "id": "g2_e05",
+          "prompt": "Join with BUT.",
+          "tiles": [
+            "The",
+            "cake",
+            "looked",
+            "good",
+            "but",
+            "it",
+            "tasted",
+            "bad",
+            "."
+          ],
+          "answer": [
+            "The",
+            "cake",
+            "looked",
+            "good",
+            "but",
+            "it",
+            "tasted",
+            "bad",
+            "."
+          ]
+        },
+        {
+          "id": "g2_e06",
+          "prompt": "Join with SO.",
+          "tiles": [
+            "It",
+            "was",
+            "cold",
+            "so",
+            "I",
+            "wore",
+            "my",
+            "coat",
+            "."
+          ],
+          "answer": [
+            "It",
+            "was",
+            "cold",
+            "so",
+            "I",
+            "wore",
+            "my",
+            "coat",
+            "."
+          ]
+        },
+        {
+          "id": "g2_e07",
+          "prompt": "Join with AND.",
+          "tiles": [
+            "The",
+            "dog",
+            "barked",
+            "and",
+            "the",
+            "cat",
+            "ran",
+            "away",
+            "."
+          ],
+          "answer": [
+            "The",
+            "dog",
+            "barked",
+            "and",
+            "the",
+            "cat",
+            "ran",
+            "away",
+            "."
+          ]
+        },
+        {
+          "id": "g2_e08",
+          "prompt": "Join with BUT.",
+          "tiles": [
+            "I",
+            "wanted",
+            "to",
+            "play",
+            "but",
+            "it",
+            "started",
+            "raining",
+            "."
+          ],
+          "answer": [
+            "I",
+            "wanted",
+            "to",
+            "play",
+            "but",
+            "it",
+            "started",
+            "raining",
+            "."
+          ]
+        },
+        {
+          "id": "g2_e09",
+          "prompt": "Join with OR.",
+          "tiles": [
+            "We",
+            "could",
+            "go",
+            "swimming",
+            "or",
+            "we",
+            "could",
+            "go",
+            "hiking",
+            "."
+          ],
+          "answer": [
+            "We",
+            "could",
+            "go",
+            "swimming",
+            "or",
+            "we",
+            "could",
+            "go",
+            "hiking",
+            "."
+          ]
+        },
+        {
+          "id": "g2_e10",
+          "prompt": "Join with SO.",
+          "tiles": [
+            "She",
+            "was",
+            "hungry",
+            "so",
+            "she",
+            "ate",
+            "a",
+            "sandwich",
+            "."
+          ],
+          "answer": [
+            "She",
+            "was",
+            "hungry",
+            "so",
+            "she",
+            "ate",
+            "a",
+            "sandwich",
+            "."
+          ]
+        },
+        {
+          "id": "g2_e11",
+          "prompt": "Join with AND.",
+          "tiles": [
+            "He",
+            "picked",
+            "up",
+            "the",
+            "ball",
+            "and",
+            "threw",
+            "it",
+            "far",
+            "."
+          ],
+          "answer": [
+            "He",
+            "picked",
+            "up",
+            "the",
+            "ball",
+            "and",
+            "threw",
+            "it",
+            "far",
+            "."
+          ]
+        },
+        {
+          "id": "g2_e12",
+          "prompt": "Join with BUT.",
+          "tiles": [
+            "The",
+            "sun",
+            "was",
+            "out",
+            "but",
+            "the",
+            "wind",
+            "was",
+            "strong",
+            "."
+          ],
+          "answer": [
+            "The",
+            "sun",
+            "was",
+            "out",
+            "but",
+            "the",
+            "wind",
+            "was",
+            "strong",
+            "."
+          ]
+        },
+        {
+          "id": "g2_e13",
+          "prompt": "Join with SO.",
+          "tiles": [
+            "I",
+            "forgot",
+            "my",
+            "lunch",
+            "so",
+            "my",
+            "friend",
+            "shared",
+            "hers",
+            "."
+          ],
+          "answer": [
+            "I",
+            "forgot",
+            "my",
+            "lunch",
+            "so",
+            "my",
+            "friend",
+            "shared",
+            "hers",
+            "."
+          ]
+        },
+        {
+          "id": "g2_e14",
+          "prompt": "Join with AND.",
+          "tiles": [
+            "We",
+            "planted",
+            "seeds",
+            "and",
+            "watered",
+            "them",
+            "every",
+            "day",
+            "."
+          ],
+          "answer": [
+            "We",
+            "planted",
+            "seeds",
+            "and",
+            "watered",
+            "them",
+            "every",
+            "day",
+            "."
+          ]
+        },
+        {
+          "id": "g2_e15",
+          "prompt": "Join with BUT.",
+          "tiles": [
+            "She",
+            "fell",
+            "down",
+            "but",
+            "she",
+            "got",
+            "back",
+            "up",
+            "."
+          ],
+          "answer": [
+            "She",
+            "fell",
+            "down",
+            "but",
+            "she",
+            "got",
+            "back",
+            "up",
+            "."
+          ]
+        }
+      ]
+    },
+    {
+      "set_id": "complex_sentences_gr3_ext",
+      "curriculum_alias": "complex_sentences_adverbial",
+      "grade_id": "grade_3",
+      "band_id": "band_3",
+      "cognitive_level": "apply",
+      "assessment_type": "formative",
+      "domain": "grammar",
+      "mechanic": "drag_and_drop",
+      "questions": [
+        {
+          "id": "g3_e01",
+          "prompt": "Build a complex sentence using BECAUSE.",
+          "tiles": [
+            "was",
+            "tired",
+            "She",
+            "because",
+            "she",
+            "ran",
+            "all",
+            "day",
+            "."
+          ],
+          "answer": [
+            "She",
+            "was",
+            "tired",
+            "because",
+            "she",
+            "ran",
+            "all",
+            "day",
+            "."
+          ]
+        },
+        {
+          "id": "g3_e02",
+          "prompt": "Build a complex sentence using WHEN.",
+          "tiles": [
+            "When",
+            "I",
+            "got",
+            "home",
+            ",",
+            "my",
+            "dog",
+            "jumped",
+            "up",
+            "."
+          ],
+          "answer": [
+            "When",
+            "I",
+            "got",
+            "home",
+            ",",
+            "my",
+            "dog",
+            "jumped",
+            "up",
+            "."
+          ]
+        },
+        {
+          "id": "g3_e03",
+          "prompt": "Build a complex sentence using BEFORE.",
+          "tiles": [
+            "Before",
+            "you",
+            "leave",
+            ",",
+            "tidy",
+            "your",
+            "room",
+            "."
+          ],
+          "answer": [
+            "Before",
+            "you",
+            "leave",
+            ",",
+            "tidy",
+            "your",
+            "room",
+            "."
+          ]
+        },
+        {
+          "id": "g3_e04",
+          "prompt": "Build a complex sentence using ALTHOUGH.",
+          "tiles": [
+            "Although",
+            "he",
+            "was",
+            "small",
+            ",",
+            "he",
+            "was",
+            "very",
+            "brave",
+            "."
+          ],
+          "answer": [
+            "Although",
+            "he",
+            "was",
+            "small",
+            ",",
+            "he",
+            "was",
+            "very",
+            "brave",
+            "."
+          ]
+        },
+        {
+          "id": "g3_e05",
+          "prompt": "Build a complex sentence using IF.",
+          "tiles": [
+            "If",
+            "it",
+            "snows",
+            ",",
+            "we",
+            "will",
+            "build",
+            "a",
+            "snowman",
+            "."
+          ],
+          "answer": [
+            "If",
+            "it",
+            "snows",
+            ",",
+            "we",
+            "will",
+            "build",
+            "a",
+            "snowman",
+            "."
+          ]
+        },
+        {
+          "id": "g3_e06",
+          "prompt": "Build a complex sentence using WHILE.",
+          "tiles": [
+            "While",
+            "she",
+            "painted",
+            ",",
+            "he",
+            "played",
+            "the",
+            "drums",
+            "."
+          ],
+          "answer": [
+            "While",
+            "she",
+            "painted",
+            ",",
+            "he",
+            "played",
+            "the",
+            "drums",
+            "."
+          ]
+        },
+        {
+          "id": "g3_e07",
+          "prompt": "Build a complex sentence using BECAUSE.",
+          "tiles": [
+            "The",
+            "game",
+            "stopped",
+            "because",
+            "the",
+            "ball",
+            "went",
+            "over",
+            "the",
+            "fence",
+            "."
+          ],
+          "answer": [
+            "The",
+            "game",
+            "stopped",
+            "because",
+            "the",
+            "ball",
+            "went",
+            "over",
+            "the",
+            "fence",
+            "."
+          ]
+        },
+        {
+          "id": "g3_e08",
+          "prompt": "Build a complex sentence using UNTIL.",
+          "tiles": [
+            "We",
+            "waited",
+            "until",
+            "the",
+            "rain",
+            "stopped",
+            "."
+          ],
+          "answer": [
+            "We",
+            "waited",
+            "until",
+            "the",
+            "rain",
+            "stopped",
+            "."
+          ]
+        },
+        {
+          "id": "g3_e09",
+          "prompt": "Build a complex sentence using AFTER.",
+          "tiles": [
+            "After",
+            "the",
+            "show",
+            "ended",
+            ",",
+            "we",
+            "walked",
+            "home",
+            "."
+          ],
+          "answer": [
+            "After",
+            "the",
+            "show",
+            "ended",
+            ",",
+            "we",
+            "walked",
+            "home",
+            "."
+          ]
+        },
+        {
+          "id": "g3_e10",
+          "prompt": "Build a complex sentence using WHEN.",
+          "tiles": [
+            "When",
+            "the",
+            "teacher",
+            "spoke",
+            ",",
+            "everyone",
+            "listened",
+            "."
+          ],
+          "answer": [
+            "When",
+            "the",
+            "teacher",
+            "spoke",
+            ",",
+            "everyone",
+            "listened",
+            "."
+          ]
+        },
+        {
+          "id": "g3_e11",
+          "prompt": "Build a complex sentence using IF.",
+          "tiles": [
+            "If",
+            "you",
+            "practice",
+            "every",
+            "day",
+            ",",
+            "you",
+            "will",
+            "improve",
+            "."
+          ],
+          "answer": [
+            "If",
+            "you",
+            "practice",
+            "every",
+            "day",
+            ",",
+            "you",
+            "will",
+            "improve",
+            "."
+          ]
+        },
+        {
+          "id": "g3_e12",
+          "prompt": "Build a complex sentence using ALTHOUGH.",
+          "tiles": [
+            "Although",
+            "the",
+            "test",
+            "was",
+            "hard",
+            ",",
+            "she",
+            "did",
+            "her",
+            "best",
+            "."
+          ],
+          "answer": [
+            "Although",
+            "the",
+            "test",
+            "was",
+            "hard",
+            ",",
+            "she",
+            "did",
+            "her",
+            "best",
+            "."
+          ]
+        },
+        {
+          "id": "g3_e13",
+          "prompt": "Build a complex sentence using BEFORE.",
+          "tiles": [
+            "Before",
+            "the",
+            "sun",
+            "rose",
+            ",",
+            "the",
+            "birds",
+            "started",
+            "singing",
+            "."
+          ],
+          "answer": [
+            "Before",
+            "the",
+            "sun",
+            "rose",
+            ",",
+            "the",
+            "birds",
+            "started",
+            "singing",
+            "."
+          ]
+        },
+        {
+          "id": "g3_e14",
+          "prompt": "Build a complex sentence using WHILE.",
+          "tiles": [
+            "While",
+            "Dad",
+            "cooked",
+            "dinner",
+            ",",
+            "we",
+            "set",
+            "the",
+            "table",
+            "."
+          ],
+          "answer": [
+            "While",
+            "Dad",
+            "cooked",
+            "dinner",
+            ",",
+            "we",
+            "set",
+            "the",
+            "table",
+            "."
+          ]
+        },
+        {
+          "id": "g3_e15",
+          "prompt": "Build a complex sentence using BECAUSE.",
+          "tiles": [
+            "He",
+            "smiled",
+            "because",
+            "his",
+            "friend",
+            "gave",
+            "him",
+            "a",
+            "gift",
+            "."
+          ],
+          "answer": [
+            "He",
+            "smiled",
+            "because",
+            "his",
+            "friend",
+            "gave",
+            "him",
+            "a",
+            "gift",
+            "."
+          ]
+        }
+      ]
+    },
+    {
+      "set_id": "complex_clauses_gr4_ext",
+      "curriculum_alias": "prepositional_dependent_clauses",
+      "grade_id": "grade_4",
+      "band_id": "band_3",
+      "cognitive_level": "apply",
+      "assessment_type": "formative",
+      "domain": "grammar",
+      "mechanic": "drag_and_drop",
+      "questions": [
+        {
+          "id": "g4_e01",
+          "prompt": "Build a sentence with a prepositional phrase using ACROSS.",
+          "tiles": [
+            "The",
+            "deer",
+            "ran",
+            "across",
+            "the",
+            "frozen",
+            "lake",
+            "."
+          ],
+          "answer": [
+            "The",
+            "deer",
+            "ran",
+            "across",
+            "the",
+            "frozen",
+            "lake",
+            "."
+          ]
+        },
+        {
+          "id": "g4_e02",
+          "prompt": "Build a sentence with a prepositional phrase using BETWEEN.",
+          "tiles": [
+            "The",
+            "river",
+            "flows",
+            "between",
+            "the",
+            "two",
+            "mountains",
+            "."
+          ],
+          "answer": [
+            "The",
+            "river",
+            "flows",
+            "between",
+            "the",
+            "two",
+            "mountains",
+            "."
+          ]
+        },
+        {
+          "id": "g4_e03",
+          "prompt": "Build a sentence with a prepositional phrase using THROUGH.",
+          "tiles": [
+            "We",
+            "walked",
+            "through",
+            "the",
+            "dark",
+            "and",
+            "silent",
+            "forest",
+            "."
+          ],
+          "answer": [
+            "We",
+            "walked",
+            "through",
+            "the",
+            "dark",
+            "and",
+            "silent",
+            "forest",
+            "."
+          ]
+        },
+        {
+          "id": "g4_e04",
+          "prompt": "Build a sentence with a prepositional phrase using ABOVE.",
+          "tiles": [
+            "The",
+            "eagle",
+            "soared",
+            "above",
+            "the",
+            "snowy",
+            "peaks",
+            "."
+          ],
+          "answer": [
+            "The",
+            "eagle",
+            "soared",
+            "above",
+            "the",
+            "snowy",
+            "peaks",
+            "."
+          ]
+        },
+        {
+          "id": "g4_e05",
+          "prompt": "Build a sentence with a relative clause using WHO.",
+          "tiles": [
+            "The",
+            "girl",
+            "who",
+            "won",
+            "the",
+            "race",
+            "celebrated",
+            "with",
+            "her",
+            "team",
+            "."
+          ],
+          "answer": [
+            "The",
+            "girl",
+            "who",
+            "won",
+            "the",
+            "race",
+            "celebrated",
+            "with",
+            "her",
+            "team",
+            "."
+          ]
+        },
+        {
+          "id": "g4_e06",
+          "prompt": "Build a sentence with a relative clause using WHICH.",
+          "tiles": [
+            "The",
+            "book",
+            ",",
+            "which",
+            "was",
+            "very",
+            "old",
+            ",",
+            "fell",
+            "apart",
+            "."
+          ],
+          "answer": [
+            "The",
+            "book",
+            ",",
+            "which",
+            "was",
+            "very",
+            "old",
+            ",",
+            "fell",
+            "apart",
+            "."
+          ]
+        },
+        {
+          "id": "g4_e07",
+          "prompt": "Build a compound-complex sentence.",
+          "tiles": [
+            "After",
+            "we",
+            "ate",
+            "breakfast",
+            ",",
+            "we",
+            "packed",
+            "our",
+            "bags",
+            "and",
+            "left",
+            "."
+          ],
+          "answer": [
+            "After",
+            "we",
+            "ate",
+            "breakfast",
+            ",",
+            "we",
+            "packed",
+            "our",
+            "bags",
+            "and",
+            "left",
+            "."
+          ]
+        },
+        {
+          "id": "g4_e08",
+          "prompt": "Build a compound-complex sentence.",
+          "tiles": [
+            "Although",
+            "it",
+            "was",
+            "late",
+            ",",
+            "she",
+            "finished",
+            "her",
+            "homework",
+            "and",
+            "went",
+            "to",
+            "bed",
+            "."
+          ],
+          "answer": [
+            "Although",
+            "it",
+            "was",
+            "late",
+            ",",
+            "she",
+            "finished",
+            "her",
+            "homework",
+            "and",
+            "went",
+            "to",
+            "bed",
+            "."
+          ]
+        },
+        {
+          "id": "g4_e09",
+          "prompt": "Build a sentence with a prepositional phrase using BEHIND.",
+          "tiles": [
+            "The",
+            "kitten",
+            "was",
+            "hiding",
+            "behind",
+            "the",
+            "large",
+            "wooden",
+            "crate",
+            "."
+          ],
+          "answer": [
+            "The",
+            "kitten",
+            "was",
+            "hiding",
+            "behind",
+            "the",
+            "large",
+            "wooden",
+            "crate",
+            "."
+          ]
+        },
+        {
+          "id": "g4_e10",
+          "prompt": "Build a sentence with a relative clause using THAT.",
+          "tiles": [
+            "The",
+            "song",
+            "that",
+            "she",
+            "sang",
+            "made",
+            "everyone",
+            "smile",
+            "."
+          ],
+          "answer": [
+            "The",
+            "song",
+            "that",
+            "she",
+            "sang",
+            "made",
+            "everyone",
+            "smile",
+            "."
+          ]
+        },
+        {
+          "id": "g4_e11",
+          "prompt": "Build a compound-complex sentence.",
+          "tiles": [
+            "When",
+            "the",
+            "storm",
+            "passed",
+            ",",
+            "the",
+            "sky",
+            "cleared",
+            "and",
+            "a",
+            "rainbow",
+            "appeared",
+            "."
+          ],
+          "answer": [
+            "When",
+            "the",
+            "storm",
+            "passed",
+            ",",
+            "the",
+            "sky",
+            "cleared",
+            "and",
+            "a",
+            "rainbow",
+            "appeared",
+            "."
+          ]
+        },
+        {
+          "id": "g4_e12",
+          "prompt": "Build a sentence with a prepositional phrase using BEYOND.",
+          "tiles": [
+            "The",
+            "castle",
+            "stood",
+            "beyond",
+            "the",
+            "misty",
+            "hills",
+            "."
+          ],
+          "answer": [
+            "The",
+            "castle",
+            "stood",
+            "beyond",
+            "the",
+            "misty",
+            "hills",
+            "."
+          ]
+        },
+        {
+          "id": "g4_e13",
+          "prompt": "Build a sentence with a relative clause using WHO.",
+          "tiles": [
+            "The",
+            "scientist",
+            "who",
+            "made",
+            "the",
+            "discovery",
+            "won",
+            "a",
+            "prize",
+            "."
+          ],
+          "answer": [
+            "The",
+            "scientist",
+            "who",
+            "made",
+            "the",
+            "discovery",
+            "won",
+            "a",
+            "prize",
+            "."
+          ]
+        },
+        {
+          "id": "g4_e14",
+          "prompt": "Build a compound-complex sentence.",
+          "tiles": [
+            "Before",
+            "the",
+            "match",
+            "began",
+            ",",
+            "the",
+            "players",
+            "stretched",
+            "and",
+            "the",
+            "crowd",
+            "cheered",
+            "."
+          ],
+          "answer": [
+            "Before",
+            "the",
+            "match",
+            "began",
+            ",",
+            "the",
+            "players",
+            "stretched",
+            "and",
+            "the",
+            "crowd",
+            "cheered",
+            "."
+          ]
+        },
+        {
+          "id": "g4_e15",
+          "prompt": "Build a sentence with a prepositional phrase using AMONG.",
+          "tiles": [
+            "She",
+            "found",
+            "a",
+            "gold",
+            "coin",
+            "among",
+            "the",
+            "old",
+            "books",
+            "."
+          ],
+          "answer": [
+            "She",
+            "found",
+            "a",
+            "gold",
+            "coin",
+            "among",
+            "the",
+            "old",
+            "books",
+            "."
+          ]
+        }
       ]
     }
-
   ]
 }

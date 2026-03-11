@@ -696,6 +696,61 @@
     .mastery-label { font-size: 0.38rem; }
   }
 
+  /* ── SPELL IMAGE (letter mode) ── */
+  .spell-image-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0.2rem 0;
+  }
+  .spell-image {
+    width: clamp(100px, 28vw, 160px);
+    height: clamp(100px, 28vw, 160px);
+    object-fit: contain;
+    border-radius: 20px;
+    border: 3px solid rgba(255,213,79,0.4);
+    background: rgba(255,248,225,0.08);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    animation: imgPop 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes imgPop {
+    0%   { transform: scale(0.6); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  /* ── LETTER TILES (single character) ── */
+  .word-tile.letter-tile {
+    width: clamp(52px, 14vw, 72px);
+    height: clamp(52px, 14vw, 72px);
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(1.6rem, 6vw, 2.4rem);
+    text-transform: uppercase;
+    border-radius: 16px;
+    font-weight: 900;
+  }
+  .built-word.letter-built {
+    width: clamp(44px, 12vw, 60px);
+    height: clamp(44px, 12vw, 60px);
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(1.4rem, 5vw, 2rem);
+    text-transform: uppercase;
+    border-radius: 14px;
+    font-weight: 900;
+  }
+
+  /* Letter mode: build zone is more compact */
+  .build-zone.letter-mode {
+    min-height: 52px;
+    gap: 6px;
+    max-width: 400px;
+  }
+
   /* ── LEVEL-UP TOAST ── */
   .level-up-overlay {
     position: fixed; inset: 0; z-index: 60;
@@ -843,9 +898,14 @@
       <div class="character" id="character">🦁</div>
     </div>
 
+    <!-- Image hint (for letter-spelling mode) -->
+    <div class="spell-image-wrap" id="spellImageWrap" style="display:none">
+      <img class="spell-image" id="spellImage" src="" alt="" />
+    </div>
+
     <!-- Build zone -->
     <div>
-      <div class="build-zone-label">Build the sentence</div>
+      <div class="build-zone-label" id="buildZoneLabel">Build the sentence</div>
       <div class="build-zone" id="buildZone"></div>
     </div>
 
@@ -870,7 +930,7 @@
     <div class="end-rating" id="endRating">⭐⭐⭐</div>
     <div class="end-title" id="endTitle">Jungle Master!</div>
     <div class="end-score-box">
-      <div class="end-score-label">Sentences Built</div>
+      <div class="end-score-label">Completed</div>
       <div class="end-score-num" id="endScoreNum">0</div>
       <div class="end-score-sub" id="endScoreSub">correct sentences</div>
     </div>
@@ -958,6 +1018,7 @@ let sentenceIndex     = 0;
 const SENTENCES_PER_GAME = 8;
 let questionPool = null; // populated from JSON fetch
 let poolIndex    = 0;
+let _isLetterMode = false;
 
 // ── PROGRESSION STATE ──────────────────────────────────────────────────────
 const MASTERY_WINDOW    = 10;
@@ -1012,14 +1073,21 @@ function _saveProgress(band, grade, mastered) {
 
 // Can the game use this question set?
 function _canHandleJW(s) {
-  return s.domain === 'grammar' && s.mechanic === 'drag_and_drop';
+  if (s.mechanic !== 'drag_and_drop') return false;
+  return s.domain === 'grammar' || s.domain === 'phonics';
 }
 
-// Normalise a question set into pool-ready { words, hint } objects
+// Normalise a question set into pool-ready { words, hint, image, isLetterMode } objects
 function _normSetJW(s) {
   return (s.questions || [])
     .filter(q => Array.isArray(q.tiles) && Array.isArray(q.answer) && !q.mechanic)
-    .map(q => ({ words: q.answer, hint: q.prompt, setId: s.set_id }));
+    .map(q => ({
+      words: q.answer,
+      hint: q.prompt,
+      image: q.image || null,
+      isLetterMode: q.answer.every(w => w.length === 1),
+      setId: s.set_id
+    }));
 }
 
 // Build the active questionPool from poolsByGrade + optional warm-up
@@ -1446,29 +1514,51 @@ function loadSentence() {
   currentSentence = s.words;
   builtSoFar      = [];
   nextWordIndex   = 0;
+  _isLetterMode   = !!s.isLetterMode;
 
-  // Hint
-  document.getElementById('hintArea').textContent = s.hint;
+  // ── Image hint (letter-spelling mode) ──
+  const imgWrap = document.getElementById('spellImageWrap');
+  const imgEl   = document.getElementById('spellImage');
+  if (_isLetterMode && s.image) {
+    imgEl.src = s.image;
+    imgEl.alt = s.words.join('');
+    imgWrap.style.display = '';
+  } else {
+    imgWrap.style.display = 'none';
+    imgEl.src = '';
+  }
 
-  // Clear build zone
+  // ── Hint text ──
+  const hintArea = document.getElementById('hintArea');
+  if (_isLetterMode) {
+    hintArea.textContent = s.hint || 'Spell the word!';
+  } else {
+    hintArea.textContent = s.hint;
+  }
+
+  // ── Build zone label ──
+  const bzLabel = document.getElementById('buildZoneLabel');
+  if (bzLabel) bzLabel.textContent = _isLetterMode ? 'Spell the word' : 'Build the sentence';
+
+  // ── Clear build zone ──
   const bz = document.getElementById('buildZone');
   bz.innerHTML = '';
+  bz.classList.toggle('letter-mode', _isLetterMode);
 
-  // Shuffle words for pool
-  const shuffled = [...currentSentence].sort(() => Math.random() - 0.5);
-  // Make sure it's actually shuffled (not in order)
+  // ── Shuffle tiles ──
+  const shuffledTiles = [...currentSentence].sort(() => Math.random() - 0.5);
   let attempts = 0;
-  while (shuffled.join('') === currentSentence.join('') && attempts < 20) {
-    shuffled.sort(() => Math.random() - 0.5);
+  while (shuffledTiles.join('') === currentSentence.join('') && attempts < 20) {
+    shuffledTiles.sort(() => Math.random() - 0.5);
     attempts++;
   }
 
-  // Render word tiles
+  // ── Render tiles ──
   const pool = document.getElementById('wordPool');
   pool.innerHTML = '';
-  shuffled.forEach((word, i) => {
+  shuffledTiles.forEach((word, i) => {
     const tile = document.createElement('div');
-    tile.className = 'word-tile';
+    tile.className = 'word-tile' + (_isLetterMode ? ' letter-tile' : '');
     tile.textContent = word;
     tile.dataset.word = word;
     tile.dataset.idx  = i;
@@ -1521,7 +1611,7 @@ function onWordTap(tile, word) {
 function addBuiltWord(word, correct) {
   const bz = document.getElementById('buildZone');
   const el = document.createElement('div');
-  el.className = 'built-word';
+  el.className = 'built-word' + (_isLetterMode ? ' letter-built' : '');
   el.textContent = word;
   bz.appendChild(el);
 }
@@ -1712,7 +1802,7 @@ function endGame() {
   document.getElementById('endRating').textContent  = rating;
   document.getElementById('endTitle').textContent    = title;
   document.getElementById('endScoreNum').textContent = score;
-  document.getElementById('endScoreSub').textContent = `out of ${Math.min(sentenceIndex, SENTENCES_PER_GAME)} sentences`;
+  document.getElementById('endScoreSub').textContent = `out of ${Math.min(sentenceIndex, SENTENCES_PER_GAME)} rounds`;
   document.getElementById('endMessage').textContent  = message;
 
   // ── Progression summary ──
