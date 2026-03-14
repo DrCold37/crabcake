@@ -270,7 +270,7 @@ function phaserCreate(){
 
   /* Animations */
   CHARS.forEach(function(c){
-    if(sc.textures.exists(c+'-idle'))sc.anims.create({key:c+'-ia',frames:sc.anims.generateFrameNumbers(c+'-idle',{start:0,end:8}),frameRate:6,repeat:-1});
+    if(sc.textures.exists(c+'-idle'))sc.anims.create({key:c+'-ia',frames:sc.anims.generateFrameNumbers(c+'-idle',{start:0,end:8}),frameRate:3,repeat:-1});
     if(sc.textures.exists(c+'-walk'))sc.anims.create({key:c+'-wa',frames:sc.anims.generateFrameNumbers(c+'-walk',{start:0,end:8}),frameRate:8,repeat:-1});
   });
 
@@ -355,7 +355,7 @@ function plBld(ck){
 function plVeh(ck){
   var sc=G.sc;if(!sc)return;var vk='v-'+VM[ck];if(!sc.textures.exists(vk))return;
   var sl=SL[ck];
-  var v=sc.add.image(sl.x+60,RY+36,vk).setScale(.32).setAlpha(0).setDepth(D.vehicle);
+  var v=sc.add.image(sl.x+60,RY+36,vk).setScale(.80).setAlpha(0).setDepth(D.vehicle);
   sc.tweens.add({targets:v,alpha:1,x:sl.x+20,duration:600,ease:'Power2'});
 }
 function plProp(idx){
@@ -371,7 +371,7 @@ function spWalk(ck){
   var sc=G.sc;if(!sc)return;
   if(!sc.textures.exists(ck+'-walk')||!sc.anims.exists(ck+'-wa'))return;
   var sl=SL[ck]||{x:600};
-  var spr=sc.add.sprite(sl.x,RY+36,ck+'-walk').setScale(.65).setOrigin(.5,1).setDepth(D.walker);
+  var spr=sc.add.sprite(sl.x,RY+36,ck+'-walk').setScale(.98).setOrigin(.5,1).setDepth(D.walker);
   spr.play(ck+'-wa');
   walkers.push({spr:spr,sp:15+Math.random()*12,dir:Math.random()>.5?1:-1,mn:Math.max(sl.x-120,10),mx:Math.min(sl.x+120,WW-10)});
 }
@@ -391,7 +391,7 @@ function charIntro(ck,cb){
 
   var useWalk=sc.textures.exists(ck+'-walk')&&sc.anims.exists(ck+'-wa');
   var startX=G.sc.cameras.main.scrollX-60;
-  var spr=sc.add.sprite(startX,RY+36,useWalk?(ck+'-walk'):(ck+'-idle')).setScale(.65).setOrigin(.5,1).setDepth(D.charIntro);
+  var spr=sc.add.sprite(startX,RY+36,useWalk?(ck+'-walk'):(ck+'-idle')).setScale(.98).setOrigin(.5,1).setDepth(D.charIntro);
   if(useWalk)spr.play(ck+'-wa');else spr.play(ck+'-ia');
   G.introSpr=spr;
 
@@ -410,7 +410,7 @@ function charIntro(ck,cb){
   updateSpot();
 
   /* Walk to building slot */
-  sc.tweens.add({targets:spr,x:targetX,duration:2000,ease:'Power1',
+  sc.tweens.add({targets:spr,x:targetX,duration:3500,ease:'Power1',
     onUpdate:function(){updateSpot()},
     onComplete:function(){
       if(sc.anims.exists(ck+'-ia'))spr.play(ck+'-ia');
@@ -426,7 +426,7 @@ function dismissIntro(){
   if(!sc||!G.introSpr)return;
   var spr=G.introSpr;G.introSpr=null;
   var exitX=sc.cameras.main.scrollX+GW+60;
-  sc.tweens.add({targets:spr,x:exitX,alpha:0,duration:1000,ease:'Power2',onComplete:function(){spr.destroy()}});
+  sc.tweens.add({targets:spr,x:exitX,duration:2800,ease:'Power1',onComplete:function(){spr.destroy()}});
 }
 
 /* ── DRAG & DROP ── */
