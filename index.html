@@ -3128,34 +3128,6 @@ function bindHoverPause(canvasId, startFn) {
     }
   }
 })();
-
-// ── Under Construction Modal for Community Builder ──
-(function() {
-  var card = document.getElementById('card-community-builder');
-  if (!card) return;
-  var gameHref = card.getAttribute('href');
-
-  // Intercept click
-  card.addEventListener('click', function(e) {
-    e.preventDefault();
-    document.getElementById('ucModal').classList.add('active');
-  });
-
-  // Play button — navigate to game
-  document.getElementById('ucPlay').addEventListener('click', function() {
-    window.location.href = gameHref;
-  });
-
-  // Exit button — close modal
-  document.getElementById('ucExit').addEventListener('click', function() {
-    document.getElementById('ucModal').classList.remove('active');
-  });
-
-  // Click overlay to close
-  document.getElementById('ucModal').addEventListener('click', function(e) {
-    if (e.target === this) this.classList.remove('active');
-  });
-})();
 </script>
 
 <!-- Under Construction Modal -->
@@ -3170,6 +3142,32 @@ function bindHoverPause(canvasId, startFn) {
     </div>
   </div>
 </div>
+
+<script>
+// ── Under Construction Modal for Community Builder ──
+(function() {
+  var card = document.getElementById('card-community-builder');
+  if (!card) return;
+  var gameHref = card.getAttribute('href');
+
+  card.addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('ucModal').classList.add('active');
+  });
+
+  document.getElementById('ucPlay').addEventListener('click', function() {
+    window.location.href = gameHref;
+  });
+
+  document.getElementById('ucExit').addEventListener('click', function() {
+    document.getElementById('ucModal').classList.remove('active');
+  });
+
+  document.getElementById('ucModal').addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('active');
+  });
+})();
+</script>
 
 </body>
 </html>
