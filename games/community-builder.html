@@ -145,7 +145,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 
 <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
 <script>
-/* Community Builder v3 — zoom-enter-patrol */
+/* Community Builder v4 — camera fix */
 (function(){
 "use strict";
 var $=function(id){return document.getElementById(id)};
@@ -345,20 +345,19 @@ function phaserUpdate(time,delta){
   if(G.zoomed&&G.introSpr&&G.introSpr.active){
     var cx=G.introSpr.x;
     var cy=RY-40;
-    var hw=(GW/cam.zoom)/2;
-    var hh=(GH/cam.zoom)/2;
-    /* Only follow once character has passed the center of the zoomed view */
-    var camCenterX=cam.scrollX+hw;
-    if(cx>camCenterX){
-      /* Character past center — follow it */
-      var tx=Math.max(hw,Math.min(cx,WW-hw));
-      var ty=Math.max(hh,Math.min(cy,GH-hh));
-      cam.scrollX+=(tx-hw-cam.scrollX)*0.08;
-      cam.scrollY+=(ty-hh-cam.scrollY)*0.08;
-    }else{
-      /* Character still on left side — hold camera at left edge */
+    var vw=GW/cam.zoom;
+    var vh=GH/cam.zoom;
+    /* Center camera on character, clamped to world bounds */
+    var targetX=Math.max(0,Math.min(cx-vw/2,WW-vw));
+    var targetY=Math.max(0,Math.min(cy-vh/2,GH-vh));
+    if(G.entering){
+      /* During entry walk: hold at left edge, correct vertical */
       cam.scrollX+=(0-cam.scrollX)*0.08;
-      cam.scrollY+=((cy-hh)-cam.scrollY)*0.08;
+      cam.scrollY+=(targetY-cam.scrollY)*0.08;
+    }else{
+      /* During patrol: follow character */
+      cam.scrollX+=(targetX-cam.scrollX)*0.06;
+      cam.scrollY+=(targetY-cam.scrollY)*0.06;
     }
   }else{
     var target=Math.max(0,Math.min(G.camTarget-GW/2,WW-GW));
@@ -407,9 +406,8 @@ function spWalk(ck){
 }
 
 /* ── CHARACTER INTRO with ZOOM ──
-   Zooms camera 200% anchored to left edge.
-   Character walks in from off-screen left.
-   Camera holds until character reaches center, then follows. */
+   Zooms camera 200% showing ground level from left edge.
+   Character walks in from off-screen left. */
 function charIntro(ck,cb){
   var sc=G.sc;
   if(!sc||!sc.textures.exists(ck+'-walk')||!sc.anims.exists(ck+'-wa')){
@@ -418,27 +416,28 @@ function charIntro(ck,cb){
   G.curChar=ck;
   var useWalk=sc.textures.exists(ck+'-walk')&&sc.anims.exists(ck+'-wa');
 
-  /* Snap camera to left edge first */
+  /* With zoom=2, visible area is 600x400.
+     Character feet at y=RY+36=756. To see ground level:
+     scrollY = GH - (GH/zoom) = 800-400 = 400
+     scrollX = 0 to start from left edge */
   sc.cameras.main.scrollX=0;
-  sc.cameras.main.scrollY=0;
+  sc.cameras.main.scrollY=GH-(GH/2);
 
   /* Character starts off-screen left */
-  var startX=-40;
+  var startX=-50;
   var spr=sc.add.sprite(startX,RY+36,useWalk?(ck+'-walk'):(ck+'-idle')).setScale(.33).setOrigin(.5,1).setDepth(D.charIntro);
   if(useWalk)spr.play(ck+'-wa');else spr.play(ck+'-ia');
   G.introSpr=spr;
   G.patrolDir=1;
-  G.zoomed=false;
   G.entering=true;
+  G.zoomed=true;
   spr.setFlipX(false);
 
   /* Zoom in */
-  G.zoomed=true;
   sc.cameras.main.zoomTo(2,600,'Sine.easeInOut');
 
-  /* Walk character to ~1/3 of zoomed view before showing question */
-  var entryTarget=120;
-  sc.tweens.add({targets:spr,x:entryTarget,duration:2200,ease:'Linear',
+  /* Walk character into view — about 1/3 across the zoomed viewport (~200px world) */
+  sc.tweens.add({targets:spr,x:200,duration:2500,ease:'Linear',
     onComplete:function(){
       G.entering=false;
       if(cb)cb();
