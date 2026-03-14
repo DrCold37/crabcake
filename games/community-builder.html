@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="description" content="Community Builder is a free social studies game for kids ages 4–10. Answer questions about community helpers, rules, and maps to build your own town! Play free on Crabcake Kids!"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- Preload critical assets -->
+  <link rel="preload" href="/fonts/Fredoka-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/Nunito-Bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/Nunito-ExtraBold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/data/community-builder-questions.json?v=1" as="fetch" crossorigin>
+  <link rel="canonical" href="https://crabcake.kids/games/community-builder.html">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#4A90D9">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Crabcake">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <title>Community Builder 🏘️ – Free Social Studies Game for Kids Ages 4–10 | Crabcake Kids</title>
+  <!-- Open Graph -->
+  <meta property="og:title" content="Community Builder – Build Your Own Town!">
+  <meta property="og:description" content="Answer questions about community helpers to build a town. Free social studies game for kids ages 4–10.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://crabcake.kids/games/community-builder.html">
+  <meta property="og:image" content="https://crabcake.kids/images/og-image.png">
+  <noscript></noscript>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* ── FONTS ── */
+@font-face{font-family:'Nunito';font-weight:700;font-style:normal;font-display:swap;src:url('/fonts/Nunito-Bold.woff2') format('woff2')}
+@font-face{font-family:'Nunito';font-weight:800;font-style:normal;font-display:swap;src:url('/fonts/Nunito-ExtraBold.woff2') format('woff2')}
+@font-face{font-family:'Boogaloo';font-weight:400;font-style:normal;font-display:swap;src:url('/fonts/Boogaloo-Regular.woff2') format('woff2')}
+@font-face{font-family:'Fredoka';font-weight:400;font-style:normal;font-display:swap;src:url('/fonts/Fredoka-Regular.woff2') format('woff2')}
+
+:root{
+  --bg:#1a3a5c;--deep:#0f2540;
+  --sky:#4A90D9;--sky2:#3578c4;
+  --yellow:#FFD93D;--coral:#FF5C5C;
+  --orange:#FF9040;--green:#4ECB71;
+  --purple:#A66CFF;--teal:#00C9B1;
+  --white:#ffffff;
+}
+
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:'Nunito',sans-serif;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+
+/* ── SCREENS ── */
+.screen{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem;overflow:hidden}
+.screen.hidden{display:none}
+
+/* ── SKY GRADIENT BG ── */
+.sky-bg{position:fixed;inset:0;z-index:0;
+  background:linear-gradient(180deg,#87CEEB 0%,#b8e4f9 40%,#d4f0ff 70%,#e8f7ff 100%)}
+
+/* ── CLOUDS ── */
+.cloud-layer{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.cloud{position:absolute;width:clamp(100px,20vw,200px);height:auto;opacity:.7;animation:drift linear infinite}
+@keyframes drift{from{transform:translateX(-200px)}to{transform:translateX(calc(100vw + 200px))}}
+
+/* ── START SCREEN ── */
+#startScreen{gap:0;padding:1.5rem 1rem;z-index:20}
+.game-icon{font-size:4rem;margin-bottom:.3rem;animation:iconBob 3s ease-in-out infinite;display:inline-block}
+@keyframes iconBob{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-12px) rotate(5deg)}}
+.game-title{font-family:'Boogaloo',cursive;font-size:clamp(2.4rem,8vw,4rem);color:var(--sky);text-shadow:0 3px 12px rgba(74,144,217,.4);text-align:center;line-height:1;margin-bottom:.2rem;animation:titleBob 2.5s ease-in-out infinite;animation-delay:.5s;display:inline-block}
+@keyframes titleBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.game-subtitle{color:rgba(255,255,255,.5);font-size:.8rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:1.4rem}
+.age-grid{display:flex;gap:.9rem;flex-wrap:wrap;justify-content:center;width:100%;max-width:480px;margin-bottom:1rem}
+.age-btn{padding:.9rem 1.4rem;border-radius:16px;border:2px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fff;cursor:pointer;transition:all .2s;text-align:center;font-family:'Nunito',sans-serif;display:flex;flex-direction:column;align-items:center;gap:.15rem;min-width:120px}
+.age-btn:hover{transform:translateY(-3px);background:rgba(74,144,217,.15);border-color:var(--sky)}
+.age-btn.selected{transform:translateY(-3px)}
+.age-btn[data-age="5"]{border-color:rgba(255,217,61,.45)}
+.age-btn[data-age="7"]{border-color:rgba(0,201,177,.45)}
+.age-btn[data-age="9"]{border-color:rgba(166,108,255,.45)}
+.age-btn[data-age="5"].selected{border-color:var(--yellow);background:rgba(255,217,61,.15);box-shadow:0 0 16px rgba(255,217,61,.35)}
+.age-btn[data-age="7"].selected{border-color:var(--teal);background:rgba(0,201,177,.15);box-shadow:0 0 16px rgba(0,201,177,.35)}
+.age-btn[data-age="9"].selected{border-color:var(--purple);background:rgba(166,108,255,.15);box-shadow:0 0 16px rgba(166,108,255,.35)}
+.age-btn .age-emoji{font-size:1.8rem;display:block;margin-bottom:.3rem}
+.age-btn .age-label{font-size:.7rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--sky)}
+.age-btn .age-topic{font-size:.6rem;color:rgba(255,255,255,.5);margin-top:.2rem;text-align:center}
+
+@keyframes btnPulse{0%,100%{transform:scale(1);box-shadow:0 4px 24px rgba(74,144,217,.45)}50%{transform:scale(1.05);box-shadow:0 6px 32px rgba(74,144,217,.75)}}
+.start-btn{margin-top:.6rem;padding:.75rem 2rem;border-radius:50px;border:none;font-family:'Boogaloo',cursive;font-size:1.2rem;cursor:pointer;transition:all .25s;
+  background:linear-gradient(135deg,var(--sky),var(--green));color:#fff;box-shadow:0 4px 24px rgba(74,144,217,.45),0 2px 8px rgba(0,0,0,.35)}
+.start-btn:not(:disabled).active{animation:btnPulse 1.2s ease-in-out infinite}
+.start-btn:disabled{background:rgba(255,255,255,.1);box-shadow:none;color:rgba(255,255,255,.3);cursor:not-allowed}
+.start-btn:not(:disabled):hover{transform:translateY(-2px) scale(1.04);box-shadow:0 8px 28px rgba(74,144,217,.45)}
+
+#bandDisplay{margin:.6rem 0 1.2rem;display:flex;flex-direction:column;align-items:center;gap:.6rem;min-height:76px;justify-content:center}
+.band-pill{display:inline-flex;align-items:center;gap:.5rem;padding:.55rem 1.4rem;border-radius:50px;font-size:1.05rem;font-weight:800;border:2px solid;animation:pillPop .4s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes pillPop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+.band-pill.band1{color:#FFD93D;border-color:rgba(255,217,61,.5);background:rgba(255,217,61,.12)}
+.band-pill.band2{color:#00C9B1;border-color:rgba(0,201,177,.5);background:rgba(0,201,177,.12)}
+.band-pill.band3{color:#A66CFF;border-color:rgba(166,108,255,.5);background:rgba(166,108,255,.12)}
+.band-source-note{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.35);letter-spacing:.5px}
+
+.back-link{color:rgba(255,255,255,.35);font-size:.75rem;text-decoration:none;letter-spacing:1px;margin-top:.5rem}
+.back-link:hover{color:var(--sky)}
+
+/* ── GAME CONTAINER ── */
+#gameContainer{position:fixed;inset:0;z-index:5;display:none}
+#gameContainer.active{display:block}
+#gameContainer canvas{display:block;width:100%!important;height:100%!important;object-fit:contain}
+
+/* ── QUESTION OVERLAY ── */
+#questionOverlay{position:fixed;inset:0;z-index:30;display:none;align-items:flex-end;justify-content:center;padding:1rem;background:rgba(0,0,0,.25)}
+#questionOverlay.active{display:flex}
+.question-panel{background:rgba(15,37,64,.95);border-radius:24px;padding:1.5rem;max-width:520px;width:100%;border:2px solid rgba(74,144,217,.3);box-shadow:0 8px 40px rgba(0,0,0,.5);animation:panelSlideUp .4s cubic-bezier(.34,1.56,.64,1) both;margin-bottom:env(safe-area-inset-bottom,0);max-height:60vh;overflow-y:auto}
+@keyframes panelSlideUp{from{transform:translateY(100px);opacity:0}to{transform:translateY(0);opacity:1}}
+.question-character{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}
+.question-character img{width:64px;height:64px;border-radius:50%;border:3px solid var(--yellow);background:rgba(255,255,255,.1)}
+.question-character .char-name{font-family:'Boogaloo',cursive;font-size:1.3rem;color:var(--yellow)}
+.question-text{font-size:1.05rem;color:var(--white);line-height:1.5;margin-bottom:1.2rem;font-weight:700}
+.options-grid{display:flex;flex-direction:column;gap:.6rem}
+.option-btn{padding:.8rem 1.2rem;border-radius:14px;border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);color:#fff;cursor:pointer;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:700;text-align:left;transition:all .2s;position:relative;overflow:hidden}
+.option-btn:hover{background:rgba(74,144,217,.2);border-color:var(--sky);transform:translateX(4px)}
+.option-btn.correct{border-color:var(--green);background:rgba(78,203,113,.25);animation:correctPop .4s ease}
+.option-btn.wrong{border-color:var(--coral);background:rgba(255,92,92,.2);animation:wrongShake .4s ease}
+@keyframes correctPop{0%{transform:scale(1)}50%{transform:scale(1.03)}100%{transform:scale(1)}}
+@keyframes wrongShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.hint-text{margin-top:.8rem;padding:.6rem 1rem;border-radius:12px;background:rgba(255,217,61,.12);border:1px solid rgba(255,217,61,.3);color:var(--yellow);font-size:.85rem;display:none}
+.hint-text.visible{display:block;animation:pillPop .3s ease}
+
+/* ── DROP ZONE (drag-and-drop bands 2-3) ── */
+.drop-indicator{position:absolute;border:3px dashed var(--yellow);border-radius:12px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:25}
+.drop-indicator.active{opacity:.7;animation:dropPulse 1.5s ease-in-out infinite}
+@keyframes dropPulse{0%,100%{opacity:.4}50%{opacity:.9}}
+
+/* ── HUD ── */
+#hud{position:fixed;top:0;left:0;right:0;z-index:15;display:none;padding:.6rem 1rem;background:linear-gradient(180deg,rgba(15,37,64,.85) 0%,transparent 100%)}
+#hud.active{display:flex;justify-content:space-between;align-items:center}
+.hud-score{font-family:'Boogaloo',cursive;font-size:1.3rem;color:var(--yellow)}
+.hud-progress{font-size:.8rem;color:rgba(255,255,255,.6);font-weight:700}
+.hud-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:1rem;transition:all .2s}
+.hud-btn:hover{background:rgba(255,255,255,.2)}
+
+/* ── CELEBRATION ── */
+#celebration{position:fixed;inset:0;z-index:40;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.4)}
+#celebration.active{display:flex}
+.celebration-card{background:rgba(15,37,64,.95);border-radius:28px;padding:2rem;max-width:400px;width:90%;text-align:center;border:3px solid var(--yellow);box-shadow:0 0 60px rgba(255,217,61,.3);animation:celebBounce .6s cubic-bezier(.34,1.56,.64,1)}
+@keyframes celebBounce{from{transform:scale(.5) rotate(-5deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+.celebration-card h2{font-family:'Boogaloo',cursive;font-size:2rem;color:var(--yellow);margin:.5rem 0}
+.celebration-card p{color:rgba(255,255,255,.7);margin-bottom:1rem}
+.celebration-card .continue-btn{padding:.65rem 2rem;border-radius:50px;border:none;font-family:'Boogaloo',cursive;font-size:1.1rem;cursor:pointer;background:linear-gradient(135deg,var(--sky),var(--green));color:#fff;box-shadow:0 4px 16px rgba(74,144,217,.4)}
+
+/* ── LOADING ── */
+#loadingScreen{z-index:50}
+.load-bar-bg{width:200px;height:12px;border-radius:6px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:1rem}
+.load-bar-fill{height:100%;width:0%;border-radius:6px;background:linear-gradient(90deg,var(--sky),var(--green));transition:width .2s}
+.load-text{color:rgba(255,255,255,.5);font-size:.75rem;margin-top:.5rem}
+
+/* ── FINISH SCREEN ── */
+#finishScreen{z-index:50}
+.finish-card{background:rgba(15,37,64,.95);border-radius:28px;padding:2rem;max-width:440px;width:90%;text-align:center;border:3px solid var(--green);box-shadow:0 0 60px rgba(78,203,113,.3);animation:celebBounce .6s cubic-bezier(.34,1.56,.64,1)}
+.finish-card h2{font-family:'Boogaloo',cursive;font-size:2.2rem;color:var(--green)}
+.finish-card .town-name{font-family:'Boogaloo',cursive;font-size:1.5rem;color:var(--yellow);margin:.5rem 0}
+.finish-card .stat{color:rgba(255,255,255,.6);font-size:.9rem;margin:.3rem 0}
+.finish-card .replay-btn{margin-top:1rem;padding:.65rem 2rem;border-radius:50px;border:none;font-family:'Boogaloo',cursive;font-size:1.1rem;cursor:pointer;background:linear-gradient(135deg,var(--sky),var(--green));color:#fff;box-shadow:0 4px 16px rgba(74,144,217,.4)}
+.finish-card .home-link{display:block;margin-top:.8rem;color:rgba(255,255,255,.4);font-size:.75rem;text-decoration:none}
+.finish-card .home-link:hover{color:var(--sky)}
+</style>
+</head>
+<body>
+
+<!-- ── SKY BACKGROUND ── -->
+<div class="sky-bg"></div>
+
+<!-- ── LOADING SCREEN ── -->
+<div id="loadingScreen" class="screen">
+  <div class="game-icon">🏗️</div>
+  <div class="game-title" style="font-size:clamp(1.6rem,5vw,2.5rem)">Building Town…</div>
+  <div class="load-bar-bg"><div class="load-bar-fill" id="loadBar"></div></div>
+  <div class="load-text" id="loadText">Loading assets…</div>
+</div>
+
+<!-- ── START SCREEN ── -->
+<div id="startScreen" class="screen hidden">
+  <div class="sky-bg"></div>
+  <div class="game-icon">🏘️</div>
+  <div class="game-title">Community Builder</div>
+  <div class="game-subtitle">social studies</div>
+
+  <div class="age-grid">
+    <button class="age-btn" data-age="5" onclick="selectAge(5)">
+      <span class="age-emoji">🧒</span>
+      <span class="age-label">Ages 4–6</span>
+      <span class="age-topic">Helpers & places</span>
+    </button>
+    <button class="age-btn" data-age="7" onclick="selectAge(7)">
+      <span class="age-emoji">👦</span>
+      <span class="age-label">Ages 6–8</span>
+      <span class="age-topic">Rules & roles</span>
+    </button>
+    <button class="age-btn" data-age="9" onclick="selectAge(9)">
+      <span class="age-emoji">🧑</span>
+      <span class="age-label">Ages 8–10</span>
+      <span class="age-topic">Maps & Ontario</span>
+    </button>
+  </div>
+
+  <div id="bandDisplay"></div>
+
+  <button class="start-btn" id="startBtn" disabled onclick="startGame()">Build Your Town!</button>
+
+  <a href="/" class="back-link">← CRABCAKE KIDS</a>
+</div>
+
+<!-- ── GAME CONTAINER (Phaser renders here) ── -->
+<div id="gameContainer"></div>
+
+<!-- ── HUD ── -->
+<div id="hud">
+  <button class="hud-btn" onclick="goHome()" aria-label="Home">🏠</button>
+  <div class="hud-score">⭐ <span id="scoreDisplay">0</span></div>
+  <div class="hud-progress"><span id="progressDisplay">0/10</span> buildings</div>
+</div>
+
+<!-- ── QUESTION OVERLAY ── -->
+<div id="questionOverlay">
+  <div class="question-panel">
+    <div class="question-character">
+      <img id="qCharImg" src="" alt="character">
+      <span class="char-name" id="qCharName"></span>
+    </div>
+    <div class="question-text" id="qText"></div>
+    <div class="options-grid" id="optionsGrid"></div>
+    <div class="hint-text" id="hintText"></div>
+  </div>
+</div>
+
+<!-- ── CELEBRATION ── -->
+<div id="celebration">
+  <div class="celebration-card">
+    <div style="font-size:3rem" id="celebEmoji">🎉</div>
+    <h2 id="celebTitle">Building Unlocked!</h2>
+    <p id="celebText"></p>
+    <button class="continue-btn" onclick="closeCelebration()">Keep Building!</button>
+  </div>
+</div>
+
+<!-- ── FINISH SCREEN ── -->
+<div id="finishScreen" class="screen hidden">
+  <div class="sky-bg"></div>
+  <div class="finish-card">
+    <div style="font-size:3.5rem">🏘️🎉</div>
+    <h2>Town Complete!</h2>
+    <div class="town-name" id="finishTownName">Your Amazing Town</div>
+    <div class="stat" id="finishScore"></div>
+    <div class="stat" id="finishAccuracy"></div>
+    <button class="replay-btn" onclick="location.reload()">Build Another Town</button>
+    <a href="/" class="home-link">← Back to Crabcake Kids</a>
+  </div>
+</div>
+
+<!-- ── PHASER + GAME ── -->
+<script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+<script src="community-builder-game.js"></script>
+
+</body>
+</html>

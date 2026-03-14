@@ -1,6 +1,6 @@
 {
   "schema_version": "1.1",
-  "last_updated": "2026-03-06",
+  "last_updated": "2026-03-13",
   "games": [
     {
       "game_id": "math-dive",
@@ -47,6 +47,18 @@
       "bands": ["band_2", "band_3"],
       "data_file": "potion-game-experiments.json",
       "data_type": "experiments"
+    },
+    {
+      "game_id": "community-builder",
+      "display_name": { "en": "Community Builder", "fr": "Bâtisseur de communauté" },
+      "file": "community-builder.html",
+      "subjects": ["social_studies"],
+      "bands": ["band_1", "band_2", "band_3"],
+      "data_file": "community-builder-questions.json",
+      "data_type": "question_sets",
+      "engine": "phaser3",
+      "multi_file": true,
+      "extra_files": ["community-builder-game.js"]
     }
   ]
 }
