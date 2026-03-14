@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Community Builder – Diagnostics</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:system-ui,sans-serif;background:#0f2540;color:#fff;padding:1.5rem;max-width:700px;margin:0 auto}
+    h1{font-size:1.4rem;margin-bottom:1rem;color:#4A90D9}
+    .test{padding:.8rem 1rem;margin:.4rem 0;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;align-items:center;gap:.5rem}
+    .test .label{font-size:.85rem;font-weight:600;flex:1}
+    .test .url{font-size:.6rem;color:rgba(255,255,255,.3);word-break:break-all}
+    .status{font-size:.8rem;font-weight:700;padding:.3rem .7rem;border-radius:6px;white-space:nowrap}
+    .wait{background:rgba(255,255,255,.1);color:rgba(255,255,255,.5)}
+    .pass{background:rgba(78,203,113,.2);color:#4ECB71}
+    .fail{background:rgba(255,92,92,.2);color:#FF5C5C}
+    .info{background:rgba(74,144,217,.2);color:#4A90D9}
+    h2{font-size:1rem;margin:1.5rem 0 .5rem;color:#FFD93D}
+    pre{background:rgba(0,0,0,.3);padding:1rem;border-radius:8px;font-size:.7rem;overflow-x:auto;margin:.5rem 0;max-height:200px;overflow-y:auto;color:#ccc}
+    #runBtn{margin:1rem 0;padding:.7rem 2rem;border:none;border-radius:50px;font-size:1rem;font-weight:700;cursor:pointer;background:linear-gradient(135deg,#4A90D9,#4ECB71);color:#fff}
+    .summary{margin-top:1rem;padding:1rem;border-radius:12px;font-weight:700}
+    .summary.allgood{background:rgba(78,203,113,.15);border:2px solid rgba(78,203,113,.4);color:#4ECB71}
+    .summary.issues{background:rgba(255,92,92,.15);border:2px solid rgba(255,92,92,.4);color:#FF5C5C}
+  </style>
+</head>
+<body>
+  <h1>🔍 Community Builder – Diagnostics</h1>
+  <p style="font-size:.8rem;color:rgba(255,255,255,.5);margin-bottom:1rem">This page tests every dependency. Deploy it to <code>/games/cb-diag.html</code> and open it on your live site.</p>
+  <button id="runBtn" onclick="runTests()">Run All Tests</button>
+
+  <h2>1. CDN / External Scripts</h2>
+  <div class="test" id="t-phaser">
+    <div><div class="label">Phaser 3.80.1 (CDN)</div><div class="url">https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js</div></div>
+    <span class="status wait" id="s-phaser">waiting</span>
+  </div>
+
+  <h2>2. Local JS File</h2>
+  <div class="test" id="t-gamejs">
+    <div><div class="label">community-builder-game.js</div><div class="url">/games/community-builder-game.js</div></div>
+    <span class="status wait" id="s-gamejs">waiting</span>
+  </div>
+
+  <h2>3. JSON Data</h2>
+  <div class="test" id="t-json">
+    <div><div class="label">Questions JSON</div><div class="url">/data/community-builder-questions.json</div></div>
+    <span class="status wait" id="s-json">waiting</span>
+  </div>
+
+  <h2>4. Font Files</h2>
+  <div class="test" id="t-font1">
+    <div><div class="label">Nunito-Bold.woff2</div><div class="url">/fonts/Nunito-Bold.woff2</div></div>
+    <span class="status wait" id="s-font1">waiting</span>
+  </div>
+
+  <h2>5. Sprite Assets (sample)</h2>
+  <div class="test" id="t-spr1">
+    <div><div class="label">firefighter-idle.png (spritesheet)</div><div class="url">/assets/community-builder/sprites/idle/firefighter-idle.png</div></div>
+    <span class="status wait" id="s-spr1">waiting</span>
+  </div>
+  <div class="test" id="t-spr2">
+    <div><div class="label">firefighter.png (static)</div><div class="url">/assets/community-builder/sprites/static/firefighter.png</div></div>
+    <span class="status wait" id="s-spr2">waiting</span>
+  </div>
+
+  <h2>6. Town Assets (sample)</h2>
+  <div class="test" id="t-bld1">
+    <div><div class="label">hospital.png</div><div class="url">/assets/community-builder/town/Buildings/hospital.png</div></div>
+    <span class="status wait" id="s-bld1">waiting</span>
+  </div>
+  <div class="test" id="t-bld2">
+    <div><div class="label">fire_station.png</div><div class="url">/assets/community-builder/town/Buildings/fire_station.png</div></div>
+    <span class="status wait" id="s-bld2">waiting</span>
+  </div>
+  <div class="test" id="t-veh">
+    <div><div class="label">ambulance.png</div><div class="url">/assets/community-builder/town/Vehicles/ambulance.png</div></div>
+    <span class="status wait" id="s-veh">waiting</span>
+  </div>
+  <div class="test" id="t-prop">
+    <div><div class="label">sign_stop.png</div><div class="url">/assets/community-builder/town/Props/sign_stop.png</div></div>
+    <span class="status wait" id="s-prop">waiting</span>
+  </div>
+  <div class="test" id="t-tree">
+    <div><div class="label">tree_01.png</div><div class="url">/assets/community-builder/town/Vegetation/tree_01.png</div></div>
+    <span class="status wait" id="s-tree">waiting</span>
+  </div>
+  <div class="test" id="t-cloud">
+    <div><div class="label">cloud_01.png</div><div class="url">/assets/community-builder/town/Props/cloud_01.png</div></div>
+    <span class="status wait" id="s-cloud">waiting</span>
+  </div>
+  <div class="test" id="t-bg">
+    <div><div class="label">Background Shades/green.png</div><div class="url">/assets/community-builder/town/Background Shades/green.png</div></div>
+    <span class="status wait" id="s-bg">waiting</span>
+  </div>
+
+  <h2>7. Phaser Boot Test</h2>
+  <div class="test" id="t-boot">
+    <div><div class="label">Can Phaser create a game instance?</div></div>
+    <span class="status wait" id="s-boot">waiting</span>
+  </div>
+
+  <div id="summaryArea"></div>
+
+  <h2>Console Log</h2>
+  <pre id="log"></pre>
+
+  <!-- Tiny hidden div for Phaser boot test -->
+  <div id="phaser-test" style="width:1px;height:1px;overflow:hidden;position:fixed;bottom:0;right:0"></div>
+
+<script>
+const log = [];
+function addLog(msg) {
+  log.push(`[${new Date().toLocaleTimeString()}] ${msg}`);
+  document.getElementById('log').textContent = log.join('\n');
+}
+
+function setStatus(id, status, text) {
+  const el = document.getElementById('s-' + id);
+  el.className = 'status ' + status;
+  el.textContent = text;
+}
+
+async function testFetch(url, id, type) {
+  try {
+    addLog(`Testing: ${url}`);
+    const start = performance.now();
+    const resp = await fetch(url, { method: 'HEAD', cache: 'no-cache' });
+    const ms = Math.round(performance.now() - start);
+    if (resp.ok) {
+      const ct = resp.headers.get('content-type') || 'unknown';
+      setStatus(id, 'pass', `✅ ${resp.status} (${ms}ms)`);
+      addLog(`  ✅ ${resp.status} OK – ${ct} – ${ms}ms`);
+      return true;
+    } else {
+      setStatus(id, 'fail', `❌ ${resp.status}`);
+      addLog(`  ❌ HTTP ${resp.status} ${resp.statusText}`);
+      return false;
+    }
+  } catch (e) {
+    setStatus(id, 'fail', `❌ ${e.message}`);
+    addLog(`  ❌ Error: ${e.message}`);
+    return false;
+  }
+}
+
+async function testImage(url, id) {
+  return new Promise(resolve => {
+    const img = new Image();
+    const start = performance.now();
+    img.onload = () => {
+      const ms = Math.round(performance.now() - start);
+      setStatus(id, 'pass', `✅ ${img.naturalWidth}×${img.naturalHeight} (${ms}ms)`);
+      addLog(`  ✅ Loaded ${img.naturalWidth}×${img.naturalHeight} – ${ms}ms`);
+      resolve(true);
+    };
+    img.onerror = () => {
+      setStatus(id, 'fail', '❌ Failed to load');
+      addLog(`  ❌ Image failed: ${url}`);
+      resolve(false);
+    };
+    addLog(`Testing image: ${url}`);
+    img.src = url + '?_t=' + Date.now();
+  });
+}
+
+async function testScript(url, id, globalName) {
+  return new Promise(resolve => {
+    addLog(`Testing script: ${url}`);
+    const start = performance.now();
+    const s = document.createElement('script');
+    s.src = url;
+    s.onload = () => {
+      const ms = Math.round(performance.now() - start);
+      if (globalName && !window[globalName]) {
+        setStatus(id, 'info', `⚠️ Loaded but ${globalName} not found`);
+        addLog(`  ⚠️ Script loaded (${ms}ms) but window.${globalName} is undefined`);
+        resolve(false);
+      } else {
+        setStatus(id, 'pass', `✅ Loaded (${ms}ms)`);
+        addLog(`  ✅ Script loaded – ${ms}ms` + (globalName ? ` – window.${globalName} exists` : ''));
+        resolve(true);
+      }
+    };
+    s.onerror = (e) => {
+      setStatus(id, 'fail', '❌ Failed to load');
+      addLog(`  ❌ Script failed: ${url} – ${e.type || 'unknown error'}`);
+      resolve(false);
+    };
+    document.head.appendChild(s);
+  });
+}
+
+async function testPhaserBoot() {
+  addLog('Testing Phaser boot...');
+  if (typeof Phaser === 'undefined') {
+    setStatus('boot', 'fail', '❌ Phaser not loaded');
+    addLog('  ❌ Cannot boot – Phaser is undefined');
+    return false;
+  }
+  return new Promise(resolve => {
+    try {
+      const timeout = setTimeout(() => {
+        setStatus('boot', 'fail', '❌ Boot timed out (5s)');
+        addLog('  ❌ Phaser.Game constructor timed out after 5s');
+        resolve(false);
+      }, 5000);
+
+      const game = new Phaser.Game({
+        type: Phaser.AUTO,
+        width: 100,
+        height: 100,
+        parent: 'phaser-test',
+        backgroundColor: '#000',
+        scene: {
+          create: function() {
+            clearTimeout(timeout);
+            setStatus('boot', 'pass', '✅ Phaser booted');
+            addLog('  ✅ Phaser.Game created and scene.create() fired');
+            game.destroy(true);
+            resolve(true);
+          }
+        },
+        banner: false,
+        audio: { noAudio: true }
+      });
+
+      addLog('  Phaser.Game constructor called, waiting for scene.create()...');
+    } catch (e) {
+      setStatus('boot', 'fail', '❌ ' + e.message);
+      addLog('  ❌ Phaser.Game threw: ' + e.message);
+      resolve(false);
+    }
+  });
+}
+
+async function runTests() {
+  document.getElementById('runBtn').disabled = true;
+  document.getElementById('runBtn').textContent = 'Running...';
+  document.getElementById('summaryArea').innerHTML = '';
+  log.length = 0;
+
+  addLog('=== Community Builder Diagnostics ===');
+  addLog('URL: ' + location.href);
+  addLog('User Agent: ' + navigator.userAgent);
+  addLog('');
+
+  let failures = 0;
+  let total = 0;
+
+  // 1. Phaser CDN
+  total++;
+  const phaserOk = await testScript('https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js', 'phaser', 'Phaser');
+  if (!phaserOk) failures++;
+
+  // 2. Game JS
+  total++;
+  const gamejsOk = await testFetch('/games/community-builder-game.js', 'gamejs');
+  if (!gamejsOk) failures++;
+
+  // 3. JSON
+  total++;
+  const jsonOk = await testFetch('/data/community-builder-questions.json', 'json');
+  if (!jsonOk) failures++;
+
+  // 4. Font
+  total++;
+  const fontOk = await testFetch('/fonts/Nunito-Bold.woff2', 'font1');
+  if (!fontOk) failures++;
+
+  // 5. Sprites
+  total += 2;
+  if (!await testImage('/assets/community-builder/sprites/idle/firefighter-idle.png', 'spr1')) failures++;
+  if (!await testImage('/assets/community-builder/sprites/static/firefighter.png', 'spr2')) failures++;
+
+  // 6. Town assets
+  total += 6;
+  if (!await testImage('/assets/community-builder/town/Buildings/hospital.png', 'bld1')) failures++;
+  if (!await testImage('/assets/community-builder/town/Buildings/fire_station.png', 'bld2')) failures++;
+  if (!await testImage('/assets/community-builder/town/Vehicles/ambulance.png', 'veh')) failures++;
+  if (!await testImage('/assets/community-builder/town/Props/sign_stop.png', 'prop')) failures++;
+  if (!await testImage('/assets/community-builder/town/Vegetation/tree_01.png', 'tree')) failures++;
+  if (!await testImage('/assets/community-builder/town/Props/cloud_01.png', 'cloud')) failures++;
+
+  // Background with space in path
+  total++;
+  addLog('Testing Background Shades path (has space in folder name)...');
+  let bgOk = await testImage('/assets/community-builder/town/Background Shades/green.png', 'bg');
+  if (!bgOk) {
+    addLog('  Retrying with URL-encoded space...');
+    bgOk = await testImage('/assets/community-builder/town/Background%20Shades/green.png', 'bg');
+  }
+  if (!bgOk) failures++;
+
+  // 7. Phaser boot
+  total++;
+  if (!await testPhaserBoot()) failures++;
+
+  // Summary
+  addLog('');
+  addLog(`=== RESULTS: ${total - failures}/${total} passed, ${failures} failed ===`);
+
+  const area = document.getElementById('summaryArea');
+  if (failures === 0) {
+    area.innerHTML = `<div class="summary allgood">✅ All ${total} tests passed. The issue may be in the game JS logic itself.</div>`;
+  } else {
+    area.innerHTML = `<div class="summary issues">❌ ${failures} of ${total} tests failed. See details above — the failed items are your problem.</div>`;
+  }
+
+  document.getElementById('runBtn').textContent = 'Run Again';
+  document.getElementById('runBtn').disabled = false;
+}
+</script>
+</body>
+</html>
