@@ -1046,6 +1046,20 @@
     max-width: 1200px; padding: 0 2rem;
   }
   .hint-arrow { margin-right: 6px; }
+
+  /* ── Under Construction Modal ── */
+  .uc-overlay{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.5);backdrop-filter:blur(4px)}
+  .uc-overlay.active{display:flex}
+  .uc-card{background:linear-gradient(135deg,#0f2540,#1a3a5c);border-radius:24px;padding:2rem;max-width:380px;width:88%;text-align:center;border:3px solid rgba(255,217,61,.4);box-shadow:0 0 60px rgba(255,217,61,.15)}
+  .uc-card .uc-icon{font-size:3rem;margin-bottom:.5rem}
+  .uc-card h2{font-family:'Boogaloo',cursive;font-size:1.6rem;color:#FFD93D;margin-bottom:.4rem}
+  .uc-card p{color:rgba(255,255,255,.6);font-size:.85rem;margin-bottom:1.2rem;line-height:1.5}
+  .uc-btns{display:flex;gap:.8rem;justify-content:center}
+  .uc-btn{padding:.6rem 1.6rem;border-radius:50px;border:none;font-family:'Boogaloo',cursive;font-size:1rem;cursor:pointer;transition:all .2s}
+  .uc-btn:hover{transform:translateY(-2px)}
+  .uc-btn-play{background:linear-gradient(135deg,#4A90D9,#4ECB71);color:#fff;box-shadow:0 4px 16px rgba(74,144,217,.4)}
+  .uc-btn-exit{background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:2px solid rgba(255,255,255,.15)}
+  .uc-btn-exit:hover{background:rgba(255,255,255,.15)}
 </style>
 
   <script type="application/ld+json">
@@ -2937,18 +2951,21 @@ function bindHoverPause(canvasId, startFn) {
 
   // Buildings that "pop up"
   const BLDG_COLORS = ['#e07050','#5b8abf','#e8c84a','#7ec87e','#c97ec8','#eea060','#8ecfcf'];
-  const buildings = Array.from({ length: 7 }, (_, i) => ({
-    x: 18 + i * 38,
-    baseW: rand(22, 34),
-    maxH: rand(30, 70),
-    curH: 0,
-    targetH: 0,
-    color: BLDG_COLORS[i % BLDG_COLORS.length],
-    windowRows: Math.floor(rand(1, 4)),
-    roofType: Math.floor(rand(0, 3)), // 0=flat, 1=pointed, 2=dome
-    delay: i * 0.4,
-    popped: false
-  }));
+  const buildings = Array.from({ length: 7 }, (_, i) => {
+    const mh = rand(30, 70);
+    return {
+      x: 18 + i * 38,
+      baseW: rand(22, 34),
+      maxH: mh,
+      curH: mh,
+      targetH: mh,
+      color: BLDG_COLORS[i % BLDG_COLORS.length],
+      windowRows: Math.floor(rand(1, 4)),
+      roofType: Math.floor(rand(0, 3)),
+      delay: i * 0.4,
+      popped: true
+    };
+  });
   let timer = 0;
   let cycleTime = 0;
 
@@ -3111,6 +3128,48 @@ function bindHoverPause(canvasId, startFn) {
     }
   }
 })();
+
+// ── Under Construction Modal for Community Builder ──
+(function() {
+  var card = document.getElementById('card-community-builder');
+  if (!card) return;
+  var gameHref = card.getAttribute('href');
+
+  // Intercept click
+  card.addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('ucModal').classList.add('active');
+  });
+
+  // Play button — navigate to game
+  document.getElementById('ucPlay').addEventListener('click', function() {
+    window.location.href = gameHref;
+  });
+
+  // Exit button — close modal
+  document.getElementById('ucExit').addEventListener('click', function() {
+    document.getElementById('ucModal').classList.remove('active');
+  });
+
+  // Click overlay to close
+  document.getElementById('ucModal').addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('active');
+  });
+})();
 </script>
+
+<!-- Under Construction Modal -->
+<div class="uc-overlay" id="ucModal">
+  <div class="uc-card">
+    <div class="uc-icon">🏗️</div>
+    <h2>Under Construction!</h2>
+    <p>Community Builder is still being built. You can play the early version, but some things might not be finished yet!</p>
+    <div class="uc-btns">
+      <button class="uc-btn uc-btn-play" id="ucPlay">Play Anyway</button>
+      <button class="uc-btn uc-btn-exit" id="ucExit">Go Back</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
