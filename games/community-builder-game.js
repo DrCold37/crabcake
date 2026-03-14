@@ -119,17 +119,34 @@ function selectAge(age) {
 async function startGame() {
   showScreen(null);
   $('loadingScreen').classList.remove('hidden');
+  $('loadBar').style.width = '0%';
+  $('loadText').textContent = 'Loading questions…';
+
+  // Loading timeout — if Phaser hangs for 20s, show error
+  const loadTimeout = setTimeout(() => {
+    if (!gameState.townScene) {
+      $('loadText').textContent = 'Loading is taking too long. Check that /assets/community-builder/ is deployed, then refresh.';
+      $('loadBar').style.background = '#FF5C5C';
+    }
+  }, 20000);
 
   // Load question data
   try {
     const resp = await fetch('/data/community-builder-questions.json?v=1');
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const data = await resp.json();
     gameState.questions = data.question_sets;
   } catch (e) {
     console.error('Failed to load questions:', e);
-    $('loadText').textContent = 'Error loading questions. Please refresh.';
+    $('loadText').textContent = 'Error loading questions. Make sure community-builder-questions.json is deployed to /data/.';
+    $('loadBar').style.width = '100%';
+    $('loadBar').style.background = '#FF5C5C';
+    clearTimeout(loadTimeout);
     return;
   }
+
+  $('loadBar').style.width = '10%';
+  $('loadText').textContent = 'Preparing town…';
 
   // Filter questions for selected band
   const bandQuestions = gameState.questions.filter(s => s.band_id === gameState.band);
@@ -162,6 +179,7 @@ async function startGame() {
     idx++;
   }
   gameState.questionQueue = queue;
+  gameState.loadTimeout = loadTimeout;
 
   // Boot Phaser
   initPhaser();
@@ -202,12 +220,19 @@ class PreloadScene extends Phaser.Scene {
 
   preload() {
     const base = '/assets/community-builder';
+    let failedFiles = 0;
 
     // Progress via DOM
     this.load.on('progress', v => {
       const pct = Math.round(v * 100);
       $('loadBar').style.width = pct + '%';
-      $('loadText').textContent = `Loading assets… ${pct}%`;
+      $('loadText').textContent = `Loading town assets… ${pct}%`;
+    });
+
+    // Track failed loads — don't block, just skip missing assets
+    this.load.on('loaderror', (file) => {
+      failedFiles++;
+      console.warn('Asset not found (skipped):', file.src);
     });
 
     // ── Character sprites ──
@@ -256,28 +281,33 @@ class PreloadScene extends Phaser.Scene {
       this.load.image(`cloud-${i}`, `${base}/town/Props/cloud_0${i}.png`);
     }
 
-    // ── Background ──
-    this.load.image('bg-green', `${base}/town/Background Shades/green.png`);
+    // ── Background (URL-encode the space in folder name) ──
+    this.load.image('bg-green', `${base}/town/Background%20Shades/green.png`);
   }
 
   create() {
-    // Create all character animations
+    // Create character animations only for sprites that loaded successfully
     CHARACTERS.forEach(c => {
-      this.anims.create({
-        key: `${c}-idle-anim`,
-        frames: this.anims.generateFrameNumbers(`${c}-idle`, { start: 0, end: 8 }),
-        frameRate: 8,
-        repeat: -1,
-      });
-      this.anims.create({
-        key: `${c}-walk-anim`,
-        frames: this.anims.generateFrameNumbers(`${c}-walk`, { start: 0, end: 8 }),
-        frameRate: 10,
-        repeat: -1,
-      });
+      if (this.textures.exists(`${c}-idle`)) {
+        this.anims.create({
+          key: `${c}-idle-anim`,
+          frames: this.anims.generateFrameNumbers(`${c}-idle`, { start: 0, end: 8 }),
+          frameRate: 8,
+          repeat: -1,
+        });
+      }
+      if (this.textures.exists(`${c}-walk`)) {
+        this.anims.create({
+          key: `${c}-walk-anim`,
+          frames: this.anims.generateFrameNumbers(`${c}-walk`, { start: 0, end: 8 }),
+          frameRate: 10,
+          repeat: -1,
+        });
+      }
     });
 
     // Hide loading, show game
+    if (gameState.loadTimeout) clearTimeout(gameState.loadTimeout);
     $('loadingScreen').classList.add('hidden');
     $('gameContainer').classList.add('active');
     $('hud').classList.add('active');
@@ -315,6 +345,7 @@ class TownScene extends Phaser.Scene {
     this.clouds = [];
     const cloudYs = [40, 80, 30, 100, 60, 50];
     for (let i = 1; i <= 6; i++) {
+      if (!this.textures.exists(`cloud-${i}`)) continue;
       const cl = this.add.image(Math.random() * GW, cloudYs[i-1], `cloud-${i}`)
         .setScale(0.35 + Math.random() * 0.2)
         .setAlpha(0.5 + Math.random() * 0.3);
@@ -496,6 +527,7 @@ class TownScene extends Phaser.Scene {
 
   // ── Spawn walking character ──
   spawnWalker(charKey) {
+    if (!this.textures.exists(`${charKey}-walk`) || !this.anims.exists(`${charKey}-walk-anim`)) return;
     const slot = BUILDING_SLOTS[charKey] || { x: GW / 2 };
     const startX = slot.x;
     const spr = this.add.sprite(startX, WALK_Y, `${charKey}-walk`)
@@ -516,6 +548,10 @@ class TownScene extends Phaser.Scene {
 
   // ── Show character intro (idle animation in front) ──
   showCharacterIntro(charKey, callback) {
+    if (!this.textures.exists(`${charKey}-idle`) || !this.anims.exists(`${charKey}-idle-anim`)) {
+      if (callback) callback();
+      return;
+    }
     const cx = GW / 2;
     const cy = ROAD_Y - 80;
     const spr = this.add.sprite(-80, cy, `${charKey}-idle`)
@@ -567,6 +603,7 @@ class TownScene extends Phaser.Scene {
     if (!this.textures.exists(bldKey)) {
       this.placeBuilding(charKey, true);
       dropZone.destroy();
+      setTimeout(() => nextQuestion(), 1200);
       return;
     }
 
@@ -604,7 +641,11 @@ class TownScene extends Phaser.Scene {
         obj.destroy();
         label.destroy();
         dropZone.destroy();
+        this.input.off('drag');
+        this.input.off('dragend');
         this.placeBuilding(charKey, true);
+        // Advance to next question after building drops in
+        setTimeout(() => nextQuestion(), 1200);
       } else {
         // Bounce back
         this.tweens.add({
@@ -661,6 +702,7 @@ function showQuestion(q) {
 
   // Set character portrait
   const img = $('qCharImg');
+  img.style.display = '';
   img.src = `/assets/community-builder/sprites/static/${q.character}.png`;
   img.alt = charInfo.name;
 

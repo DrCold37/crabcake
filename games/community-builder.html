@@ -219,7 +219,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 <div id="questionOverlay">
   <div class="question-panel">
     <div class="question-character">
-      <img id="qCharImg" src="" alt="character">
+      <img id="qCharImg" src="" alt="character" onerror="this.style.display='none'">
       <span class="char-name" id="qCharName"></span>
     </div>
     <div class="question-text" id="qText"></div>
@@ -253,6 +253,22 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 </div>
 
 <!-- ── PHASER + GAME ── -->
+<script>
+  // Inline fallback: if Phaser or game JS fail to load, show start screen anyway
+  // (the external scripts will override this on success)
+  window.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+      var ls = document.getElementById('loadingScreen');
+      var ss = document.getElementById('startScreen');
+      // If start screen is still hidden after 3s, force-show it
+      if (ss && ss.classList.contains('hidden') && ls && !ls.classList.contains('hidden')) {
+        ls.classList.add('hidden');
+        ss.classList.remove('hidden');
+        console.warn('Fallback: forced start screen visible');
+      }
+    }, 3000);
+  });
+</script>
 <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
 <script src="community-builder-game.js"></script>
 
