@@ -184,7 +184,7 @@ var CP=[{k:'sign_stop',x:390,s:.55},{k:'sign_warning',x:770,s:.5},{k:'sign_const
 
 var D={sky:0,tree:2,ground:5,ghost:7,prop:8,building:10,vehicle:11,walker:12,spotlight:45,charIntro:50};
 
-var G={band:null,bn:1,qs:[],queue:[],score:0,ans:0,corr:0,cp:{},pi:0,ul:0,dm:false,sc:null,gm:null,introSpr:null,spotGfx:null,camTarget:0};
+var G={band:null,bn:1,qs:[],queue:[],score:0,ans:0,corr:0,cp:{},pi:0,ul:0,dm:false,sc:null,gm:null,introSpr:null,spotGfx:null,camTarget:0,curChar:null,patrolDir:1,patrolSpeed:43,zoomed:false};
 var clouds=[],walkers=[],bldSpr={},propSpr=[];
 var celebCb=null;
 
@@ -270,7 +270,7 @@ function phaserCreate(){
 
   /* Animations */
   CHARS.forEach(function(c){
-    if(sc.textures.exists(c+'-idle'))sc.anims.create({key:c+'-ia',frames:sc.anims.generateFrameNumbers(c+'-idle',{start:0,end:8}),frameRate:3,repeat:-1});
+    if(sc.textures.exists(c+'-idle'))sc.anims.create({key:c+'-ia',frames:sc.anims.generateFrameNumbers(c+'-idle',{start:0,end:8}),frameRate:4,repeat:-1});
     if(sc.textures.exists(c+'-walk'))sc.anims.create({key:c+'-wa',frames:sc.anims.generateFrameNumbers(c+'-walk',{start:0,end:8}),frameRate:8,repeat:-1});
   });
 
@@ -331,10 +331,30 @@ function phaserCreate(){
 function phaserUpdate(time,delta){
   clouds.forEach(function(cl){cl.x+=cl._sp*(delta/1000);if(cl.x>WW+200)cl.x=-200});
   walkers.forEach(function(w){w.spr.x+=w.dir*w.sp*(delta/1000);w.spr.setFlipX(w.dir<0);if(w.spr.x>w.mx)w.dir=-1;if(w.spr.x<w.mn)w.dir=1});
-  /* Smooth camera scroll to target */
+  /* Patrol intro sprite during questions */
+  if(G.introSpr&&G.introSpr.active&&G.zoomed){
+    var s=G.introSpr;
+    s.x+=G.patrolDir*G.patrolSpeed*(delta/1000);
+    s.setFlipX(G.patrolDir<0);
+    if(s.x>WW-60){G.patrolDir=-1}
+    if(s.x<60){G.patrolDir=1}
+  }
+  /* Camera: follow character when zoomed, otherwise smooth scroll to target */
   var cam=this.cameras.main;
-  var target=Math.max(0,Math.min(G.camTarget-GW/2,WW-GW));
-  cam.scrollX+=(target-cam.scrollX)*0.04;
+  if(G.zoomed&&G.introSpr&&G.introSpr.active){
+    var cx=G.introSpr.x;
+    var cy=RY-40;
+    var hw=(GW/cam.zoom)/2;
+    var hh=(GH/cam.zoom)/2;
+    var tx=Math.max(hw,Math.min(cx,WW-hw));
+    var ty=Math.max(hh,Math.min(cy,GH-hh));
+    cam.scrollX+=(tx-hw-cam.scrollX)*0.08;
+    cam.scrollY+=(ty-hh-cam.scrollY)*0.08;
+  }else{
+    var target=Math.max(0,Math.min(G.camTarget-GW/2,WW-GW));
+    cam.scrollX+=(target-cam.scrollX)*0.04;
+    cam.scrollY+=(0-cam.scrollY)*0.04;
+  }
 }
 
 /* ── PAN CAMERA to a world x position ── */
@@ -376,57 +396,41 @@ function spWalk(ck){
   walkers.push({spr:spr,sp:15+Math.random()*12,dir:Math.random()>.5?1:-1,mn:Math.max(sl.x-120,10),mx:Math.min(sl.x+120,WW-10)});
 }
 
-/* ── CHARACTER INTRO with SPOTLIGHT ──
-   Same size as walkers (.65), walks to building slot area.
-   Spotlight circle follows the character. */
+/* ── CHARACTER INTRO with ZOOM ──
+   Zooms camera 200%, character walks from left edge, patrols during questions. */
 function charIntro(ck,cb){
   var sc=G.sc;
   if(!sc||!sc.textures.exists(ck+'-walk')||!sc.anims.exists(ck+'-wa')){
     if(!sc||!sc.textures.exists(ck+'-idle')||!sc.anims.exists(ck+'-ia')){if(cb)cb();return}
   }
-  /* Figure out where this character's building will be, pan camera there */
-  var targetX=600;
-  if(SL[ck])targetX=SL[ck].x;
-  panTo(targetX);
-
+  G.curChar=ck;
   var useWalk=sc.textures.exists(ck+'-walk')&&sc.anims.exists(ck+'-wa');
-  var startX=G.sc.cameras.main.scrollX-60;
+  var startX=60;
   var spr=sc.add.sprite(startX,RY+36,useWalk?(ck+'-walk'):(ck+'-idle')).setScale(.33).setOrigin(.5,1).setDepth(D.charIntro);
   if(useWalk)spr.play(ck+'-wa');else spr.play(ck+'-ia');
   G.introSpr=spr;
+  G.patrolDir=1;
+  spr.setFlipX(false);
 
-  /* Spotlight — glowing circle that follows character */
-  var spot=sc.add.graphics().setDepth(D.spotlight);
-  G.spotGfx=spot;
-  function updateSpot(){
-    spot.clear();
-    spot.fillStyle(0xFFD93D,0.12);
-    spot.fillCircle(spr.x,RY-20,80);
-    spot.fillStyle(0xFFD93D,0.06);
-    spot.fillCircle(spr.x,RY-20,120);
-    spot.lineStyle(2,0xFFD93D,0.3);
-    spot.strokeCircle(spr.x,RY-20,80);
-  }
-  updateSpot();
+  /* Zoom camera in 200% */
+  G.zoomed=true;
+  sc.cameras.main.zoomTo(2,800,'Sine.easeInOut');
 
-  /* Walk to building slot */
-  sc.tweens.add({targets:spr,x:targetX,duration:3500,ease:'Power1',
-    onUpdate:function(){updateSpot()},
-    onComplete:function(){
-      if(sc.anims.exists(ck+'-ia'))spr.play(ck+'-ia');
-      updateSpot();
-      sc.time.delayedCall(1200,function(){if(cb)cb()});
-    }
-  });
+  /* Short delay for zoom to settle, then show question */
+  sc.time.delayedCall(900,function(){if(cb)cb()});
 }
 
-function dismissIntro(){
+function dismissIntro(cb){
   var sc=G.sc;
-  if(G.spotGfx){G.spotGfx.destroy();G.spotGfx=null}
-  if(!sc||!G.introSpr)return;
+  G.curChar=null;
+  G.zoomed=false;
+  if(sc)sc.cameras.main.zoomTo(1,800,'Sine.easeInOut');
+  if(!sc||!G.introSpr){if(cb)setTimeout(cb,3800);return}
   var spr=G.introSpr;G.introSpr=null;
   var exitX=sc.cameras.main.scrollX+GW+60;
   sc.tweens.add({targets:spr,x:exitX,duration:2800,ease:'Power1',onComplete:function(){spr.destroy()}});
+  /* 3 second delay after zoom-out before callback */
+  if(cb)setTimeout(cb,3800);
 }
 
 /* ── DRAG & DROP ── */
@@ -455,12 +459,23 @@ function initDrag(ck){
 
 /* ── QUESTIONS (DOM at top) ── */
 function nextQ(){
-  if(!G.queue.length){finish();return}
+  if(!G.queue.length){dismissIntro(function(){finish()});return}
   var allDone=true;for(var k in G.cp){if(!G.cp[k].unl){allDone=false;break}}
-  if(allDone){finish();return}
+  if(allDone){dismissIntro(function(){finish()});return}
   var q=null;while(G.queue.length>0){var c=G.queue.shift();if(!G.cp[c.character].unl){q=c;break}}
-  if(!q){finish();return}
-  charIntro(q.character,function(){showQ(q)});
+  if(!q){dismissIntro(function(){finish()});return}
+
+  /* Same character — stay zoomed, just show next question */
+  if(q.character===G.curChar){
+    showQ(q);
+    return;
+  }
+  /* Different character — dismiss current, delay, then intro new */
+  if(G.curChar){
+    dismissIntro(function(){charIntro(q.character,function(){showQ(q)})});
+  }else{
+    charIntro(q.character,function(){showQ(q)});
+  }
 }
 
 function showQ(q){
@@ -485,15 +500,20 @@ function ansH(ch,q,btn){
     var p=G.cp[q.character];p.cor++;updHUD();
     if(p.cor>=3&&!p.unl){
       p.unl=true;G.ul++;
-      setTimeout(function(){$('qOver').classList.remove('active');dismissIntro();unlockC(q.character)},600);
+      setTimeout(function(){
+        $('qOver').classList.remove('active');
+        dismissIntro(function(){unlockC(q.character)});
+      },600);
     }else{
-      setTimeout(function(){$('qOver').classList.remove('active');dismissIntro();setTimeout(nextQ,500)},700);
+      /* Same character continues — stay zoomed */
+      setTimeout(function(){$('qOver').classList.remove('active');setTimeout(nextQ,500)},700);
     }
   }else{
     btn.classList.add('no');$('qHi').classList.add('vis');
     var btns=$('qOp').querySelectorAll('.qb');
     setTimeout(function(){btns[q.correct].classList.add('ok')},400);
-    setTimeout(function(){$('qOver').classList.remove('active');dismissIntro();setTimeout(nextQ,500)},2000);
+    /* Same character continues — stay zoomed */
+    setTimeout(function(){$('qOver').classList.remove('active');setTimeout(nextQ,500)},2000);
   }
 }
 
@@ -526,7 +546,7 @@ function showCeleb(em,ti,tx,cb){celebCb=cb||null;$('cEm').textContent=em;$('cTi'
 function closeCeleb(){$('celeb').classList.remove('active');if(celebCb){var f=celebCb;celebCb=null;f()}else setTimeout(nextQ,500)}
 function doConfetti(){var cs=['#FFD93D','#FF5C5C','#4ECB71','#A66CFF','#4A90D9','#FF9040'];for(var i=0;i<20;i++){var d=document.createElement('div');var t=1+Math.random()*1.5;d.style.cssText='position:fixed;width:8px;height:8px;border-radius:'+(Math.random()>.5?'50%':'2px')+';background:'+cs[Math.floor(Math.random()*cs.length)]+';left:'+Math.random()*100+'%;top:-8px;opacity:1;pointer-events:none;z-index:41;animation:cfall '+t+'s ease-out '+Math.random()*.4+'s forwards';$('celeb').appendChild(d);(function(el,dur){setTimeout(function(){el.remove()},(dur+.5)*1000)})(d,t)}}
 
-function finish(){$('qOver').classList.remove('active');$('hud').classList.remove('active');dismissIntro();var a=G.ans?Math.round(G.corr/G.ans*100):0;$('fSc').textContent='\u2B50 Score: '+G.score;$('fAc').textContent='\u{1F3AF} Accuracy: '+a+'% ('+G.corr+'/'+G.ans+')';var adj=['Amazing','Wonderful','Friendly','Happy','Sunny','Cozy','Busy','Peaceful'];var noun=['Town','Village','Neighbourhood','Community','Haven'];$('fTn').textContent=adj[Math.floor(Math.random()*adj.length)]+' '+noun[Math.floor(Math.random()*noun.length)];setTimeout(function(){showScr('finishScreen')},800)}
+function finish(){$('qOver').classList.remove('active');$('hud').classList.remove('active');var a=G.ans?Math.round(G.corr/G.ans*100):0;$('fSc').textContent='\u2B50 Score: '+G.score;$('fAc').textContent='\u{1F3AF} Accuracy: '+a+'% ('+G.corr+'/'+G.ans+')';var adj=['Amazing','Wonderful','Friendly','Happy','Sunny','Cozy','Busy','Peaceful'];var noun=['Town','Village','Neighbourhood','Community','Haven'];$('fTn').textContent=adj[Math.floor(Math.random()*adj.length)]+' '+noun[Math.floor(Math.random()*noun.length)];setTimeout(function(){showScr('finishScreen')},800)}
 
 showScr('startScreen');
 })();
