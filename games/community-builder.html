@@ -287,10 +287,10 @@ function phaserCreate(){
   sky.fillGradientStyle(0x87CEEB,0x87CEEB,0xc8e6f8,0xc8e6f8,1);
   sky.fillRect(0,0,GW,GH);
 
-  /* Clouds — small and light, just at the very top */
+  /* Clouds — 3x size, light, top area */
   for(var i=1;i<=4;i++){
     if(!sc.textures.exists('cl-'+i))continue;
-    var cl=sc.add.image(Math.random()*GW,20+Math.random()*60,'cl-'+i).setScale(.18+Math.random()*.12).setAlpha(.3+Math.random()*.2).setDepth(D.sky);
+    var cl=sc.add.image(Math.random()*GW,30+Math.random()*80,'cl-'+i).setScale(.55+Math.random()*.35).setAlpha(.3+Math.random()*.2).setDepth(D.sky);
     cl._sp=4+Math.random()*6;clouds.push(cl);
   }
 
@@ -318,15 +318,15 @@ function phaserCreate(){
     bldSpr[ck]={ghost:gh,sprite:null};
   });
 
-  /* Small trees — placed between building slots, behind buildings */
+  /* Trees — 3x size, between building slots */
   [128,268,420,575,720,855,985,1105].forEach(function(tx,i){
     var k='t-'+(i%3===0?'tree_01':i%3===1?'tree_02':'tree_03');
-    if(sc.textures.exists(k))sc.add.image(tx,RY,k).setScale(.25+Math.random()*.1).setOrigin(.5,1).setDepth(D.tree);
+    if(sc.textures.exists(k))sc.add.image(tx,RY,k).setScale(.75+Math.random()*.3).setOrigin(.5,1).setDepth(D.tree);
   });
 
-  /* Small bushes at building bases */
+  /* Bushes at building bases — proportional to trees */
   [90,230,380,530,680,830,960,1090].forEach(function(bx){
-    if(sc.textures.exists('t-bush_01'))sc.add.image(bx,RY+2,'t-bush_01').setScale(.2).setOrigin(.5,1).setDepth(D.bush);
+    if(sc.textures.exists('t-bush_01'))sc.add.image(bx,RY+2,'t-bush_01').setScale(.55).setOrigin(.5,1).setDepth(D.bush);
   });
 
   /* Prop ghost circles */
@@ -367,7 +367,7 @@ function plBld(ck){
 function plVeh(ck){
   var sc=G.sc;if(!sc)return;var vk='v-'+VM[ck];if(!sc.textures.exists(vk))return;
   var sl=SL[ck];
-  var v=sc.add.image(sl.x+50,RY+38,vk).setScale(.32).setAlpha(0).setDepth(D.vehicle);
+  var v=sc.add.image(sl.x+50,RY+40,vk).setScale(.32).setAlpha(0).setDepth(D.vehicle);
   sc.tweens.add({targets:v,alpha:1,x:sl.x+15,duration:600,ease:'Power2'});
 }
 
@@ -384,7 +384,7 @@ function spWalk(ck){
   var sc=G.sc;if(!sc)return;
   if(!sc.textures.exists(ck+'-walk')||!sc.anims.exists(ck+'-wa'))return;
   var sl=SL[ck]||{x:GW/2};
-  var spr=sc.add.sprite(sl.x,RY+5,ck+'-walk').setScale(.65).setOrigin(.5,1).setDepth(D.walker);
+  var spr=sc.add.sprite(sl.x,RY+37,ck+'-walk').setScale(.65).setOrigin(.5,1).setDepth(D.walker);
   spr.play(ck+'-wa');
   walkers.push({spr:spr,sp:15+Math.random()*12,dir:Math.random()>.5?1:-1,mn:Math.max(30,sl.x-90),mx:Math.min(GW-30,sl.x+90)});
 }
@@ -398,7 +398,7 @@ function charIntro(ck,cb){
   if(!sc||!sc.textures.exists(ck+'-idle')||!sc.anims.exists(ck+'-ia')){if(cb)cb();return}
   /* Walk in from left using walk animation */
   var useWalk=sc.textures.exists(ck+'-walk')&&sc.anims.exists(ck+'-wa');
-  var spr=sc.add.sprite(-120,RY,useWalk?(ck+'-walk'):(ck+'-idle')).setScale(1.1).setOrigin(.5,1).setDepth(D.charIntro);
+  var spr=sc.add.sprite(-120,RY+37,useWalk?(ck+'-walk'):(ck+'-idle')).setScale(3.3).setOrigin(.5,1).setDepth(D.charIntro);
   if(useWalk)spr.play(ck+'-wa');else spr.play(ck+'-ia');
 
   G.introSpr=spr;
@@ -504,12 +504,21 @@ function unlockC(ck){
   var c=CI[ck];
   if(ck==='construction'){
     for(var i=0;i<2&&G.pi<CP.length;i++,G.pi++)plProp(G.pi);
-    showCeleb('\u{1F3D7}\u{FE0F}','New Infrastructure!',c.n+' added signs and lights!',function(){setTimeout(nextQ,500)});
+    /* Show celeb after props animate in */
+    setTimeout(function(){
+      showCeleb('\u{1F3D7}\u{FE0F}','New Infrastructure!',c.n+' added signs and lights!',function(){setTimeout(nextQ,500)});
+    },600);
   }else if(G.dm){
+    /* Drag mode: show celeb first with instructions */
     showCeleb(c.e,c.n,'Drag the '+c.l+' to its spot!',function(){initDrag(ck)});
   }else{
-    plBld(ck);spWalk(ck);
-    showCeleb(c.e,'New Building!',c.n+' has joined the town!',function(){setTimeout(nextQ,500)});
+    /* AUTO-PLACE: drop building first, let user watch it land, THEN show celebration */
+    plBld(ck);
+    spWalk(ck);
+    /* Wait for building bounce to finish (900ms) + a beat, then celebrate */
+    setTimeout(function(){
+      showCeleb(c.e,'New Building!',c.n+' has joined the town!',function(){setTimeout(nextQ,500)});
+    },1200);
   }
   /* Bank milestone at 5 buildings */
   if(G.ul===5&&G.sc&&G.sc.textures.exists('b-bank')){
