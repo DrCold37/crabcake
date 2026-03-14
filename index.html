@@ -1135,6 +1135,12 @@
           "position": 5,
           "name": "Jungle Words",
           "url": "https://crabcake.kids/jungle-words.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "name": "Community Builder",
+          "url": "https://crabcake.kids/games/community-builder.html"
         }
       ]
     }
@@ -1417,6 +1423,25 @@
         </div>
       </a>
 
+      <a class="game-card" id="card-community-builder"
+         data-bands='["band_1","band_2","band_3"]'
+         data-subject="social_studies"
+         data-grades='{"band_1":"JK / SK","band_2":"Grade 1 &amp; 2","band_3":"Grade 3 &amp; 4"}'
+         data-file="/games/community-builder.html"
+         href="/games/community-builder.html">
+        <div class="game-thumb" style="background:linear-gradient(135deg,#1a3a5c,#0f2540)"><canvas id="canvas-community"></canvas><span class="thumb-emoji">🏘️</span><img class="card-ca-badge" src="/images/ca-logo.webp" width="24" height="24" alt="" /></div>
+        <div class="game-info">
+          <h3>Community Builder</h3>
+          <p>Answer questions about community helpers, rules and maps to build your very own town!</p>
+          <div class="game-tags">
+            <span class="tag tag-age">Ages 4–10</span>
+            <span class="tag tag-cat">Social Studies</span>
+            <span class="tag tag-new">🆕 New</span>
+          </div>
+          <div class="grade-links" id="links-community-builder"></div>
+        </div>
+      </a>
+
     </div><!-- /games-grid -->
 
   <section style="padding:32px 24px 16px;max-width:600px;margin:0 auto;text-align:center;">
@@ -1613,7 +1638,7 @@
       av_bestfriend:{game:'avatar',em:'🐾',name:'Best Friends',desc:'Choose a pet companion',hint:'Select any pet'},
       av_fashion:   {game:'avatar',em:'👗',name:'Fashion Designer',desc:"Change your avatar's outfit colour",hint:'Pick a new outfit colour'},
       av_makeover:  {game:'avatar',em:'✨',name:'Makeover!',desc:'Customise your avatar 3 times',hint:'Make 3 changes to your avatar'},
-      cg_fan:{game:'crabcake',em:'🦀',name:'Crabcake Fan',desc:'Play all 4 Crabcake games at least once',hint:"Try all 4 games"},
+      cg_fan:{game:'crabcake',em:'🦀',name:'Crabcake Fan',desc:'Play any 5 Crabcake games at least once',hint:"Try 5 different games"},
       cg_allround:{game:'crabcake',em:'🌟',name:'All-Rounder',desc:'Earn at least one badge in every game',hint:"Badge in all 4 games"},
       cg_dedicated:{game:'crabcake',em:'🎮',name:'Dedicated',desc:'Play 10 games total across all games',hint:"Play 10 total games"},
       cg_bughunter:{game:'crabcake',em:'🐛',name:'Bug Hunter',desc:'Reported a bug to help improve Crabcake',hint:"Report a bug via email"},
@@ -1659,8 +1684,16 @@
   kl_band_1:{game:'kitchenlab',em:'🥉',name:'Ages 4–6 Champion',desc:'Achieved band mastery for Ages 4–6 in Kitchen Lab',hint:'Master all grades in band 1'},
   kl_band_2:{game:'kitchenlab',em:'🥈',name:'Ages 6–8 Champion',desc:'Achieved band mastery for Ages 6–8 in Kitchen Lab',hint:'Master all grades in band 2'},
   kl_band_3:{game:'kitchenlab',em:'🥇',name:'Ages 8–10 Champion',desc:'Achieved band mastery for Ages 8–10 in Kitchen Lab',hint:'Master all grades in band 3'},
+  cb_first:{game:'communitybuilder',em:'🏘️',name:'First Building',desc:'Unlock your first building in Community Builder',hint:'Answer 3 questions correctly for one helper'},
+  cb_five:{game:'communitybuilder',em:'⭐',name:'Growing Town',desc:'Unlock 5 buildings in one game',hint:'Unlock 5 buildings'},
+  cb_complete:{game:'communitybuilder',em:'🏆',name:'Town Complete',desc:'Unlock all 10 community helpers in one game',hint:'Unlock all 10 helpers'},
+  cb_perfect:{game:'communitybuilder',em:'💎',name:'Perfect Mayor',desc:'Complete a game without any wrong answers',hint:'No wrong answers'},
+  cb_helpers:{game:'communitybuilder',em:'🤝',name:'Community Hero',desc:'Learn about all 10 community helpers',hint:'Play all helper questions'},
+  cb_band_1:{game:'communitybuilder',em:'🥉',name:'Ages 4–6 Builder',desc:'Complete Community Builder on Ages 4–6',hint:'Finish the Ages 4–6 level'},
+  cb_band_2:{game:'communitybuilder',em:'🥈',name:'Ages 6–8 Builder',desc:'Complete Community Builder on Ages 6–8',hint:'Finish the Ages 6–8 level'},
+  cb_band_3:{game:'communitybuilder',em:'🥇',name:'Ages 8–10 Builder',desc:'Complete Community Builder on Ages 8–10',hint:'Finish the Ages 8–10 level'},
     };
-    const GAME_LABELS={mathdive:'🤿 Math Dive',junglewords:'🦁 Jungle Words',witchbrew:'🧙‍♀️ Witch\'s Brew',tubesort:'🧪 Tube Sort',kitchenlab:'👨‍🔬 Kitchen Lab',avatar:'🎨 Avatar & Pet',crabcake:'🦀 Crabcake'};
+    const GAME_LABELS={mathdive:'🤿 Math Dive',junglewords:'🦁 Jungle Words',witchbrew:'🧙‍♀️ Witch\'s Brew',tubesort:'🧪 Tube Sort',kitchenlab:'👨‍🔬 Kitchen Lab',communitybuilder:'🏘️ Community Builder',avatar:'🎨 Avatar & Pet',crabcake:'🦀 Crabcake'};
     const BADGE_KEY='crabcake_badges_v1';
 
     function renderHomeBadges(){
@@ -1680,7 +1713,7 @@
         groups[b.game].push(id);
       });
       // Build in fixed game order
-      const order=['mathdive','junglewords','witchbrew','tubesort','kitchenlab','avatar','crabcake'];
+      const order=['mathdive','junglewords','witchbrew','tubesort','kitchenlab','communitybuilder','avatar','crabcake'];
       let html='';
       order.forEach(game=>{
         const ids=Object.keys(BADGE_DEF).filter(id=>BADGE_DEF[id].game===game);
@@ -2889,6 +2922,192 @@ function bindHoverPause(canvasId, startFn) {
       draw(); // render one static frame on load
       _card_canvas_kitchen.addEventListener('mouseenter', () => { paused = false; draw(); });
       _card_canvas_kitchen.addEventListener('mouseleave', () => { paused = true; });
+    }
+  }
+})();
+
+// ─── COMMUNITY BUILDER: rising buildings + drifting clouds ───────────────────
+(function communityBuilder() {
+  const { canvas, ctx, W, H } = initCanvas('canvas-community');
+  let paused = true;
+
+  const SKY_TOP = '#87CEEB', SKY_BOT = '#d4f0ff';
+  const ROAD_Y = H - 22;
+  const GRASS_Y = ROAD_Y - 8;
+
+  // Buildings that "pop up"
+  const BLDG_COLORS = ['#e07050','#5b8abf','#e8c84a','#7ec87e','#c97ec8','#eea060','#8ecfcf'];
+  const buildings = Array.from({ length: 7 }, (_, i) => ({
+    x: 18 + i * 38,
+    baseW: rand(22, 34),
+    maxH: rand(30, 70),
+    curH: 0,
+    targetH: 0,
+    color: BLDG_COLORS[i % BLDG_COLORS.length],
+    windowRows: Math.floor(rand(1, 4)),
+    roofType: Math.floor(rand(0, 3)), // 0=flat, 1=pointed, 2=dome
+    delay: i * 0.4,
+    popped: false
+  }));
+  let timer = 0;
+  let cycleTime = 0;
+
+  // Clouds
+  const clouds = Array.from({ length: 4 }, () => ({
+    x: rand(-30, W + 30), y: rand(6, 28),
+    w: rand(24, 44), h: rand(10, 16),
+    speed: rand(0.15, 0.35), alpha: rand(0.35, 0.65)
+  }));
+
+  // Character blobs walking on road
+  const walkers = Array.from({ length: 3 }, () => ({
+    x: rand(10, W - 10), dir: Math.random() > 0.5 ? 1 : -1,
+    speed: rand(0.2, 0.5),
+    color: ['#ff6b6b','#4ecb71','#ffd93d','#a66cff'][Math.floor(rand(0, 4))],
+    size: rand(3, 5)
+  }));
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Sky gradient
+    const skyG = ctx.createLinearGradient(0, 0, 0, GRASS_Y);
+    skyG.addColorStop(0, SKY_TOP);
+    skyG.addColorStop(1, SKY_BOT);
+    ctx.fillStyle = skyG;
+    ctx.fillRect(0, 0, W, GRASS_Y);
+
+    // Clouds
+    clouds.forEach(c => {
+      c.x += c.speed;
+      if (c.x > W + 50) c.x = -50;
+      ctx.save();
+      ctx.globalAlpha = c.alpha;
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.ellipse(c.x, c.y, c.w / 2, c.h / 2, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(c.x - c.w * 0.25, c.y + 2, c.w * 0.3, c.h * 0.4, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(c.x + c.w * 0.25, c.y + 1, c.w * 0.35, c.h * 0.45, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    });
+
+    // Animate buildings popping up
+    timer += 0.016;
+    cycleTime += 0.016;
+    // Reset cycle every 6 seconds
+    if (cycleTime > 6) {
+      cycleTime = 0;
+      buildings.forEach(b => { b.targetH = 0; b.popped = false; });
+    }
+
+    buildings.forEach(b => {
+      if (!b.popped && cycleTime > b.delay) {
+        b.targetH = b.maxH;
+        b.popped = true;
+      }
+      // Ease toward target
+      b.curH += (b.targetH - b.curH) * 0.08;
+
+      if (b.curH > 1) {
+        const bx = b.x;
+        const by = GRASS_Y - b.curH;
+        const bw = b.baseW;
+        const bh = b.curH;
+
+        // Building body
+        ctx.fillStyle = b.color;
+        ctx.fillRect(bx, by, bw, bh);
+
+        // Roof
+        ctx.fillStyle = shadeColor(b.color, -25);
+        if (b.roofType === 1) {
+          ctx.beginPath();
+          ctx.moveTo(bx - 2, by);
+          ctx.lineTo(bx + bw / 2, by - 8);
+          ctx.lineTo(bx + bw + 2, by);
+          ctx.fill();
+        } else if (b.roofType === 2) {
+          ctx.beginPath();
+          ctx.ellipse(bx + bw / 2, by, bw / 2 + 1, 6, 0, Math.PI, 0);
+          ctx.fill();
+        } else {
+          ctx.fillRect(bx - 1, by - 3, bw + 2, 3);
+        }
+
+        // Windows
+        ctx.fillStyle = 'rgba(255,255,200,0.7)';
+        const winSize = 4;
+        const cols = Math.max(1, Math.floor(bw / 12));
+        const rows = Math.min(b.windowRows, Math.floor(bh / 14));
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            const wx = bx + 5 + c * (bw - 10) / Math.max(cols, 1);
+            const wy = by + 8 + r * 14;
+            ctx.fillRect(wx, wy, winSize, winSize);
+          }
+        }
+
+        // Door
+        ctx.fillStyle = shadeColor(b.color, -40);
+        const dw = Math.min(8, bw * 0.3);
+        ctx.fillRect(bx + bw / 2 - dw / 2, GRASS_Y - Math.min(10, bh * 0.3), dw, Math.min(10, bh * 0.3));
+      }
+    });
+
+    // Grass
+    ctx.fillStyle = '#7ec850';
+    ctx.fillRect(0, GRASS_Y, W, ROAD_Y - GRASS_Y);
+
+    // Road
+    ctx.fillStyle = '#555';
+    ctx.fillRect(0, ROAD_Y, W, H - ROAD_Y);
+    // Road lines
+    ctx.fillStyle = '#ffdd44';
+    for (let rx = 0; rx < W; rx += 18) {
+      ctx.fillRect(rx, ROAD_Y + (H - ROAD_Y) / 2 - 1, 9, 2);
+    }
+
+    // Walking characters
+    walkers.forEach(w => {
+      w.x += w.dir * w.speed;
+      if (w.x > W + 5) w.dir = -1;
+      if (w.x < -5) w.dir = 1;
+      ctx.fillStyle = w.color;
+      ctx.beginPath();
+      ctx.arc(w.x, ROAD_Y - 4, w.size, 0, Math.PI * 2);
+      ctx.fill();
+      // Tiny head
+      ctx.fillStyle = '#fdd';
+      ctx.beginPath();
+      ctx.arc(w.x, ROAD_Y - 4 - w.size - 1, w.size * 0.6, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    if (!paused) requestAnimationFrame(draw);
+  }
+
+  function shadeColor(hex, pct) {
+    let r = parseInt(hex.slice(1, 3), 16);
+    let g = parseInt(hex.slice(3, 5), 16);
+    let b = parseInt(hex.slice(5, 7), 16);
+    r = Math.max(0, Math.min(255, r + Math.round(r * pct / 100)));
+    g = Math.max(0, Math.min(255, g + Math.round(g * pct / 100)));
+    b = Math.max(0, Math.min(255, b + Math.round(b * pct / 100)));
+    return `rgb(${r},${g},${b})`;
+  }
+
+  const _canvas_canvas_community = document.getElementById('canvas-community');
+  if (_canvas_canvas_community) {
+    const _card_canvas_community = _canvas_canvas_community.closest('.game-card');
+    if (_card_canvas_community) {
+      draw(); // render one static frame on load
+      _card_canvas_community.addEventListener('mouseenter', () => { paused = false; draw(); });
+      _card_canvas_community.addEventListener('mouseleave', () => { paused = true; });
     }
   }
 })();
