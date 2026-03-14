@@ -253,8 +253,8 @@ function phaserPreload(){
   self.load.on('progress',function(v){$('lBar').style.width=Math.round(20+v*75)+'%';$('lTxt').textContent='Loading town assets... '+Math.round(v*100)+'%'});
   self.load.on('loaderror',function(f){console.warn('Skipped:',f.key)});
   CHARS.forEach(function(c){
-    self.load.spritesheet(c+'-idle',AP+'/sprites/idle/'+c+'-idle.png',{frameWidth:192,frameHeight:192});
-    self.load.spritesheet(c+'-walk',AP+'/sprites/walk/'+c+'-walk.png',{frameWidth:192,frameHeight:192});
+    self.load.spritesheet(c+'-idle',AP+'/sprites/idle/'+c+'-idle.png',{frameWidth:384,frameHeight:384});
+    self.load.spritesheet(c+'-walk',AP+'/sprites/walk/'+c+'-walk.png',{frameWidth:384,frameHeight:384});
     self.load.image(c+'-st',AP+'/sprites/static/'+c+'.png');
   });
   ['hospital','fire_station','building_medium_gray','building_medium_orange','building_large_teal','mini_mart','pizzeria','coffee_shop','gas_station','bank'].forEach(function(b){self.load.image('b-'+b,AP+'/town/Buildings/'+b+'.png')});
@@ -371,7 +371,7 @@ function spWalk(ck){
   var sc=G.sc;if(!sc)return;
   if(!sc.textures.exists(ck+'-walk')||!sc.anims.exists(ck+'-wa'))return;
   var sl=SL[ck]||{x:600};
-  var spr=sc.add.sprite(sl.x,RY+36,ck+'-walk').setScale(.65).setOrigin(.5,1).setDepth(D.walker);
+  var spr=sc.add.sprite(sl.x,RY+36,ck+'-walk').setScale(.33).setOrigin(.5,1).setDepth(D.walker);
   spr.play(ck+'-wa');
   walkers.push({spr:spr,sp:15+Math.random()*12,dir:Math.random()>.5?1:-1,mn:Math.max(sl.x-120,10),mx:Math.min(sl.x+120,WW-10)});
 }
@@ -391,7 +391,7 @@ function charIntro(ck,cb){
 
   var useWalk=sc.textures.exists(ck+'-walk')&&sc.anims.exists(ck+'-wa');
   var startX=G.sc.cameras.main.scrollX-60;
-  var spr=sc.add.sprite(startX,RY+36,useWalk?(ck+'-walk'):(ck+'-idle')).setScale(.65).setOrigin(.5,1).setDepth(D.charIntro);
+  var spr=sc.add.sprite(startX,RY+36,useWalk?(ck+'-walk'):(ck+'-idle')).setScale(.33).setOrigin(.5,1).setDepth(D.charIntro);
   if(useWalk)spr.play(ck+'-wa');else spr.play(ck+'-ia');
   G.introSpr=spr;
 
