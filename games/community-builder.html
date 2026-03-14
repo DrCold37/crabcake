@@ -184,7 +184,7 @@ var CP=[{k:'sign_stop',x:390,s:.55},{k:'sign_warning',x:770,s:.5},{k:'sign_const
 
 var D={sky:0,tree:2,ground:5,ghost:7,prop:8,building:10,vehicle:11,walker:12,spotlight:45,charIntro:50};
 
-var G={band:null,bn:1,qs:[],queue:[],score:0,ans:0,corr:0,cp:{},pi:0,ul:0,dm:false,sc:null,gm:null,introSpr:null,spotGfx:null,camTarget:0,curChar:null,patrolDir:1,patrolSpeed:43,zoomed:false};
+var G={band:null,bn:1,qs:[],queue:[],score:0,ans:0,corr:0,cp:{},pi:0,ul:0,dm:false,sc:null,gm:null,introSpr:null,camTarget:0,curChar:null,patrolDir:1,patrolSpeed:43,zoomed:false};
 var clouds=[],walkers=[],bldSpr={},propSpr=[];
 var celebCb=null;
 
@@ -339,17 +339,26 @@ function phaserUpdate(time,delta){
     if(s.x>WW-60){G.patrolDir=-1}
     if(s.x<60){G.patrolDir=1}
   }
-  /* Camera: follow character when zoomed, otherwise smooth scroll to target */
+  /* Camera */
   var cam=this.cameras.main;
   if(G.zoomed&&G.introSpr&&G.introSpr.active){
     var cx=G.introSpr.x;
     var cy=RY-40;
     var hw=(GW/cam.zoom)/2;
     var hh=(GH/cam.zoom)/2;
-    var tx=Math.max(hw,Math.min(cx,WW-hw));
-    var ty=Math.max(hh,Math.min(cy,GH-hh));
-    cam.scrollX+=(tx-hw-cam.scrollX)*0.08;
-    cam.scrollY+=(ty-hh-cam.scrollY)*0.08;
+    /* Only follow once character has passed the center of the zoomed view */
+    var camCenterX=cam.scrollX+hw;
+    if(cx>camCenterX){
+      /* Character past center — follow it */
+      var tx=Math.max(hw,Math.min(cx,WW-hw));
+      var ty=Math.max(hh,Math.min(cy,GH-hh));
+      cam.scrollX+=(tx-hw-cam.scrollX)*0.08;
+      cam.scrollY+=(ty-hh-cam.scrollY)*0.08;
+    }else{
+      /* Character still on left side — hold camera at left edge */
+      cam.scrollX+=(0-cam.scrollX)*0.08;
+      cam.scrollY+=((cy-hh)-cam.scrollY)*0.08;
+    }
   }else{
     var target=Math.max(0,Math.min(G.camTarget-GW/2,WW-GW));
     cam.scrollX+=(target-cam.scrollX)*0.04;
@@ -397,7 +406,7 @@ function spWalk(ck){
 }
 
 /* ── CHARACTER INTRO with ZOOM ──
-   Zooms camera 200%, character walks from left edge, patrols during questions. */
+   Zooms camera 200% anchored to left edge, character walks from left. */
 function charIntro(ck,cb){
   var sc=G.sc;
   if(!sc||!sc.textures.exists(ck+'-walk')||!sc.anims.exists(ck+'-wa')){
@@ -412,7 +421,8 @@ function charIntro(ck,cb){
   G.patrolDir=1;
   spr.setFlipX(false);
 
-  /* Zoom camera in 200% */
+  /* Snap camera to left edge before zooming */
+  sc.cameras.main.scrollX=0;
   G.zoomed=true;
   sc.cameras.main.zoomTo(2,800,'Sine.easeInOut');
 
@@ -425,18 +435,17 @@ function dismissIntro(cb){
   G.curChar=null;
   G.zoomed=false;
   if(sc)sc.cameras.main.zoomTo(1,800,'Sine.easeInOut');
-  if(!sc||!G.introSpr){if(cb)setTimeout(cb,3800);return}
+  if(!sc||!G.introSpr){if(cb)setTimeout(cb,1000);return}
   var spr=G.introSpr;G.introSpr=null;
   var exitX=sc.cameras.main.scrollX+GW+60;
   sc.tweens.add({targets:spr,x:exitX,duration:2800,ease:'Power1',onComplete:function(){spr.destroy()}});
-  /* 3 second delay after zoom-out before callback */
-  if(cb)setTimeout(cb,3800);
+  if(cb)setTimeout(cb,1000);
 }
 
 /* ── DRAG & DROP ── */
 function initDrag(ck){
   var sc=G.sc;if(!sc)return;var sl=SL[ck];
-  if(!sl||!sc.textures.exists('b-'+CI[ck].b)){plBld(ck);spWalk(ck);setTimeout(nextQ,800);return}
+  if(!sl||!sc.textures.exists('b-'+CI[ck].b)){plBld(ck);spWalk(ck);setTimeout(nextQ,3000);return}
   var bk='b-'+CI[ck].b;
   var dz=sc.add.graphics().setDepth(D.charIntro-1);
   var gw2=Math.round(sl.s*380);var ghh2=Math.round(sl.s*450);
@@ -451,7 +460,7 @@ function initDrag(ck){
     if(Phaser.Math.Distance.Between(o.x,o.y,sl.x,RY-sl.s*225)<140){
       o.disableInteractive();o.destroy();lbl.destroy();dz.destroy();
       sc.input.off('drag',dragFn);sc.input.off('dragend',endFn);
-      plBld(ck);spWalk(ck);setTimeout(nextQ,1200);
+      plBld(ck);spWalk(ck);setTimeout(nextQ,3000);
     }else{sc.tweens.add({targets:o,x:camX+GW/2,y:100,duration:300,ease:'Power2'})}
   };
   sc.input.on('drag',dragFn);sc.input.on('dragend',endFn);
@@ -522,14 +531,15 @@ function unlockC(ck){
   var c=CI[ck];
   if(ck==='construction'){
     for(var i=0;i<2&&G.pi<CP.length;i++,G.pi++)plProp(G.pi);
-    setTimeout(function(){showCeleb('\u{1F3D7}\u{FE0F}','New Infrastructure!',c.n+' added signs and lights!',function(){setTimeout(nextQ,500)})},600);
+    setTimeout(function(){showCeleb('\u{1F3D7}\u{FE0F}','New Infrastructure!',c.n+' added signs and lights!',function(){setTimeout(nextQ,3000)})},600);
   }else if(G.dm){
+    /* Band 2/3 — user drags building */
     showCeleb(c.e,c.n,'Drag the '+c.l+' to its spot!',function(){initDrag(ck)});
   }else{
-    /* Pan camera to building slot, drop building, THEN celebrate */
+    /* Band 1 — auto-place building, then 3s delay */
     if(SL[ck])panTo(SL[ck].x);
     plBld(ck);spWalk(ck);
-    setTimeout(function(){showCeleb(c.e,'New Building!',c.n+' has joined the town!',function(){setTimeout(nextQ,500)})},1300);
+    setTimeout(function(){showCeleb(c.e,'New Building!',c.n+' has joined the town!',function(){setTimeout(nextQ,3000)})},1300);
   }
   if(G.ul===5&&G.sc&&G.sc.textures.exists('b-bank')){
     var sc2=G.sc;var bankX=1530;panTo(bankX);
@@ -542,8 +552,9 @@ function unlockC(ck){
 }
 
 /* ── CELEB ── */
-function showCeleb(em,ti,tx,cb){celebCb=cb||null;$('cEm').textContent=em;$('cTi').textContent=ti;$('cTx').textContent=tx;$('celeb').classList.add('active');doConfetti()}
-function closeCeleb(){$('celeb').classList.remove('active');if(celebCb){var f=celebCb;celebCb=null;f()}else setTimeout(nextQ,500)}
+var celebTimer=null;
+function showCeleb(em,ti,tx,cb){celebCb=cb||null;$('cEm').textContent=em;$('cTi').textContent=ti;$('cTx').textContent=tx;$('celeb').classList.add('active');doConfetti();if(celebTimer)clearTimeout(celebTimer);celebTimer=setTimeout(closeCeleb,2000)}
+function closeCeleb(){if(celebTimer){clearTimeout(celebTimer);celebTimer=null}$('celeb').classList.remove('active');if(celebCb){var f=celebCb;celebCb=null;f()}else setTimeout(nextQ,500)}
 function doConfetti(){var cs=['#FFD93D','#FF5C5C','#4ECB71','#A66CFF','#4A90D9','#FF9040'];for(var i=0;i<20;i++){var d=document.createElement('div');var t=1+Math.random()*1.5;d.style.cssText='position:fixed;width:8px;height:8px;border-radius:'+(Math.random()>.5?'50%':'2px')+';background:'+cs[Math.floor(Math.random()*cs.length)]+';left:'+Math.random()*100+'%;top:-8px;opacity:1;pointer-events:none;z-index:41;animation:cfall '+t+'s ease-out '+Math.random()*.4+'s forwards';$('celeb').appendChild(d);(function(el,dur){setTimeout(function(){el.remove()},(dur+.5)*1000)})(d,t)}}
 
 function finish(){$('qOver').classList.remove('active');$('hud').classList.remove('active');var a=G.ans?Math.round(G.corr/G.ans*100):0;$('fSc').textContent='\u2B50 Score: '+G.score;$('fAc').textContent='\u{1F3AF} Accuracy: '+a+'% ('+G.corr+'/'+G.ans+')';var adj=['Amazing','Wonderful','Friendly','Happy','Sunny','Cozy','Busy','Peaceful'];var noun=['Town','Village','Neighbourhood','Community','Haven'];$('fTn').textContent=adj[Math.floor(Math.random()*adj.length)]+' '+noun[Math.floor(Math.random()*noun.length)];setTimeout(function(){showScr('finishScreen')},800)}
