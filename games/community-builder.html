@@ -145,7 +145,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 
 <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
 <script>
-/* Community Builder v4 — camera fix */
+/* Community Builder v5 — startFollow camera */
 (function(){
 "use strict";
 var $=function(id){return document.getElementById(id)};
@@ -340,26 +340,9 @@ function phaserUpdate(time,delta){
     if(s.x>WW-60){G.patrolDir=-1}
     if(s.x<60){G.patrolDir=1}
   }
-  /* Camera */
+  /* Camera — when not zoomed/following, smooth scroll to target */
   var cam=this.cameras.main;
-  if(G.zoomed&&G.introSpr&&G.introSpr.active){
-    var cx=G.introSpr.x;
-    var cy=RY-40;
-    var vw=GW/cam.zoom;
-    var vh=GH/cam.zoom;
-    /* Center camera on character, clamped to world bounds */
-    var targetX=Math.max(0,Math.min(cx-vw/2,WW-vw));
-    var targetY=Math.max(0,Math.min(cy-vh/2,GH-vh));
-    if(G.entering){
-      /* During entry walk: hold at left edge, correct vertical */
-      cam.scrollX+=(0-cam.scrollX)*0.08;
-      cam.scrollY+=(targetY-cam.scrollY)*0.08;
-    }else{
-      /* During patrol: follow character */
-      cam.scrollX+=(targetX-cam.scrollX)*0.06;
-      cam.scrollY+=(targetY-cam.scrollY)*0.06;
-    }
-  }else{
+  if(!G.zoomed){
     var target=Math.max(0,Math.min(G.camTarget-GW/2,WW-GW));
     cam.scrollX+=(target-cam.scrollX)*0.04;
     cam.scrollY+=(0-cam.scrollY)*0.04;
@@ -406,8 +389,7 @@ function spWalk(ck){
 }
 
 /* ── CHARACTER INTRO with ZOOM ──
-   Zooms camera 200% showing ground level from left edge.
-   Character walks in from off-screen left. */
+   Zooms camera 200%, uses Phaser startFollow to track character. */
 function charIntro(ck,cb){
   var sc=G.sc;
   if(!sc||!sc.textures.exists(ck+'-walk')||!sc.anims.exists(ck+'-wa')){
@@ -415,13 +397,6 @@ function charIntro(ck,cb){
   }
   G.curChar=ck;
   var useWalk=sc.textures.exists(ck+'-walk')&&sc.anims.exists(ck+'-wa');
-
-  /* With zoom=2, visible area is 600x400.
-     Character feet at y=RY+36=756. To see ground level:
-     scrollY = GH - (GH/zoom) = 800-400 = 400
-     scrollX = 0 to start from left edge */
-  sc.cameras.main.scrollX=0;
-  sc.cameras.main.scrollY=GH-(GH/2);
 
   /* Character starts off-screen left */
   var startX=-50;
@@ -433,10 +408,12 @@ function charIntro(ck,cb){
   G.zoomed=true;
   spr.setFlipX(false);
 
-  /* Zoom in */
-  sc.cameras.main.zoomTo(2,600,'Sine.easeInOut');
+  /* Use Phaser's built-in follow — offset so character is left-of-center during entry */
+  var cam=sc.cameras.main;
+  cam.startFollow(spr,true,0.08,0.08,0,80);
+  cam.setZoom(2);
 
-  /* Walk character into view — about 1/3 across the zoomed viewport (~200px world) */
+  /* Walk character into view */
   sc.tweens.add({targets:spr,x:200,duration:2500,ease:'Linear',
     onComplete:function(){
       G.entering=false;
@@ -450,7 +427,10 @@ function dismissIntro(cb){
   G.curChar=null;
   G.zoomed=false;
   G.entering=false;
-  if(sc)sc.cameras.main.zoomTo(1,800,'Sine.easeInOut');
+  if(sc){
+    sc.cameras.main.stopFollow();
+    sc.cameras.main.zoomTo(1,800,'Sine.easeInOut');
+  }
   if(!sc||!G.introSpr){if(cb)setTimeout(cb,1000);return}
   var spr=G.introSpr;G.introSpr=null;
   var exitX=sc.cameras.main.scrollX+GW+60;
