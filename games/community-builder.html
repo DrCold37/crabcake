@@ -145,7 +145,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 
 <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
 <script>
-/* Community Builder v14 — feet lower */
+/* Community Builder v16 — keep char in place */
 (function(){
 "use strict";
 var $=function(id){return document.getElementById(id)};
@@ -474,18 +474,22 @@ function charIntro(ck,cb){
 
 function dismissIntro(cb){
   var sc=G.sc;
+  var ck=G.curChar;
   G.curChar=null;
   G.entering=false;
   if(!sc||!G.introSpr){if(cb)setTimeout(cb,500);return}
   var spr=G.introSpr;G.introSpr=null;
-  spr.destroy();
+  /* Convert intro sprite to a permanent walker at current position */
+  spr.setDepth(D.walker);
+  var cx=spr.x;
+  walkers.push({spr:spr,sp:15+Math.random()*12,dir:G.patrolDir,mn:Math.max(cx-150,10),mx:Math.min(cx+150,WW-10)});
   if(cb)setTimeout(cb,500);
 }
 
 /* ── DRAG & DROP ── */
 function initDrag(ck){
   var sc=G.sc;if(!sc)return;var sl=SL[ck];
-  if(!sl||!sc.textures.exists('b-'+CI[ck].b)){plBld(ck);spWalk(ck);doConfetti();setTimeout(nextQ,3000);return}
+  if(!sl||!sc.textures.exists('b-'+CI[ck].b)){plBld(ck);doConfetti();setTimeout(nextQ,3000);return}
   var bk='b-'+CI[ck].b;
   var dz=sc.add.graphics().setDepth(D.charIntro-1);
   var gw2=Math.round(sl.s*340);var ghh2=Math.round(sl.s*400);
@@ -501,7 +505,7 @@ function initDrag(ck){
     if(Phaser.Math.Distance.Between(o.x,o.y,sl.x,RY+28-sl.s*200)<140){
       o.disableInteractive();o.destroy();lbl.destroy();dz.destroy();
       sc.input.off('drag',dragFn);sc.input.off('dragend',endFn);
-      plBld(ck);spWalk(ck);doConfetti();setTimeout(nextQ,3000);
+      plBld(ck);doConfetti();setTimeout(nextQ,3000);
     }else{sc.tweens.add({targets:o,x:camX+vw/2,y:RY-200,duration:300,ease:'Power2'})}
   };
   sc.input.on('drag',dragFn);sc.input.on('dragend',endFn);
@@ -581,7 +585,7 @@ function unlockC(ck){
   }else{
     /* Band 1 — auto-place building with confetti, 3s delay */
     if(SL[ck])panTo(SL[ck].x);
-    setTimeout(function(){plBld(ck);spWalk(ck);doConfetti()},1400);
+    setTimeout(function(){plBld(ck);doConfetti()},1400);
     setTimeout(nextQ,4500);
   }
   if(G.ul===5&&G.sc&&G.sc.textures.exists('b-bank')){
