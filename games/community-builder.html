@@ -111,7 +111,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 <div id="hud">
   <button class="hb" id="homeBtn">&#x1F3E0;</button>
   <div class="hs">&#x2B50; <span id="scD">0</span></div>
-  <div class="hp"><span id="prD">0</span>/10 buildings</div>
+  <div class="hp"><span id="prD">0</span>/12 buildings</div>
 </div>
 
 <!-- Question at TOP -->
@@ -145,7 +145,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 
 <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
 <script>
-/* Community Builder v17 — seamless char handoff */
+/* Community Builder v18 — add mechanic + vet */
 (function(){
 "use strict";
 var $=function(id){return document.getElementById(id)};
@@ -154,9 +154,9 @@ var $=function(id){return document.getElementById(id)};
    World is 3600px wide. Camera permanently zoomed 2x (viewport 600x400).
    Layout top→bottom: sky, bg buildings, bg trees, grass, buildings, sidewalk, road, bottom grass.
    Character walks on sidewalk between buildings and road. */
-var GW=1200,GH=800,WW=3600,RY=700,AP='/assets/community-builder';
+var GW=1200,GH=800,WW=4200,RY=700,AP='/assets/community-builder';
 var WALKY=RY+65;
-var CHARS=['firefighter','doctor','police','chef','farmer','teacher','librarian','construction','mailcarrier','busdriver'];
+var CHARS=['firefighter','doctor','police','chef','farmer','teacher','librarian','construction','mailcarrier','busdriver','mechanic','vet'];
 var CI={
   firefighter:{n:'Firefighter Frankie',e:'\u{1F692}',b:'fire_station',v:'car_red',l:'Fire Station'},
   doctor:{n:'Doctor Dana',e:'\u{1F3E5}',b:'hospital',v:'ambulance',l:'Hospital'},
@@ -167,22 +167,26 @@ var CI={
   librarian:{n:'Librarian Lily',e:'\u{1F4D6}',b:'building_large_teal',v:null,l:'Library'},
   construction:{n:'Builder Blake',e:'\u{1F3D7}\u{FE0F}',b:null,v:null,l:'Infrastructure'},
   mailcarrier:{n:'Mail Carrier Mo',e:'\u{1F4EC}',b:'building_medium_orange',v:'van_white',l:'Post Office'},
-  busdriver:{n:'Bus Driver Bella',e:'\u{1F68C}',b:'gas_station',v:'taxi',l:'Gas Station'}
+  busdriver:{n:'Bus Driver Bella',e:'\u{1F68C}',b:'gas_station',v:'taxi',l:'Gas Station'},
+  mechanic:{n:'Mechanic Max',e:'\u{1F527}',b:'warehouse_red',v:null,l:'Auto Shop'},
+  vet:{n:'Vet Violet',e:'\u{1F43E}',b:'house_large_green',v:null,l:'Vet Clinic'}
 };
-/* 9 building slots — 380px apart, uniform scale to prevent overlap */
+/* 11 building slots — 350px apart, uniform scale to prevent overlap */
 var SL={
   busdriver:  {x:200, s:.45},
-  firefighter:{x:580, s:.45},
-  police:     {x:960, s:.45},
-  doctor:     {x:1340,s:.45},
-  mailcarrier:{x:1720,s:.45},
-  librarian:  {x:2100,s:.45},
-  farmer:     {x:2480,s:.45},
-  chef:       {x:2860,s:.45},
-  teacher:    {x:3240,s:.45}
+  firefighter:{x:550, s:.45},
+  police:     {x:900, s:.45},
+  doctor:     {x:1250,s:.45},
+  mailcarrier:{x:1600,s:.45},
+  librarian:  {x:1950,s:.45},
+  farmer:     {x:2300,s:.45},
+  chef:       {x:2650,s:.45},
+  teacher:    {x:3000,s:.45},
+  mechanic:   {x:3350,s:.45},
+  vet:        {x:3700,s:.45}
 };
 var VM={doctor:'ambulance',police:'police_car',busdriver:'taxi',mailcarrier:'van_white',chef:'van_black',firefighter:'car_red',teacher:'car_blue'};
-var CP=[{k:'sign_stop',x:390,s:.45},{k:'sign_warning',x:770,s:.4},{k:'sign_construction_1',x:1150,s:.4},{k:'light_pole_1',x:1530,s:.35},{k:'fence_wood',x:1910,s:.45},{k:'water_hydrant',x:2290,s:.45},{k:'sign_st_name',x:2670,s:.4},{k:'light_pole_2',x:3050,s:.35}];
+var CP=[{k:'sign_stop',x:375,s:.45},{k:'sign_warning',x:725,s:.4},{k:'sign_construction_1',x:1075,s:.4},{k:'light_pole_1',x:1425,s:.35},{k:'fence_wood',x:1775,s:.45},{k:'water_hydrant',x:2125,s:.45},{k:'sign_st_name',x:2475,s:.4},{k:'light_pole_2',x:2825,s:.35},{k:'light_pole_3',x:3175,s:.35},{k:'sign_info',x:3525,s:.4}];
 
 var D={sky:0,bgBuild2:1,bgTree2:2,bgBuild1:3,bgTree1:4,ground:5,tree:6,ghost:7,prop:8,building:10,vehicle:11,walker:12,charIntro:50};
 
@@ -258,13 +262,13 @@ function phaserPreload(){
     self.load.image(c+'-st',AP+'/sprites/static/'+c+'.png');
   });
   /* Foreground buildings */
-  ['hospital','fire_station','building_medium_gray','building_medium_orange','building_large_teal','mini_mart','pizzeria','coffee_shop','gas_station','bank','barber_shop','donut_shop'].forEach(function(b){self.load.image('b-'+b,AP+'/town/Buildings/'+b+'.png')});
+  ['hospital','fire_station','building_medium_gray','building_medium_orange','building_large_teal','mini_mart','pizzeria','coffee_shop','gas_station','bank','barber_shop','donut_shop','warehouse_red','house_large_green'].forEach(function(b){self.load.image('b-'+b,AP+'/town/Buildings/'+b+'.png')});
   /* Background buildings (2 depth layers) */
   ['building_large_background_1','building_large_background_2','building_medium_background_1','building_medium_background_2','building_small_background_1','building_small_background_2','house_large_background_1','house_large_background_2','house_medium_background_1','house_medium_background_2','warehouse_background_1','warehouse_background_2'].forEach(function(b){self.load.image('bg-'+b,AP+'/town/Buildings/'+b+'.png')});
   /* Vehicles */
   ['ambulance','police_car','taxi','van_white','van_black','car_red','car_blue'].forEach(function(v){self.load.image('v-'+v,AP+'/town/Vehicles/'+v+'.png')});
   /* Props */
-  ['sign_stop','sign_warning','sign_construction_1','sign_st_name','light_pole_1','light_pole_2','light_pole_3','fence_wood','fence_garden_brown','water_hydrant','light_post'].forEach(function(p){self.load.image('p-'+p,AP+'/town/Props/'+p+'.png')});
+  ['sign_stop','sign_warning','sign_construction_1','sign_st_name','sign_info','light_pole_1','light_pole_2','light_pole_3','fence_wood','fence_garden_brown','water_hydrant','light_post'].forEach(function(p){self.load.image('p-'+p,AP+'/town/Props/'+p+'.png')});
   /* Foreground vegetation */
   ['tree_01','tree_02','tree_03','bush_01','bush_02','weeds_01','weeds_02','weeds_03'].forEach(function(v){self.load.image('t-'+v,AP+'/town/Vegetation/'+v+'.png')});
   /* Background vegetation (2 depth layers) */
@@ -597,7 +601,7 @@ function unlockC(ck){
     setTimeout(function(){plBld(ck);doConfetti()},1400);
     setTimeout(nextQ,4500);
   }
-  if(G.ul===5&&G.sc&&G.sc.textures.exists('b-bank')){
+  if(G.ul===6&&G.sc&&G.sc.textures.exists('b-bank')){
     var sc2=G.sc;var bankX=1530;
     setTimeout(function(){
       panTo(bankX);
