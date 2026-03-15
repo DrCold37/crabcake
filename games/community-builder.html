@@ -162,20 +162,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 .frb{margin-top:.8rem;padding:.6rem 1.8rem;border-radius:50px;border:none;font-family:'Boogaloo',cursive;font-size:1.05rem;cursor:pointer;background:linear-gradient(135deg,var(--sky),var(--green));color:#fff}
 .fhl{display:block;margin-top:.7rem;color:rgba(255,255,255,.4);font-size:.7rem;text-decoration:none}
 @keyframes cfall{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(70vh) rotate(400deg);opacity:0}}
-/* ═══ VEHICLE TUNING PANEL ═══ */
-#tuneBtn{position:fixed;bottom:10px;right:10px;z-index:60;background:#FFD93D;color:#1a3a5c;border:none;border-radius:8px;padding:6px 12px;font-family:'Nunito',sans-serif;font-size:.7rem;font-weight:800;cursor:pointer;opacity:.6}
-#tuneBtn:hover{opacity:1}
-#tunePanel{position:fixed;top:0;right:0;bottom:0;width:320px;z-index:60;background:rgba(10,20,40,.95);overflow-y:auto;padding:10px;display:none;font-family:'Nunito',sans-serif;color:#fff;font-size:.7rem}
-#tunePanel.open{display:block}
-#tunePanel h3{font-family:'Boogaloo',cursive;color:var(--yellow);font-size:1rem;margin:0 0 6px;text-align:center}
-.tv{margin-bottom:8px;padding:6px;background:rgba(255,255,255,.05);border-radius:8px}
-.tv-name{font-weight:800;color:var(--sky);margin-bottom:3px}
-.tv-row{display:flex;align-items:center;gap:4px;margin:2px 0}
-.tv-row label{width:20px;text-align:right;color:rgba(255,255,255,.5);font-size:.6rem}
-.tv-row input[type=range]{flex:1;height:14px;accent-color:var(--sky)}
-.tv-row .tv-val{width:38px;font-size:.6rem;color:var(--yellow);text-align:right}
-#tuneExport{margin:8px auto;display:block;background:var(--green);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-weight:800;cursor:pointer;font-size:.75rem}
-#tuneOutput{width:100%;height:120px;margin-top:6px;background:rgba(0,0,0,.3);color:var(--yellow);border:1px solid rgba(255,255,255,.15);border-radius:6px;font-family:monospace;font-size:.6rem;padding:6px;display:none}
 </style>
 </head>
 <body>
@@ -256,15 +242,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
   </div>
 </div>
 
-<!-- Vehicle Tuning Panel -->
-<button id="tuneBtn" onclick="document.getElementById('tunePanel').classList.toggle('open')">&#x1F527; Tune Vehicles</button>
-<div id="tunePanel">
-  <h3>&#x1F697; Vehicle Tuning</h3>
-  <div id="tuneSliders"></div>
-  <button id="tuneExport">&#x1F4CB; Export Config</button>
-  <textarea id="tuneOutput" readonly></textarea>
-</div>
-
 <div id="finishScreen" class="screen hidden">
   <div class="fc">
     <div style="font-size:3.2rem">&#x1F3D8;&#xFE0F;&#x1F389;</div>
@@ -323,17 +300,17 @@ var D={sky:0,bgBuild2:1,bgTree2:2,bgBuild1:3,bgTree1:4,ground:5,tree:6,ghost:7,p
 /* Per-vehicle config: sx=scaleX, sy=scaleY, by=bottomLane Y offset, ty=topLane Y offset */
 var VEH_CFG={
   firetruck:  {sx:0.257, sy:0.181, by:0,  ty:0},
-  ambulance:  {sx:0.205, sy:0.132, by:15, ty:0},
-  policecar:  {sx:0.184, sy:0.116, by:25, ty:0},
-  foodtruck:  {sx:0.243, sy:0.170, by:11, ty:0},
-  tractor:    {sx:0.155, sy:0.153, by:15, ty:0},
-  teachercar: {sx:0.211, sy:0.150, by:30, ty:20},
-  libraryvan: {sx:0.190, sy:0.176, by:14, ty:0},
-  dumptruck:  {sx:0.223, sy:0.181, by:12, ty:0},
-  mailvan:    {sx:0.209, sy:0.154, by:12, ty:0},
-  bus:        {sx:0.273, sy:0.201, by:8,  ty:0},
-  towtruck:   {sx:0.201, sy:0.163, by:0,  ty:6},
-  animalvan:  {sx:0.190, sy:0.163, by:9,  ty:0}
+  ambulance:  {sx:0.205, sy:0.132, by:15, ty:11},
+  policecar:  {sx:0.184, sy:0.116, by:25, ty:20},
+  foodtruck:  {sx:0.243, sy:0.170, by:11, ty:8},
+  tractor:    {sx:0.155, sy:0.153, by:15, ty:11},
+  teachercar: {sx:0.211, sy:0.150, by:30, ty:24},
+  libraryvan: {sx:0.190, sy:0.176, by:14, ty:11},
+  dumptruck:  {sx:0.223, sy:0.181, by:12, ty:9},
+  mailvan:    {sx:0.209, sy:0.154, by:12, ty:9},
+  bus:        {sx:0.273, sy:0.201, by:8,  ty:7},
+  towtruck:   {sx:0.201, sy:0.163, by:9,  ty:6},
+  animalvan:  {sx:0.190, sy:0.163, by:9,  ty:8}
 };
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -724,6 +701,9 @@ function phaserPreload(){
   ['hospital','fire_station','building_medium_gray','building_medium_orange','building_large_teal','mini_mart','pizzeria','coffee_shop','gas_station','bank','barber_shop','donut_shop','warehouse_red','house_large_green'].forEach(function(b){self.load.image('b-'+b,AP+'/town/Buildings/'+b+'.png')});
   ['building_large_background_1','building_large_background_2','building_medium_background_1','building_medium_background_2','building_small_background_1','building_small_background_2','house_large_background_1','house_large_background_2','house_medium_background_1','house_medium_background_2','warehouse_background_1','warehouse_background_2'].forEach(function(b){self.load.image('bg-'+b,AP+'/town/Buildings/'+b+'.png')});
   ['ambulance','policecar','bus','firetruck','foodtruck','tractor','teachercar','libraryvan','mailvan','dumptruck','towtruck','animalvan'].forEach(function(v){self.load.image('v-'+v,AP+'/town/Vehicles/'+v+'.png')});
+  /* Animated vehicle spritesheets (384x384 frames, 3x3 grid = 9 frames) */
+  var ANIM_VEH=['ambulance','policecar'];
+  ANIM_VEH.forEach(function(v){self.load.spritesheet('va-'+v,AP+'/town/Vehicles/'+v+'-animate.png',{frameWidth:384,frameHeight:384})});
   ['sign_stop','sign_warning','sign_construction_1','sign_st_name','sign_info','light_pole_1','light_pole_2','light_pole_3','fence_wood','fence_garden_brown','water_hydrant','light_post'].forEach(function(p){self.load.image('p-'+p,AP+'/town/Props/'+p+'.png')});
   ['tree_01','tree_02','tree_03','bush_01','bush_02','weeds_01','weeds_02','weeds_03'].forEach(function(v){self.load.image('t-'+v,AP+'/town/Vegetation/'+v+'.png')});
   ['tree_01_background_1','tree_01_background_2','tree_02_background_1','tree_02_background_2'].forEach(function(v){self.load.image('tbg-'+v,AP+'/town/Vegetation/'+v+'.png')});
@@ -739,6 +719,10 @@ function phaserCreate(){
   CHARS.forEach(function(c){
     if(sc.textures.exists(c+'-idle'))sc.anims.create({key:c+'-ia',frames:sc.anims.generateFrameNumbers(c+'-idle',{start:0,end:8}),frameRate:4,repeat:-1});
     if(sc.textures.exists(c+'-walk'))sc.anims.create({key:c+'-wa',frames:sc.anims.generateFrameNumbers(c+'-walk',{start:0,end:8}),frameRate:8,repeat:-1});
+  });
+  /* Vehicle drive animations */
+  ['ambulance','policecar'].forEach(function(v){
+    if(sc.textures.exists('va-'+v))sc.anims.create({key:v+'-da',frames:sc.anims.generateFrameNumbers('va-'+v,{start:0,end:8}),frameRate:6,repeat:-1});
   });
 
   sc.cameras.main.setBounds(0,0,WW,GH);
@@ -797,14 +781,22 @@ function phaserCreate(){
     var LANE_BOTTOM_Y=ROADY-12;
     var LANE_TOP_Y=ROADY-46;
     Object.keys(VM).forEach(function(ck){
-      var vk='v-'+VM[ck];if(!sc.textures.exists(vk))return;
-      var sl=SL[ck]||{x:600};
       var vn=VM[ck];
+      var vk='v-'+vn;
+      var hasAnim=sc.textures.exists('va-'+vn)&&sc.anims.exists(vn+'-da');
+      if(!hasAnim&&!sc.textures.exists(vk))return;
+      var sl=SL[ck]||{x:600};
       var cfg=VEH_CFG[vn]||{sx:0.22,sy:0.18,by:0,ty:0};
       var bottomY=LANE_BOTTOM_Y+cfg.by;
       var topY=LANE_TOP_Y+cfg.ty;
-      var v=sc.add.image(sl.x+20,bottomY,vk).setScale(cfg.sx,cfg.sy).setDepth(D.vehicle);
-      v._charKey=ck;v._dir=1;v._sp=120+Math.random()*150;v._baseSp=v._sp;
+      var v;
+      if(hasAnim){
+        v=sc.add.sprite(sl.x+20,bottomY,'va-'+vn).setScale(cfg.sx,cfg.sy).setDepth(D.vehicle);
+        v.play(vn+'-da');
+      }else{
+        v=sc.add.image(sl.x+20,bottomY,vk).setScale(cfg.sx,cfg.sy).setDepth(D.vehicle);
+      }
+      v._charKey=ck;v._dir=1;v._sp=40+Math.random()*50;v._baseSp=v._sp;
       v._stopTimer=8000+Math.random()*10000;v._stopped=false;v._stopDur=1000+Math.random()*1500;v._elapsed=0;
       v._laneBottomY=bottomY;v._laneTopY=topY;
       v._baseSX=cfg.sx;v._baseSY=cfg.sy;
@@ -1079,13 +1071,20 @@ function plBld(ck){
   if(VM[ck])sc.time.delayedCall(1000,function(){plVeh(ck)});
 }
 function plVeh(ck){
-  var sc=G.sc;if(!sc)return;var vk='v-'+VM[ck];if(!sc.textures.exists(vk))return;
-  var sl=SL[ck];var vn=VM[ck];
+  var sc=G.sc;if(!sc)return;var vn=VM[ck];
+  var hasAnim=sc.textures.exists('va-'+vn)&&sc.anims.exists(vn+'-da');
+  if(!hasAnim&&!sc.textures.exists('v-'+vn))return;
+  var sl=SL[ck];
   var cfg=VEH_CFG[vn]||{sx:0.22,sy:0.18};
-  /* Band 2/3 parked vehicles are ~1.18x larger than band 1 road vehicles */
   var sx=cfg.sx*1.18;var sy=cfg.sy*1.18;
   var vy=(ck==='teacher')?WALKY+10:WALKY-2;
-  var v=sc.add.image(sl.x+60,vy,vk).setScale(sx,sy).setAlpha(0).setDepth(D.vehicle);
+  var v;
+  if(hasAnim){
+    v=sc.add.sprite(sl.x+60,vy,'va-'+vn).setScale(sx,sy).setAlpha(0).setDepth(D.vehicle);
+    v.play(vn+'-da');
+  }else{
+    v=sc.add.image(sl.x+60,vy,'v-'+vn).setScale(sx,sy).setAlpha(0).setDepth(D.vehicle);
+  }
   sc.tweens.add({targets:v,alpha:1,x:sl.x+20,duration:600,ease:'Power2'});
 }
 function plProp(idx){
@@ -1179,90 +1178,6 @@ function _renderEndBadges(){
     row.appendChild(coin);
   });
 }
-
-/* ══════════════════════════════════════════════════════════════════════════
-   VEHICLE TUNING PANEL
-   ══════════════════════════════════════════════════════════════════════════ */
-function buildTunePanel(){
-  var wrap=$('tuneSliders');if(!wrap)return;
-  wrap.innerHTML='';
-  var LANE_BOTTOM_Y=ROADY-12;
-  var LANE_TOP_Y=ROADY-46;
-  var names={firetruck:'Fire Truck',ambulance:'Ambulance',policecar:'Police Car',foodtruck:'Food Truck',tractor:'Tractor',teachercar:'Blue Sedan',libraryvan:'Bookmobile',dumptruck:'Dump Truck',mailvan:'Mail Van',bus:'School Bus',towtruck:'Tow Truck',animalvan:'Animal Van'};
-  Object.keys(VEH_CFG).forEach(function(vn){
-    var cfg=VEH_CFG[vn];
-    var div=document.createElement('div');div.className='tv';
-    div.innerHTML='<div class="tv-name">'+(names[vn]||vn)+'</div>';
-    function mkRow(label,key,min,max,step){
-      var row=document.createElement('div');row.className='tv-row';
-      var lbl=document.createElement('label');lbl.textContent=label;
-      var inp=document.createElement('input');inp.type='range';
-      inp.min=min;inp.max=max;inp.step=step;inp.value=cfg[key];
-      var val=document.createElement('span');val.className='tv-val';val.textContent=Number(cfg[key]).toFixed(3);
-      inp.addEventListener('input',function(){
-        cfg[key]=parseFloat(inp.value);
-        val.textContent=Number(cfg[key]).toFixed(3);
-        applyTune(vn);
-      });
-      row.appendChild(lbl);row.appendChild(inp);row.appendChild(val);
-      div.appendChild(row);
-    }
-    mkRow('W','sx',0.05,0.5,0.001);
-    mkRow('H','sy',0.05,0.5,0.001);
-    mkRow('Y\u2193','by',-40,60,1);
-    mkRow('Y\u2191','ty',-40,60,1);
-    wrap.appendChild(div);
-  });
-  $('tuneExport').addEventListener('click',exportTune);
-}
-
-function applyTune(vn){
-  /* Find the character key for this vehicle name */
-  var ck=null;
-  for(var k in VM){if(VM[k]===vn){ck=k;break}}
-  if(!ck)return;
-  var v=vehSpr[ck];if(!v||!v.active)return;
-  var cfg=VEH_CFG[vn];
-  var LANE_BOTTOM_Y=ROADY-12;
-  var LANE_TOP_Y=ROADY-46;
-  v._baseSX=cfg.sx;v._baseSY=cfg.sy;
-  v._laneBottomY=LANE_BOTTOM_Y+cfg.by;
-  v._laneTopY=LANE_TOP_Y+cfg.ty;
-  /* Apply scale based on current lane */
-  if(v._dir===1){
-    v.setScale(cfg.sx,cfg.sy);
-    v.y=v._laneBottomY;
-  }else{
-    v.setScale(cfg.sx*0.85,cfg.sy*0.85);
-    v.y=v._laneTopY;
-  }
-}
-
-function exportTune(){
-  var lines=['var VEH_CFG={'];
-  var keys=Object.keys(VEH_CFG);
-  keys.forEach(function(vn,i){
-    var c=VEH_CFG[vn];
-    var comma=i<keys.length-1?',':'';
-    lines.push('  '+vn+': {sx:'+c.sx.toFixed(3)+', sy:'+c.sy.toFixed(3)+', by:'+c.by+', ty:'+c.ty+'}'+comma);
-  });
-  lines.push('};');
-  var txt=lines.join('\n');
-  var ta=$('tuneOutput');
-  ta.style.display='block';ta.value=txt;
-  ta.select();
-  try{navigator.clipboard.writeText(txt)}catch(e){}
-}
-
-/* Build panel once Phaser scene is ready */
-var _origPhaserReady=null;
-(function(){
-  var _origCreate=phaserCreate;
-  phaserCreate=function(){
-    _origCreate.call(this);
-    buildTunePanel();
-  };
-})();
 
 showScr('startScreen');
 })();
