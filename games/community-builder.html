@@ -145,7 +145,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 
 <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
 <script>
-/* Community Builder v7 — road at bottom */
+/* Community Builder v8 — building alignment */
 (function(){
 "use strict";
 var $=function(id){return document.getElementById(id)};
@@ -155,7 +155,7 @@ var $=function(id){return document.getElementById(id)};
    Layout top→bottom: sky, bg buildings, bg trees, grass, buildings, sidewalk, road, bottom grass.
    Character walks on sidewalk between buildings and road. */
 var GW=1200,GH=800,WW=3600,RY=700,AP='/assets/community-builder';
-var WALKY=RY+25;
+var WALKY=RY+38;
 var CHARS=['firefighter','doctor','police','chef','farmer','teacher','librarian','construction','mailcarrier','busdriver'];
 var CI={
   firefighter:{n:'Firefighter Frankie',e:'\u{1F692}',b:'fire_station',v:'car_red',l:'Fire Station'},
@@ -336,16 +336,16 @@ function phaserCreate(){
   var fgTreeX=[100,390,770,1150,1530,1910,2290,2670,3050,3400];
   fgTreeX.forEach(function(tx,i){
     var k='t-'+(i%3===0?'tree_01':i%3===1?'tree_02':'tree_03');
-    if(sc.textures.exists(k))sc.add.image(tx+Math.random()*40-20,RY+5,k).setScale(.4+Math.random()*.12).setOrigin(.5,1).setDepth(D.tree);
+    if(sc.textures.exists(k))sc.add.image(tx+Math.random()*40-20,RY+25,k).setScale(.4+Math.random()*.12).setOrigin(.5,1).setDepth(D.tree);
   });
   /* Bushes and weeds along the grass strip */
   for(var wi=0;wi<20;wi++){
     var wk='t-weeds_0'+(wi%3+1);
-    if(sc.textures.exists(wk))sc.add.image(wi*185+Math.random()*60,RY+15+Math.random()*8,wk).setScale(.3+Math.random()*.15).setOrigin(.5,1).setDepth(D.tree);
+    if(sc.textures.exists(wk))sc.add.image(wi*185+Math.random()*60,RY+26+Math.random()*4,wk).setScale(.3+Math.random()*.15).setOrigin(.5,1).setDepth(D.tree);
   }
   for(var bsi=0;bsi<6;bsi++){
     var bsk='t-bush_0'+(bsi%2+1);
-    if(sc.textures.exists(bsk))sc.add.image(300+bsi*600+Math.random()*100,RY+8,bsk).setScale(.35+Math.random()*.1).setOrigin(.5,1).setDepth(D.tree);
+    if(sc.textures.exists(bsk))sc.add.image(300+bsi*600+Math.random()*100,RY+26,bsk).setScale(.35+Math.random()*.1).setOrigin(.5,1).setDepth(D.tree);
   }
 
   /* ═══ GROUND — grass on top, sidewalk, road to bottom ═══ */
@@ -365,15 +365,15 @@ function phaserCreate(){
   Object.keys(SL).forEach(function(ck){
     var sl=SL[ck];var gh=sc.add.graphics().setDepth(D.ghost);
     var gw=Math.round(sl.s*340);var ghh=Math.round(sl.s*400);
-    gh.lineStyle(2,0xffffff,.08);gh.strokeRoundedRect(sl.x-gw/2,RY-ghh,gw,ghh,8);
-    gh.fillStyle(0xffffff,.02);gh.fillRoundedRect(sl.x-gw/2,RY-ghh,gw,ghh,8);
+    gh.lineStyle(2,0xffffff,.08);gh.strokeRoundedRect(sl.x-gw/2,RY+28-ghh,gw,ghh,8);
+    gh.fillStyle(0xffffff,.02);gh.fillRoundedRect(sl.x-gw/2,RY+28-ghh,gw,ghh,8);
     bldSpr[ck]={ghost:gh,sprite:null};
   });
 
   /* Prop ghost circles */
   CP.forEach(function(p){
     var gh=sc.add.graphics().setDepth(D.ghost);
-    gh.lineStyle(1,0xffffff,.06);gh.strokeCircle(p.x,RY-8,8);
+    gh.lineStyle(1,0xffffff,.06);gh.strokeCircle(p.x,RY+20,8);
     propSpr.push({ghost:gh,sprite:null});
   });
 
@@ -416,7 +416,7 @@ function plBld(ck){
   var bk='b-'+CI[ck].b;if(!sc.textures.exists(bk))return;
   if(bldSpr[ck]&&bldSpr[ck].ghost){bldSpr[ck].ghost.destroy();bldSpr[ck].ghost=null}
   var b=sc.add.image(sl.x,-400,bk).setScale(sl.s).setOrigin(.5,1).setDepth(D.building);
-  sc.tweens.add({targets:b,y:RY,duration:900,ease:'Bounce.easeOut',onComplete:function(){
+  sc.tweens.add({targets:b,y:RY+28,duration:900,ease:'Bounce.easeOut',onComplete:function(){
     sc.tweens.add({targets:b,scaleX:sl.s*1.06,scaleY:sl.s*.95,yoyo:true,duration:200});
   }});
   bldSpr[ck].sprite=b;
@@ -432,7 +432,7 @@ function plProp(idx){
   if(idx>=CP.length)return;var sc=G.sc;if(!sc)return;
   var p=CP[idx];var pk='p-'+p.k;if(!sc.textures.exists(pk))return;
   if(propSpr[idx]&&propSpr[idx].ghost){propSpr[idx].ghost.destroy();propSpr[idx].ghost=null}
-  var spr=sc.add.image(p.x,RY,pk).setScale(0).setOrigin(.5,1).setAlpha(0).setDepth(D.prop);
+  var spr=sc.add.image(p.x,RY+28,pk).setScale(0).setOrigin(.5,1).setAlpha(0).setDepth(D.prop);
   sc.tweens.add({targets:spr,alpha:1,scaleX:p.s,scaleY:p.s,duration:500,ease:'Back.easeOut'});
 }
 
@@ -495,7 +495,7 @@ function initDrag(ck){
   var bk='b-'+CI[ck].b;
   var dz=sc.add.graphics().setDepth(D.charIntro-1);
   var gw2=Math.round(sl.s*340);var ghh2=Math.round(sl.s*400);
-  dz.lineStyle(3,0xFFD93D,.6);dz.strokeRoundedRect(sl.x-gw2/2-5,RY-ghh2-5,gw2+10,ghh2+10,10);
+  dz.lineStyle(3,0xFFD93D,.6);dz.strokeRoundedRect(sl.x-gw2/2-5,RY+28-ghh2-5,gw2+10,ghh2+10,10);
   sc.tweens.add({targets:dz,alpha:.3,yoyo:true,repeat:-1,duration:600});
   var camX=sc.cameras.main.scrollX;
   var vw=GW/sc.cameras.main.zoom;
@@ -504,7 +504,7 @@ function initDrag(ck){
   var lbl=sc.add.text(camX+vw/2,RY-260,'\u{1F446} Drag to the glowing spot!',{fontFamily:'Nunito',fontSize:'14px',fontStyle:'bold',color:'#FFD93D',stroke:'#000',strokeThickness:3}).setOrigin(.5).setDepth(D.charIntro+2);
   var dragFn=function(p,o,dx,dy){o.x=dx;o.y=dy};
   var endFn=function(p,o){
-    if(Phaser.Math.Distance.Between(o.x,o.y,sl.x,RY-sl.s*200)<140){
+    if(Phaser.Math.Distance.Between(o.x,o.y,sl.x,RY+28-sl.s*200)<140){
       o.disableInteractive();o.destroy();lbl.destroy();dz.destroy();
       sc.input.off('drag',dragFn);sc.input.off('dragend',endFn);
       plBld(ck);spWalk(ck);doConfetti();setTimeout(nextQ,3000);
@@ -596,7 +596,7 @@ function unlockC(ck){
       panTo(bankX);
       setTimeout(function(){
         var bk=sc2.add.image(bankX,-300,'b-bank').setScale(.45).setOrigin(.5,1).setDepth(D.building);
-        sc2.tweens.add({targets:bk,y:RY,duration:900,ease:'Bounce.easeOut'});
+        sc2.tweens.add({targets:bk,y:RY+28,duration:900,ease:'Bounce.easeOut'});
         doConfetti();
       },1400);
     },5000);
