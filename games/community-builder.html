@@ -600,19 +600,25 @@ function startGame(){
       var grades=BAND_GRADES[G.band]||[];
       G.poolsByGrade={};
       grades.forEach(function(g){G.poolsByGrade[g]=[]});
+      /* grade_id fallback for v1 JSON without grade_id fields */
+      var _gidFallback={band_1:'sk',band_2:'grade_1',band_3:'grade_3'};
       G.qs.forEach(function(s){
         if(s.band_id!==G.band)return;
-        var gid=s.grade_id;if(!G.poolsByGrade[gid])G.poolsByGrade[gid]=[];
+        var gid=s.grade_id||_gidFallback[s.band_id]||null;
+        if(!gid)return;
+        if(!G.poolsByGrade[gid])G.poolsByGrade[gid]=[];
         s.questions.forEach(function(q){
           G.poolsByGrade[gid].push({question:q.question,options:q.options,correct:q.correct,hint:q.hint,character:s.character});
         });
       });
-      /* Cross-band warmup */
+      /* Cross-band warmup — only load if pool is still empty (v2 JSON puts warm-up in target band) */
       var xb=CROSS_BAND[G.band];
-      if(xb){
+      if(xb&&(!G.poolsByGrade[xb.prevGrade]||G.poolsByGrade[xb.prevGrade].length===0)){
         G.poolsByGrade[xb.prevGrade]=[];
         G.qs.forEach(function(s){
-          if(s.band_id!==xb.prevBand||s.grade_id!==xb.prevGrade)return;
+          if(s.band_id!==xb.prevBand)return;
+          var gid2=s.grade_id||_gidFallback[s.band_id]||null;
+          if(gid2!==xb.prevGrade)return;
           s.questions.forEach(function(q){
             G.poolsByGrade[xb.prevGrade].push({question:q.question,options:q.options,correct:q.correct,hint:q.hint,character:s.character});
           });
@@ -745,7 +751,7 @@ function phaserCreate(){
     Object.keys(VM).forEach(function(ck){
       var vk='v-'+VM[ck];if(!sc.textures.exists(vk))return;
       var sl=SL[ck]||{x:600};
-      var v=sc.add.image(sl.x+20,ROADY,vk).setScale(.55).setDepth(D.vehicle);
+      var v=sc.add.image(sl.x+20,ROADY,vk).setScale(.275).setDepth(D.vehicle);
       v._charKey=ck;v._dir=Math.random()>.5?1:-1;v._sp=20+Math.random()*25;
       v._stopTimer=2000+Math.random()*3000;v._stopped=false;v._stopDur=3000+Math.random()*1000;v._elapsed=0;
       v.setFlipX(v._dir<0);
@@ -978,7 +984,7 @@ function plBld(ck){
 function plVeh(ck){
   var sc=G.sc;if(!sc)return;var vk='v-'+VM[ck];if(!sc.textures.exists(vk))return;
   var sl=SL[ck];
-  var v=sc.add.image(sl.x+60,WALKY+10,vk).setScale(.65).setAlpha(0).setDepth(D.vehicle);
+  var v=sc.add.image(sl.x+60,WALKY+10,vk).setScale(.325).setAlpha(0).setDepth(D.vehicle);
   sc.tweens.add({targets:v,alpha:1,x:sl.x+20,duration:600,ease:'Power2'});
 }
 function plProp(idx){
