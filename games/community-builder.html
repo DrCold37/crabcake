@@ -754,20 +754,27 @@ function phaserCreate(){
     });
     /* All props pre-placed */
     CP.forEach(function(p){var pk='p-'+p.k;if(sc.textures.exists(pk))sc.add.image(p.x,RY+28,pk).setScale(p.s).setOrigin(.5,1).setDepth(D.prop)});
-    /* All vehicles driving on road */
-    /* Per-vehicle scale: foodtruck/policecar/ambulance/tractor are 90% smaller */
+    /* All vehicles driving on road — two-lane system */
+    /* Squish list: 90% height for firetruck/ambulance/mailvan/policecar/tractor/foodtruck/teachercar */
+    var _vSquish={firetruck:true,ambulance:true,mailvan:true,policecar:true,tractor:true,foodtruck:true,teachercar:true};
+    /* Already-small vehicles (90% width+height from before) */
     var _vSmall={foodtruck:true,policecar:true,ambulance:true,tractor:true};
+    var LANE_BOTTOM_Y=ROADY-12;
+    var LANE_TOP_Y=ROADY-22;
     Object.keys(VM).forEach(function(ck){
       var vk='v-'+VM[ck];if(!sc.textures.exists(vk))return;
       var sl=SL[ck]||{x:600};
-      var vy=(ck==='teacher')?ROADY:ROADY-12;
       var small=!!_vSmall[VM[ck]];
+      var squish=!!_vSquish[VM[ck]];
       var sx=small?0.223:0.248;
       var sy=small?0.201:0.223;
-      var v=sc.add.image(sl.x+20,vy,vk).setScale(sx,sy).setDepth(D.vehicle);
-      v._charKey=ck;v._dir=Math.random()>.5?1:-1;v._sp=20+Math.random()*25;
+      if(squish)sy=sy*0.9;
+      /* All start in bottom lane driving left-to-right, staggered positions */
+      var v=sc.add.image(sl.x+20,LANE_BOTTOM_Y,vk).setScale(sx,sy).setDepth(D.vehicle);
+      v._charKey=ck;v._dir=1;v._sp=20+Math.random()*25;
       v._stopTimer=2000+Math.random()*3000;v._stopped=false;v._stopDur=3000+Math.random()*1000;v._elapsed=0;
-      v.setFlipX(v._dir<0);
+      v._laneBottomY=LANE_BOTTOM_Y;v._laneTopY=LANE_TOP_Y;
+      v.setFlipX(false);
       vehSpr[ck]=v;
     });
   }else{
@@ -814,7 +821,7 @@ function phaserUpdate(time,delta){
     if(s.x>WW-60)G.patrolDir=-1;if(s.x<60)G.patrolDir=1;
     if(!G.isMatch)G.camTarget.x+=(s.x-G.camTarget.x)*0.08;
   }
-  /* Vehicle driving (band 1) */
+  /* Vehicle driving (band 1) — two-lane system */
   if(G.isMatch){
     var vKeys=Object.keys(vehSpr);
     vKeys.forEach(function(ck){
@@ -823,31 +830,36 @@ function phaserUpdate(time,delta){
       if(v._stopped){
         if(v._elapsed>=v._stopDur){v._stopped=false;v._elapsed=0;v._stopTimer=3000+Math.random()*4000}
       }else{
-        v.x+=v._dir*v._sp*(delta/1000);v.setFlipX(v._dir<0);
-        if(v.x>WW-60){v._dir=-1;v.setFlipX(true)}
-        if(v.x<60){v._dir=1;v.setFlipX(false)}
+        v.x+=v._dir*v._sp*(delta/1000);
+        /* Hit right edge → switch to top lane (R→L, behind, higher up) */
+        if(v.x>WW-60&&v._dir===1){
+          v._dir=-1;v.setFlipX(true);
+          v.y=v._laneTopY;v.setDepth(D.vehicle-0.5);
+        }
+        /* Hit left edge → switch to bottom lane (L→R, in front, lower) */
+        if(v.x<60&&v._dir===-1){
+          v._dir=1;v.setFlipX(false);
+          v.y=v._laneBottomY;v.setDepth(D.vehicle);
+        }
         if(v._elapsed>=v._stopTimer){v._stopped=true;v._elapsed=0;v._stopDur=3000+Math.random()*1000}
       }
     });
-    /* Anti-overlap: if two vehicles are too close, reverse the faster one */
+    /* Anti-overlap: only between vehicles in the same lane (same direction) */
     for(var vi=0;vi<vKeys.length;vi++){
       var va=vehSpr[vKeys[vi]];if(!va||!va.active)continue;
-      var wa=va.displayWidth*0.5;
       for(var vj=vi+1;vj<vKeys.length;vj++){
         var vb=vehSpr[vKeys[vj]];if(!vb||!vb.active)continue;
+        if(va._dir!==vb._dir)continue; /* different lanes — skip */
+        var wa=va.displayWidth*0.5;
         var wb=vb.displayWidth*0.5;
         var gap=wa+wb+20;
         var dist=Math.abs(va.x-vb.x);
         if(dist<gap){
-          /* Push apart and reverse direction of the one moving toward the other */
           var nudge=(gap-dist)*0.5+1;
           if(va.x<vb.x){va.x-=nudge;vb.x+=nudge}
           else{va.x+=nudge;vb.x-=nudge}
-          if(va._dir===vb._dir){/* same dir — reverse faster one */
-            if(va._sp>=vb._sp){va._dir*=-1;va.setFlipX(va._dir<0)} else {vb._dir*=-1;vb.setFlipX(vb._dir<0)}
-          }else{/* head-on — both reverse */
-            va._dir*=-1;vb._dir*=-1;va.setFlipX(va._dir<0);vb.setFlipX(vb._dir<0);
-          }
+          /* Slow one yields: reverse the faster vehicle */
+          if(va._sp>=vb._sp){va._sp=vb._sp*0.9}else{vb._sp=va._sp*0.9}
         }
       }
     }
@@ -1026,9 +1038,12 @@ function plVeh(ck){
   var sl=SL[ck];
   var vy=(ck==='teacher')?WALKY+10:WALKY-2;
   var _vs={foodtruck:true,policecar:true,ambulance:true,tractor:true};
+  var _vq={firetruck:true,ambulance:true,mailvan:true,policecar:true,tractor:true,foodtruck:true,teachercar:true};
   var small=!!_vs[VM[ck]];
+  var squish=!!_vq[VM[ck]];
   var sx=small?0.264:0.293;
   var sy=small?0.237:0.263;
+  if(squish)sy=sy*0.9;
   var v=sc.add.image(sl.x+60,vy,vk).setScale(sx,sy).setAlpha(0).setDepth(D.vehicle);
   sc.tweens.add({targets:v,alpha:1,x:sl.x+20,duration:600,ease:'Power2'});
 }
