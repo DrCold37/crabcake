@@ -145,7 +145,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 
 <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
 <script>
-/* Community Builder v10 — char position + ghost fix */
+/* Community Builder v11 — sidewalk walk position */
 (function(){
 "use strict";
 var $=function(id){return document.getElementById(id)};
@@ -155,7 +155,7 @@ var $=function(id){return document.getElementById(id)};
    Layout top→bottom: sky, bg buildings, bg trees, grass, buildings, sidewalk, road, bottom grass.
    Character walks on sidewalk between buildings and road. */
 var GW=1200,GH=800,WW=3600,RY=700,AP='/assets/community-builder';
-var WALKY=RY+35;
+var WALKY=RY+42;
 var CHARS=['firefighter','doctor','police','chef','farmer','teacher','librarian','construction','mailcarrier','busdriver'];
 var CI={
   firefighter:{n:'Firefighter Frankie',e:'\u{1F692}',b:'fire_station',v:'car_red',l:'Fire Station'},
@@ -354,12 +354,12 @@ function phaserCreate(){
   g.fillStyle(0x5a9e4b);g.fillRect(0,RY,WW,25);
   g.fillStyle(0x4a8e3b);g.fillRect(0,RY+20,WW,8);
   /* Sidewalk */
-  g.fillStyle(0xccbbaa);g.fillRect(0,RY+28,WW,10);
+  g.fillStyle(0xccbbaa);g.fillRect(0,RY+28,WW,16);
   /* Road — extends to bottom of world */
-  g.fillStyle(0x555555);g.fillRect(0,RY+38,WW,GH-RY-38);
+  g.fillStyle(0x555555);g.fillRect(0,RY+44,WW,GH-RY-44);
   /* Road center line */
   g.fillStyle(0xffdd44);
-  for(var rx=0;rx<WW;rx+=55)g.fillRect(rx,RY+61,28,3);
+  for(var rx=0;rx<WW;rx+=55)g.fillRect(rx,RY+65,28,3);
 
   /* Building slots — no ghost outlines */
   Object.keys(SL).forEach(function(ck){
@@ -419,7 +419,7 @@ function plBld(ck){
 function plVeh(ck){
   var sc=G.sc;if(!sc)return;var vk='v-'+VM[ck];if(!sc.textures.exists(vk))return;
   var sl=SL[ck];
-  var v=sc.add.image(sl.x+60,WALKY+15,vk).setScale(.65).setAlpha(0).setDepth(D.vehicle);
+  var v=sc.add.image(sl.x+60,WALKY+20,vk).setScale(.65).setAlpha(0).setDepth(D.vehicle);
   sc.tweens.add({targets:v,alpha:1,x:sl.x+20,duration:600,ease:'Power2'});
 }
 function plProp(idx){
