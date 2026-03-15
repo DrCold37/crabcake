@@ -145,7 +145,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 
 <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
 <script>
-/* Community Builder v16 — keep char in place */
+/* Community Builder v17 — seamless char handoff */
 (function(){
 "use strict";
 var $=function(id){return document.getElementById(id)};
@@ -473,16 +473,15 @@ function charIntro(ck,cb){
 }
 
 function dismissIntro(cb){
-  var sc=G.sc;
-  var ck=G.curChar;
   G.curChar=null;
   G.entering=false;
-  if(!sc||!G.introSpr){if(cb)setTimeout(cb,500);return}
-  var spr=G.introSpr;G.introSpr=null;
-  /* Convert intro sprite to a permanent walker at current position */
-  spr.setDepth(D.walker);
-  var cx=spr.x;
-  walkers.push({spr:spr,sp:15+Math.random()*12,dir:G.patrolDir,mn:Math.max(cx-150,10),mx:Math.min(cx+150,WW-10)});
+  if(G.introSpr){
+    /* Leave sprite exactly as-is, just add to walkers and stop tracking as intro */
+    var spr=G.introSpr;
+    var cx=spr.x;
+    walkers.push({spr:spr,sp:15+Math.random()*12,dir:G.patrolDir,mn:Math.max(cx-150,10),mx:Math.min(cx+150,WW-10)});
+    G.introSpr=null;
+  }
   if(cb)setTimeout(cb,500);
 }
 
@@ -556,7 +555,17 @@ function ansH(ch,q,btn){
       p.unl=true;G.ul++;
       setTimeout(function(){
         $('qOver').classList.remove('active');
-        dismissIntro(function(){unlockC(q.character)});
+        /* Convert current character to permanent walker WITHOUT disrupting them */
+        if(G.introSpr){
+          var spr=G.introSpr;
+          var cx=spr.x;
+          walkers.push({spr:spr,sp:15+Math.random()*12,dir:G.patrolDir,mn:Math.max(cx-150,10),mx:Math.min(cx+150,WW-10)});
+          G.introSpr=null;
+        }
+        G.curChar=null;
+        G.entering=false;
+        /* Now unlock — just camera and building, character untouched */
+        unlockC(q.character);
       },600);
     }else{
       /* Same character continues — stay zoomed */
