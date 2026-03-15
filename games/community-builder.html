@@ -702,7 +702,7 @@ function phaserPreload(){
   ['building_large_background_1','building_large_background_2','building_medium_background_1','building_medium_background_2','building_small_background_1','building_small_background_2','house_large_background_1','house_large_background_2','house_medium_background_1','house_medium_background_2','warehouse_background_1','warehouse_background_2'].forEach(function(b){self.load.image('bg-'+b,AP+'/town/Buildings/'+b+'.png')});
   ['ambulance','policecar','bus','firetruck','foodtruck','tractor','teachercar','libraryvan','mailvan','dumptruck','towtruck','animalvan'].forEach(function(v){self.load.image('v-'+v,AP+'/town/Vehicles/'+v+'.png')});
   /* Animated vehicle spritesheets (384x384 frames, 3x3 grid = 9 frames) */
-  var ANIM_VEH=['ambulance','policecar'];
+  var ANIM_VEH=['ambulance','policecar','firetruck'];
   ANIM_VEH.forEach(function(v){self.load.spritesheet('va-'+v,AP+'/town/Vehicles/'+v+'-animate.png',{frameWidth:384,frameHeight:384})});
   ['sign_stop','sign_warning','sign_construction_1','sign_st_name','sign_info','light_pole_1','light_pole_2','light_pole_3','fence_wood','fence_garden_brown','water_hydrant','light_post'].forEach(function(p){self.load.image('p-'+p,AP+'/town/Props/'+p+'.png')});
   ['tree_01','tree_02','tree_03','bush_01','bush_02','weeds_01','weeds_02','weeds_03'].forEach(function(v){self.load.image('t-'+v,AP+'/town/Vegetation/'+v+'.png')});
@@ -721,7 +721,7 @@ function phaserCreate(){
     if(sc.textures.exists(c+'-walk'))sc.anims.create({key:c+'-wa',frames:sc.anims.generateFrameNumbers(c+'-walk',{start:0,end:8}),frameRate:8,repeat:-1});
   });
   /* Vehicle drive animations */
-  ['ambulance','policecar'].forEach(function(v){
+  ['ambulance','policecar','firetruck'].forEach(function(v){
     if(sc.textures.exists('va-'+v))sc.anims.create({key:v+'-da',frames:sc.anims.generateFrameNumbers('va-'+v,{start:0,end:8}),frameRate:6,repeat:-1});
   });
 
