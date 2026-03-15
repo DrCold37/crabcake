@@ -755,25 +755,25 @@ function phaserCreate(){
     /* All props pre-placed */
     CP.forEach(function(p){var pk='p-'+p.k;if(sc.textures.exists(pk))sc.add.image(p.x,RY+28,pk).setScale(p.s).setOrigin(.5,1).setDepth(D.prop)});
     /* All vehicles driving on road — two-lane system */
-    /* Squish list: 90% height for firetruck/ambulance/mailvan/policecar/tractor/foodtruck/teachercar */
-    var _vSquish={firetruck:true,ambulance:true,mailvan:true,policecar:true,tractor:true,foodtruck:true,teachercar:true};
-    /* Already-small vehicles (90% width+height from before) */
-    var _vSmall={foodtruck:true,policecar:true,ambulance:true,tractor:true};
+    /* 90% size: towtruck/animalvan/tractor + existing foodtruck/policecar/ambulance */
+    var _vSmall={foodtruck:true,policecar:true,ambulance:true,tractor:true,towtruck:true,animalvan:true};
+    /* 90% vertical squish: all except blue sedan (teachercar) */
     var LANE_BOTTOM_Y=ROADY-12;
     var LANE_TOP_Y=ROADY-22;
     Object.keys(VM).forEach(function(ck){
       var vk='v-'+VM[ck];if(!sc.textures.exists(vk))return;
       var sl=SL[ck]||{x:600};
       var small=!!_vSmall[VM[ck]];
-      var squish=!!_vSquish[VM[ck]];
+      var isSedan=(VM[ck]==='teachercar');
       var sx=small?0.223:0.248;
       var sy=small?0.201:0.223;
-      if(squish)sy=sy*0.9;
-      /* All start in bottom lane driving left-to-right, staggered positions */
+      if(!isSedan)sy=sy*0.9;
+      /* All start in bottom lane driving left-to-right */
       var v=sc.add.image(sl.x+20,LANE_BOTTOM_Y,vk).setScale(sx,sy).setDepth(D.vehicle);
       v._charKey=ck;v._dir=1;v._sp=20+Math.random()*25;
       v._stopTimer=2000+Math.random()*3000;v._stopped=false;v._stopDur=3000+Math.random()*1000;v._elapsed=0;
       v._laneBottomY=LANE_BOTTOM_Y;v._laneTopY=LANE_TOP_Y;
+      v._baseSX=sx;v._baseSY=sy;
       v.setFlipX(false);
       vehSpr[ck]=v;
     });
@@ -831,15 +831,17 @@ function phaserUpdate(time,delta){
         if(v._elapsed>=v._stopDur){v._stopped=false;v._elapsed=0;v._stopTimer=3000+Math.random()*4000}
       }else{
         v.x+=v._dir*v._sp*(delta/1000);
-        /* Hit right edge → switch to top lane (R→L, behind, higher up) */
+        /* Hit right edge → switch to top lane (R→L, behind, smaller, higher up) */
         if(v.x>WW-60&&v._dir===1){
           v._dir=-1;v.setFlipX(true);
           v.y=v._laneTopY;v.setDepth(D.vehicle-0.5);
+          v.setScale(v._baseSX*0.75,v._baseSY*0.75);
         }
-        /* Hit left edge → switch to bottom lane (L→R, in front, lower) */
+        /* Hit left edge → switch to bottom lane (L→R, full size, lower) */
         if(v.x<60&&v._dir===-1){
           v._dir=1;v.setFlipX(false);
           v.y=v._laneBottomY;v.setDepth(D.vehicle);
+          v.setScale(v._baseSX,v._baseSY);
         }
         if(v._elapsed>=v._stopTimer){v._stopped=true;v._elapsed=0;v._stopDur=3000+Math.random()*1000}
       }
@@ -1037,13 +1039,12 @@ function plVeh(ck){
   var sc=G.sc;if(!sc)return;var vk='v-'+VM[ck];if(!sc.textures.exists(vk))return;
   var sl=SL[ck];
   var vy=(ck==='teacher')?WALKY+10:WALKY-2;
-  var _vs={foodtruck:true,policecar:true,ambulance:true,tractor:true};
-  var _vq={firetruck:true,ambulance:true,mailvan:true,policecar:true,tractor:true,foodtruck:true,teachercar:true};
+  var _vs={foodtruck:true,policecar:true,ambulance:true,tractor:true,towtruck:true,animalvan:true};
   var small=!!_vs[VM[ck]];
-  var squish=!!_vq[VM[ck]];
+  var isSedan=(VM[ck]==='teachercar');
   var sx=small?0.264:0.293;
   var sy=small?0.237:0.263;
-  if(squish)sy=sy*0.9;
+  if(!isSedan)sy=sy*0.9;
   var v=sc.add.image(sl.x+60,vy,vk).setScale(sx,sy).setAlpha(0).setDepth(D.vehicle);
   sc.tweens.add({targets:v,alpha:1,x:sl.x+20,duration:600,ease:'Power2'});
 }
