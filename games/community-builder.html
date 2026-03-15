@@ -490,16 +490,16 @@ function updateMasteryVisual(){
     if(wrap)wrap.style.display='';if(gradeEl)gradeEl.classList.add('promoted');
     var bc=0;for(var i=0;i<G.bandAnswerHistory.length;i++)if(G.bandAnswerHistory[i])bc++;
     var bp=Math.min(bc/BAND_MASTERY_REQUIRED,1);
-    fill.style.transform='scale('+bp+')';fill.className='mastery-fill band-mastery'+(bp>=1?' full':'');
-    arc.style.strokeDashoffset=MASTERY_CIRCUMFERENCE*(1-bp);arc.className='mastery-arc band-mastery'+(bp>=1?' full':'');
+    fill.style.transform='scale('+bp+')';fill.setAttribute('class','mastery-fill band-mastery'+(bp>=1?' full':''));
+    arc.style.strokeDashoffset=MASTERY_CIRCUMFERENCE*(1-bp);arc.setAttribute('class','mastery-arc band-mastery'+(bp>=1?' full':''));
     if(label)label.textContent=bp>=1?'\u2B50 MASTER':bc+'/'+BAND_MASTERY_REQUIRED;
     return;
   }
   if(wrap)wrap.style.display='';
   var cc=0;for(var j=0;j<G.answerHistory.length;j++)if(G.answerHistory[j])cc++;
   var pr=Math.min(cc/MASTERY_REQUIRED,1);
-  fill.style.transform='scale('+pr+')';fill.className='mastery-fill'+(pr>=1?' full':'');
-  arc.style.strokeDashoffset=MASTERY_CIRCUMFERENCE*(1-pr);arc.className='mastery-arc'+(pr>=1?' full':'');
+  fill.style.transform='scale('+pr+')';fill.setAttribute('class','mastery-fill'+(pr>=1?' full':''));
+  arc.style.strokeDashoffset=MASTERY_CIRCUMFERENCE*(1-pr);arc.setAttribute('class','mastery-arc'+(pr>=1?' full':''));
   if(label)label.textContent=pr>=1?'\u2713 READY':cc+'/'+MASTERY_REQUIRED;
 }
 
