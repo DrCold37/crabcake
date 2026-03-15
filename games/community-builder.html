@@ -756,24 +756,33 @@ function phaserCreate(){
     CP.forEach(function(p){var pk='p-'+p.k;if(sc.textures.exists(pk))sc.add.image(p.x,RY+28,pk).setScale(p.s).setOrigin(.5,1).setDepth(D.prop)});
     /* All vehicles driving on road — two-lane system */
     var _vSmall={foodtruck:true,policecar:true,ambulance:true,tractor:true,towtruck:true,animalvan:true};
-    /* Extra 90% shrink on top of everything */
     var _vShrink={policecar:true,teachercar:true,mailvan:true,ambulance:true,tractor:true,towtruck:true,firetruck:true,foodtruck:true};
     var LANE_BOTTOM_Y=ROADY-12;
-    var LANE_TOP_Y=ROADY-22;
+    var LANE_TOP_Y=ROADY-46;
     Object.keys(VM).forEach(function(ck){
       var vk='v-'+VM[ck];if(!sc.textures.exists(vk))return;
       var sl=SL[ck]||{x:600};
-      var small=!!_vSmall[VM[ck]];
-      var isSedan=(VM[ck]==='teachercar');
+      var vn=VM[ck];
+      var small=!!_vSmall[vn];
+      var isSedan=(vn==='teachercar');
       var sx=small?0.223:0.248;
       var sy=small?0.201:0.223;
       if(!isSedan)sy=sy*0.9;
-      if(_vShrink[VM[ck]]){sx*=0.9;sy*=0.9}
+      if(_vShrink[vn]){sx*=0.9;sy*=0.9}
+      /* Per-vehicle tweaks */
+      if(vn==='firetruck')sx*=1.15;
+      if(vn==='dumptruck'){sx*=0.9;sy*=0.9}
+      if(vn==='policecar'){sx*=0.9;sy*=0.9}
+      if(vn==='animalvan')sx*=0.85;
+      /* Per-vehicle bottom-lane Y offset */
+      var bottomY=LANE_BOTTOM_Y;
+      if(vn==='firetruck')bottomY=LANE_BOTTOM_Y-15;
+      if(vn==='policecar')bottomY=LANE_BOTTOM_Y+10;
       /* All start in bottom lane driving left-to-right */
-      var v=sc.add.image(sl.x+20,LANE_BOTTOM_Y,vk).setScale(sx,sy).setDepth(D.vehicle);
+      var v=sc.add.image(sl.x+20,bottomY,vk).setScale(sx,sy).setDepth(D.vehicle);
       v._charKey=ck;v._dir=1;v._sp=20+Math.random()*25;
       v._stopTimer=2000+Math.random()*3000;v._stopped=false;v._stopDur=3000+Math.random()*1000;v._elapsed=0;
-      v._laneBottomY=LANE_BOTTOM_Y;v._laneTopY=LANE_TOP_Y;
+      v._laneBottomY=bottomY;v._laneTopY=LANE_TOP_Y;
       v._baseSX=sx;v._baseSY=sy;
       v.setFlipX(false);
       vehSpr[ck]=v;
@@ -1038,16 +1047,20 @@ function plBld(ck){
 }
 function plVeh(ck){
   var sc=G.sc;if(!sc)return;var vk='v-'+VM[ck];if(!sc.textures.exists(vk))return;
-  var sl=SL[ck];
+  var sl=SL[ck];var vn=VM[ck];
   var vy=(ck==='teacher')?WALKY+10:WALKY-2;
   var _vs={foodtruck:true,policecar:true,ambulance:true,tractor:true,towtruck:true,animalvan:true};
   var _vShrink={policecar:true,teachercar:true,mailvan:true,ambulance:true,tractor:true,towtruck:true,firetruck:true,foodtruck:true};
-  var small=!!_vs[VM[ck]];
-  var isSedan=(VM[ck]==='teachercar');
+  var small=!!_vs[vn];
+  var isSedan=(vn==='teachercar');
   var sx=small?0.264:0.293;
   var sy=small?0.237:0.263;
   if(!isSedan)sy=sy*0.9;
-  if(_vShrink[VM[ck]]){sx*=0.9;sy*=0.9}
+  if(_vShrink[vn]){sx*=0.9;sy*=0.9}
+  if(vn==='firetruck')sx*=1.15;
+  if(vn==='dumptruck'){sx*=0.9;sy*=0.9}
+  if(vn==='policecar'){sx*=0.9;sy*=0.9}
+  if(vn==='animalvan')sx*=0.85;
   var v=sc.add.image(sl.x+60,vy,vk).setScale(sx,sy).setAlpha(0).setDepth(D.vehicle);
   sc.tweens.add({targets:v,alpha:1,x:sl.x+20,duration:600,ease:'Power2'});
 }
