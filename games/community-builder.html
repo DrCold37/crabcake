@@ -322,18 +322,18 @@ var D={sky:0,bgBuild2:1,bgTree2:2,bgBuild1:3,bgTree1:4,ground:5,tree:6,ghost:7,p
 
 /* Per-vehicle config: sx=scaleX, sy=scaleY, by=bottomLane Y offset, ty=topLane Y offset */
 var VEH_CFG={
-  firetruck:  {sx:0.257, sy:0.181, by:-5,  ty:0},
-  ambulance:  {sx:0.205, sy:0.132, by:0,   ty:0},
-  policecar:  {sx:0.217, sy:0.111, by:30,  ty:0},
-  foodtruck:  {sx:0.243, sy:0.170, by:0,   ty:0},
-  tractor:    {sx:0.181, sy:0.147, by:5,   ty:0},
-  teachercar: {sx:0.224, sy:0.149, by:32,  ty:20},
-  libraryvan: {sx:0.201, sy:0.191, by:3,   ty:0},
-  dumptruck:  {sx:0.223, sy:0.181, by:5,   ty:0},
-  mailvan:    {sx:0.209, sy:0.154, by:11,  ty:0},
-  bus:        {sx:0.273, sy:0.201, by:3,   ty:0},
-  towtruck:   {sx:0.201, sy:0.163, by:0,   ty:0},
-  animalvan:  {sx:0.190, sy:0.163, by:-3,  ty:0}
+  firetruck:  {sx:0.242, sy:0.157, by:8,  ty:0},
+  ambulance:  {sx:0.184, sy:0.151, by:-17, ty:7},
+  policecar:  {sx:0.167, sy:0.120, by:22, ty:19},
+  foodtruck:  {sx:0.199, sy:0.158, by:14, ty:11},
+  tractor:    {sx:0.161, sy:0.129, by:5,  ty:16},
+  teachercar: {sx:0.189, sy:0.169, by:27, ty:22},
+  libraryvan: {sx:0.194, sy:0.172, by:3,  ty:12},
+  dumptruck:  {sx:0.235, sy:0.191, by:13, ty:8},
+  mailvan:    {sx:0.209, sy:0.163, by:11, ty:7},
+  bus:        {sx:0.244, sy:0.189, by:11, ty:0},
+  towtruck:   {sx:0.186, sy:0.155, by:11, ty:7},
+  animalvan:  {sx:0.178, sy:0.154, by:12, ty:9}
 };
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -804,7 +804,7 @@ function phaserCreate(){
       var bottomY=LANE_BOTTOM_Y+cfg.by;
       var topY=LANE_TOP_Y+cfg.ty;
       var v=sc.add.image(sl.x+20,bottomY,vk).setScale(cfg.sx,cfg.sy).setDepth(D.vehicle);
-      v._charKey=ck;v._dir=1;v._sp=20+Math.random()*25;
+      v._charKey=ck;v._dir=1;v._sp=60+Math.random()*75;
       v._stopTimer=2000+Math.random()*3000;v._stopped=false;v._stopDur=3000+Math.random()*1000;v._elapsed=0;
       v._laneBottomY=bottomY;v._laneTopY=topY;
       v._baseSX=cfg.sx;v._baseSY=cfg.sy;
