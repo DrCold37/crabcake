@@ -145,7 +145,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 
 <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
 <script>
-/* Community Builder v12 — walk on sidewalk */
+/* Community Builder v13 — opaque layers */
 (function(){
 "use strict";
 var $=function(id){return document.getElementById(id)};
@@ -184,7 +184,7 @@ var SL={
 var VM={doctor:'ambulance',police:'police_car',busdriver:'taxi',mailcarrier:'van_white',chef:'van_black',firefighter:'car_red',teacher:'car_blue'};
 var CP=[{k:'sign_stop',x:390,s:.45},{k:'sign_warning',x:770,s:.4},{k:'sign_construction_1',x:1150,s:.4},{k:'light_pole_1',x:1530,s:.35},{k:'fence_wood',x:1910,s:.45},{k:'water_hydrant',x:2290,s:.45},{k:'sign_st_name',x:2670,s:.4},{k:'light_pole_2',x:3050,s:.35}];
 
-var D={sky:0,bgBuild2:1,bgTree2:2,bgBuild1:3,bgTree1:4,tree:5,ground:6,ghost:7,prop:8,building:10,vehicle:11,walker:12,charIntro:50};
+var D={sky:0,bgBuild2:1,bgTree2:2,bgBuild1:3,bgTree1:4,ground:5,tree:6,ghost:7,prop:8,building:10,vehicle:11,walker:12,charIntro:50};
 
 var G={band:null,bn:1,qs:[],queue:[],score:0,ans:0,corr:0,cp:{},pi:0,ul:0,dm:false,sc:null,gm:null,introSpr:null,camTarget:0,curChar:null,patrolDir:1,patrolSpeed:43,entering:false};
 var clouds=[],walkers=[],bldSpr={},propSpr=[];
@@ -307,14 +307,14 @@ function phaserCreate(){
   for(var bi=0;bi<12;bi++){
     var bk2=bgKeys2[bi%bgKeys2.length];
     if(!sc.textures.exists(bk2))continue;
-    sc.add.image(150+bi*300+Math.random()*60,RY-40,bk2).setScale(.35+Math.random()*.1).setOrigin(.5,1).setDepth(D.bgBuild2).setScrollFactor(.5).setAlpha(.7);
+    sc.add.image(150+bi*300+Math.random()*60,RY-40,bk2).setScale(.35+Math.random()*.1).setOrigin(.5,1).setDepth(D.bgBuild2).setScrollFactor(.5);
   }
   /* Background trees layer 2 */
   var tBgKeys2=['tbg-tree_01_background_2','tbg-tree_02_background_2'];
   for(var ti=0;ti<10;ti++){
     var tk2=tBgKeys2[ti%tBgKeys2.length];
     if(!sc.textures.exists(tk2))continue;
-    sc.add.image(100+ti*360+Math.random()*80,RY-10,tk2).setScale(.35+Math.random()*.1).setOrigin(.5,1).setDepth(D.bgTree2).setScrollFactor(.55).setAlpha(.7);
+    sc.add.image(100+ti*360+Math.random()*80,RY-10,tk2).setScale(.35+Math.random()*.1).setOrigin(.5,1).setDepth(D.bgTree2).setScrollFactor(.55);
   }
 
   /* ═══ BACKGROUND LAYER 1 — mid-dark ═══ */
@@ -322,14 +322,14 @@ function phaserCreate(){
   for(var bi2=0;bi2<10;bi2++){
     var bk1=bgKeys1[bi2%bgKeys1.length];
     if(!sc.textures.exists(bk1))continue;
-    sc.add.image(250+bi2*350+Math.random()*80,RY-20,bk1).setScale(.38+Math.random()*.08).setOrigin(.5,1).setDepth(D.bgBuild1).setScrollFactor(.65).setAlpha(.8);
+    sc.add.image(250+bi2*350+Math.random()*80,RY-20,bk1).setScale(.38+Math.random()*.08).setOrigin(.5,1).setDepth(D.bgBuild1).setScrollFactor(.65);
   }
   /* Background trees layer 1 */
   var tBgKeys1=['tbg-tree_01_background_1','tbg-tree_02_background_1'];
   for(var ti2=0;ti2<8;ti2++){
     var tk1=tBgKeys1[ti2%tBgKeys1.length];
     if(!sc.textures.exists(tk1))continue;
-    sc.add.image(200+ti2*440+Math.random()*100,RY,tk1).setScale(.4+Math.random()*.1).setOrigin(.5,1).setDepth(D.bgTree1).setScrollFactor(.7).setAlpha(.85);
+    sc.add.image(200+ti2*440+Math.random()*100,RY,tk1).setScale(.4+Math.random()*.1).setOrigin(.5,1).setDepth(D.bgTree1).setScrollFactor(.7);
   }
 
   /* ═══ FOREGROUND TREES — between building slots ═══ */
