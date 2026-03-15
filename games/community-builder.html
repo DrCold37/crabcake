@@ -770,12 +770,12 @@ function phaserCreate(){
       if(!isSedan)sy=sy*0.9;
       if(_vShrink[vn]){sx*=0.9;sy*=0.9}
       /* Per-vehicle tweaks */
-      if(vn==='teachercar'){sx*=0.85;sy*=0.85;sy*=0.85;sx*=1.15;sx*=1.10;sy*=1.10;sx*=1.10;sy*=1.10}
+      if(vn==='teachercar'){sx*=0.85;sy*=0.85;sy*=0.85;sx*=1.15;sx*=1.10;sy*=1.10;sx*=1.10;sy*=1.10;sx*=0.85;sy*=0.85}
       if(vn==='ambulance'){sx*=1.20;sy*=0.95}
       if(vn==='foodtruck'){sx*=1.10;sy*=1.10;sx*=1.10;sy*=0.95}
       if(vn==='firetruck')sx*=1.15;
       if(vn==='dumptruck'){sx*=0.9;sy*=0.9}
-      if(vn==='policecar'){sx*=0.9;sy*=0.9;sy*=0.80;sx*=1.15}
+      if(vn==='policecar'){sx*=0.9;sy*=0.9;sy*=0.80;sx*=1.15;sx*=1.10}
       if(vn==='animalvan'){sx*=0.85;sy*=0.90}
       if(vn==='bus')sx*=1.10;
       if(vn==='libraryvan'){sy*=0.95;sx*=0.90;sx*=0.90}
@@ -1074,12 +1074,12 @@ function plVeh(ck){
   var sy=small?0.237:0.263;
   if(!isSedan)sy=sy*0.9;
   if(_vShrink[vn]){sx*=0.9;sy*=0.9}
-  if(vn==='teachercar'){sx*=0.85;sy*=0.85;sy*=0.85;sx*=1.15;sx*=1.10;sy*=1.10;sx*=1.10;sy*=1.10}
+  if(vn==='teachercar'){sx*=0.85;sy*=0.85;sy*=0.85;sx*=1.15;sx*=1.10;sy*=1.10;sx*=1.10;sy*=1.10;sx*=0.85;sy*=0.85}
   if(vn==='ambulance'){sx*=1.20;sy*=0.95}
   if(vn==='foodtruck'){sx*=1.10;sy*=1.10;sx*=1.10;sy*=0.95}
   if(vn==='firetruck')sx*=1.15;
   if(vn==='dumptruck'){sx*=0.9;sy*=0.9}
-  if(vn==='policecar'){sx*=0.9;sy*=0.9;sy*=0.80;sx*=1.15}
+  if(vn==='policecar'){sx*=0.9;sy*=0.9;sy*=0.80;sx*=1.15;sx*=1.10}
   if(vn==='animalvan'){sx*=0.85;sy*=0.90}
   if(vn==='bus')sx*=1.10;
   if(vn==='libraryvan'){sy*=0.95;sx*=0.90;sx*=0.90}
