@@ -770,19 +770,28 @@ function phaserCreate(){
       if(!isSedan)sy=sy*0.9;
       if(_vShrink[vn]){sx*=0.9;sy*=0.9}
       /* Per-vehicle tweaks */
+      if(vn==='teachercar'){sx*=0.85;sy*=0.85;sy*=0.85}
+      if(vn==='ambulance')sx*=1.20;
+      if(vn==='foodtruck'){sx*=1.10;sy*=1.10;sx*=1.10}
       if(vn==='firetruck')sx*=1.15;
       if(vn==='dumptruck'){sx*=0.9;sy*=0.9}
       if(vn==='policecar'){sx*=0.9;sy*=0.9}
       if(vn==='animalvan')sx*=0.85;
-      /* Per-vehicle bottom-lane Y offset */
+      /* Per-vehicle bottom-lane Y offset (L→R) */
       var bottomY=LANE_BOTTOM_Y;
-      if(vn==='firetruck')bottomY=LANE_BOTTOM_Y-15;
+      if(vn==='firetruck')bottomY=LANE_BOTTOM_Y-5;
       if(vn==='policecar')bottomY=LANE_BOTTOM_Y+10;
+      if(vn==='dumptruck')bottomY=LANE_BOTTOM_Y+5;
+      if(vn==='mailvan')bottomY=LANE_BOTTOM_Y+5;
+      if(vn==='tractor')bottomY=LANE_BOTTOM_Y+5;
+      /* Per-vehicle top-lane Y offset (R→L) */
+      var topY=LANE_TOP_Y;
+      if(vn==='teachercar')topY=LANE_TOP_Y+20;
       /* All start in bottom lane driving left-to-right */
       var v=sc.add.image(sl.x+20,bottomY,vk).setScale(sx,sy).setDepth(D.vehicle);
       v._charKey=ck;v._dir=1;v._sp=20+Math.random()*25;
       v._stopTimer=2000+Math.random()*3000;v._stopped=false;v._stopDur=3000+Math.random()*1000;v._elapsed=0;
-      v._laneBottomY=bottomY;v._laneTopY=LANE_TOP_Y;
+      v._laneBottomY=bottomY;v._laneTopY=topY;
       v._baseSX=sx;v._baseSY=sy;
       v.setFlipX(false);
       vehSpr[ck]=v;
@@ -1057,6 +1066,9 @@ function plVeh(ck){
   var sy=small?0.237:0.263;
   if(!isSedan)sy=sy*0.9;
   if(_vShrink[vn]){sx*=0.9;sy*=0.9}
+  if(vn==='teachercar'){sx*=0.85;sy*=0.85;sy*=0.85}
+  if(vn==='ambulance')sx*=1.20;
+  if(vn==='foodtruck'){sx*=1.10;sy*=1.10;sx*=1.10}
   if(vn==='firetruck')sx*=1.15;
   if(vn==='dumptruck'){sx*=0.9;sy*=0.9}
   if(vn==='policecar'){sx*=0.9;sy*=0.9}
