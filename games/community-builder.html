@@ -770,20 +770,23 @@ function phaserCreate(){
       if(!isSedan)sy=sy*0.9;
       if(_vShrink[vn]){sx*=0.9;sy*=0.9}
       /* Per-vehicle tweaks */
-      if(vn==='teachercar'){sx*=0.85;sy*=0.85;sy*=0.85;sx*=1.05}
-      if(vn==='ambulance')sx*=1.20;
-      if(vn==='foodtruck'){sx*=1.10;sy*=1.10;sx*=1.10}
+      if(vn==='teachercar'){sx*=0.85;sy*=0.85;sy*=0.85;sx*=1.15;sx*=1.10;sy*=1.10;sx*=1.10;sy*=1.10}
+      if(vn==='ambulance'){sx*=1.20;sy*=0.95}
+      if(vn==='foodtruck'){sx*=1.10;sy*=1.10;sx*=1.10;sy*=0.95}
       if(vn==='firetruck')sx*=1.15;
       if(vn==='dumptruck'){sx*=0.9;sy*=0.9}
-      if(vn==='policecar'){sx*=0.9;sy*=0.9;sy*=0.80}
-      if(vn==='animalvan')sx*=0.85;
+      if(vn==='policecar'){sx*=0.9;sy*=0.9;sy*=0.80;sx*=1.15}
+      if(vn==='animalvan'){sx*=0.85;sy*=0.90}
       if(vn==='bus')sx*=1.10;
+      if(vn==='libraryvan'){sy*=0.95;sx*=0.90;sx*=0.90}
+      if(vn==='mailvan')sx*=1.10;
+      if(vn==='tractor'){sx*=0.95;sy*=0.95;sx*=0.95;sy*=0.95}
       /* Per-vehicle bottom-lane Y offset (L→R) */
       var bottomY=LANE_BOTTOM_Y;
       if(vn==='firetruck')bottomY=LANE_BOTTOM_Y-5;
-      if(vn==='policecar')bottomY=LANE_BOTTOM_Y+10;
+      if(vn==='policecar')bottomY=LANE_BOTTOM_Y+30;
       if(vn==='dumptruck')bottomY=LANE_BOTTOM_Y+5;
-      if(vn==='mailvan')bottomY=LANE_BOTTOM_Y-5;
+      if(vn==='mailvan')bottomY=LANE_BOTTOM_Y+11;
       if(vn==='tractor')bottomY=LANE_BOTTOM_Y+5;
       if(vn==='libraryvan')bottomY=LANE_BOTTOM_Y+3;
       if(vn==='bus')bottomY=LANE_BOTTOM_Y+3;
@@ -1071,14 +1074,17 @@ function plVeh(ck){
   var sy=small?0.237:0.263;
   if(!isSedan)sy=sy*0.9;
   if(_vShrink[vn]){sx*=0.9;sy*=0.9}
-  if(vn==='teachercar'){sx*=0.85;sy*=0.85;sy*=0.85;sx*=1.05}
-  if(vn==='ambulance')sx*=1.20;
-  if(vn==='foodtruck'){sx*=1.10;sy*=1.10;sx*=1.10}
+  if(vn==='teachercar'){sx*=0.85;sy*=0.85;sy*=0.85;sx*=1.15;sx*=1.10;sy*=1.10;sx*=1.10;sy*=1.10}
+  if(vn==='ambulance'){sx*=1.20;sy*=0.95}
+  if(vn==='foodtruck'){sx*=1.10;sy*=1.10;sx*=1.10;sy*=0.95}
   if(vn==='firetruck')sx*=1.15;
   if(vn==='dumptruck'){sx*=0.9;sy*=0.9}
-  if(vn==='policecar'){sx*=0.9;sy*=0.9;sy*=0.80}
-  if(vn==='animalvan')sx*=0.85;
+  if(vn==='policecar'){sx*=0.9;sy*=0.9;sy*=0.80;sx*=1.15}
+  if(vn==='animalvan'){sx*=0.85;sy*=0.90}
   if(vn==='bus')sx*=1.10;
+  if(vn==='libraryvan'){sy*=0.95;sx*=0.90;sx*=0.90}
+  if(vn==='mailvan')sx*=1.10;
+  if(vn==='tractor'){sx*=0.95;sy*=0.95;sx*=0.95;sy*=0.95}
   var v=sc.add.image(sl.x+60,vy,vk).setScale(sx,sy).setAlpha(0).setDepth(D.vehicle);
   sc.tweens.add({targets:v,alpha:1,x:sl.x+20,duration:600,ease:'Power2'});
 }
