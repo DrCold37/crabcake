@@ -1,514 +1,208 @@
 {
-  "schema_version": "1.1",
+  "schema_version": "2.0",
   "game_id": "community-builder",
-  "version": "1.1",
+  "version": "2.0",
   "last_updated": "2026-03-14",
-  "description": "Question sets for Community Builder. Covers community helper roles, rules and responsibilities, and basic geography/mapping concepts aligned to Ontario Social Studies curriculum Grades 1–4. Each character has questions across age bands. Correct answers unlock buildings, vehicles, and props to grow the town.",
+  "description": "Question sets for Community Builder v2. Band 1 is visual matching (no text questions). Bands 2-3 use text questions with grade-tiered progression matching the maths-dive system. Each question set has a grade_id for the progression engine.",
   "progression_rules": {
-    "warm_up_from_previous_band": true,
-    "warm_up_percentage": 0.25,
-    "mastery_threshold": 0.85,
+    "play_chain": {
+      "band_1": [
+        "jk",
+        "sk"
+      ],
+      "band_2": [
+        "sk",
+        "grade_1",
+        "grade_2"
+      ],
+      "band_3": [
+        "grade_2",
+        "grade_3",
+        "grade_4"
+      ]
+    },
+    "cross_band": {
+      "band_3": {
+        "prev_band": "band_2",
+        "prev_grade": "grade_2"
+      }
+    },
+    "band_grades": {
+      "band_1": [
+        "jk",
+        "sk"
+      ],
+      "band_2": [
+        "grade_1",
+        "grade_2"
+      ],
+      "band_3": [
+        "grade_3",
+        "grade_4"
+      ]
+    },
     "mastery_window": 10,
+    "mastery_threshold": 0.85,
+    "band_mastery_window": 20,
+    "band_mastery_required": 19,
     "unlock_threshold": 3,
-    "note": "Players must answer unlock_threshold questions correctly for a character to unlock their building. Band 1 auto-places buildings; Bands 2–3 use drag-and-drop placement."
+    "note": "Band 1 uses visual matching (tap building/vehicle). Bands 2-3 use text questions. Grade mastery = 85% of last 10. Band mastery = 19/20 at top grade. Cross-band warmup loads previous band's top grade."
+  },
+  "band_1_matching": {
+    "note": "Band 1 visual matching config. All buildings pre-placed. Player taps matching building + vehicle.",
+    "jk_rule": "Match 1 of 2 (building OR vehicle)",
+    "sk_rule": "Match BOTH building AND vehicle",
+    "characters_per_round": 6,
+    "excluded_characters": [
+      "construction"
+    ],
+    "vehicle_map": {
+      "firefighter": "car_red",
+      "doctor": "ambulance",
+      "police": "police_car",
+      "chef": "van_black",
+      "teacher": "car_blue",
+      "mailcarrier": "van_white",
+      "busdriver": "taxi"
+    },
+    "environmental_hints": {
+      "firefighter": "fire_hydrant nearby, red/orange accents",
+      "doctor": "cross/heart symbols, white building",
+      "police": "badge symbol, blue accents",
+      "chef": "food items nearby, kitchen window",
+      "farmer": "plants/crops nearby, green accents",
+      "teacher": "books/apple nearby, pencil accents",
+      "librarian": "books visible, quiet symbol",
+      "mailcarrier": "mailbox nearby, envelope symbols",
+      "busdriver": "bus stop sign, road markings",
+      "mechanic": "tools nearby, tire/wrench",
+      "vet": "animal prints, paw symbols"
+    }
   },
   "question_sets": [
     {
-      "set_id": "firefighter_band1",
-      "character": "firefighter",
-      "band_id": "band_1",
+      "set_id": "busdriver_band2_sk",
+      "character": "busdriver",
+      "band_id": "band_2",
       "category": "roles",
       "questions": [
         {
-          "id": "cb001",
-          "question": "Who puts out fires in our community?",
+          "id": "cb109",
+          "question": "Who drives the bus that takes you to school?",
           "options": [
-            "Firefighter",
+            "Bus driver",
             "Chef",
             "Farmer"
           ],
           "correct": 0,
-          "hint": "They wear a red helmet and drive a big red truck!"
+          "hint": "They sit at the front of the big yellow bus."
         },
         {
-          "id": "cb002",
-          "question": "What does a fire truck carry?",
+          "id": "cb110",
+          "question": "What colour is a school bus?",
           "options": [
-            "Water and hoses",
-            "Books and pencils",
-            "Food and plates"
+            "Yellow",
+            "Blue",
+            "Green"
           ],
           "correct": 0,
-          "hint": "Fires need lots of water to go out."
+          "hint": "It's a bright, sunny colour so cars can see it easily."
         },
         {
-          "id": "cb003",
-          "question": "If there is a fire, what number do you call?",
+          "id": "cb111",
+          "question": "What should you do when you get on a bus?",
           "options": [
-            "9-1-1",
-            "1-2-3",
-            "5-5-5"
+            "Sit down and wear your seatbelt",
+            "Stand up and jump around",
+            "Yell at the driver"
           ],
           "correct": 0,
-          "hint": "This special number gets help fast."
+          "hint": "Sitting safely keeps you from getting hurt if the bus stops suddenly."
         },
         {
-          "id": "cb004",
-          "question": "Where do firefighters work?",
+          "id": "cb112",
+          "question": "Where does a bus stop to pick people up?",
           "options": [
-            "Fire station",
-            "Library",
-            "Farm"
+            "At a bus stop",
+            "In the middle of the road",
+            "On top of a hill"
           ],
           "correct": 0,
-          "hint": "The big red building with the fire trucks inside."
+          "hint": "Look for a sign with a picture of a bus."
         }
-      ]
+      ],
+      "grade_id": "sk"
     },
     {
-      "set_id": "firefighter_band2",
-      "character": "firefighter",
+      "set_id": "busdriver_band2_grade1",
+      "character": "busdriver",
       "band_id": "band_2",
       "category": "responsibilities",
       "questions": [
         {
-          "id": "cb005",
-          "question": "Why should every home have a smoke alarm?",
+          "id": "cb113",
+          "question": "Why is public transit important for a community?",
           "options": [
-            "To warn people about fires early",
-            "To play music",
-            "To tell the time",
-            "To keep bugs away"
+            "It helps people who don't have cars get around",
+            "It makes streets more crowded",
+            "It is only for children",
+            "It replaces all walking"
           ],
           "correct": 0,
-          "hint": "Smoke alarms make a loud sound when they sense smoke."
+          "hint": "Buses and trains are for everyone in the community."
         },
         {
-          "id": "cb006",
-          "question": "What should your family practise at home for fire safety?",
+          "id": "cb114",
+          "question": "What does a taxi do?",
           "options": [
-            "An escape plan",
-            "A cooking plan",
-            "A shopping list",
-            "A cleaning schedule"
+            "Takes people where they need to go for a fare",
+            "Delivers mail",
+            "Puts out fires",
+            "Carries sick people to hospital"
           ],
           "correct": 0,
-          "hint": "Everyone should know how to get out safely."
-        },
-        {
-          "id": "cb007",
-          "question": "Firefighters also help with which other emergencies?",
-          "options": [
-            "Car accidents and rescues",
-            "Homework and chores",
-            "Cooking dinner",
-            "Painting houses"
-          ],
-          "correct": 0,
-          "hint": "They help people who are trapped or hurt."
-        },
-        {
-          "id": "cb008",
-          "question": "What is the firefighter's rule about matches and lighters?",
-          "options": [
-            "Only adults should use them",
-            "Anyone can use them",
-            "They are toys",
-            "Hide them under the bed"
-          ],
-          "correct": 0,
-          "hint": "These things can start fires and are not for kids."
+          "hint": "You can call one when you need a ride."
         }
-      ]
+      ],
+      "grade_id": "grade_1"
     },
     {
-      "set_id": "firefighter_band3",
-      "character": "firefighter",
-      "band_id": "band_3",
-      "category": "responsibilities",
-      "questions": [
-        {
-          "id": "cb009",
-          "question": "In Ontario, who is responsible for making fire safety rules for buildings?",
-          "options": [
-            "The local fire department and government",
-            "The grocery store",
-            "Individual families only",
-            "The school principal"
-          ],
-          "correct": 0,
-          "hint": "Fire codes are created by community leaders to keep everyone safe."
-        },
-        {
-          "id": "cb010",
-          "question": "What is the 'Stop, Drop, and Roll' rule for?",
-          "options": [
-            "If your clothes catch fire",
-            "If you are tired",
-            "If you hear thunder",
-            "If you see a spider"
-          ],
-          "correct": 0,
-          "hint": "Rolling on the ground smothers flames."
-        },
-        {
-          "id": "cb011",
-          "question": "How do fire hydrants help firefighters?",
-          "options": [
-            "They provide a water supply on the street",
-            "They block traffic",
-            "They hold letters",
-            "They grow flowers"
-          ],
-          "correct": 0,
-          "hint": "Firefighters connect hoses to these red or yellow objects on sidewalks."
-        },
-        {
-          "id": "cb012",
-          "question": "Why do firefighters inspect buildings in the community?",
-          "options": [
-            "To check that fire safety rules are followed",
-            "To count the windows",
-            "To paint the walls",
-            "To deliver mail"
-          ],
-          "correct": 0,
-          "hint": "They make sure exits, alarms, and sprinklers are working."
-        }
-      ]
-    },
-    {
-      "set_id": "doctor_band1",
-      "character": "doctor",
-      "band_id": "band_1",
-      "category": "roles",
-      "questions": [
-        {
-          "id": "cb013",
-          "question": "Who helps you feel better when you are sick?",
-          "options": [
-            "Doctor",
-            "Bus driver",
-            "Construction worker"
-          ],
-          "correct": 0,
-          "hint": "They wear a white coat and use a stethoscope."
-        },
-        {
-          "id": "cb014",
-          "question": "Where does a doctor work?",
-          "options": [
-            "Hospital or clinic",
-            "Fire station",
-            "Gas station"
-          ],
-          "correct": 0,
-          "hint": "A big building with a red cross on it."
-        },
-        {
-          "id": "cb015",
-          "question": "What tool does a doctor use to listen to your heart?",
-          "options": [
-            "Stethoscope",
-            "Hammer",
-            "Paintbrush"
-          ],
-          "correct": 0,
-          "hint": "It has two earpieces and a round end."
-        },
-        {
-          "id": "cb016",
-          "question": "What vehicle rushes sick people to the hospital?",
-          "options": [
-            "Ambulance",
-            "School bus",
-            "Taxi"
-          ],
-          "correct": 0,
-          "hint": "It has flashing lights and a loud siren."
-        }
-      ]
-    },
-    {
-      "set_id": "doctor_band2",
-      "character": "doctor",
+      "set_id": "busdriver_band2_grade2",
+      "character": "busdriver",
       "band_id": "band_2",
       "category": "responsibilities",
       "questions": [
         {
-          "id": "cb017",
-          "question": "Why do communities need hospitals?",
+          "id": "cb115",
+          "question": "Why is it important to share the road?",
           "options": [
-            "So sick or hurt people can get help nearby",
-            "To store food",
-            "To park cars",
-            "To hold classes"
+            "Cars, buses, bikes, and pedestrians all need space to travel safely",
+            "Because the road is too big for one car",
+            "So people can race",
+            "Because the law is unfair"
           ],
           "correct": 0,
-          "hint": "When there's an emergency, people need help close to home."
+          "hint": "Everyone has a right to travel safely."
         },
         {
-          "id": "cb018",
-          "question": "What is one way to stay healthy in your community?",
+          "id": "cb116",
+          "question": "What is a 'route' on a bus map?",
           "options": [
-            "Wash your hands often",
-            "Stay up all night",
-            "Skip breakfast every day",
-            "Never go outside"
+            "The path the bus follows with its stops",
+            "The name of the driver",
+            "The colour of the bus",
+            "The time the bus was built"
           ],
           "correct": 0,
-          "hint": "Clean hands help stop germs from spreading."
-        },
-        {
-          "id": "cb019",
-          "question": "Who else works at a hospital besides doctors?",
-          "options": [
-            "Nurses and paramedics",
-            "Firefighters and police",
-            "Farmers and chefs",
-            "Bus drivers and pilots"
-          ],
-          "correct": 0,
-          "hint": "A whole team of health workers cares for patients."
-        },
-        {
-          "id": "cb020",
-          "question": "Why is it important to visit the doctor even when you are not sick?",
-          "options": [
-            "For check-ups to stay healthy",
-            "To get a sticker",
-            "Because it is fun",
-            "To see the fish tank"
-          ],
-          "correct": 0,
-          "hint": "Check-ups help catch problems before they get big."
+          "hint": "Each bus follows a set path through the community."
         }
-      ]
+      ],
+      "grade_id": "grade_2"
     },
     {
-      "set_id": "doctor_band3",
-      "character": "doctor",
-      "band_id": "band_3",
-      "category": "geography",
-      "questions": [
-        {
-          "id": "cb021",
-          "question": "In rural parts of Ontario, why might people travel far to see a doctor?",
-          "options": [
-            "There are fewer hospitals in rural areas",
-            "Doctors don't like the country",
-            "Roads are always closed",
-            "Hospitals only open in cities"
-          ],
-          "correct": 0,
-          "hint": "Smaller communities sometimes don't have their own hospital."
-        },
-        {
-          "id": "cb022",
-          "question": "What does OHIP provide for people in Ontario?",
-          "options": [
-            "Health care coverage",
-            "Free groceries",
-            "School supplies",
-            "Bus tickets"
-          ],
-          "correct": 0,
-          "hint": "It's a card that helps pay for doctor visits."
-        },
-        {
-          "id": "cb023",
-          "question": "On a community map, a hospital is usually shown with which symbol?",
-          "options": [
-            "A red cross or H",
-            "A star",
-            "A tree",
-            "A circle"
-          ],
-          "correct": 0,
-          "hint": "Look for the letter that starts the word 'Hospital'."
-        },
-        {
-          "id": "cb024",
-          "question": "Why do ambulances need clear roads to travel fast?",
-          "options": [
-            "To reach patients quickly in emergencies",
-            "Because they like speeding",
-            "To deliver packages",
-            "To practise driving"
-          ],
-          "correct": 0,
-          "hint": "Every second counts when someone is very sick or hurt."
-        }
-      ]
-    },
-    {
-      "set_id": "police_band1",
-      "character": "police",
-      "band_id": "band_1",
-      "category": "roles",
-      "questions": [
-        {
-          "id": "cb025",
-          "question": "Who helps keep our community safe from danger?",
-          "options": [
-            "Police officer",
-            "Chef",
-            "Librarian"
-          ],
-          "correct": 0,
-          "hint": "They wear a badge and sometimes drive a car with flashing lights."
-        },
-        {
-          "id": "cb026",
-          "question": "What vehicle do police officers drive?",
-          "options": [
-            "Police car",
-            "Fire truck",
-            "Tractor"
-          ],
-          "correct": 0,
-          "hint": "It often has flashing red and blue lights."
-        },
-        {
-          "id": "cb027",
-          "question": "If you are lost, who is a safe person to ask for help?",
-          "options": [
-            "A police officer",
-            "A stranger in a car",
-            "Nobody"
-          ],
-          "correct": 0,
-          "hint": "They are trained to help people who need it."
-        },
-        {
-          "id": "cb028",
-          "question": "What is one rule police officers help everyone follow?",
-          "options": [
-            "Stop at red lights",
-            "Run as fast as you can",
-            "Talk loudly everywhere"
-          ],
-          "correct": 0,
-          "hint": "Red means stop, green means go!"
-        }
-      ]
-    },
-    {
-      "set_id": "police_band2",
-      "character": "police",
-      "band_id": "band_2",
-      "category": "responsibilities",
-      "questions": [
-        {
-          "id": "cb029",
-          "question": "Why do communities have rules and laws?",
-          "options": [
-            "To keep everyone safe and fair",
-            "To make people angry",
-            "Because rules are fun",
-            "To give police something to do"
-          ],
-          "correct": 0,
-          "hint": "Rules help people live together peacefully."
-        },
-        {
-          "id": "cb030",
-          "question": "What should you do if you see someone being bullied?",
-          "options": [
-            "Tell a trusted adult",
-            "Ignore it",
-            "Join in",
-            "Run away"
-          ],
-          "correct": 0,
-          "hint": "Adults can help stop bullying and keep everyone safe."
-        },
-        {
-          "id": "cb031",
-          "question": "What does a crosswalk help people do safely?",
-          "options": [
-            "Cross the street",
-            "Park their car",
-            "Ride a bike",
-            "Fly a kite"
-          ],
-          "correct": 0,
-          "hint": "The white lines on the road tell drivers to stop for walkers."
-        },
-        {
-          "id": "cb032",
-          "question": "Who is responsible for following community rules?",
-          "options": [
-            "Everyone in the community",
-            "Only children",
-            "Only police officers",
-            "Only teachers"
-          ],
-          "correct": 0,
-          "hint": "Rules work best when everybody follows them."
-        }
-      ]
-    },
-    {
-      "set_id": "police_band3",
-      "character": "police",
-      "band_id": "band_3",
-      "category": "responsibilities",
-      "questions": [
-        {
-          "id": "cb033",
-          "question": "In Canada, who makes the laws that communities must follow?",
-          "options": [
-            "Elected government leaders",
-            "Store owners",
-            "Sports coaches",
-            "News reporters"
-          ],
-          "correct": 0,
-          "hint": "People vote for leaders who create and change laws."
-        },
-        {
-          "id": "cb034",
-          "question": "What is the difference between a rule and a law?",
-          "options": [
-            "Laws are official and enforced by government; rules can be informal",
-            "There is no difference",
-            "Rules are harder to follow",
-            "Laws are only for adults"
-          ],
-          "correct": 0,
-          "hint": "Laws are written down by government and apply to everyone."
-        },
-        {
-          "id": "cb035",
-          "question": "Why do different communities sometimes have different by-laws?",
-          "options": [
-            "Each community has different needs",
-            "Some communities forgot the rules",
-            "Only big cities have laws",
-            "Laws change every day"
-          ],
-          "correct": 0,
-          "hint": "A fishing village and a big city need different rules."
-        },
-        {
-          "id": "cb036",
-          "question": "On a map, a police station might be marked with which symbol?",
-          "options": [
-            "A shield or badge icon",
-            "A tree",
-            "A sun",
-            "A wave"
-          ],
-          "correct": 0,
-          "hint": "Think about what a police officer wears on their chest."
-        }
-      ]
-    },
-    {
-      "set_id": "chef_band1",
+      "set_id": "chef_band2_sk",
       "character": "chef",
-      "band_id": "band_1",
+      "band_id": "band_2",
       "category": "roles",
       "questions": [
         {
@@ -556,10 +250,11 @@
           "correct": 0,
           "hint": "Sometimes families want someone else to cook a meal."
         }
-      ]
+      ],
+      "grade_id": "sk"
     },
     {
-      "set_id": "chef_band2",
+      "set_id": "chef_band2_grade1",
       "character": "chef",
       "band_id": "band_2",
       "category": "responsibilities",
@@ -587,7 +282,16 @@
           ],
           "correct": 0,
           "hint": "Clean kitchens and proper cooking stop germs."
-        },
+        }
+      ],
+      "grade_id": "grade_1"
+    },
+    {
+      "set_id": "chef_band2_grade2",
+      "character": "chef",
+      "band_id": "band_2",
+      "category": "responsibilities",
+      "questions": [
         {
           "id": "cb043",
           "question": "What is a tradition many Canadian families share around food?",
@@ -612,561 +316,13 @@
           "correct": 0,
           "hint": "You might find Italian, Chinese, Indian, and many other foods in your community."
         }
-      ]
+      ],
+      "grade_id": "grade_2"
     },
     {
-      "set_id": "chef_band3",
-      "character": "chef",
-      "band_id": "band_3",
-      "category": "geography",
-      "questions": [
-        {
-          "id": "cb045",
-          "question": "Which region of Ontario is known for growing many fruits like peaches and grapes?",
-          "options": [
-            "Niagara Region",
-            "Northern Ontario",
-            "Ottawa Valley",
-            "Thunder Bay"
-          ],
-          "correct": 0,
-          "hint": "This area is near a famous waterfall."
-        },
-        {
-          "id": "cb046",
-          "question": "Why might a town near the ocean have more seafood restaurants?",
-          "options": [
-            "Fresh fish is caught nearby",
-            "People near the ocean don't like meat",
-            "There are no farms near oceans",
-            "Fish is cheaper everywhere"
-          ],
-          "correct": 0,
-          "hint": "Local food often depends on what is available close by."
-        },
-        {
-          "id": "cb047",
-          "question": "What is a 'food bank' and why do communities need them?",
-          "options": [
-            "A place that gives free food to families who need it",
-            "A bank that loans money for food",
-            "A restaurant for bankers",
-            "A place to store money"
-          ],
-          "correct": 0,
-          "hint": "Some families need help getting enough food."
-        },
-        {
-          "id": "cb048",
-          "question": "What does 'locally grown' mean on a menu?",
-          "options": [
-            "The food was grown nearby, not far away",
-            "The food grew inside the restaurant",
-            "The food is very old",
-            "The food is from another country"
-          ],
-          "correct": 0,
-          "hint": "Local means close to where you live."
-        }
-      ]
-    },
-    {
-      "set_id": "farmer_band1",
-      "character": "farmer",
-      "band_id": "band_1",
-      "category": "roles",
-      "questions": [
-        {
-          "id": "cb049",
-          "question": "Who grows the food we eat?",
-          "options": [
-            "Farmer",
-            "Mail carrier",
-            "Bus driver"
-          ],
-          "correct": 0,
-          "hint": "They work on land with crops and animals."
-        },
-        {
-          "id": "cb050",
-          "question": "Which of these grows on a farm?",
-          "options": [
-            "Corn",
-            "Books",
-            "Cars"
-          ],
-          "correct": 0,
-          "hint": "It is tall, green, and you can eat it!"
-        },
-        {
-          "id": "cb051",
-          "question": "Where does milk come from?",
-          "options": [
-            "Cows on a farm",
-            "A factory that makes water",
-            "A library"
-          ],
-          "correct": 0,
-          "hint": "Moo! This animal gives us milk."
-        },
-        {
-          "id": "cb052",
-          "question": "What does a farmer sell at a market?",
-          "options": [
-            "Fruits and vegetables",
-            "Toys and games",
-            "Cars and trucks"
-          ],
-          "correct": 0,
-          "hint": "Fresh, yummy things they grew themselves."
-        }
-      ]
-    },
-    {
-      "set_id": "farmer_band2",
-      "character": "farmer",
-      "band_id": "band_2",
-      "category": "responsibilities",
-      "questions": [
-        {
-          "id": "cb053",
-          "question": "Why are farms important to a community?",
-          "options": [
-            "They provide food for people to eat",
-            "They are fun to visit",
-            "They have pretty flowers",
-            "They make loud noises"
-          ],
-          "correct": 0,
-          "hint": "Without farms, stores would have no food to sell."
-        },
-        {
-          "id": "cb054",
-          "question": "What is a farmers' market?",
-          "options": [
-            "A place where farmers sell food directly to people",
-            "A store that sells farm tools",
-            "A movie about farms",
-            "A type of barn"
-          ],
-          "correct": 0,
-          "hint": "You can buy fresh apples, vegetables, and eggs there."
-        },
-        {
-          "id": "cb055",
-          "question": "How do the seasons affect what a farmer can grow?",
-          "options": [
-            "Different crops grow in different seasons",
-            "Farmers only work in summer",
-            "Seasons don't matter at all",
-            "All crops grow in winter"
-          ],
-          "correct": 0,
-          "hint": "Strawberries ripen in summer but not in January."
-        },
-        {
-          "id": "cb056",
-          "question": "How does food get from the farm to the grocery store?",
-          "options": [
-            "Trucks, trains, or ships carry it",
-            "It walks there",
-            "People carry it in baskets",
-            "It flies on airplanes only"
-          ],
-          "correct": 0,
-          "hint": "Big vehicles move large amounts of food across the province."
-        }
-      ]
-    },
-    {
-      "set_id": "farmer_band3",
-      "character": "farmer",
-      "band_id": "band_3",
-      "category": "geography",
-      "questions": [
-        {
-          "id": "cb057",
-          "question": "Which part of Ontario has the most farmland?",
-          "options": [
-            "Southern Ontario",
-            "Northern Ontario",
-            "The Canadian Shield",
-            "The Ottawa River"
-          ],
-          "correct": 0,
-          "hint": "The flat land and warmer weather in the south are better for crops."
-        },
-        {
-          "id": "cb058",
-          "question": "What is one reason Indigenous peoples in Ontario farmed the Three Sisters (corn, beans, squash)?",
-          "options": [
-            "The three plants help each other grow",
-            "They were the only plants available",
-            "The government told them to",
-            "They could not find other food"
-          ],
-          "correct": 0,
-          "hint": "Corn grows tall, beans climb it, and squash covers the ground."
-        },
-        {
-          "id": "cb059",
-          "question": "On a land-use map, what colour usually shows farmland?",
-          "options": [
-            "Yellow or light green",
-            "Red or purple",
-            "Black or gray",
-            "Dark blue"
-          ],
-          "correct": 0,
-          "hint": "Think about the colour of fields and crops."
-        },
-        {
-          "id": "cb060",
-          "question": "What challenge do Ontario farmers face due to urban sprawl?",
-          "options": [
-            "Farmland is being turned into housing",
-            "Too many people want to be farmers",
-            "There is too much rain",
-            "Crops grow too fast"
-          ],
-          "correct": 0,
-          "hint": "Cities and suburbs keep growing outward onto land that was once farmed."
-        }
-      ]
-    },
-    {
-      "set_id": "teacher_band1",
-      "character": "teacher",
-      "band_id": "band_1",
-      "category": "roles",
-      "questions": [
-        {
-          "id": "cb061",
-          "question": "Who helps you learn to read and count at school?",
-          "options": [
-            "Teacher",
-            "Firefighter",
-            "Farmer"
-          ],
-          "correct": 0,
-          "hint": "They stand at the front of your classroom."
-        },
-        {
-          "id": "cb062",
-          "question": "Where do teachers work?",
-          "options": [
-            "School",
-            "Hospital",
-            "Fire station"
-          ],
-          "correct": 0,
-          "hint": "A building with classrooms, a playground, and a bell."
-        },
-        {
-          "id": "cb063",
-          "question": "Why is it important to be kind to classmates?",
-          "options": [
-            "So everyone feels happy and safe",
-            "So you get more snacks",
-            "So you can be the boss",
-            "So the teacher is quiet"
-          ],
-          "correct": 0,
-          "hint": "A friendly classroom is a better place to learn."
-        },
-        {
-          "id": "cb064",
-          "question": "What is one rule you follow at school?",
-          "options": [
-            "Raise your hand to speak",
-            "Run in the hallways",
-            "Shout all the time"
-          ],
-          "correct": 0,
-          "hint": "This lets everyone take turns talking."
-        }
-      ]
-    },
-    {
-      "set_id": "teacher_band2",
-      "character": "teacher",
-      "band_id": "band_2",
-      "category": "responsibilities",
-      "questions": [
-        {
-          "id": "cb065",
-          "question": "How does a school help a community?",
-          "options": [
-            "It gives children a place to learn and grow",
-            "It parks fire trucks",
-            "It grows food",
-            "It delivers mail"
-          ],
-          "correct": 0,
-          "hint": "Education is one of the most important services a community provides."
-        },
-        {
-          "id": "cb066",
-          "question": "What responsibility do students have at school?",
-          "options": [
-            "To try their best and respect others",
-            "To run the school",
-            "To cook lunch for everyone",
-            "To clean the teacher's car"
-          ],
-          "correct": 0,
-          "hint": "Being a good student means working hard and being respectful."
-        },
-        {
-          "id": "cb067",
-          "question": "Why do schools have rules about safety?",
-          "options": [
-            "To protect everyone from getting hurt",
-            "To keep it quiet for the principal",
-            "Because rules are fun",
-            "To punish students"
-          ],
-          "correct": 0,
-          "hint": "Fire drills, no running in halls — these all keep people safe."
-        },
-        {
-          "id": "cb068",
-          "question": "How do families and schools work together?",
-          "options": [
-            "Parents and teachers talk about how to help children learn",
-            "Families teach math at home only",
-            "Schools tell parents what to do",
-            "They don't work together"
-          ],
-          "correct": 0,
-          "hint": "Parent-teacher nights and school events bring families and schools together."
-        }
-      ]
-    },
-    {
-      "set_id": "teacher_band3",
-      "character": "teacher",
-      "band_id": "band_3",
-      "category": "responsibilities",
-      "questions": [
-        {
-          "id": "cb069",
-          "question": "In Ontario, who is responsible for making sure all children can go to school?",
-          "options": [
-            "The provincial government",
-            "Individual teachers",
-            "Grocery stores",
-            "Sports teams"
-          ],
-          "correct": 0,
-          "hint": "The Ontario government creates education laws and funds schools."
-        },
-        {
-          "id": "cb070",
-          "question": "Why do some Ontario communities have both public and Catholic school boards?",
-          "options": [
-            "The Canadian Constitution protects both systems",
-            "Catholic schools are private businesses",
-            "Public schools don't teach well",
-            "There are too many students for one system"
-          ],
-          "correct": 0,
-          "hint": "This right is written into Canada's founding document."
-        },
-        {
-          "id": "cb071",
-          "question": "How did schools in early Ontario communities differ from schools today?",
-          "options": [
-            "They were one-room schoolhouses with all ages together",
-            "They had computers and smartboards",
-            "They had no teachers",
-            "They were exactly the same"
-          ],
-          "correct": 0,
-          "hint": "Long ago, one teacher taught children of all ages in a single room."
-        },
-        {
-          "id": "cb072",
-          "question": "Why is it important that schools teach about different cultures?",
-          "options": [
-            "So students understand and respect the diverse community they live in",
-            "To replace their own culture",
-            "Because the law says you must speak many languages",
-            "To prepare for a test"
-          ],
-          "correct": 0,
-          "hint": "Canada is home to people from many different backgrounds."
-        }
-      ]
-    },
-    {
-      "set_id": "librarian_band1",
-      "character": "librarian",
-      "band_id": "band_1",
-      "category": "roles",
-      "questions": [
-        {
-          "id": "cb073",
-          "question": "Who helps you find books to read?",
-          "options": [
-            "Librarian",
-            "Bus driver",
-            "Construction worker"
-          ],
-          "correct": 0,
-          "hint": "They work in a building full of books."
-        },
-        {
-          "id": "cb074",
-          "question": "What is a library for?",
-          "options": [
-            "Borrowing books and learning",
-            "Buying groceries",
-            "Fixing cars"
-          ],
-          "correct": 0,
-          "hint": "You can take a book home and bring it back when you're done!"
-        },
-        {
-          "id": "cb075",
-          "question": "What is one rule at the library?",
-          "options": [
-            "Use a quiet voice",
-            "Shout as loud as you can",
-            "Run between the shelves"
-          ],
-          "correct": 0,
-          "hint": "People need quiet to read and think."
-        },
-        {
-          "id": "cb076",
-          "question": "What else can you do at a library besides read books?",
-          "options": [
-            "Use a computer or join story time",
-            "Go swimming",
-            "Buy toys"
-          ],
-          "correct": 0,
-          "hint": "Libraries have many fun activities for kids!"
-        }
-      ]
-    },
-    {
-      "set_id": "librarian_band2",
-      "character": "librarian",
-      "band_id": "band_2",
-      "category": "responsibilities",
-      "questions": [
-        {
-          "id": "cb077",
-          "question": "Why is a library called a 'public' place?",
-          "options": [
-            "Because anyone in the community can use it for free",
-            "Because it is outside",
-            "Because it is very big",
-            "Because it is noisy"
-          ],
-          "correct": 0,
-          "hint": "Public means open to all people, and it costs nothing to visit."
-        },
-        {
-          "id": "cb078",
-          "question": "How does a library card work?",
-          "options": [
-            "You sign up, borrow books, and return them on time",
-            "You buy the card and keep the books",
-            "You trade cards with friends",
-            "You use it to open doors"
-          ],
-          "correct": 0,
-          "hint": "The card lets you borrow and return items."
-        },
-        {
-          "id": "cb079",
-          "question": "What happens when everyone takes care of library books?",
-          "options": [
-            "More people can enjoy them for a long time",
-            "The librarian gets a prize",
-            "The books grow bigger",
-            "Nothing changes"
-          ],
-          "correct": 0,
-          "hint": "Shared things last longer when people are careful."
-        },
-        {
-          "id": "cb080",
-          "question": "What services does a modern library offer besides books?",
-          "options": [
-            "Computer access, programs, and meeting rooms",
-            "Haircuts and car repairs",
-            "Restaurants and gyms",
-            "Movie theatres and playgrounds"
-          ],
-          "correct": 0,
-          "hint": "Libraries have grown to offer many community resources."
-        }
-      ]
-    },
-    {
-      "set_id": "librarian_band3",
-      "character": "librarian",
-      "band_id": "band_3",
-      "category": "geography",
-      "questions": [
-        {
-          "id": "cb081",
-          "question": "How do public libraries help people who are new to Canada?",
-          "options": [
-            "They offer language classes, settlement info, and free resources",
-            "They give them houses",
-            "They teach them to drive",
-            "They don't help newcomers"
-          ],
-          "correct": 0,
-          "hint": "Libraries are often one of the first places newcomers visit for help."
-        },
-        {
-          "id": "cb082",
-          "question": "On a community map, which symbol might show a library?",
-          "options": [
-            "A book icon",
-            "A fork and knife",
-            "A gas pump",
-            "A tree"
-          ],
-          "correct": 0,
-          "hint": "The symbol relates to what you do there — read!"
-        },
-        {
-          "id": "cb083",
-          "question": "Why might a small community and a big city have different-sized libraries?",
-          "options": [
-            "Bigger populations need bigger libraries with more resources",
-            "Small towns don't read",
-            "Cities have more money to waste",
-            "Library size is random"
-          ],
-          "correct": 0,
-          "hint": "More people means more demand for books and programs."
-        },
-        {
-          "id": "cb084",
-          "question": "How did people share stories in communities before public libraries existed?",
-          "options": [
-            "Through oral storytelling passed down through generations",
-            "They didn't share stories",
-            "They only used telephones",
-            "They wrote emails"
-          ],
-          "correct": 0,
-          "hint": "Indigenous and early communities used spoken words to share knowledge."
-        }
-      ]
-    },
-    {
-      "set_id": "construction_band1",
+      "set_id": "construction_band2_sk",
       "character": "construction",
-      "band_id": "band_1",
+      "band_id": "band_2",
       "category": "roles",
       "questions": [
         {
@@ -1213,10 +369,11 @@
           "correct": 0,
           "hint": "They shine bright light on streets and sidewalks."
         }
-      ]
+      ],
+      "grade_id": "sk"
     },
     {
-      "set_id": "construction_band2",
+      "set_id": "construction_band2_grade1",
       "character": "construction",
       "band_id": "band_2",
       "category": "responsibilities",
@@ -1244,7 +401,16 @@
           ],
           "correct": 0,
           "hint": "Orange signs warn about work zones."
-        },
+        }
+      ],
+      "grade_id": "grade_1"
+    },
+    {
+      "set_id": "construction_band2_grade2",
+      "character": "construction",
+      "band_id": "band_2",
+      "category": "responsibilities",
+      "questions": [
         {
           "id": "cb091",
           "question": "Why is a fire hydrant important for a community?",
@@ -1269,68 +435,489 @@
           "correct": 0,
           "hint": "Roads, bridges, water pipes, and electrical wires are all part of this."
         }
-      ]
+      ],
+      "grade_id": "grade_2"
     },
     {
-      "set_id": "construction_band3",
-      "character": "construction",
-      "band_id": "band_3",
-      "category": "geography",
+      "set_id": "doctor_band2_sk",
+      "character": "doctor",
+      "band_id": "band_2",
+      "category": "roles",
       "questions": [
         {
-          "id": "cb093",
-          "question": "Why do communities create 'zoning' rules for where buildings can go?",
+          "id": "cb013",
+          "question": "Who helps you feel better when you are sick?",
           "options": [
-            "To keep homes, shops, and factories in the right areas",
-            "To confuse builders",
-            "To make maps prettier",
-            "Because the mayor likes rules"
+            "Doctor",
+            "Bus driver",
+            "Construction worker"
           ],
           "correct": 0,
-          "hint": "You wouldn't want a noisy factory next to a school."
+          "hint": "They wear a white coat and use a stethoscope."
         },
         {
-          "id": "cb094",
-          "question": "What does a street name sign help people do?",
+          "id": "cb014",
+          "question": "Where does a doctor work?",
           "options": [
-            "Find their way around the community",
-            "Know what shops are nearby",
-            "Learn the name of the mayor",
-            "Tell what time it is"
+            "Hospital or clinic",
+            "Fire station",
+            "Gas station"
           ],
           "correct": 0,
-          "hint": "Every road has a name so people can give and follow directions."
+          "hint": "A big building with a red cross on it."
         },
         {
-          "id": "cb095",
-          "question": "How has transportation infrastructure in Ontario changed since the 1800s?",
+          "id": "cb015",
+          "question": "What tool does a doctor use to listen to your heart?",
           "options": [
-            "From canals and dirt roads to highways and railways",
-            "It hasn't changed at all",
-            "Cars were always the main way to travel",
-            "Only boats were used"
+            "Stethoscope",
+            "Hammer",
+            "Paintbrush"
           ],
           "correct": 0,
-          "hint": "Early settlers used waterways; now we have Highway 401."
+          "hint": "It has two earpieces and a round end."
         },
         {
-          "id": "cb096",
-          "question": "Why must builders follow building codes?",
+          "id": "cb016",
+          "question": "What vehicle rushes sick people to the hospital?",
           "options": [
-            "To make sure buildings are safe for people",
-            "To use more expensive materials",
-            "To build faster",
-            "To make buildings taller"
+            "Ambulance",
+            "School bus",
+            "Taxi"
           ],
           "correct": 0,
-          "hint": "Codes are rules about how strong and safe a building must be."
+          "hint": "It has flashing lights and a loud siren."
         }
-      ]
+      ],
+      "grade_id": "sk"
     },
     {
-      "set_id": "mailcarrier_band1",
+      "set_id": "doctor_band2_grade1",
+      "character": "doctor",
+      "band_id": "band_2",
+      "category": "responsibilities",
+      "questions": [
+        {
+          "id": "cb017",
+          "question": "Why do communities need hospitals?",
+          "options": [
+            "So sick or hurt people can get help nearby",
+            "To store food",
+            "To park cars",
+            "To hold classes"
+          ],
+          "correct": 0,
+          "hint": "When there's an emergency, people need help close to home."
+        },
+        {
+          "id": "cb018",
+          "question": "What is one way to stay healthy in your community?",
+          "options": [
+            "Wash your hands often",
+            "Stay up all night",
+            "Skip breakfast every day",
+            "Never go outside"
+          ],
+          "correct": 0,
+          "hint": "Clean hands help stop germs from spreading."
+        }
+      ],
+      "grade_id": "grade_1"
+    },
+    {
+      "set_id": "doctor_band2_grade2",
+      "character": "doctor",
+      "band_id": "band_2",
+      "category": "responsibilities",
+      "questions": [
+        {
+          "id": "cb019",
+          "question": "Who else works at a hospital besides doctors?",
+          "options": [
+            "Nurses and paramedics",
+            "Firefighters and police",
+            "Farmers and chefs",
+            "Bus drivers and pilots"
+          ],
+          "correct": 0,
+          "hint": "A whole team of health workers cares for patients."
+        },
+        {
+          "id": "cb020",
+          "question": "Why is it important to visit the doctor even when you are not sick?",
+          "options": [
+            "For check-ups to stay healthy",
+            "To get a sticker",
+            "Because it is fun",
+            "To see the fish tank"
+          ],
+          "correct": 0,
+          "hint": "Check-ups help catch problems before they get big."
+        }
+      ],
+      "grade_id": "grade_2"
+    },
+    {
+      "set_id": "farmer_band2_sk",
+      "character": "farmer",
+      "band_id": "band_2",
+      "category": "roles",
+      "questions": [
+        {
+          "id": "cb049",
+          "question": "Who grows the food we eat?",
+          "options": [
+            "Farmer",
+            "Mail carrier",
+            "Bus driver"
+          ],
+          "correct": 0,
+          "hint": "They work on land with crops and animals."
+        },
+        {
+          "id": "cb050",
+          "question": "Which of these grows on a farm?",
+          "options": [
+            "Corn",
+            "Books",
+            "Cars"
+          ],
+          "correct": 0,
+          "hint": "It is tall, green, and you can eat it!"
+        },
+        {
+          "id": "cb051",
+          "question": "Where does milk come from?",
+          "options": [
+            "Cows on a farm",
+            "A factory that makes water",
+            "A library"
+          ],
+          "correct": 0,
+          "hint": "Moo! This animal gives us milk."
+        },
+        {
+          "id": "cb052",
+          "question": "What does a farmer sell at a market?",
+          "options": [
+            "Fruits and vegetables",
+            "Toys and games",
+            "Cars and trucks"
+          ],
+          "correct": 0,
+          "hint": "Fresh, yummy things they grew themselves."
+        }
+      ],
+      "grade_id": "sk"
+    },
+    {
+      "set_id": "farmer_band2_grade1",
+      "character": "farmer",
+      "band_id": "band_2",
+      "category": "responsibilities",
+      "questions": [
+        {
+          "id": "cb053",
+          "question": "Why are farms important to a community?",
+          "options": [
+            "They provide food for people to eat",
+            "They are fun to visit",
+            "They have pretty flowers",
+            "They make loud noises"
+          ],
+          "correct": 0,
+          "hint": "Without farms, stores would have no food to sell."
+        },
+        {
+          "id": "cb054",
+          "question": "What is a farmers' market?",
+          "options": [
+            "A place where farmers sell food directly to people",
+            "A store that sells farm tools",
+            "A movie about farms",
+            "A type of barn"
+          ],
+          "correct": 0,
+          "hint": "You can buy fresh apples, vegetables, and eggs there."
+        }
+      ],
+      "grade_id": "grade_1"
+    },
+    {
+      "set_id": "farmer_band2_grade2",
+      "character": "farmer",
+      "band_id": "band_2",
+      "category": "responsibilities",
+      "questions": [
+        {
+          "id": "cb055",
+          "question": "How do the seasons affect what a farmer can grow?",
+          "options": [
+            "Different crops grow in different seasons",
+            "Farmers only work in summer",
+            "Seasons don't matter at all",
+            "All crops grow in winter"
+          ],
+          "correct": 0,
+          "hint": "Strawberries ripen in summer but not in January."
+        },
+        {
+          "id": "cb056",
+          "question": "How does food get from the farm to the grocery store?",
+          "options": [
+            "Trucks, trains, or ships carry it",
+            "It walks there",
+            "People carry it in baskets",
+            "It flies on airplanes only"
+          ],
+          "correct": 0,
+          "hint": "Big vehicles move large amounts of food across the province."
+        }
+      ],
+      "grade_id": "grade_2"
+    },
+    {
+      "set_id": "firefighter_band2_sk",
+      "character": "firefighter",
+      "band_id": "band_2",
+      "category": "roles",
+      "questions": [
+        {
+          "id": "cb001",
+          "question": "Who puts out fires in our community?",
+          "options": [
+            "Firefighter",
+            "Chef",
+            "Farmer"
+          ],
+          "correct": 0,
+          "hint": "They wear a red helmet and drive a big red truck!"
+        },
+        {
+          "id": "cb002",
+          "question": "What does a fire truck carry?",
+          "options": [
+            "Water and hoses",
+            "Books and pencils",
+            "Food and plates"
+          ],
+          "correct": 0,
+          "hint": "Fires need lots of water to go out."
+        },
+        {
+          "id": "cb003",
+          "question": "If there is a fire, what number do you call?",
+          "options": [
+            "9-1-1",
+            "1-2-3",
+            "5-5-5"
+          ],
+          "correct": 0,
+          "hint": "This special number gets help fast."
+        },
+        {
+          "id": "cb004",
+          "question": "Where do firefighters work?",
+          "options": [
+            "Fire station",
+            "Library",
+            "Farm"
+          ],
+          "correct": 0,
+          "hint": "The big red building with the fire trucks inside."
+        }
+      ],
+      "grade_id": "sk"
+    },
+    {
+      "set_id": "firefighter_band2_grade1",
+      "character": "firefighter",
+      "band_id": "band_2",
+      "category": "responsibilities",
+      "questions": [
+        {
+          "id": "cb005",
+          "question": "Why should every home have a smoke alarm?",
+          "options": [
+            "To warn people about fires early",
+            "To play music",
+            "To tell the time",
+            "To keep bugs away"
+          ],
+          "correct": 0,
+          "hint": "Smoke alarms make a loud sound when they sense smoke."
+        },
+        {
+          "id": "cb006",
+          "question": "What should your family practise at home for fire safety?",
+          "options": [
+            "An escape plan",
+            "A cooking plan",
+            "A shopping list",
+            "A cleaning schedule"
+          ],
+          "correct": 0,
+          "hint": "Everyone should know how to get out safely."
+        }
+      ],
+      "grade_id": "grade_1"
+    },
+    {
+      "set_id": "firefighter_band2_grade2",
+      "character": "firefighter",
+      "band_id": "band_2",
+      "category": "responsibilities",
+      "questions": [
+        {
+          "id": "cb007",
+          "question": "Firefighters also help with which other emergencies?",
+          "options": [
+            "Car accidents and rescues",
+            "Homework and chores",
+            "Cooking dinner",
+            "Painting houses"
+          ],
+          "correct": 0,
+          "hint": "They help people who are trapped or hurt."
+        },
+        {
+          "id": "cb008",
+          "question": "What is the firefighter's rule about matches and lighters?",
+          "options": [
+            "Only adults should use them",
+            "Anyone can use them",
+            "They are toys",
+            "Hide them under the bed"
+          ],
+          "correct": 0,
+          "hint": "These things can start fires and are not for kids."
+        }
+      ],
+      "grade_id": "grade_2"
+    },
+    {
+      "set_id": "librarian_band2_sk",
+      "character": "librarian",
+      "band_id": "band_2",
+      "category": "roles",
+      "questions": [
+        {
+          "id": "cb073",
+          "question": "Who helps you find books to read?",
+          "options": [
+            "Librarian",
+            "Bus driver",
+            "Construction worker"
+          ],
+          "correct": 0,
+          "hint": "They work in a building full of books."
+        },
+        {
+          "id": "cb074",
+          "question": "What is a library for?",
+          "options": [
+            "Borrowing books and learning",
+            "Buying groceries",
+            "Fixing cars"
+          ],
+          "correct": 0,
+          "hint": "You can take a book home and bring it back when you're done!"
+        },
+        {
+          "id": "cb075",
+          "question": "What is one rule at the library?",
+          "options": [
+            "Use a quiet voice",
+            "Shout as loud as you can",
+            "Run between the shelves"
+          ],
+          "correct": 0,
+          "hint": "People need quiet to read and think."
+        },
+        {
+          "id": "cb076",
+          "question": "What else can you do at a library besides read books?",
+          "options": [
+            "Use a computer or join story time",
+            "Go swimming",
+            "Buy toys"
+          ],
+          "correct": 0,
+          "hint": "Libraries have many fun activities for kids!"
+        }
+      ],
+      "grade_id": "sk"
+    },
+    {
+      "set_id": "librarian_band2_grade1",
+      "character": "librarian",
+      "band_id": "band_2",
+      "category": "responsibilities",
+      "questions": [
+        {
+          "id": "cb077",
+          "question": "Why is a library called a 'public' place?",
+          "options": [
+            "Because anyone in the community can use it for free",
+            "Because it is outside",
+            "Because it is very big",
+            "Because it is noisy"
+          ],
+          "correct": 0,
+          "hint": "Public means open to all people, and it costs nothing to visit."
+        },
+        {
+          "id": "cb078",
+          "question": "How does a library card work?",
+          "options": [
+            "You sign up, borrow books, and return them on time",
+            "You buy the card and keep the books",
+            "You trade cards with friends",
+            "You use it to open doors"
+          ],
+          "correct": 0,
+          "hint": "The card lets you borrow and return items."
+        }
+      ],
+      "grade_id": "grade_1"
+    },
+    {
+      "set_id": "librarian_band2_grade2",
+      "character": "librarian",
+      "band_id": "band_2",
+      "category": "responsibilities",
+      "questions": [
+        {
+          "id": "cb079",
+          "question": "What happens when everyone takes care of library books?",
+          "options": [
+            "More people can enjoy them for a long time",
+            "The librarian gets a prize",
+            "The books grow bigger",
+            "Nothing changes"
+          ],
+          "correct": 0,
+          "hint": "Shared things last longer when people are careful."
+        },
+        {
+          "id": "cb080",
+          "question": "What services does a modern library offer besides books?",
+          "options": [
+            "Computer access, programs, and meeting rooms",
+            "Haircuts and car repairs",
+            "Restaurants and gyms",
+            "Movie theatres and playgrounds"
+          ],
+          "correct": 0,
+          "hint": "Libraries have grown to offer many community resources."
+        }
+      ],
+      "grade_id": "grade_2"
+    },
+    {
+      "set_id": "mailcarrier_band2_sk",
       "character": "mailcarrier",
-      "band_id": "band_1",
+      "band_id": "band_2",
       "category": "roles",
       "questions": [
         {
@@ -1377,10 +964,11 @@
           "correct": 0,
           "hint": "You can buy stamps and send packages here."
         }
-      ]
+      ],
+      "grade_id": "sk"
     },
     {
-      "set_id": "mailcarrier_band2",
+      "set_id": "mailcarrier_band2_grade1",
       "character": "mailcarrier",
       "band_id": "band_2",
       "category": "responsibilities",
@@ -1408,7 +996,16 @@
           ],
           "correct": 0,
           "hint": "Their trucks and mailboxes are red."
-        },
+        }
+      ],
+      "grade_id": "grade_1"
+    },
+    {
+      "set_id": "mailcarrier_band2_grade2",
+      "character": "mailcarrier",
+      "band_id": "band_2",
+      "category": "responsibilities",
+      "questions": [
         {
           "id": "cb103",
           "question": "Why does every house have a unique address?",
@@ -1433,232 +1030,13 @@
           "correct": 0,
           "hint": "In Canada it looks like A1A 1A1 — letters and numbers mixed together."
         }
-      ]
+      ],
+      "grade_id": "grade_2"
     },
     {
-      "set_id": "mailcarrier_band3",
-      "character": "mailcarrier",
-      "band_id": "band_3",
-      "category": "geography",
-      "questions": [
-        {
-          "id": "cb105",
-          "question": "How do postal codes help sort mail across Canada?",
-          "options": [
-            "The first letter tells which province or region the mail goes to",
-            "They are just for decoration",
-            "They tell how heavy the package is",
-            "They show the colour of the mailbox"
-          ],
-          "correct": 0,
-          "hint": "K is for eastern Ontario, M is for Toronto, and so on."
-        },
-        {
-          "id": "cb106",
-          "question": "How did communities in early Canada communicate before a postal system?",
-          "options": [
-            "By sending messengers on foot, horse, or canoe",
-            "By email",
-            "By telephone",
-            "They could not communicate at all"
-          ],
-          "correct": 0,
-          "hint": "Travel was slow, so messages took days or weeks."
-        },
-        {
-          "id": "cb107",
-          "question": "Why might mail delivery be harder in northern Ontario communities?",
-          "options": [
-            "Long distances and rough terrain make travel difficult",
-            "People don't write letters there",
-            "The mail carrier doesn't like snow",
-            "There are no addresses in the north"
-          ],
-          "correct": 0,
-          "hint": "Some communities are very far from cities and hard to reach."
-        },
-        {
-          "id": "cb108",
-          "question": "How has communication changed from letters to today?",
-          "options": [
-            "People now also use email, texts, and video calls",
-            "People stopped communicating",
-            "Letters are still the only way",
-            "Everyone uses carrier pigeons now"
-          ],
-          "correct": 0,
-          "hint": "Technology has given us many new ways to stay in touch."
-        }
-      ]
-    },
-    {
-      "set_id": "busdriver_band1",
-      "character": "busdriver",
-      "band_id": "band_1",
-      "category": "roles",
-      "questions": [
-        {
-          "id": "cb109",
-          "question": "Who drives the bus that takes you to school?",
-          "options": [
-            "Bus driver",
-            "Chef",
-            "Farmer"
-          ],
-          "correct": 0,
-          "hint": "They sit at the front of the big yellow bus."
-        },
-        {
-          "id": "cb110",
-          "question": "What colour is a school bus?",
-          "options": [
-            "Yellow",
-            "Blue",
-            "Green"
-          ],
-          "correct": 0,
-          "hint": "It's a bright, sunny colour so cars can see it easily."
-        },
-        {
-          "id": "cb111",
-          "question": "What should you do when you get on a bus?",
-          "options": [
-            "Sit down and wear your seatbelt",
-            "Stand up and jump around",
-            "Yell at the driver"
-          ],
-          "correct": 0,
-          "hint": "Sitting safely keeps you from getting hurt if the bus stops suddenly."
-        },
-        {
-          "id": "cb112",
-          "question": "Where does a bus stop to pick people up?",
-          "options": [
-            "At a bus stop",
-            "In the middle of the road",
-            "On top of a hill"
-          ],
-          "correct": 0,
-          "hint": "Look for a sign with a picture of a bus."
-        }
-      ]
-    },
-    {
-      "set_id": "busdriver_band2",
-      "character": "busdriver",
-      "band_id": "band_2",
-      "category": "responsibilities",
-      "questions": [
-        {
-          "id": "cb113",
-          "question": "Why is public transit important for a community?",
-          "options": [
-            "It helps people who don't have cars get around",
-            "It makes streets more crowded",
-            "It is only for children",
-            "It replaces all walking"
-          ],
-          "correct": 0,
-          "hint": "Buses and trains are for everyone in the community."
-        },
-        {
-          "id": "cb114",
-          "question": "What does a taxi do?",
-          "options": [
-            "Takes people where they need to go for a fare",
-            "Delivers mail",
-            "Puts out fires",
-            "Carries sick people to hospital"
-          ],
-          "correct": 0,
-          "hint": "You can call one when you need a ride."
-        },
-        {
-          "id": "cb115",
-          "question": "Why is it important to share the road?",
-          "options": [
-            "Cars, buses, bikes, and pedestrians all need space to travel safely",
-            "Because the road is too big for one car",
-            "So people can race",
-            "Because the law is unfair"
-          ],
-          "correct": 0,
-          "hint": "Everyone has a right to travel safely."
-        },
-        {
-          "id": "cb116",
-          "question": "What is a 'route' on a bus map?",
-          "options": [
-            "The path the bus follows with its stops",
-            "The name of the driver",
-            "The colour of the bus",
-            "The time the bus was built"
-          ],
-          "correct": 0,
-          "hint": "Each bus follows a set path through the community."
-        }
-      ]
-    },
-    {
-      "set_id": "busdriver_band3",
-      "character": "busdriver",
-      "band_id": "band_3",
-      "category": "geography",
-      "questions": [
-        {
-          "id": "cb117",
-          "question": "What is the main public transit system in Toronto called?",
-          "options": [
-            "The TTC (Toronto Transit Commission)",
-            "The GO Train only",
-            "The School Bus Network",
-            "The CN Tower Express"
-          ],
-          "correct": 0,
-          "hint": "It runs buses, streetcars, and subways."
-        },
-        {
-          "id": "cb118",
-          "question": "Why might a community in Northern Ontario rely more on cars than buses?",
-          "options": [
-            "Towns are spread far apart with fewer bus routes",
-            "People in the north prefer walking",
-            "Buses can't drive in Canada",
-            "Northern roads are too wide for buses"
-          ],
-          "correct": 0,
-          "hint": "Long distances between communities make bus routes impractical."
-        },
-        {
-          "id": "cb119",
-          "question": "What information does a transit map show?",
-          "options": [
-            "Bus and train routes, stops, and connections",
-            "Where all the restaurants are",
-            "The names of all drivers",
-            "How much gas costs"
-          ],
-          "correct": 0,
-          "hint": "It helps riders plan their journey from one place to another."
-        },
-        {
-          "id": "cb120",
-          "question": "How does transportation infrastructure connect Ontario communities?",
-          "options": [
-            "Highways, railways, and airports link cities and towns",
-            "People walk between all cities",
-            "Only boats are used",
-            "Communities are not connected"
-          ],
-          "correct": 0,
-          "hint": "Highway 401, Via Rail, and airports help people and goods move across the province."
-        }
-      ]
-    },
-    {
-      "set_id": "mechanic_band1",
+      "set_id": "mechanic_band2_sk",
       "character": "mechanic",
-      "band_id": "band_1",
+      "band_id": "band_2",
       "category": "roles",
       "questions": [
         {
@@ -1706,10 +1084,11 @@
           "correct": 0,
           "hint": "Mechanics check things like brakes and tires to keep us safe."
         }
-      ]
+      ],
+      "grade_id": "sk"
     },
     {
-      "set_id": "mechanic_band2",
+      "set_id": "mechanic_band2_grade1",
       "character": "mechanic",
       "band_id": "band_2",
       "category": "responsibilities",
@@ -1737,7 +1116,16 @@
           ],
           "correct": 0,
           "hint": "These things help keep everyone safe on the road."
-        },
+        }
+      ],
+      "grade_id": "grade_1"
+    },
+    {
+      "set_id": "mechanic_band2_grade2",
+      "character": "mechanic",
+      "band_id": "band_2",
+      "category": "responsibilities",
+      "questions": [
         {
           "id": "cb207",
           "question": "What does a tow truck do?",
@@ -1762,68 +1150,252 @@
           "correct": 0,
           "hint": "Flat tires can make driving dangerous."
         }
-      ]
+      ],
+      "grade_id": "grade_2"
     },
     {
-      "set_id": "mechanic_band3",
-      "character": "mechanic",
-      "band_id": "band_3",
-      "category": "geography",
+      "set_id": "police_band2_sk",
+      "character": "police",
+      "band_id": "band_2",
+      "category": "roles",
       "questions": [
         {
-          "id": "cb209",
-          "question": "Why are auto shops important in rural Ontario communities?",
+          "id": "cb025",
+          "question": "Who helps keep our community safe from danger?",
           "options": [
-            "People depend on cars because towns are far apart",
-            "Cars are only used in cities",
-            "Rural areas have no roads",
-            "Mechanics only work in Toronto"
+            "Police officer",
+            "Chef",
+            "Librarian"
           ],
           "correct": 0,
-          "hint": "In areas with less public transit, cars are the main way to get around."
+          "hint": "They wear a badge and sometimes drive a car with flashing lights."
         },
         {
-          "id": "cb210",
-          "question": "What happens at a vehicle safety inspection in Ontario?",
+          "id": "cb026",
+          "question": "What vehicle do police officers drive?",
           "options": [
-            "A mechanic checks that the car meets safety standards",
-            "The car gets a new paint job",
-            "The driver takes a written test",
-            "The car is washed and waxed"
+            "Police car",
+            "Fire truck",
+            "Tractor"
           ],
           "correct": 0,
-          "hint": "The government requires this to make sure cars on the road are safe."
+          "hint": "It often has flashing red and blue lights."
         },
         {
-          "id": "cb211",
-          "question": "How have cars changed communities over time?",
+          "id": "cb027",
+          "question": "If you are lost, who is a safe person to ask for help?",
           "options": [
-            "People can live farther from where they work and shop",
-            "Cars have made communities smaller",
-            "People stopped travelling after cars were invented",
-            "Cars are only used for fun"
+            "A police officer",
+            "A stranger in a car",
+            "Nobody"
           ],
           "correct": 0,
-          "hint": "Cars let people travel longer distances every day."
+          "hint": "They are trained to help people who need it."
         },
         {
-          "id": "cb212",
-          "question": "Why might a community need more than one auto shop?",
+          "id": "cb028",
+          "question": "What is one rule police officers help everyone follow?",
           "options": [
-            "More people and cars means more repairs are needed",
-            "Auto shops are only for decoration",
-            "One shop fixes everything instantly",
-            "Cars never break down"
+            "Stop at red lights",
+            "Run as fast as you can",
+            "Talk loudly everywhere"
           ],
           "correct": 0,
-          "hint": "As a community grows, so does the need for services."
+          "hint": "Red means stop, green means go!"
         }
-      ]
+      ],
+      "grade_id": "sk"
     },
     {
-      "set_id": "vet_band1",
+      "set_id": "police_band2_grade1",
+      "character": "police",
+      "band_id": "band_2",
+      "category": "responsibilities",
+      "questions": [
+        {
+          "id": "cb029",
+          "question": "Why do communities have rules and laws?",
+          "options": [
+            "To keep everyone safe and fair",
+            "To make people angry",
+            "Because rules are fun",
+            "To give police something to do"
+          ],
+          "correct": 0,
+          "hint": "Rules help people live together peacefully."
+        },
+        {
+          "id": "cb030",
+          "question": "What should you do if you see someone being bullied?",
+          "options": [
+            "Tell a trusted adult",
+            "Ignore it",
+            "Join in",
+            "Run away"
+          ],
+          "correct": 0,
+          "hint": "Adults can help stop bullying and keep everyone safe."
+        }
+      ],
+      "grade_id": "grade_1"
+    },
+    {
+      "set_id": "police_band2_grade2",
+      "character": "police",
+      "band_id": "band_2",
+      "category": "responsibilities",
+      "questions": [
+        {
+          "id": "cb031",
+          "question": "What does a crosswalk help people do safely?",
+          "options": [
+            "Cross the street",
+            "Park their car",
+            "Ride a bike",
+            "Fly a kite"
+          ],
+          "correct": 0,
+          "hint": "The white lines on the road tell drivers to stop for walkers."
+        },
+        {
+          "id": "cb032",
+          "question": "Who is responsible for following community rules?",
+          "options": [
+            "Everyone in the community",
+            "Only children",
+            "Only police officers",
+            "Only teachers"
+          ],
+          "correct": 0,
+          "hint": "Rules work best when everybody follows them."
+        }
+      ],
+      "grade_id": "grade_2"
+    },
+    {
+      "set_id": "teacher_band2_sk",
+      "character": "teacher",
+      "band_id": "band_2",
+      "category": "roles",
+      "questions": [
+        {
+          "id": "cb061",
+          "question": "Who helps you learn to read and count at school?",
+          "options": [
+            "Teacher",
+            "Firefighter",
+            "Farmer"
+          ],
+          "correct": 0,
+          "hint": "They stand at the front of your classroom."
+        },
+        {
+          "id": "cb062",
+          "question": "Where do teachers work?",
+          "options": [
+            "School",
+            "Hospital",
+            "Fire station"
+          ],
+          "correct": 0,
+          "hint": "A building with classrooms, a playground, and a bell."
+        },
+        {
+          "id": "cb063",
+          "question": "Why is it important to be kind to classmates?",
+          "options": [
+            "So everyone feels happy and safe",
+            "So you get more snacks",
+            "So you can be the boss",
+            "So the teacher is quiet"
+          ],
+          "correct": 0,
+          "hint": "A friendly classroom is a better place to learn."
+        },
+        {
+          "id": "cb064",
+          "question": "What is one rule you follow at school?",
+          "options": [
+            "Raise your hand to speak",
+            "Run in the hallways",
+            "Shout all the time"
+          ],
+          "correct": 0,
+          "hint": "This lets everyone take turns talking."
+        }
+      ],
+      "grade_id": "sk"
+    },
+    {
+      "set_id": "teacher_band2_grade1",
+      "character": "teacher",
+      "band_id": "band_2",
+      "category": "responsibilities",
+      "questions": [
+        {
+          "id": "cb065",
+          "question": "How does a school help a community?",
+          "options": [
+            "It gives children a place to learn and grow",
+            "It parks fire trucks",
+            "It grows food",
+            "It delivers mail"
+          ],
+          "correct": 0,
+          "hint": "Education is one of the most important services a community provides."
+        },
+        {
+          "id": "cb066",
+          "question": "What responsibility do students have at school?",
+          "options": [
+            "To try their best and respect others",
+            "To run the school",
+            "To cook lunch for everyone",
+            "To clean the teacher's car"
+          ],
+          "correct": 0,
+          "hint": "Being a good student means working hard and being respectful."
+        }
+      ],
+      "grade_id": "grade_1"
+    },
+    {
+      "set_id": "teacher_band2_grade2",
+      "character": "teacher",
+      "band_id": "band_2",
+      "category": "responsibilities",
+      "questions": [
+        {
+          "id": "cb067",
+          "question": "Why do schools have rules about safety?",
+          "options": [
+            "To protect everyone from getting hurt",
+            "To keep it quiet for the principal",
+            "Because rules are fun",
+            "To punish students"
+          ],
+          "correct": 0,
+          "hint": "Fire drills, no running in halls — these all keep people safe."
+        },
+        {
+          "id": "cb068",
+          "question": "How do families and schools work together?",
+          "options": [
+            "Parents and teachers talk about how to help children learn",
+            "Families teach math at home only",
+            "Schools tell parents what to do",
+            "They don't work together"
+          ],
+          "correct": 0,
+          "hint": "Parent-teacher nights and school events bring families and schools together."
+        }
+      ],
+      "grade_id": "grade_2"
+    },
+    {
+      "set_id": "vet_band2_sk",
       "character": "vet",
-      "band_id": "band_1",
+      "band_id": "band_2",
       "category": "roles",
       "questions": [
         {
@@ -1871,10 +1443,11 @@
           "correct": 0,
           "hint": "Vets help pets and other animals stay healthy."
         }
-      ]
+      ],
+      "grade_id": "sk"
     },
     {
-      "set_id": "vet_band2",
+      "set_id": "vet_band2_grade1",
       "character": "vet",
       "band_id": "band_2",
       "category": "responsibilities",
@@ -1902,7 +1475,16 @@
           ],
           "correct": 0,
           "hint": "Pets depend on their owners to take care of them."
-        },
+        }
+      ],
+      "grade_id": "grade_1"
+    },
+    {
+      "set_id": "vet_band2_grade2",
+      "character": "vet",
+      "band_id": "band_2",
+      "category": "responsibilities",
+      "questions": [
         {
           "id": "cb219",
           "question": "What does it mean to spay or neuter a pet?",
@@ -1927,10 +1509,737 @@
           "correct": 0,
           "hint": "Some foods that are fine for people are dangerous for animals."
         }
-      ]
+      ],
+      "grade_id": "grade_2"
     },
     {
-      "set_id": "vet_band3",
+      "set_id": "busdriver_band3_grade3",
+      "character": "busdriver",
+      "band_id": "band_3",
+      "category": "geography",
+      "questions": [
+        {
+          "id": "cb117",
+          "question": "What is the main public transit system in Toronto called?",
+          "options": [
+            "The TTC (Toronto Transit Commission)",
+            "The GO Train only",
+            "The School Bus Network",
+            "The CN Tower Express"
+          ],
+          "correct": 0,
+          "hint": "It runs buses, streetcars, and subways."
+        },
+        {
+          "id": "cb118",
+          "question": "Why might a community in Northern Ontario rely more on cars than buses?",
+          "options": [
+            "Towns are spread far apart with fewer bus routes",
+            "People in the north prefer walking",
+            "Buses can't drive in Canada",
+            "Northern roads are too wide for buses"
+          ],
+          "correct": 0,
+          "hint": "Long distances between communities make bus routes impractical."
+        }
+      ],
+      "grade_id": "grade_3"
+    },
+    {
+      "set_id": "busdriver_band3_grade4",
+      "character": "busdriver",
+      "band_id": "band_3",
+      "category": "geography",
+      "questions": [
+        {
+          "id": "cb119",
+          "question": "What information does a transit map show?",
+          "options": [
+            "Bus and train routes, stops, and connections",
+            "Where all the restaurants are",
+            "The names of all drivers",
+            "How much gas costs"
+          ],
+          "correct": 0,
+          "hint": "It helps riders plan their journey from one place to another."
+        },
+        {
+          "id": "cb120",
+          "question": "How does transportation infrastructure connect Ontario communities?",
+          "options": [
+            "Highways, railways, and airports link cities and towns",
+            "People walk between all cities",
+            "Only boats are used",
+            "Communities are not connected"
+          ],
+          "correct": 0,
+          "hint": "Highway 401, Via Rail, and airports help people and goods move across the province."
+        }
+      ],
+      "grade_id": "grade_4"
+    },
+    {
+      "set_id": "chef_band3_grade3",
+      "character": "chef",
+      "band_id": "band_3",
+      "category": "geography",
+      "questions": [
+        {
+          "id": "cb045",
+          "question": "Which region of Ontario is known for growing many fruits like peaches and grapes?",
+          "options": [
+            "Niagara Region",
+            "Northern Ontario",
+            "Ottawa Valley",
+            "Thunder Bay"
+          ],
+          "correct": 0,
+          "hint": "This area is near a famous waterfall."
+        },
+        {
+          "id": "cb046",
+          "question": "Why might a town near the ocean have more seafood restaurants?",
+          "options": [
+            "Fresh fish is caught nearby",
+            "People near the ocean don't like meat",
+            "There are no farms near oceans",
+            "Fish is cheaper everywhere"
+          ],
+          "correct": 0,
+          "hint": "Local food often depends on what is available close by."
+        }
+      ],
+      "grade_id": "grade_3"
+    },
+    {
+      "set_id": "chef_band3_grade4",
+      "character": "chef",
+      "band_id": "band_3",
+      "category": "geography",
+      "questions": [
+        {
+          "id": "cb047",
+          "question": "What is a 'food bank' and why do communities need them?",
+          "options": [
+            "A place that gives free food to families who need it",
+            "A bank that loans money for food",
+            "A restaurant for bankers",
+            "A place to store money"
+          ],
+          "correct": 0,
+          "hint": "Some families need help getting enough food."
+        },
+        {
+          "id": "cb048",
+          "question": "What does 'locally grown' mean on a menu?",
+          "options": [
+            "The food was grown nearby, not far away",
+            "The food grew inside the restaurant",
+            "The food is very old",
+            "The food is from another country"
+          ],
+          "correct": 0,
+          "hint": "Local means close to where you live."
+        }
+      ],
+      "grade_id": "grade_4"
+    },
+    {
+      "set_id": "construction_band3_grade3",
+      "character": "construction",
+      "band_id": "band_3",
+      "category": "geography",
+      "questions": [
+        {
+          "id": "cb093",
+          "question": "Why do communities create 'zoning' rules for where buildings can go?",
+          "options": [
+            "To keep homes, shops, and factories in the right areas",
+            "To confuse builders",
+            "To make maps prettier",
+            "Because the mayor likes rules"
+          ],
+          "correct": 0,
+          "hint": "You wouldn't want a noisy factory next to a school."
+        },
+        {
+          "id": "cb094",
+          "question": "What does a street name sign help people do?",
+          "options": [
+            "Find their way around the community",
+            "Know what shops are nearby",
+            "Learn the name of the mayor",
+            "Tell what time it is"
+          ],
+          "correct": 0,
+          "hint": "Every road has a name so people can give and follow directions."
+        }
+      ],
+      "grade_id": "grade_3"
+    },
+    {
+      "set_id": "construction_band3_grade4",
+      "character": "construction",
+      "band_id": "band_3",
+      "category": "geography",
+      "questions": [
+        {
+          "id": "cb095",
+          "question": "How has transportation infrastructure in Ontario changed since the 1800s?",
+          "options": [
+            "From canals and dirt roads to highways and railways",
+            "It hasn't changed at all",
+            "Cars were always the main way to travel",
+            "Only boats were used"
+          ],
+          "correct": 0,
+          "hint": "Early settlers used waterways; now we have Highway 401."
+        },
+        {
+          "id": "cb096",
+          "question": "Why must builders follow building codes?",
+          "options": [
+            "To make sure buildings are safe for people",
+            "To use more expensive materials",
+            "To build faster",
+            "To make buildings taller"
+          ],
+          "correct": 0,
+          "hint": "Codes are rules about how strong and safe a building must be."
+        }
+      ],
+      "grade_id": "grade_4"
+    },
+    {
+      "set_id": "doctor_band3_grade3",
+      "character": "doctor",
+      "band_id": "band_3",
+      "category": "geography",
+      "questions": [
+        {
+          "id": "cb021",
+          "question": "In rural parts of Ontario, why might people travel far to see a doctor?",
+          "options": [
+            "There are fewer hospitals in rural areas",
+            "Doctors don't like the country",
+            "Roads are always closed",
+            "Hospitals only open in cities"
+          ],
+          "correct": 0,
+          "hint": "Smaller communities sometimes don't have their own hospital."
+        },
+        {
+          "id": "cb022",
+          "question": "What does OHIP provide for people in Ontario?",
+          "options": [
+            "Health care coverage",
+            "Free groceries",
+            "School supplies",
+            "Bus tickets"
+          ],
+          "correct": 0,
+          "hint": "It's a card that helps pay for doctor visits."
+        }
+      ],
+      "grade_id": "grade_3"
+    },
+    {
+      "set_id": "doctor_band3_grade4",
+      "character": "doctor",
+      "band_id": "band_3",
+      "category": "geography",
+      "questions": [
+        {
+          "id": "cb023",
+          "question": "On a community map, a hospital is usually shown with which symbol?",
+          "options": [
+            "A red cross or H",
+            "A star",
+            "A tree",
+            "A circle"
+          ],
+          "correct": 0,
+          "hint": "Look for the letter that starts the word 'Hospital'."
+        },
+        {
+          "id": "cb024",
+          "question": "Why do ambulances need clear roads to travel fast?",
+          "options": [
+            "To reach patients quickly in emergencies",
+            "Because they like speeding",
+            "To deliver packages",
+            "To practise driving"
+          ],
+          "correct": 0,
+          "hint": "Every second counts when someone is very sick or hurt."
+        }
+      ],
+      "grade_id": "grade_4"
+    },
+    {
+      "set_id": "farmer_band3_grade3",
+      "character": "farmer",
+      "band_id": "band_3",
+      "category": "geography",
+      "questions": [
+        {
+          "id": "cb057",
+          "question": "Which part of Ontario has the most farmland?",
+          "options": [
+            "Southern Ontario",
+            "Northern Ontario",
+            "The Canadian Shield",
+            "The Ottawa River"
+          ],
+          "correct": 0,
+          "hint": "The flat land and warmer weather in the south are better for crops."
+        },
+        {
+          "id": "cb058",
+          "question": "What is one reason Indigenous peoples in Ontario farmed the Three Sisters (corn, beans, squash)?",
+          "options": [
+            "The three plants help each other grow",
+            "They were the only plants available",
+            "The government told them to",
+            "They could not find other food"
+          ],
+          "correct": 0,
+          "hint": "Corn grows tall, beans climb it, and squash covers the ground."
+        }
+      ],
+      "grade_id": "grade_3"
+    },
+    {
+      "set_id": "farmer_band3_grade4",
+      "character": "farmer",
+      "band_id": "band_3",
+      "category": "geography",
+      "questions": [
+        {
+          "id": "cb059",
+          "question": "On a land-use map, what colour usually shows farmland?",
+          "options": [
+            "Yellow or light green",
+            "Red or purple",
+            "Black or gray",
+            "Dark blue"
+          ],
+          "correct": 0,
+          "hint": "Think about the colour of fields and crops."
+        },
+        {
+          "id": "cb060",
+          "question": "What challenge do Ontario farmers face due to urban sprawl?",
+          "options": [
+            "Farmland is being turned into housing",
+            "Too many people want to be farmers",
+            "There is too much rain",
+            "Crops grow too fast"
+          ],
+          "correct": 0,
+          "hint": "Cities and suburbs keep growing outward onto land that was once farmed."
+        }
+      ],
+      "grade_id": "grade_4"
+    },
+    {
+      "set_id": "firefighter_band3_grade3",
+      "character": "firefighter",
+      "band_id": "band_3",
+      "category": "responsibilities",
+      "questions": [
+        {
+          "id": "cb009",
+          "question": "In Ontario, who is responsible for making fire safety rules for buildings?",
+          "options": [
+            "The local fire department and government",
+            "The grocery store",
+            "Individual families only",
+            "The school principal"
+          ],
+          "correct": 0,
+          "hint": "Fire codes are created by community leaders to keep everyone safe."
+        },
+        {
+          "id": "cb010",
+          "question": "What is the 'Stop, Drop, and Roll' rule for?",
+          "options": [
+            "If your clothes catch fire",
+            "If you are tired",
+            "If you hear thunder",
+            "If you see a spider"
+          ],
+          "correct": 0,
+          "hint": "Rolling on the ground smothers flames."
+        }
+      ],
+      "grade_id": "grade_3"
+    },
+    {
+      "set_id": "firefighter_band3_grade4",
+      "character": "firefighter",
+      "band_id": "band_3",
+      "category": "responsibilities",
+      "questions": [
+        {
+          "id": "cb011",
+          "question": "How do fire hydrants help firefighters?",
+          "options": [
+            "They provide a water supply on the street",
+            "They block traffic",
+            "They hold letters",
+            "They grow flowers"
+          ],
+          "correct": 0,
+          "hint": "Firefighters connect hoses to these red or yellow objects on sidewalks."
+        },
+        {
+          "id": "cb012",
+          "question": "Why do firefighters inspect buildings in the community?",
+          "options": [
+            "To check that fire safety rules are followed",
+            "To count the windows",
+            "To paint the walls",
+            "To deliver mail"
+          ],
+          "correct": 0,
+          "hint": "They make sure exits, alarms, and sprinklers are working."
+        }
+      ],
+      "grade_id": "grade_4"
+    },
+    {
+      "set_id": "librarian_band3_grade3",
+      "character": "librarian",
+      "band_id": "band_3",
+      "category": "geography",
+      "questions": [
+        {
+          "id": "cb081",
+          "question": "How do public libraries help people who are new to Canada?",
+          "options": [
+            "They offer language classes, settlement info, and free resources",
+            "They give them houses",
+            "They teach them to drive",
+            "They don't help newcomers"
+          ],
+          "correct": 0,
+          "hint": "Libraries are often one of the first places newcomers visit for help."
+        },
+        {
+          "id": "cb082",
+          "question": "On a community map, which symbol might show a library?",
+          "options": [
+            "A book icon",
+            "A fork and knife",
+            "A gas pump",
+            "A tree"
+          ],
+          "correct": 0,
+          "hint": "The symbol relates to what you do there — read!"
+        }
+      ],
+      "grade_id": "grade_3"
+    },
+    {
+      "set_id": "librarian_band3_grade4",
+      "character": "librarian",
+      "band_id": "band_3",
+      "category": "geography",
+      "questions": [
+        {
+          "id": "cb083",
+          "question": "Why might a small community and a big city have different-sized libraries?",
+          "options": [
+            "Bigger populations need bigger libraries with more resources",
+            "Small towns don't read",
+            "Cities have more money to waste",
+            "Library size is random"
+          ],
+          "correct": 0,
+          "hint": "More people means more demand for books and programs."
+        },
+        {
+          "id": "cb084",
+          "question": "How did people share stories in communities before public libraries existed?",
+          "options": [
+            "Through oral storytelling passed down through generations",
+            "They didn't share stories",
+            "They only used telephones",
+            "They wrote emails"
+          ],
+          "correct": 0,
+          "hint": "Indigenous and early communities used spoken words to share knowledge."
+        }
+      ],
+      "grade_id": "grade_4"
+    },
+    {
+      "set_id": "mailcarrier_band3_grade3",
+      "character": "mailcarrier",
+      "band_id": "band_3",
+      "category": "geography",
+      "questions": [
+        {
+          "id": "cb105",
+          "question": "How do postal codes help sort mail across Canada?",
+          "options": [
+            "The first letter tells which province or region the mail goes to",
+            "They are just for decoration",
+            "They tell how heavy the package is",
+            "They show the colour of the mailbox"
+          ],
+          "correct": 0,
+          "hint": "K is for eastern Ontario, M is for Toronto, and so on."
+        },
+        {
+          "id": "cb106",
+          "question": "How did communities in early Canada communicate before a postal system?",
+          "options": [
+            "By sending messengers on foot, horse, or canoe",
+            "By email",
+            "By telephone",
+            "They could not communicate at all"
+          ],
+          "correct": 0,
+          "hint": "Travel was slow, so messages took days or weeks."
+        }
+      ],
+      "grade_id": "grade_3"
+    },
+    {
+      "set_id": "mailcarrier_band3_grade4",
+      "character": "mailcarrier",
+      "band_id": "band_3",
+      "category": "geography",
+      "questions": [
+        {
+          "id": "cb107",
+          "question": "Why might mail delivery be harder in northern Ontario communities?",
+          "options": [
+            "Long distances and rough terrain make travel difficult",
+            "People don't write letters there",
+            "The mail carrier doesn't like snow",
+            "There are no addresses in the north"
+          ],
+          "correct": 0,
+          "hint": "Some communities are very far from cities and hard to reach."
+        },
+        {
+          "id": "cb108",
+          "question": "How has communication changed from letters to today?",
+          "options": [
+            "People now also use email, texts, and video calls",
+            "People stopped communicating",
+            "Letters are still the only way",
+            "Everyone uses carrier pigeons now"
+          ],
+          "correct": 0,
+          "hint": "Technology has given us many new ways to stay in touch."
+        }
+      ],
+      "grade_id": "grade_4"
+    },
+    {
+      "set_id": "mechanic_band3_grade3",
+      "character": "mechanic",
+      "band_id": "band_3",
+      "category": "geography",
+      "questions": [
+        {
+          "id": "cb209",
+          "question": "Why are auto shops important in rural Ontario communities?",
+          "options": [
+            "People depend on cars because towns are far apart",
+            "Cars are only used in cities",
+            "Rural areas have no roads",
+            "Mechanics only work in Toronto"
+          ],
+          "correct": 0,
+          "hint": "In areas with less public transit, cars are the main way to get around."
+        },
+        {
+          "id": "cb210",
+          "question": "What happens at a vehicle safety inspection in Ontario?",
+          "options": [
+            "A mechanic checks that the car meets safety standards",
+            "The car gets a new paint job",
+            "The driver takes a written test",
+            "The car is washed and waxed"
+          ],
+          "correct": 0,
+          "hint": "The government requires this to make sure cars on the road are safe."
+        }
+      ],
+      "grade_id": "grade_3"
+    },
+    {
+      "set_id": "mechanic_band3_grade4",
+      "character": "mechanic",
+      "band_id": "band_3",
+      "category": "geography",
+      "questions": [
+        {
+          "id": "cb211",
+          "question": "How have cars changed communities over time?",
+          "options": [
+            "People can live farther from where they work and shop",
+            "Cars have made communities smaller",
+            "People stopped travelling after cars were invented",
+            "Cars are only used for fun"
+          ],
+          "correct": 0,
+          "hint": "Cars let people travel longer distances every day."
+        },
+        {
+          "id": "cb212",
+          "question": "Why might a community need more than one auto shop?",
+          "options": [
+            "More people and cars means more repairs are needed",
+            "Auto shops are only for decoration",
+            "One shop fixes everything instantly",
+            "Cars never break down"
+          ],
+          "correct": 0,
+          "hint": "As a community grows, so does the need for services."
+        }
+      ],
+      "grade_id": "grade_4"
+    },
+    {
+      "set_id": "police_band3_grade3",
+      "character": "police",
+      "band_id": "band_3",
+      "category": "responsibilities",
+      "questions": [
+        {
+          "id": "cb033",
+          "question": "In Canada, who makes the laws that communities must follow?",
+          "options": [
+            "Elected government leaders",
+            "Store owners",
+            "Sports coaches",
+            "News reporters"
+          ],
+          "correct": 0,
+          "hint": "People vote for leaders who create and change laws."
+        },
+        {
+          "id": "cb034",
+          "question": "What is the difference between a rule and a law?",
+          "options": [
+            "Laws are official and enforced by government; rules can be informal",
+            "There is no difference",
+            "Rules are harder to follow",
+            "Laws are only for adults"
+          ],
+          "correct": 0,
+          "hint": "Laws are written down by government and apply to everyone."
+        }
+      ],
+      "grade_id": "grade_3"
+    },
+    {
+      "set_id": "police_band3_grade4",
+      "character": "police",
+      "band_id": "band_3",
+      "category": "responsibilities",
+      "questions": [
+        {
+          "id": "cb035",
+          "question": "Why do different communities sometimes have different by-laws?",
+          "options": [
+            "Each community has different needs",
+            "Some communities forgot the rules",
+            "Only big cities have laws",
+            "Laws change every day"
+          ],
+          "correct": 0,
+          "hint": "A fishing village and a big city need different rules."
+        },
+        {
+          "id": "cb036",
+          "question": "On a map, a police station might be marked with which symbol?",
+          "options": [
+            "A shield or badge icon",
+            "A tree",
+            "A sun",
+            "A wave"
+          ],
+          "correct": 0,
+          "hint": "Think about what a police officer wears on their chest."
+        }
+      ],
+      "grade_id": "grade_4"
+    },
+    {
+      "set_id": "teacher_band3_grade3",
+      "character": "teacher",
+      "band_id": "band_3",
+      "category": "responsibilities",
+      "questions": [
+        {
+          "id": "cb069",
+          "question": "In Ontario, who is responsible for making sure all children can go to school?",
+          "options": [
+            "The provincial government",
+            "Individual teachers",
+            "Grocery stores",
+            "Sports teams"
+          ],
+          "correct": 0,
+          "hint": "The Ontario government creates education laws and funds schools."
+        },
+        {
+          "id": "cb070",
+          "question": "Why do some Ontario communities have both public and Catholic school boards?",
+          "options": [
+            "The Canadian Constitution protects both systems",
+            "Catholic schools are private businesses",
+            "Public schools don't teach well",
+            "There are too many students for one system"
+          ],
+          "correct": 0,
+          "hint": "This right is written into Canada's founding document."
+        }
+      ],
+      "grade_id": "grade_3"
+    },
+    {
+      "set_id": "teacher_band3_grade4",
+      "character": "teacher",
+      "band_id": "band_3",
+      "category": "responsibilities",
+      "questions": [
+        {
+          "id": "cb071",
+          "question": "How did schools in early Ontario communities differ from schools today?",
+          "options": [
+            "They were one-room schoolhouses with all ages together",
+            "They had computers and smartboards",
+            "They had no teachers",
+            "They were exactly the same"
+          ],
+          "correct": 0,
+          "hint": "Long ago, one teacher taught children of all ages in a single room."
+        },
+        {
+          "id": "cb072",
+          "question": "Why is it important that schools teach about different cultures?",
+          "options": [
+            "So students understand and respect the diverse community they live in",
+            "To replace their own culture",
+            "Because the law says you must speak many languages",
+            "To prepare for a test"
+          ],
+          "correct": 0,
+          "hint": "Canada is home to people from many different backgrounds."
+        }
+      ],
+      "grade_id": "grade_4"
+    },
+    {
+      "set_id": "vet_band3_grade3",
       "character": "vet",
       "band_id": "band_3",
       "category": "geography",
@@ -1958,7 +2267,16 @@
           ],
           "correct": 0,
           "hint": "Shelters give animals a safe place to stay and help them get adopted."
-        },
+        }
+      ],
+      "grade_id": "grade_3"
+    },
+    {
+      "set_id": "vet_band3_grade4",
+      "character": "vet",
+      "band_id": "band_3",
+      "category": "geography",
+      "questions": [
         {
           "id": "cb223",
           "question": "Why might a community need a bylaw about pets?",
@@ -1983,7 +2301,8 @@
           "correct": 0,
           "hint": "Healthy animals are important for the food we eat."
         }
-      ]
+      ],
+      "grade_id": "grade_4"
     }
   ]
 }
