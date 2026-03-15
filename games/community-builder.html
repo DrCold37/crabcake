@@ -748,11 +748,16 @@ function phaserCreate(){
     /* All props pre-placed */
     CP.forEach(function(p){var pk='p-'+p.k;if(sc.textures.exists(pk))sc.add.image(p.x,RY+28,pk).setScale(p.s).setOrigin(.5,1).setDepth(D.prop)});
     /* All vehicles driving on road */
+    /* Per-vehicle scale: foodtruck/policecar/ambulance/tractor are 90% smaller */
+    var _vSmall={foodtruck:true,policecar:true,ambulance:true,tractor:true};
     Object.keys(VM).forEach(function(ck){
       var vk='v-'+VM[ck];if(!sc.textures.exists(vk))return;
       var sl=SL[ck]||{x:600};
       var vy=(ck==='teacher')?ROADY:ROADY-12;
-      var v=sc.add.image(sl.x+20,vy,vk).setScale(.248,.223).setDepth(D.vehicle);
+      var small=!!_vSmall[VM[ck]];
+      var sx=small?0.223:0.248;
+      var sy=small?0.201:0.223;
+      var v=sc.add.image(sl.x+20,vy,vk).setScale(sx,sy).setDepth(D.vehicle);
       v._charKey=ck;v._dir=Math.random()>.5?1:-1;v._sp=20+Math.random()*25;
       v._stopTimer=2000+Math.random()*3000;v._stopped=false;v._stopDur=3000+Math.random()*1000;v._elapsed=0;
       v.setFlipX(v._dir<0);
@@ -802,7 +807,8 @@ function phaserUpdate(time,delta){
   }
   /* Vehicle driving (band 1) */
   if(G.isMatch){
-    Object.keys(vehSpr).forEach(function(ck){
+    var vKeys=Object.keys(vehSpr);
+    vKeys.forEach(function(ck){
       var v=vehSpr[ck];if(!v||!v.active)return;
       v._elapsed+=delta;
       if(v._stopped){
@@ -814,6 +820,28 @@ function phaserUpdate(time,delta){
         if(v._elapsed>=v._stopTimer){v._stopped=true;v._elapsed=0;v._stopDur=3000+Math.random()*1000}
       }
     });
+    /* Anti-overlap: if two vehicles are too close, reverse the faster one */
+    for(var vi=0;vi<vKeys.length;vi++){
+      var va=vehSpr[vKeys[vi]];if(!va||!va.active)continue;
+      var wa=va.displayWidth*0.5;
+      for(var vj=vi+1;vj<vKeys.length;vj++){
+        var vb=vehSpr[vKeys[vj]];if(!vb||!vb.active)continue;
+        var wb=vb.displayWidth*0.5;
+        var gap=wa+wb+20;
+        var dist=Math.abs(va.x-vb.x);
+        if(dist<gap){
+          /* Push apart and reverse direction of the one moving toward the other */
+          var nudge=(gap-dist)*0.5+1;
+          if(va.x<vb.x){va.x-=nudge;vb.x+=nudge}
+          else{va.x+=nudge;vb.x-=nudge}
+          if(va._dir===vb._dir){/* same dir — reverse faster one */
+            if(va._sp>=vb._sp){va._dir*=-1;va.setFlipX(va._dir<0)} else {vb._dir*=-1;vb.setFlipX(vb._dir<0)}
+          }else{/* head-on — both reverse */
+            va._dir*=-1;vb._dir*=-1;va.setFlipX(va._dir<0);vb.setFlipX(vb._dir<0);
+          }
+        }
+      }
+    }
   }
 }
 
@@ -986,7 +1014,11 @@ function plVeh(ck){
   var sc=G.sc;if(!sc)return;var vk='v-'+VM[ck];if(!sc.textures.exists(vk))return;
   var sl=SL[ck];
   var vy=(ck==='teacher')?WALKY+10:WALKY-2;
-  var v=sc.add.image(sl.x+60,vy,vk).setScale(.293,.263).setAlpha(0).setDepth(D.vehicle);
+  var _vs={foodtruck:true,policecar:true,ambulance:true,tractor:true};
+  var small=!!_vs[VM[ck]];
+  var sx=small?0.264:0.293;
+  var sy=small?0.237:0.263;
+  var v=sc.add.image(sl.x+60,vy,vk).setScale(sx,sy).setAlpha(0).setDepth(D.vehicle);
   sc.tweens.add({targets:v,alpha:1,x:sl.x+20,duration:600,ease:'Power2'});
 }
 function plProp(idx){
