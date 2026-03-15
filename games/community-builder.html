@@ -145,7 +145,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 
 <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
 <script>
-/* Community Builder v6 — visual overhaul */
+/* Community Builder v7 — road at bottom */
 (function(){
 "use strict";
 var $=function(id){return document.getElementById(id)};
@@ -154,7 +154,7 @@ var $=function(id){return document.getElementById(id)};
    World is 3600px wide. Camera permanently zoomed 2x (viewport 600x400).
    Layout top→bottom: sky, bg buildings, bg trees, grass, buildings, sidewalk, road, bottom grass.
    Character walks on sidewalk between buildings and road. */
-var GW=1200,GH=800,WW=3600,RY=540,AP='/assets/community-builder';
+var GW=1200,GH=800,WW=3600,RY=700,AP='/assets/community-builder';
 var WALKY=RY+25;
 var CHARS=['firefighter','doctor','police','chef','farmer','teacher','librarian','construction','mailcarrier','busdriver'];
 var CI={
@@ -348,20 +348,18 @@ function phaserCreate(){
     if(sc.textures.exists(bsk))sc.add.image(300+bsi*600+Math.random()*100,RY+8,bsk).setScale(.35+Math.random()*.1).setOrigin(.5,1).setDepth(D.tree);
   }
 
-  /* ═══ GROUND — grass on top, sidewalk, road, bottom grass ═══ */
+  /* ═══ GROUND — grass on top, sidewalk, road to bottom ═══ */
   var g=sc.add.graphics().setDepth(D.ground);
   /* Grass strip above sidewalk */
   g.fillStyle(0x5a9e4b);g.fillRect(0,RY,WW,25);
   g.fillStyle(0x4a8e3b);g.fillRect(0,RY+20,WW,8);
   /* Sidewalk */
   g.fillStyle(0xccbbaa);g.fillRect(0,RY+28,WW,10);
-  /* Road */
-  g.fillStyle(0x555555);g.fillRect(0,RY+38,WW,50);
+  /* Road — extends to bottom of world */
+  g.fillStyle(0x555555);g.fillRect(0,RY+38,WW,GH-RY-38);
   /* Road center line */
   g.fillStyle(0xffdd44);
   for(var rx=0;rx<WW;rx+=55)g.fillRect(rx,RY+61,28,3);
-  /* Bottom grass */
-  g.fillStyle(0x4a8f38);g.fillRect(0,RY+88,WW,GH-RY-88);
 
   /* Building ghost outlines */
   Object.keys(SL).forEach(function(ck){
