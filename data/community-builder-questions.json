@@ -57,13 +57,18 @@
       "construction"
     ],
     "vehicle_map": {
-      "firefighter": "car_red",
+      "firefighter": "firetruck",
       "doctor": "ambulance",
-      "police": "police_car",
-      "chef": "van_black",
-      "teacher": "car_blue",
-      "mailcarrier": "van_white",
-      "busdriver": "taxi"
+      "police": "policecar",
+      "chef": "foodtruck",
+      "farmer": "tractor",
+      "teacher": "teachercar",
+      "librarian": "libraryvan",
+      "construction": "dumptruck",
+      "mailcarrier": "mailvan",
+      "busdriver": "bus",
+      "mechanic": "towtruck",
+      "vet": "animalvan"
     },
     "environmental_hints": {
       "firefighter": "fire_hydrant nearby, red/orange accents",
