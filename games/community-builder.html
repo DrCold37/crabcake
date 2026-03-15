@@ -793,7 +793,7 @@ function phaserCreate(){
       if(hasAnim){
         /* Compute scale multiplier: static image is bigger than 384x384 frame */
         var staticTex=sc.textures.exists(vk)?sc.textures.get(vk).getSourceImage():null;
-        var animMul=staticTex?(staticTex.width/384):1;
+        var animMul=staticTex?(staticTex.width/384*2):2;
         v=sc.add.sprite(sl.x+20,bottomY,'va-'+vn).setScale(cfg.sx*animMul,cfg.sy*animMul).setDepth(D.vehicle);
         v.play(vn+'-da');
         v._animMul=animMul;
@@ -1084,7 +1084,7 @@ function plVeh(ck){
   var sx=cfg.sx*1.18;var sy=cfg.sy*1.18;
   if(hasAnim){
     var staticTex=sc.textures.exists('v-'+vn)?sc.textures.get('v-'+vn).getSourceImage():null;
-    var mul=staticTex?(staticTex.width/384):1;
+    var mul=staticTex?(staticTex.width/384*2):2;
     sx*=mul;sy*=mul;
   }
   var vy=(ck==='teacher')?WALKY+10:WALKY-2;
