@@ -804,8 +804,8 @@ function phaserCreate(){
       var bottomY=LANE_BOTTOM_Y+cfg.by;
       var topY=LANE_TOP_Y+cfg.ty;
       var v=sc.add.image(sl.x+20,bottomY,vk).setScale(cfg.sx,cfg.sy).setDepth(D.vehicle);
-      v._charKey=ck;v._dir=1;v._sp=120+Math.random()*150;
-      v._stopTimer=2000+Math.random()*3000;v._stopped=false;v._stopDur=3000+Math.random()*1000;v._elapsed=0;
+      v._charKey=ck;v._dir=1;v._sp=120+Math.random()*150;v._baseSp=v._sp;
+      v._stopTimer=8000+Math.random()*10000;v._stopped=false;v._stopDur=1000+Math.random()*1500;v._elapsed=0;
       v._laneBottomY=bottomY;v._laneTopY=topY;
       v._baseSX=cfg.sx;v._baseSY=cfg.sy;
       v.setFlipX(false);
@@ -855,47 +855,56 @@ function phaserUpdate(time,delta){
     if(s.x>WW-60)G.patrolDir=-1;if(s.x<60)G.patrolDir=1;
     if(!G.isMatch)G.camTarget.x+=(s.x-G.camTarget.x)*0.08;
   }
-  /* Vehicle driving (band 1) — two-lane system */
+  /* Vehicle driving (band 1) — two-lane natural traffic */
   if(G.isMatch){
     var vKeys=Object.keys(vehSpr);
+    /* Reset all speeds toward base each frame (gradual restore) */
+    vKeys.forEach(function(ck){
+      var v=vehSpr[ck];if(!v||!v.active)return;
+      if(v._sp<v._baseSp)v._sp+=(v._baseSp-v._sp)*0.02;
+    });
     vKeys.forEach(function(ck){
       var v=vehSpr[ck];if(!v||!v.active)return;
       v._elapsed+=delta;
       if(v._stopped){
-        if(v._elapsed>=v._stopDur){v._stopped=false;v._elapsed=0;v._stopTimer=3000+Math.random()*4000}
+        if(v._elapsed>=v._stopDur){v._stopped=false;v._elapsed=0;v._stopTimer=8000+Math.random()*10000}
       }else{
         v.x+=v._dir*v._sp*(delta/1000);
-        /* Hit right edge → switch to top lane (R→L, behind, smaller, higher up) */
+        /* Hit right edge → switch to top lane */
         if(v.x>WW-60&&v._dir===1){
           v._dir=-1;v.setFlipX(true);
           v.y=v._laneTopY;v.setDepth(D.vehicle-0.5);
           v.setScale(v._baseSX*0.85,v._baseSY*0.85);
         }
-        /* Hit left edge → switch to bottom lane (L→R, full size, lower) */
+        /* Hit left edge → switch to bottom lane */
         if(v.x<60&&v._dir===-1){
           v._dir=1;v.setFlipX(false);
           v.y=v._laneBottomY;v.setDepth(D.vehicle);
           v.setScale(v._baseSX,v._baseSY);
         }
-        if(v._elapsed>=v._stopTimer){v._stopped=true;v._elapsed=0;v._stopDur=3000+Math.random()*1000}
+        if(v._elapsed>=v._stopTimer){v._stopped=true;v._elapsed=0;v._stopDur=1000+Math.random()*1500}
       }
     });
-    /* Anti-overlap: only between vehicles in the same lane (same direction) */
+    /* Same-lane spacing: if too close, the trailing vehicle slows down (never below 40% base) */
     for(var vi=0;vi<vKeys.length;vi++){
       var va=vehSpr[vKeys[vi]];if(!va||!va.active)continue;
       for(var vj=vi+1;vj<vKeys.length;vj++){
         var vb=vehSpr[vKeys[vj]];if(!vb||!vb.active)continue;
-        if(va._dir!==vb._dir)continue; /* different lanes — skip */
-        var wa=va.displayWidth*0.5;
-        var wb=vb.displayWidth*0.5;
-        var gap=wa+wb+20;
+        if(va._dir!==vb._dir)continue;
+        var hw=va.displayWidth*0.5+vb.displayWidth*0.5+60;
         var dist=Math.abs(va.x-vb.x);
-        if(dist<gap){
-          var nudge=(gap-dist)*0.5+1;
-          if(va.x<vb.x){va.x-=nudge;vb.x+=nudge}
-          else{va.x+=nudge;vb.x-=nudge}
-          /* Slow one yields: reverse the faster vehicle */
-          if(va._sp>=vb._sp){va._sp=vb._sp*0.9}else{vb._sp=va._sp*0.9}
+        if(dist<hw){
+          /* Nudge apart gently */
+          var nudge=(hw-dist)*0.3;
+          if(va._dir===1){
+            /* L→R: trailing = smaller x */
+            if(va.x<vb.x){va.x-=nudge;va._sp=Math.max(va._baseSp*0.4,vb._sp*0.7)}
+            else{vb.x-=nudge;vb._sp=Math.max(vb._baseSp*0.4,va._sp*0.7)}
+          }else{
+            /* R→L: trailing = larger x */
+            if(va.x>vb.x){va.x+=nudge;va._sp=Math.max(va._baseSp*0.4,vb._sp*0.7)}
+            else{vb.x+=nudge;vb._sp=Math.max(vb._baseSp*0.4,va._sp*0.7)}
+          }
         }
       }
     }
