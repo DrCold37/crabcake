@@ -755,9 +755,9 @@ function phaserCreate(){
     /* All props pre-placed */
     CP.forEach(function(p){var pk='p-'+p.k;if(sc.textures.exists(pk))sc.add.image(p.x,RY+28,pk).setScale(p.s).setOrigin(.5,1).setDepth(D.prop)});
     /* All vehicles driving on road — two-lane system */
-    /* 90% size: towtruck/animalvan/tractor + existing foodtruck/policecar/ambulance */
     var _vSmall={foodtruck:true,policecar:true,ambulance:true,tractor:true,towtruck:true,animalvan:true};
-    /* 90% vertical squish: all except blue sedan (teachercar) */
+    /* Extra 90% shrink on top of everything */
+    var _vShrink={policecar:true,teachercar:true,mailvan:true,ambulance:true,tractor:true,towtruck:true,firetruck:true,foodtruck:true};
     var LANE_BOTTOM_Y=ROADY-12;
     var LANE_TOP_Y=ROADY-22;
     Object.keys(VM).forEach(function(ck){
@@ -768,6 +768,7 @@ function phaserCreate(){
       var sx=small?0.223:0.248;
       var sy=small?0.201:0.223;
       if(!isSedan)sy=sy*0.9;
+      if(_vShrink[VM[ck]]){sx*=0.9;sy*=0.9}
       /* All start in bottom lane driving left-to-right */
       var v=sc.add.image(sl.x+20,LANE_BOTTOM_Y,vk).setScale(sx,sy).setDepth(D.vehicle);
       v._charKey=ck;v._dir=1;v._sp=20+Math.random()*25;
@@ -835,7 +836,7 @@ function phaserUpdate(time,delta){
         if(v.x>WW-60&&v._dir===1){
           v._dir=-1;v.setFlipX(true);
           v.y=v._laneTopY;v.setDepth(D.vehicle-0.5);
-          v.setScale(v._baseSX*0.75,v._baseSY*0.75);
+          v.setScale(v._baseSX*0.85,v._baseSY*0.85);
         }
         /* Hit left edge → switch to bottom lane (L→R, full size, lower) */
         if(v.x<60&&v._dir===-1){
@@ -1040,11 +1041,13 @@ function plVeh(ck){
   var sl=SL[ck];
   var vy=(ck==='teacher')?WALKY+10:WALKY-2;
   var _vs={foodtruck:true,policecar:true,ambulance:true,tractor:true,towtruck:true,animalvan:true};
+  var _vShrink={policecar:true,teachercar:true,mailvan:true,ambulance:true,tractor:true,towtruck:true,firetruck:true,foodtruck:true};
   var small=!!_vs[VM[ck]];
   var isSedan=(VM[ck]==='teachercar');
   var sx=small?0.264:0.293;
   var sy=small?0.237:0.263;
   if(!isSedan)sy=sy*0.9;
+  if(_vShrink[VM[ck]]){sx*=0.9;sy*=0.9}
   var v=sc.add.image(sl.x+60,vy,vk).setScale(sx,sy).setAlpha(0).setDepth(D.vehicle);
   sc.tweens.add({targets:v,alpha:1,x:sl.x+20,duration:600,ease:'Power2'});
 }
