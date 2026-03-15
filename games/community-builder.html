@@ -791,15 +791,20 @@ function phaserCreate(){
       var topY=LANE_TOP_Y+cfg.ty;
       var v;
       if(hasAnim){
-        v=sc.add.sprite(sl.x+20,bottomY,'va-'+vn).setScale(cfg.sx,cfg.sy).setDepth(D.vehicle);
+        /* Compute scale multiplier: static image is bigger than 384x384 frame */
+        var staticTex=sc.textures.exists(vk)?sc.textures.get(vk).getSourceImage():null;
+        var animMul=staticTex?(staticTex.width/384):1;
+        v=sc.add.sprite(sl.x+20,bottomY,'va-'+vn).setScale(cfg.sx*animMul,cfg.sy*animMul).setDepth(D.vehicle);
         v.play(vn+'-da');
+        v._animMul=animMul;
       }else{
         v=sc.add.image(sl.x+20,bottomY,vk).setScale(cfg.sx,cfg.sy).setDepth(D.vehicle);
+        v._animMul=1;
       }
       v._charKey=ck;v._dir=1;v._sp=40+Math.random()*50;v._baseSp=v._sp;
       v._stopTimer=8000+Math.random()*10000;v._stopped=false;v._stopDur=1000+Math.random()*1500;v._elapsed=0;
       v._laneBottomY=bottomY;v._laneTopY=topY;
-      v._baseSX=cfg.sx;v._baseSY=cfg.sy;
+      v._baseSX=cfg.sx*(hasAnim&&staticTex?animMul:1);v._baseSY=cfg.sy*(hasAnim&&staticTex?animMul:1);
       v.setFlipX(false);
       vehSpr[ck]=v;
     });
@@ -1077,6 +1082,11 @@ function plVeh(ck){
   var sl=SL[ck];
   var cfg=VEH_CFG[vn]||{sx:0.22,sy:0.18};
   var sx=cfg.sx*1.18;var sy=cfg.sy*1.18;
+  if(hasAnim){
+    var staticTex=sc.textures.exists('v-'+vn)?sc.textures.get('v-'+vn).getSourceImage():null;
+    var mul=staticTex?(staticTex.width/384):1;
+    sx*=mul;sy*=mul;
+  }
   var vy=(ck==='teacher')?WALKY+10:WALKY-2;
   var v;
   if(hasAnim){
