@@ -145,7 +145,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 
 <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
 <script>
-/* Community Builder v8 — building alignment */
+/* Community Builder v10 — char position + ghost fix */
 (function(){
 "use strict";
 var $=function(id){return document.getElementById(id)};
@@ -155,7 +155,7 @@ var $=function(id){return document.getElementById(id)};
    Layout top→bottom: sky, bg buildings, bg trees, grass, buildings, sidewalk, road, bottom grass.
    Character walks on sidewalk between buildings and road. */
 var GW=1200,GH=800,WW=3600,RY=700,AP='/assets/community-builder';
-var WALKY=RY+38;
+var WALKY=RY+35;
 var CHARS=['firefighter','doctor','police','chef','farmer','teacher','librarian','construction','mailcarrier','busdriver'];
 var CI={
   firefighter:{n:'Firefighter Frankie',e:'\u{1F692}',b:'fire_station',v:'car_red',l:'Fire Station'},
@@ -361,20 +361,14 @@ function phaserCreate(){
   g.fillStyle(0xffdd44);
   for(var rx=0;rx<WW;rx+=55)g.fillRect(rx,RY+61,28,3);
 
-  /* Building ghost outlines */
+  /* Building slots — no ghost outlines */
   Object.keys(SL).forEach(function(ck){
-    var sl=SL[ck];var gh=sc.add.graphics().setDepth(D.ghost);
-    var gw=Math.round(sl.s*340);var ghh=Math.round(sl.s*400);
-    gh.lineStyle(2,0xffffff,.08);gh.strokeRoundedRect(sl.x-gw/2,RY+28-ghh,gw,ghh,8);
-    gh.fillStyle(0xffffff,.02);gh.fillRoundedRect(sl.x-gw/2,RY+28-ghh,gw,ghh,8);
-    bldSpr[ck]={ghost:gh,sprite:null};
+    bldSpr[ck]={ghost:null,sprite:null};
   });
 
-  /* Prop ghost circles */
+  /* Prop slots — no ghost outlines */
   CP.forEach(function(p){
-    var gh=sc.add.graphics().setDepth(D.ghost);
-    gh.lineStyle(1,0xffffff,.06);gh.strokeCircle(p.x,RY+20,8);
-    propSpr.push({ghost:gh,sprite:null});
+    propSpr.push({ghost:null,sprite:null});
   });
 
   /* ═══ CAMERA — create invisible follow target, start following ═══ */
