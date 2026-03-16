@@ -118,8 +118,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 .nav-btn.vis{display:flex}
 
 /* Clear city button */
-.hb-clear{background:rgba(255,92,92,.15);border:1px solid rgba(255,92,92,.3);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#ff5c5c;font-size:.75rem;transition:background .2s}
-.hb-clear:hover{background:rgba(255,92,92,.3)}
+.hb-clear{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:.85rem}
 
 /* City full modal */
 #cityFullModal{position:fixed;inset:0;z-index:62;display:none;align-items:center;justify-content:center;background:rgba(10,22,40,.7);backdrop-filter:blur(6px)}
@@ -616,7 +615,8 @@ function _restoreCity(){
     if(!sc.textures.exists(ck+'-walk')||!sc.anims.exists(ck+'-wa'))return;
     var sl=SL[ck]||{x:600};
     var spr=sc.add.sprite(sl.x,WALKY,ck+'-walk').setScale(.33).setOrigin(.5,1).setDepth(D.walker);spr.play(ck+'-wa');
-    walkers.push({spr:spr,sp:15+Math.random()*12,dir:Math.random()>.5?1:-1,mn:Math.max(sl.x-120,10),mx:Math.min(sl.x+120,WW-10)});
+    spr._charKey=ck;
+    walkers.push({spr:spr,sp:15+Math.random()*12,dir:Math.random()>.5?1:-1,mn:Math.max(sl.x-80,10),mx:Math.min(sl.x+80,WW-10)});
   });
   updHUD();
 }
@@ -1421,8 +1421,8 @@ function ansH(isCorrect,q,btn,opWrap){
             var walkDur=Math.max((dist/walkSpeed)*1000,800);
             spr.setFlipX(spr.x>sl.x);
             G.sc.tweens.add({targets:spr,x:sl.x,duration:walkDur,ease:'Linear',onComplete:function(){
-              spr.setFlipX(false);
-              walkers.push({spr:spr,sp:15+Math.random()*12,dir:1,mn:Math.max(sl.x-120,10),mx:Math.min(sl.x+120,WW-10)});
+              spr.setFlipX(false);spr._charKey=ck;
+              walkers.push({spr:spr,sp:15+Math.random()*12,dir:1,mn:Math.max(sl.x-80,10),mx:Math.min(sl.x+80,WW-10)});
             }});
           }else{
             var cx=spr.x;
@@ -1555,7 +1555,8 @@ function spWalk(ck){
   var sc=G.sc;if(!sc||!sc.textures.exists(ck+'-walk')||!sc.anims.exists(ck+'-wa'))return;
   var sl=SL[ck]||{x:600};
   var spr=sc.add.sprite(sl.x,WALKY,ck+'-walk').setScale(.33).setOrigin(.5,1).setDepth(D.walker);spr.play(ck+'-wa');
-  walkers.push({spr:spr,sp:15+Math.random()*12,dir:Math.random()>.5?1:-1,mn:Math.max(sl.x-120,10),mx:Math.min(sl.x+120,WW-10)});
+  spr._charKey=ck;
+  walkers.push({spr:spr,sp:15+Math.random()*12,dir:Math.random()>.5?1:-1,mn:Math.max(sl.x-80,10),mx:Math.min(sl.x+80,WW-10)});
 }
 
 function charIntro(ck,cb){
@@ -1570,8 +1571,22 @@ function charIntro(ck,cb){
   sc.tweens.add({targets:spr,x:200,duration:2500,ease:'Linear',onComplete:function(){G.entering=false;G.camTarget.x=spr.x;if(cb)cb()}});
 }
 function dismissIntro(cb){
+  var ck=G.curChar;
   G.curChar=null;G.entering=false;
-  if(G.introSpr){var spr=G.introSpr,cx=spr.x;walkers.push({spr:spr,sp:15+Math.random()*12,dir:G.patrolDir,mn:Math.max(cx-150,10),mx:Math.min(cx+150,WW-10)});G.introSpr=null}
+  if(G.introSpr){
+    var spr=G.introSpr;
+    var p=ck?G.cp[ck]:null;
+    if(p&&p.bld&&SL[ck]){
+      /* Character has a building — move walker to patrol near it */
+      var sl=SL[ck];
+      spr.setDepth(D.walker);spr.x=sl.x;spr._charKey=ck;
+      walkers.push({spr:spr,sp:15+Math.random()*12,dir:1,mn:Math.max(sl.x-80,10),mx:Math.min(sl.x+80,WW-10)});
+    }else{
+      /* No building yet — remove sprite, they haven't earned their spot */
+      spr.destroy();
+    }
+    G.introSpr=null;
+  }
   if(cb)setTimeout(cb,500);
 }
 
