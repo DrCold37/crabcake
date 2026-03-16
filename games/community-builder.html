@@ -75,11 +75,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 
 /* HUD */
 #hud{position:fixed;top:0;left:0;right:0;z-index:15;display:none;padding:.4rem .8rem;background:linear-gradient(180deg,rgba(15,37,64,.7),transparent)}
-#hud.active{display:flex;justify-content:space-between;align-items:center}
+#hud.active{display:grid;grid-template-columns:1fr auto 1fr;align-items:center}
+.hud-left{display:flex;align-items:center;gap:.5rem}
 .hb{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:.85rem}
 .hs{font-family:'Boogaloo',cursive;font-size:1.1rem;color:var(--yellow)}
 .hp{font-size:.7rem;color:rgba(255,255,255,.6);font-weight:700}
-.hud-right{display:flex;align-items:center;gap:.6rem}
+.hud-right{display:flex;align-items:center;gap:.6rem;justify-content:flex-end}
 .hud-center{display:flex;align-items:center;justify-content:center;pointer-events:none}
 #cb-avatar-hud{pointer-events:none}
 @media(max-width:600px){#cb-avatar-hud svg{width:36px!important;height:36px!important}}
@@ -126,16 +127,17 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 .qh.vis{display:block}
 
 /* ═══ MATCH PROMPT — centered box (band 1) ═══ */
-#matchOver{position:fixed;top:50px;left:50%;transform:translateX(-50%);z-index:30;display:none;flex-direction:column;align-items:center;padding:.8rem 1.2rem;background:rgba(15,37,64,.94);border:2px solid rgba(255,255,255,.15);border-radius:20px;backdrop-filter:blur(8px);box-shadow:0 8px 32px rgba(0,0,0,.4);max-width:420px;width:90%}
+#matchOver{position:fixed;top:50px;left:50%;transform:translateX(-50%);z-index:30;display:none;flex-direction:row;align-items:center;padding:.6rem 1rem;background:rgba(15,37,64,.94);border:2px solid rgba(255,255,255,.15);border-radius:20px;backdrop-filter:blur(8px);box-shadow:0 8px 32px rgba(0,0,0,.4);max-width:480px;width:92%;gap:.8rem}
 #matchOver.active{display:flex}
-.mc{display:flex;align-items:center;gap:.6rem;margin-bottom:.2rem;margin-top:.3rem}
-.mc img{width:52px;height:52px;border-radius:50%;border:2px solid var(--yellow);background:rgba(255,255,255,.1);object-fit:cover}
-.mc .mn{font-family:'Boogaloo',cursive;font-size:1.2rem;color:var(--yellow)}
-.mt{font-size:1rem;color:#fff;line-height:1.4;font-weight:700;text-align:center;margin-bottom:.2rem}
-.match-status{display:flex;gap:.8rem;align-items:center;font-size:.85rem;font-weight:700}
-.match-status .ms-item{display:flex;align-items:center;gap:.3rem;padding:.3rem .7rem;border-radius:20px;border:2px solid rgba(255,255,255,.15);color:rgba(255,255,255,.5)}
+.mc-img{width:80px;height:80px;object-fit:contain;flex-shrink:0;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4))}
+.mc-body{display:flex;flex-direction:column;align-items:flex-start;gap:.3rem;flex:1}
+.mc-name{font-family:'Boogaloo',cursive;font-size:1.2rem;color:var(--yellow)}
+.mt{font-size:.9rem;color:#fff;line-height:1.3;font-weight:700}
+.match-status{display:flex;gap:.5rem;align-items:center;font-size:.8rem;font-weight:700}
+.match-status .ms-item{display:flex;align-items:center;gap:.3rem;padding:.25rem .6rem;border-radius:20px;border:2px solid rgba(255,255,255,.15);color:rgba(255,255,255,.5)}
 .match-status .ms-item.done{border-color:var(--green);color:var(--green);background:rgba(78,203,113,.15)}
 .match-status .ms-item.needed{border-color:var(--yellow);color:var(--yellow);background:rgba(255,217,61,.1)}
+@media(max-width:400px){.mc-img{width:60px;height:60px}.mc-name{font-size:1rem}.mt{font-size:.8rem}}
 
 /* Red flash for wrong taps */
 #wrongFlash{position:fixed;inset:0;z-index:35;background:rgba(255,60,60,.25);pointer-events:none;opacity:0;transition:opacity .15s}
@@ -215,8 +217,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 <div id="gameWrap"></div>
 
 <div id="hud">
-  <button class="hb" id="homeBtn">&#x1F3E0;</button>
-  <div class="hs">&#x2B50; <span id="scD">0</span></div>
+  <div class="hud-left">
+    <button class="hb" id="homeBtn">&#x1F3E0;</button>
+    <div class="hs">&#x2B50; <span id="scD">0</span></div>
+  </div>
   <div class="hud-center"><div id="cb-avatar-hud" data-hud-size="42"></div></div>
   <div class="hud-right">
     <div class="qbar-grade" id="qbarGrade"></div>
@@ -249,9 +253,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 
 <!-- Match prompt (band 1) -->
 <div id="matchOver">
-  <div class="mc"><img id="mImg" src="" alt="" onerror="this.style.display='none'"><span class="mn" id="mNm"></span></div>
-  <div class="mt" id="mTx">Tap their building!</div>
-  <div class="match-status" id="mSt"></div>
+  <img class="mc-img" id="mImg" src="" alt="" onerror="this.style.display='none'">
+  <div class="mc-body">
+    <div class="mc-name" id="mNm"></div>
+    <div class="mt" id="mTx">Tap their building!</div>
+    <div class="match-status" id="mSt"></div>
+  </div>
 </div>
 
 <!-- Wrong-tap flash -->
@@ -329,7 +336,7 @@ var SL={
 };
 var VM={firefighter:'firetruck',doctor:'ambulance',police:'policecar',chef:'foodtruck',farmer:'tractor',teacher:'teachercar',librarian:'libraryvan',construction:'dumptruck',mailcarrier:'mailvan',busdriver:'bus',mechanic:'towtruck',vet:'animalvan'};
 var CP=[{k:'sign_stop',x:375,s:.45},{k:'sign_warning',x:725,s:.4},{k:'sign_construction_1',x:1075,s:.4},{k:'light_pole_1',x:1425,s:.35},{k:'fence_wood',x:1775,s:.45},{k:'water_hydrant',x:2125,s:.45},{k:'sign_st_name',x:2475,s:.4},{k:'light_pole_2',x:2825,s:.35},{k:'light_pole_3',x:3175,s:.35},{k:'sign_info',x:3525,s:.4}];
-var D={sky:0,bgBuild2:1,bgTree2:2,bgBuild1:3,bgTree1:4,ground:5,tree:6,ghost:7,prop:8,building:10,walker:10.5,vehicle:11,charIntro:50,highlight:55};
+var D={sky:0,bgBuild2:1,bgTree2:2,bgBuild1:3,bgTree1:4,ground:5,tree:6,ghost:7,prop:8,building:10,walker:10.2,vehicle:11,charIntro:50,highlight:55};
 
 /* Per-vehicle config: sx=scaleX, sy=scaleY, by=bottomLane Y offset, ty=topLane Y offset */
 var VEH_CFG={
