@@ -309,9 +309,20 @@
       font-weight: 900;
     }
     .band-no-info a:hover { text-decoration: underline; }
-
-
-    /* ── START SCREEN HOME BUTTON ── */
+    /* Inline band picker */
+    .band-picker-label{font-size:.9rem;font-weight:800;color:rgba(255,255,255,.5);margin-bottom:.5rem;text-align:center}
+    .band-picker-btns{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center}
+    .band-picker-btns button{display:flex;flex-direction:column;align-items:center;gap:.35rem;padding:.7rem .6rem;border-radius:16px;border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);cursor:pointer;flex:1;min-width:80px;max-width:130px;font-family:'Nunito',sans-serif;transition:transform .15s,background .15s,border-color .15s}
+    .band-picker-btns button:hover{transform:translateY(-3px);background:rgba(255,255,255,.1)}
+    .band-picker-btns button .bp-em{font-size:1.4rem}
+    .band-picker-btns button .bp-age{font-size:.85rem;font-weight:900;color:#fff}
+    .band-picker-btns button .bp-lbl{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:.15rem .5rem;border-radius:50px;border:1.5px solid}
+    .band-picker-btns button:nth-child(1){border-color:rgba(255,217,61,.35)}
+    .band-picker-btns button:nth-child(1) .bp-lbl{color:#FFD93D;border-color:rgba(255,217,61,.5)}
+    .band-picker-btns button:nth-child(2){border-color:rgba(0,201,177,.35)}
+    .band-picker-btns button:nth-child(2) .bp-lbl{color:#00C9B1;border-color:rgba(0,201,177,.5)}
+    .band-picker-btns button:nth-child(3){border-color:rgba(166,108,255,.35)}
+    .band-picker-btns button:nth-child(3) .bp-lbl{color:#A66CFF;border-color:rgba(166,108,255,.5)}
     .start-home-btn {
       position: absolute;
       top: 1rem;
@@ -1420,11 +1431,15 @@ function buildActivePool() {
   } else {
     // No band info at all — show prompt, leave Dive In disabled
     document.getElementById('bandDisplay').innerHTML =
-      `<div class="band-no-info">
-        👉 <a href="/index.html#games">Visit the homepage</a> and pick your age group first for the best experience!
+      `<div class="band-picker-label">Who's playing?</div>
+       <div class="band-picker-btns">
+         <button onclick="pickBand('band_1')"><span class="bp-em">🌱</span><span class="bp-age">Ages 4–6</span><span class="bp-lbl">JK / SK</span></button>
+         <button onclick="pickBand('band_2')"><span class="bp-em">🌿</span><span class="bp-age">Ages 6–8</span><span class="bp-lbl">Grade 1 &amp; 2</span></button>
+         <button onclick="pickBand('band_3')"><span class="bp-em">🌳</span><span class="bp-age">Ages 8–10</span><span class="bp-lbl">Grade 3 &amp; 4</span></button>
        </div>`;
   }
 })();
+function pickBand(b){try{localStorage.setItem('ck_band',b)}catch(e){}location.href=location.pathname+'?band='+b}
 
 function shuffle(arr) {
   const a = [...arr];

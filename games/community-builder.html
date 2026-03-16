@@ -42,6 +42,20 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 .bsn{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.35)}
 .bnoinfo{text-align:center;font-size:.88rem;font-weight:700;color:rgba(255,255,255,.5);max-width:260px;line-height:1.6}
 .bnoinfo a{color:var(--sky);text-decoration:none;font-weight:900}
+/* Inline band picker */
+.band-picker-label{font-size:.9rem;font-weight:800;color:rgba(255,255,255,.5);margin-bottom:.5rem}
+.band-picker-btns{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center}
+.band-picker-btns button{display:flex;flex-direction:column;align-items:center;gap:.35rem;padding:.7rem .6rem;border-radius:16px;border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);cursor:pointer;flex:1;min-width:80px;max-width:130px;font-family:'Nunito',sans-serif;transition:transform .15s,background .15s,border-color .15s}
+.band-picker-btns button:hover{transform:translateY(-3px);background:rgba(255,255,255,.1)}
+.band-picker-btns button .bp-em{font-size:1.4rem}
+.band-picker-btns button .bp-age{font-size:.85rem;font-weight:900;color:#fff}
+.band-picker-btns button .bp-lbl{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:.15rem .5rem;border-radius:50px;border:1.5px solid}
+.band-picker-btns button:nth-child(1){border-color:rgba(255,217,61,.35)}
+.band-picker-btns button:nth-child(1) .bp-lbl{color:#FFD93D;border-color:rgba(255,217,61,.5)}
+.band-picker-btns button:nth-child(2){border-color:rgba(0,201,177,.35)}
+.band-picker-btns button:nth-child(2) .bp-lbl{color:#00C9B1;border-color:rgba(0,201,177,.5)}
+.band-picker-btns button:nth-child(3){border-color:rgba(166,108,255,.35)}
+.band-picker-btns button:nth-child(3) .bp-lbl{color:#A66CFF;border-color:rgba(166,108,255,.5)}
 .blink{color:rgba(255,255,255,.35);font-size:.75rem;text-decoration:none;letter-spacing:1px;margin-top:.5rem}
 /* Start screen home button — exact match maths-dive */
 .hud-btn{display:flex;flex-direction:column;align-items:center;gap:2px;background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.12);border-radius:12px;padding:.3rem .7rem;cursor:pointer;transition:background .15s,border-color .15s,transform .15s;text-decoration:none}
@@ -788,8 +802,9 @@ if(urlBand&&BAND_META[urlBand]){
   $('bandDisplay').innerHTML='<div class="bpill '+BAND_META[savedBand].cls+'">'+BAND_META[savedBand].lbl+'</div><div class="bsn">\u21A9 continuing from last visit</div>';
   $('startBtn').disabled=false;$('startBtn').classList.add('active');
 }else{
-  $('bandDisplay').innerHTML='<div class="bnoinfo">\u{1F449} <a href="/index.html#games">Visit the homepage</a> and pick your age group first!</div>';
+  $('bandDisplay').innerHTML='<div class="band-picker-label">Who\u2019s playing?</div><div class="band-picker-btns"><button onclick="pickBand(\'band_1\')"><span class="bp-em">\u{1F331}</span><span class="bp-age">Ages 4\u20136</span><span class="bp-lbl">JK / SK</span></button><button onclick="pickBand(\'band_2\')"><span class="bp-em">\u{1F33F}</span><span class="bp-age">Ages 6\u20138</span><span class="bp-lbl">Grade 1 &amp; 2</span></button><button onclick="pickBand(\'band_3\')"><span class="bp-em">\u{1F333}</span><span class="bp-age">Ages 8\u201310</span><span class="bp-lbl">Grade 3 &amp; 4</span></button></div>';
 }
+window.pickBand=function(b){try{localStorage.setItem('ck_band',b)}catch(e){}location.href=location.pathname+'?band='+b};
 $('startBtn').addEventListener('click',startGame);
 $('homeBtn').addEventListener('click',function(){if(confirm('Leave? Progress will be lost.'))location.href='/'});
 $('soundBtn').addEventListener('click',function(){
