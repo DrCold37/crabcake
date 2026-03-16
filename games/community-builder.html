@@ -785,14 +785,10 @@ function startGame(){
       }
       buildActivePool();
 
-      /* Build character-based queue from current grade pool */
-      CHARS.forEach(function(c){G.cp[c]={cor:0,unl:false}});
+      /* Build fully randomized queue */
+      CHARS.forEach(function(c){G.cp[c]={cor:0,bld:false,veh:false}});
       var gradeQs=G.poolsByGrade[G.currentGrade]||[];
-      var bc={};
-      gradeQs.forEach(function(q){if(!bc[q.character])bc[q.character]=[];bc[q.character].push(q)});
-      var queue=[];var co=CHARS.slice();shuf(co);
-      co.forEach(function(c){if(bc[c]){shuf(bc[c]);queue=queue.concat(bc[c])}});
-      G.queue=queue;
+      G.queue=shuf(gradeQs.slice());
       $('prT').textContent='12';
       renderGradeSelector();
       console.log('CB: band'+G.bn+' ready, grade='+G.currentGrade+' playGrades='+G.playGrades+' queue='+G.queue.length);
@@ -1225,14 +1221,11 @@ function playSound(type){
    ══════════════════════════════════════════════════════════════════════════ */
 function nextQ(){
   console.log('CB: nextQ queue='+G.queue.length);
-  if(!G.queue.length){dismissIntro(function(){finish()});return}
-  var allDone=true;for(var k in G.cp){if(!G.cp[k].unl){allDone=false;break}}
-  if(allDone){dismissIntro(function(){finish()});return}
-  var q=null;while(G.queue.length>0){var c=G.queue.shift();if(!G.cp[c.character].unl){q=c;break}}
-  if(!q){dismissIntro(function(){finish()});return}
-  if(q.character===G.curChar){showQ(q);return}
-  if(G.curChar){dismissIntro(function(){charIntro(q.character,function(){showQ(q)})})}
-  else{charIntro(q.character,function(){showQ(q)})}
+  if(!G.queue.length){finish();return}
+  if(G.lives<=0)return;
+  var q=G.queue.shift();
+  if(!q){finish();return}
+  showQ(q);
 }
 
 function showQ(q){
@@ -1242,35 +1235,64 @@ function showQ(q){
   $('qTx').textContent=q.question;
   $('qHi').classList.remove('vis');$('qHi').textContent=q.hint||'';
   var g=$('qOp');g.innerHTML='';
-  q.options.forEach(function(o,i){
-    var b=document.createElement('button');b.className='qb';b.textContent=o;
-    b.addEventListener('click',function(){ansH(i,q,b)});g.appendChild(b);
+  /* Randomize answer positions */
+  var indices=[];for(var i=0;i<q.options.length;i++)indices.push(i);
+  shuf(indices);
+  var newCorrect=-1;
+  indices.forEach(function(origIdx,newIdx){
+    if(origIdx===q.correct)newCorrect=newIdx;
+  });
+  indices.forEach(function(origIdx){
+    var b=document.createElement('button');b.className='qb';b.textContent=q.options[origIdx];
+    var isCorrect=(origIdx===q.correct);
+    b.addEventListener('click',function(){ansH(isCorrect,q,b,g)});g.appendChild(b);
   });
   $('qOver').classList.add('active');
 }
 
-function ansH(ch,q,btn){
-  $('qOp').querySelectorAll('.qb').forEach(function(b){b.style.pointerEvents='none'});
+function ansH(isCorrect,q,btn,opWrap){
+  opWrap.querySelectorAll('.qb').forEach(function(b){b.style.pointerEvents='none'});
   G.ans++;
-  if(ch===q.correct){
+  if(isCorrect){
     btn.classList.add('ok');G.corr++;G.score+=10;
-    playSound('correct');
+    playSound('correct');correctFlash();
     recordAnswer(true);
     var p=G.cp[q.character];p.cor++;updHUD();
-    if(p.cor>=3&&!p.unl){
-      p.unl=true;G.ul++;
+    if(p.cor===1&&!p.bld){
+      /* First correct → drop building */
+      p.bld=true;G.ul++;
       setTimeout(function(){
         $('qOver').classList.remove('active');
-        /* Convert intro sprite to permanent walker */
-        if(G.introSpr){
-          var spr=G.introSpr,cx=spr.x;
-          walkers.push({spr:spr,sp:15+Math.random()*12,dir:G.patrolDir,mn:Math.max(cx-150,10),mx:Math.min(cx+150,WW-10)});
-          G.introSpr=null;
+        var ck=q.character;
+        if(ck==='construction'){
+          for(var i=0;i<2&&G.pi<CP.length;i++,G.pi++)plProp(G.pi);
+          doConfetti();playSound('matchComplete');
+        }else if(SL[ck]){
+          panTo(SL[ck].x);
+          setTimeout(function(){plBld(ck);doConfetti();playSound('matchComplete')},1200);
         }
-        G.curChar=null;G.entering=false;
-        unlockC(q.character);
-      },600);
+        updHUD();
+        setTimeout(nextQ,3500);
+      },700);
+    }else if(p.cor===2&&!p.veh){
+      /* Second correct → spawn vehicle + walker */
+      p.veh=true;
+      setTimeout(function(){
+        $('qOver').classList.remove('active');
+        var ck=q.character;
+        if(SL[ck])panTo(SL[ck].x);
+        setTimeout(function(){
+          if(VM[ck])plVeh(ck);
+          spWalk(ck);
+          doConfetti();playSound('matchComplete');
+          var ci=CI[ck];
+          showMatchCeleb(ci?ci.e:'\u2B50',ci?ci.n+' joined!':'Welcome!');
+        },1200);
+        updHUD();
+        setTimeout(nextQ,3500);
+      },700);
     }else{
+      /* 3rd+ correct — just continue */
       setTimeout(function(){$('qOver').classList.remove('active');setTimeout(nextQ,500)},700);
     }
   }else{
@@ -1278,31 +1300,15 @@ function ansH(ch,q,btn){
     playSound('wrong');
     recordAnswer(false);
     loseLife();
-    var btns=$('qOp').querySelectorAll('.qb');
-    setTimeout(function(){btns[q.correct].classList.add('ok')},400);
+    /* Show correct answer */
+    opWrap.querySelectorAll('.qb').forEach(function(b2){
+      if(!b2.classList.contains('no')&&!b2.classList.contains('ok')){
+        /* Find the correct one by checking text against correct option */
+        if(b2.textContent===q.options[q.correct])setTimeout(function(){b2.classList.add('ok')},400);
+      }
+    });
     if(G.lives>0)setTimeout(function(){$('qOver').classList.remove('active');setTimeout(nextQ,500)},2000);
   }
-}
-
-/* ── UNLOCK (bands 2/3) ── */
-function unlockC(ck){
-  if(ck==='construction'){
-    for(var i=0;i<2&&G.pi<CP.length;i++,G.pi++)plProp(G.pi);
-    doConfetti();setTimeout(nextQ,3000);
-  }else if(G.dm){
-    if(SL[ck])panTo(SL[ck].x);setTimeout(function(){initDrag(ck)},1400);
-  }else{
-    if(SL[ck])panTo(SL[ck].x);
-    setTimeout(function(){plBld(ck);doConfetti()},1400);setTimeout(nextQ,4500);
-  }
-  if(G.ul===6&&G.sc&&G.sc.textures.exists('b-bank')){
-    var sc2=G.sc,bx=1530;
-    setTimeout(function(){panTo(bx);setTimeout(function(){
-      var bk=sc2.add.image(bx,-300,'b-bank').setScale(.45).setOrigin(.5,1).setDepth(D.building);
-      sc2.tweens.add({targets:bk,y:RY+28,duration:900,ease:'Bounce.easeOut'});doConfetti();
-    },1400)},5000);
-  }
-  updHUD();
 }
 
 function plBld(ck){
@@ -1374,29 +1380,6 @@ function dismissIntro(cb){
 }
 
 /* ── DRAG & DROP (bands 2/3) ── */
-function initDrag(ck){
-  var sc=G.sc;if(!sc)return;var sl=SL[ck];
-  if(!sl||!sc.textures.exists('b-'+CI[ck].b)){plBld(ck);doConfetti();setTimeout(nextQ,3000);return}
-  var bk='b-'+CI[ck].b;
-  var dz=sc.add.graphics().setDepth(D.charIntro-1);
-  var gw2=Math.round(sl.s*340),ghh2=Math.round(sl.s*400);
-  dz.lineStyle(3,0xFFD93D,.6);dz.strokeRoundedRect(sl.x-gw2/2-5,RY+28-ghh2-5,gw2+10,ghh2+10,10);
-  sc.tweens.add({targets:dz,alpha:.3,yoyo:true,repeat:-1,duration:600});
-  var camX=sc.cameras.main.scrollX,vw=GW/sc.cameras.main.zoom;
-  var db=sc.add.image(camX+vw/2,RY-200,bk).setScale(sl.s*.7).setInteractive({draggable:true}).setDepth(D.charIntro+1);
-  sc.tweens.add({targets:db,scaleX:sl.s*.75,scaleY:sl.s*.75,yoyo:true,repeat:-1,duration:600});
-  var lbl=sc.add.text(camX+vw/2,RY-260,'\u{1F446} Drag to the glowing spot!',{fontFamily:'Nunito',fontSize:'14px',fontStyle:'bold',color:'#FFD93D',stroke:'#000',strokeThickness:3}).setOrigin(.5).setDepth(D.charIntro+2);
-  var dragFn=function(p,o,dx,dy){o.x=dx;o.y=dy};
-  var endFn=function(p,o){
-    if(Phaser.Math.Distance.Between(o.x,o.y,sl.x,RY+28-sl.s*200)<140){
-      o.disableInteractive();o.destroy();lbl.destroy();dz.destroy();
-      sc.input.off('drag',dragFn);sc.input.off('dragend',endFn);
-      plBld(ck);doConfetti();setTimeout(nextQ,3000);
-    }else{sc.tweens.add({targets:o,x:camX+vw/2,y:RY-200,duration:300,ease:'Power2'})}
-  };
-  sc.input.on('drag',dragFn);sc.input.on('dragend',endFn);
-}
-
 /* ══════════════════════════════════════════════════════════════════════════
    CONFETTI
    ══════════════════════════════════════════════════════════════════════════ */
