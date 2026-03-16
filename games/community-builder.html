@@ -44,15 +44,16 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 .bnoinfo a{color:var(--sky);text-decoration:none;font-weight:900}
 .blink{color:rgba(255,255,255,.35);font-size:.75rem;text-decoration:none;letter-spacing:1px;margin-top:.5rem}
 
-/* Grade selector */
+/* Grade selector — exact match maths-dive */
 #gradeSelector{margin:.4rem 0;min-height:20px}
-.grade-status{display:flex;flex-direction:column;align-items:center;gap:.4rem}
-.grade-next-label{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.5)}
-.grade-all-done{color:var(--yellow)}
-.grade-pills{display:flex;gap:.35rem;flex-wrap:wrap;justify-content:center}
-.gpill{padding:.3rem .7rem;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.05);color:rgba(255,255,255,.4);font-size:.7rem;font-weight:700;cursor:default}
-.gpill-done{border-color:var(--green);background:rgba(78,203,113,.15);color:var(--green);cursor:pointer}
-.gpill-current{border-color:var(--yellow);background:rgba(255,217,61,.15);color:var(--yellow)}
+.grade-status{display:flex;flex-direction:column;align-items:center;gap:.5rem;margin:.3rem 0}
+.grade-next-label{font-size:.72rem;font-weight:800;color:rgba(255,255,255,.5);letter-spacing:.5px}
+.grade-all-done{color:#FFD93D}
+.grade-pills{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.gpill{font-size:.65rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;padding:.25rem .7rem;border-radius:20px;border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:rgba(255,255,255,.35);cursor:default;transition:all .2s;font-family:'Nunito',sans-serif}
+.gpill-done{border-color:rgba(78,203,113,.5);background:rgba(78,203,113,.1);color:#4ECB71;cursor:pointer}
+.gpill-done:hover{background:rgba(78,203,113,.2);transform:translateY(-1px)}
+.gpill-current{border-color:rgba(255,217,61,.5);background:rgba(255,217,61,.12);color:#FFD93D;box-shadow:0 0 8px rgba(255,217,61,.2)}
 .gpill-locked{opacity:.4}
 
 /* Load screen */
@@ -72,22 +73,25 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 .hp{font-size:.7rem;color:rgba(255,255,255,.6);font-weight:700}
 .hud-right{display:flex;align-items:center;gap:.6rem}
 
-/* Mastery ring */
-.mastery-wrap{display:flex;align-items:center;gap:.3rem}
-.mastery-ring{width:28px;height:28px;position:relative;display:flex;align-items:center;justify-content:center}
-.mastery-fill{position:absolute;inset:3px;border-radius:50%;background:radial-gradient(circle at 40% 35%,rgba(74,144,217,.2),rgba(74,144,217,.05));transform:scale(0);transition:transform .4s}
-.mastery-fill.full{background:radial-gradient(circle at 40% 35%,rgba(255,217,61,1),rgba(255,160,0,.85))}
-.mastery-ring-svg{width:100%;height:100%;transform:rotate(-90deg)}
+/* Mastery ring — exact match maths-dive */
+.mastery-wrap{display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0}
+.mastery-ring{width:38px;height:38px;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center}
+.mastery-fill{position:absolute;inset:4px;border-radius:50%;background:radial-gradient(circle at 40% 35%,rgba(0,201,177,.9),rgba(0,150,130,.7));transform:scale(0);transition:transform .5s cubic-bezier(.34,1.56,.64,1);z-index:1}
+.mastery-fill.full{background:radial-gradient(circle at 40% 35%,rgba(255,217,61,1),rgba(255,160,0,.85));box-shadow:0 0 12px rgba(255,217,61,.6)}
+.mastery-ring-svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);z-index:2}
 .mastery-track{fill:none;stroke:rgba(255,255,255,.1);stroke-width:3}
-.mastery-arc{fill:none;stroke:var(--sky);stroke-width:3;stroke-linecap:round;stroke-dasharray:106.81;stroke-dashoffset:106.81;transition:stroke-dashoffset .4s}
-.mastery-arc.full{stroke:var(--yellow)}
-.mastery-label{font-size:.42rem;font-weight:800;color:rgba(255,255,255,.6);white-space:nowrap}
-.mastery-fill.band-mastery{background:radial-gradient(circle at 40% 35%,rgba(255,217,61,.2),rgba(255,160,0,.05))}
-.mastery-fill.band-mastery.full{background:radial-gradient(circle at 40% 35%,rgba(255,217,61,1),rgba(255,160,0,.85))}
-.mastery-arc.band-mastery{stroke:#ffa500}
-.mastery-arc.band-mastery.full{stroke:#ffd700}
-.hud-grade{font-size:.6rem;font-weight:800;color:rgba(255,255,255,.5)}
-.hud-grade.promoted{color:var(--yellow)}
+.mastery-arc{fill:none;stroke:var(--teal);stroke-width:3;stroke-linecap:round;transition:stroke-dashoffset .5s cubic-bezier(.34,1.56,.64,1),stroke .3s}
+.mastery-arc.full{stroke:var(--yellow);filter:drop-shadow(0 0 4px rgba(255,217,61,.6))}
+.mastery-label{font-size:.42rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.35);text-align:center;white-space:nowrap}
+/* Band mastery ring colors */
+.mastery-fill.band-mastery{background:radial-gradient(circle at 40% 35%,rgba(255,217,61,.9),rgba(255,160,0,.7))}
+.mastery-fill.band-mastery.full{background:radial-gradient(circle at 40% 35%,rgba(255,217,61,1),rgba(255,160,0,.9));box-shadow:0 0 16px rgba(255,217,61,.7)}
+.mastery-arc.band-mastery{stroke:#FFD93D}
+.mastery-arc.band-mastery.full{stroke:#FFD93D;filter:drop-shadow(0 0 6px rgba(255,217,61,.8))}
+/* Grade pill in HUD */
+.qbar-grade{font-size:.58rem;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:.2rem .6rem;white-space:nowrap;flex-shrink:0;transition:color .3s,border-color .3s,background .3s}
+.qbar-grade.promoted{color:var(--yellow);border-color:rgba(255,217,61,.4);background:rgba(255,217,61,.1)}
+@media(max-width:600px){.qbar-grade{font-size:.48rem;padding:.15rem .45rem}.mastery-ring{width:32px;height:32px}.mastery-label{font-size:.38rem}}
 
 /* Nav scroll buttons */
 .nav-btn{position:fixed;top:20%;z-index:32;width:36px;height:36px;border-radius:50%;border:2px solid rgba(255,255,255,.3);background:rgba(15,37,64,.6);color:#fff;font-size:1.2rem;display:none;align-items:center;justify-content:center;cursor:pointer;transform:translateY(-50%);backdrop-filter:blur(4px);transition:background .2s}
@@ -126,22 +130,25 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 #wrongFlash{position:fixed;inset:0;z-index:35;background:rgba(255,60,60,.25);pointer-events:none;opacity:0;transition:opacity .15s}
 #wrongFlash.show{opacity:1}
 
-/* Level-up overlay */
-.level-up-overlay{position:fixed;inset:0;z-index:45;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:opacity .3s}
+/* Level-up overlay — exact match maths-dive */
+.level-up-overlay{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;background:rgba(10,22,40,.6);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .35s ease}
 .level-up-overlay.show{opacity:1;pointer-events:auto}
-.level-up-inner{background:linear-gradient(135deg,#0a1628,#1a2a4a);border:3px solid var(--yellow);border-radius:24px;padding:1.5rem 2rem;text-align:center;box-shadow:0 0 50px rgba(255,217,61,.3)}
-.level-up-inner .lu-emoji{font-size:3rem}
-.level-up-inner .lu-title{font-family:'Boogaloo',cursive;font-size:1.5rem;color:var(--yellow);margin:.3rem 0}
-.level-up-inner .lu-text{color:rgba(255,255,255,.7);font-size:.85rem}
+.level-up-inner{display:flex;flex-direction:column;align-items:center;gap:.4rem;animation:lvlPop .5s cubic-bezier(.34,1.56,.64,1) both}
+.level-up-emoji{font-size:4rem;filter:drop-shadow(0 0 20px rgba(255,215,0,.7))}
+.level-up-title{font-family:'Boogaloo',cursive;font-size:2.8rem;color:#FFD93D;text-shadow:0 0 30px rgba(255,217,61,.5);letter-spacing:1px}
+.level-up-text{font-size:1.15rem;font-weight:800;color:rgba(255,255,255,.85);letter-spacing:.5px}
+@keyframes lvlPop{0%{transform:scale(.3) translateY(40px);opacity:0}60%{transform:scale(1.08) translateY(-4px);opacity:1}100%{transform:scale(1) translateY(0)}}
 
-/* Band mastery overlay */
-.band-mastery-overlay{position:fixed;inset:0;z-index:48;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .3s}
+/* Band mastery overlay — exact match maths-dive */
+.band-mastery-overlay{position:fixed;inset:0;z-index:65;display:flex;align-items:center;justify-content:center;background:rgba(10,22,40,.75);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .4s ease}
 .band-mastery-overlay.show{opacity:1;pointer-events:auto}
-.band-mastery-inner{background:linear-gradient(135deg,#0a1628,#1a2a4a);border:3px solid #ffd700;border-radius:26px;padding:2rem;text-align:center;box-shadow:0 0 60px rgba(255,215,0,.4)}
+.band-mastery-inner{display:flex;flex-direction:column;align-items:center;gap:.5rem;animation:bandPop .6s cubic-bezier(.34,1.56,.64,1) both}
 .band-mastery-emoji{font-size:5rem;filter:drop-shadow(0 0 24px rgba(255,217,61,.5))}
-.band-mastery-title{font-family:'Boogaloo',cursive;font-size:1.8rem;color:#ffd700;margin:.4rem 0}
-.band-mastery-text{color:rgba(255,255,255,.7);font-size:.9rem}
-.band-mastery-stars{font-size:2rem;margin-top:.3rem}
+.band-mastery-title{font-family:'Boogaloo',cursive;font-size:3.2rem;color:#FFD93D;text-shadow:0 0 40px rgba(255,217,61,.5);letter-spacing:2px}
+.band-mastery-text{font-size:1.3rem;font-weight:800;color:rgba(255,255,255,.9);letter-spacing:.5px}
+.band-mastery-stars{font-size:2.5rem;letter-spacing:8px;animation:starPulse 1.2s ease-in-out infinite alternate}
+@keyframes bandPop{0%{transform:scale(.2) translateY(60px);opacity:0}60%{transform:scale(1.1) translateY(-8px);opacity:1}100%{transform:scale(1) translateY(0)}}
+@keyframes starPulse{0%{filter:drop-shadow(0 0 6px rgba(255,217,61,.3))}100%{filter:drop-shadow(0 0 20px rgba(255,217,61,.8))}}
 
 /* Badge toast */
 .badge-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:linear-gradient(135deg,#0a1628,#1a2a4a);border:2px solid #ffd700;border-radius:20px;padding:14px 22px;display:flex;align-items:center;gap:14px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.5),0 0 24px rgba(255,215,0,.3);transition:transform .5s cubic-bezier(.34,1.56,.64,1),opacity .4s;opacity:0;pointer-events:none;max-width:340px}
@@ -196,7 +203,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
   <button class="hb" id="homeBtn">&#x1F3E0;</button>
   <div class="hs">&#x2B50; <span id="scD">0</span></div>
   <div class="hud-right">
-    <div class="hud-grade" id="hudGrade"></div>
+    <div class="qbar-grade" id="qbarGrade"></div>
     <div class="mastery-wrap" id="masteryWrap" style="display:none">
       <div class="mastery-ring">
         <div class="mastery-fill" id="masteryFill"></div>
@@ -237,9 +244,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 <!-- Level-up overlay -->
 <div class="level-up-overlay" id="levelUpOverlay">
   <div class="level-up-inner">
-    <div class="lu-emoji">&#x1F31F;</div>
-    <div class="lu-title">Level Up!</div>
-    <div class="lu-text" id="levelUpText"></div>
+    <div class="level-up-emoji">&#x1F393;</div>
+    <div class="level-up-title">Level Up!</div>
+    <div class="level-up-text" id="levelUpText"></div>
   </div>
 </div>
 
@@ -506,15 +513,28 @@ function showBandMastery(){
 }
 
 function updateMasteryVisual(){
-  var fill=$('masteryFill'),arc=$('masteryArc'),label=$('masteryLabel'),gradeEl=$('hudGrade'),wrap=$('masteryWrap');
+  var fill=$('masteryFill'),arc=$('masteryArc'),label=$('masteryLabel'),gradeEl=$('qbarGrade'),wrap=$('masteryWrap');
   if(!fill||!arc)return;
-  if(gradeEl&&G.currentGrade&&GRADE_META[G.currentGrade])gradeEl.textContent=GRADE_META[G.currentGrade].label;
-  else if(gradeEl)gradeEl.textContent='';
+  /* Update grade pill */
+  if(gradeEl){
+    if(G.currentGrade&&GRADE_META[G.currentGrade]){
+      gradeEl.textContent=GRADE_META[G.currentGrade].label;
+      gradeEl.style.display='';
+    }else{
+      gradeEl.textContent='';gradeEl.style.display='none';
+    }
+    gradeEl.classList.remove('promoted');
+  }
   if(!G.band||!G.currentGrade){if(wrap)wrap.style.display='none';return}
   var isTop=G.playGrades.indexOf(G.currentGrade)>=G.playGrades.length-1;
-  if(isTop&&G.bandMastered){if(wrap)wrap.style.display='none';if(gradeEl){gradeEl.classList.add('promoted');gradeEl.textContent+='\u2B50'}return}
+  if(isTop&&G.bandMastered){
+    if(wrap)wrap.style.display='none';
+    if(gradeEl){gradeEl.classList.add('promoted');gradeEl.textContent+='\u2B50'}
+    return;
+  }
   if(isTop&&!G.bandMastered){
-    if(wrap)wrap.style.display='';if(gradeEl)gradeEl.classList.add('promoted');
+    if(wrap)wrap.style.display='';
+    if(gradeEl)gradeEl.classList.add('promoted');
     var bc=0;for(var i=0;i<G.bandAnswerHistory.length;i++)if(G.bandAnswerHistory[i])bc++;
     var bp=Math.min(bc/BAND_MASTERY_REQUIRED,1);
     fill.style.transform='scale('+bp+')';fill.setAttribute('class','mastery-fill band-mastery'+(bp>=1?' full':''));
