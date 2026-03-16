@@ -78,8 +78,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 #hud.active{display:grid;grid-template-columns:1fr auto 1fr;align-items:center}
 .hud-left{display:flex;align-items:center;gap:.5rem}
 .hb{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:.85rem}
+.hb-sound{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:.85rem}
 .hs{font-family:'Boogaloo',cursive;font-size:1.1rem;color:var(--yellow)}
 .hp{font-size:.7rem;color:rgba(255,255,255,.6);font-weight:700}
+.lives-display{display:flex;gap:4px;align-items:center}
+.life-heart{font-size:1.4rem;transition:transform .2s,filter .2s}
+.life-heart.lost{filter:grayscale(1) opacity(.3);transform:scale(.8)}
+@media(max-width:600px){.life-heart{font-size:1rem}}
 .hud-right{display:flex;align-items:center;gap:.6rem;justify-content:flex-end}
 .hud-center{display:flex;align-items:center;justify-content:center;pointer-events:none}
 #cb-avatar-hud{pointer-events:none}
@@ -228,7 +233,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 <div id="hud">
   <div class="hud-left">
     <button class="hb" id="homeBtn">&#x1F3E0;</button>
+    <button class="hb-sound" id="soundBtn" title="Toggle Sound">&#x1F50A;</button>
     <div class="hs">&#x2B50; <span id="scD">0</span></div>
+    <div class="lives-display" id="livesDisplay">
+      <span class="life-heart" id="h1">&#x2764;&#xFE0F;</span>
+      <span class="life-heart" id="h2">&#x2764;&#xFE0F;</span>
+      <span class="life-heart" id="h3">&#x2764;&#xFE0F;</span>
+    </div>
   </div>
   <div class="hud-center"><div id="cb-avatar-hud" data-hud-size="42"></div></div>
   <div class="hud-right">
@@ -396,7 +407,7 @@ var G={
   poolsByGrade:{},playGrades:[],currentGrade:null,
   answerHistory:[],bandAnswerHistory:[],bandMastered:false,
   qs:[],queue:[],score:0,ans:0,corr:0,cp:{},pi:0,ul:0,
-  dm:false,isMatch:false,
+  dm:false,isMatch:false,lives:3,
   matchChars:[],matchIdx:0,matchBldDone:false,matchVehDone:false,needVehicle:false,
   sc:null,gm:null,introSpr:null,camTarget:0,
   curChar:null,patrolDir:1,patrolSpeed:43,entering:false,
@@ -406,7 +417,19 @@ var clouds=[],walkers=[],bldSpr={},propSpr=[],vehSpr={};
 
 function showScr(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.add('hidden')});if(id)$(id).classList.remove('hidden')}
 function shuf(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
-function updHUD(){$('scD').textContent=G.score;$('prD').textContent=G.ul}
+function updHUD(){
+  $('scD').textContent=G.score;$('prD').textContent=G.ul;
+  for(var i=1;i<=3;i++){var h=$('h'+i);if(h){if(i<=G.lives)h.classList.remove('lost');else h.classList.add('lost')}}
+}
+function loseLife(){
+  G.lives--;updHUD();
+  if(G.lives<=0){
+    /* Disable all interactives */
+    Object.keys(bldSpr).forEach(function(k){var bs=bldSpr[k];if(bs&&bs.sprite)try{bs.sprite.disableInteractive()}catch(e){}});
+    Object.keys(vehSpr).forEach(function(k){var vs=vehSpr[k];if(vs&&vs.active)try{vs.disableInteractive()}catch(e){}});
+    setTimeout(function(){$('qOver').classList.remove('active');$('matchOver').classList.remove('active');finish()},800);
+  }
+}
 
 /* ══════════════════════════════════════════════════════════════════════════
    BADGE SYSTEM — shared crabcake_badges_v1 store
@@ -637,6 +660,10 @@ if(urlBand&&BAND_META[urlBand]){
 }
 $('startBtn').addEventListener('click',startGame);
 $('homeBtn').addEventListener('click',function(){if(confirm('Leave? Progress will be lost.'))location.href='/'});
+$('soundBtn').addEventListener('click',function(){
+  _soundOn=!_soundOn;
+  $('soundBtn').textContent=_soundOn?'\u{1F50A}':'\u{1F507}';
+});
 
 /* ── Pre-render grade pills on start screen from saved progress ── */
 if(G.band){
@@ -679,6 +706,7 @@ function startGame(){
   if(!G.band){console.error('CB: no band set');return}
   /* Init audio context inside user gesture */
   try{if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume()}catch(e){}
+  G.lives=3;
   console.log('CB: startGame band='+G.band+' isMatch='+G.isMatch);
   showScr('loadScreen');
   $('lBar').style.width='5%';$('lTxt').textContent='Loading questions...';
@@ -1073,7 +1101,7 @@ function handleBldTap(tapped,target){
     var el=$('msBld');if(el)el.className='ms-item done';
     var bs=bldSpr[tapped];if(bs&&bs.sprite){G.sc.tweens.add({targets:bs.sprite,scaleX:bs.sprite.scaleX*1.12,scaleY:bs.sprite.scaleY*.92,yoyo:true,duration:300,ease:'Bounce.easeOut'})}
     checkMatchDone(target);
-  }else{wrongFlash();playSound('wrong');recordAnswer(false)}
+  }else{wrongFlash();playSound('wrong');recordAnswer(false);loseLife()}
 }
 function handleVehTap(tapped,target){
   if(G.matchVehDone)return;
@@ -1084,7 +1112,7 @@ function handleVehTap(tapped,target){
     var el=$('msVeh');if(el)el.className='ms-item done';
     var vs=vehSpr[tapped];if(vs)G.sc.tweens.add({targets:vs,y:vs.y-12,yoyo:true,duration:300,ease:'Bounce.easeOut'});
     checkMatchDone(target);
-  }else{wrongFlash();playSound('wrong');recordAnswer(false)}
+  }else{wrongFlash();playSound('wrong');recordAnswer(false);loseLife()}
 }
 function checkMatchDone(target){
   var isSK=(G.currentGrade==='sk');
@@ -1249,9 +1277,10 @@ function ansH(ch,q,btn){
     btn.classList.add('no');$('qHi').classList.add('vis');
     playSound('wrong');
     recordAnswer(false);
+    loseLife();
     var btns=$('qOp').querySelectorAll('.qb');
     setTimeout(function(){btns[q.correct].classList.add('ok')},400);
-    setTimeout(function(){$('qOver').classList.remove('active');setTimeout(nextQ,500)},2000);
+    if(G.lives>0)setTimeout(function(){$('qOver').classList.remove('active');setTimeout(nextQ,500)},2000);
   }
 }
 
