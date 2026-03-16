@@ -919,6 +919,7 @@ function phaserCreate(){
   $('lBar').style.width='100%';$('lTxt').textContent='Ready!';
   setTimeout(function(){
     showScr(null);$('gameWrap').classList.add('active');$('hud').classList.add('active');
+    if(typeof CrabcakeAvatar!=='undefined')CrabcakeAvatar.refreshHUD();
     updateMasteryVisual();
     setTimeout(G.isMatch?nextMatch:nextQ,800);
   },400);
@@ -1333,6 +1334,8 @@ showScr=function(id){
 };
 
 showScr('startScreen');
+/* Init avatar HUD widget */
+if(typeof CrabcakeAvatar!=='undefined')setTimeout(function(){CrabcakeAvatar.refreshHUD()},100);
 })();
 </script>
 <script src="/crabcake-avatar.js?v=8" defer></script>
