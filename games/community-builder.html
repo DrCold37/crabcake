@@ -1369,7 +1369,10 @@ function nextQ(){
     if(G.curChar){dismissIntro(function(){charIntro(q.character,function(){showQ(q)})})}
     else{charIntro(q.character,function(){showQ(q)})}
   }else{
-    showQ(q);
+    /* Returning character — pan to their building then show question */
+    var sl=SL[q.character];
+    if(sl)panTo(sl.x);
+    setTimeout(function(){showQ(q)},600);
   }
 }
 
@@ -1405,13 +1408,20 @@ function ansH(isCorrect,q,btn,opWrap){
       setTimeout(function(){
         $('qOver').classList.remove('active');
         var ck=q.character;
-        /* Convert intro sprite to permanent walker near building */
+        var sl=SL[ck];
+        /* Pan camera to building slot immediately */
+        if(sl)panTo(sl.x);
+        /* Convert intro sprite to permanent walker — walk at natural speed */
         if(G.introSpr&&G.curChar===ck){
           var spr=G.introSpr;
-          var sl=SL[ck];
+          spr.setDepth(D.walker);
           if(sl){
-            spr.setDepth(D.walker);
-            G.sc.tweens.add({targets:spr,x:sl.x,duration:1500,ease:'Linear',onComplete:function(){
+            var dist=Math.abs(spr.x-sl.x);
+            var walkSpeed=30; /* px/s — natural walking pace */
+            var walkDur=Math.max((dist/walkSpeed)*1000,800);
+            spr.setFlipX(spr.x>sl.x);
+            G.sc.tweens.add({targets:spr,x:sl.x,duration:walkDur,ease:'Linear',onComplete:function(){
+              spr.setFlipX(false);
               walkers.push({spr:spr,sp:15+Math.random()*12,dir:1,mn:Math.max(sl.x-120,10),mx:Math.min(sl.x+120,WW-10)});
             }});
           }else{
@@ -1420,7 +1430,6 @@ function ansH(isCorrect,q,btn,opWrap){
           }
           G.introSpr=null;G.curChar=null;G.entering=false;
         }else{
-          /* No intro sprite (already in city) — just spawn walker */
           spWalk(ck);
         }
         if(ck==='construction'){
