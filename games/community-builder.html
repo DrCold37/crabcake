@@ -1115,12 +1115,12 @@ function phaserCreate(){
 function phaserUpdate(time,delta){
   clouds.forEach(function(cl){cl.x+=cl._sp*(delta/1000);if(cl.x>WW+200)cl.x=-200});
   walkers.forEach(function(w){if(!w.spr||!w.spr.active||w._tw)return;w.spr.x+=w.dir*w.sp*(delta/1000);w.spr.setFlipX(w.dir<0);if(w.spr.x>w.mx)w.dir=-1;if(w.spr.x<w.mn)w.dir=1});
-  /* Patrol intro sprite (bands 2/3) — constrained to left area */
+  /* Patrol intro sprite (bands 2/3) */
   if(G.introSpr&&G.introSpr.active&&!G.entering){
     var s=G.introSpr;
     s.x+=G.patrolDir*G.patrolSpeed*(delta/1000);
     s.setFlipX(G.patrolDir<0);
-    if(s.x>500)G.patrolDir=-1;if(s.x<60)G.patrolDir=1;
+    if(s.x>WW-60)G.patrolDir=-1;if(s.x<60)G.patrolDir=1;
     if(!G.isMatch)G.camTarget.x+=(s.x-G.camTarget.x)*0.08;
   }
   /* Vehicle driving — two-lane natural traffic (all bands) */
