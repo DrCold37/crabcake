@@ -704,7 +704,7 @@ function phaserPreload(){
   /* Animated vehicle spritesheets (384x384 frames, 3x3 grid = 9 frames) */
   var ANIM_VEH=['ambulance','policecar','firetruck'];
   ANIM_VEH.forEach(function(v){self.load.spritesheet('va-'+v,AP+'/town/Vehicles/'+v+'-animate.png',{frameWidth:384,frameHeight:384})});
-  ['sign_stop','sign_warning','sign_construction_1','sign_st_name','sign_info','light_pole_1','light_pole_2','light_pole_3','fence_wood','fence_garden_brown','water_hydrant','light_post'].forEach(function(p){self.load.image('p-'+p,AP+'/town/Props/'+p+'.png')});
+  ['sign_stop','sign_warning','sign_construction_1','sign_st_name','sign_info','light_pole_1','light_pole_2','light_pole_3','fence_wood','fence_garden_brown','water_hydrant','light_post','sign_wrench'].forEach(function(p){self.load.image('p-'+p,AP+'/town/Props/'+p+'.png')});
   ['tree_01','tree_02','tree_03','bush_01','bush_02','weeds_01','weeds_02','weeds_03'].forEach(function(v){self.load.image('t-'+v,AP+'/town/Vegetation/'+v+'.png')});
   ['tree_01_background_1','tree_01_background_2','tree_02_background_1','tree_02_background_2'].forEach(function(v){self.load.image('tbg-'+v,AP+'/town/Vegetation/'+v+'.png')});
   for(var i=1;i<=6;i++)self.load.image('cl-'+i,AP+'/town/Props/cloud_0'+i+'.png');
@@ -775,6 +775,11 @@ function phaserCreate(){
       var b=sc.add.image(sl.x,RY+28,bk).setScale(sl.s).setOrigin(.5,1).setDepth(D.building);
       bldSpr[ck].sprite=b;
     });
+    /* Wrench sign on mechanic's warehouse */
+    if(sc.textures.exists('p-sign_wrench')){
+      var msl=SL.mechanic;
+      sc.add.image(msl.x,RY+28-msl.s*200,  'p-sign_wrench').setScale(.12).setOrigin(.5,.5).setDepth(D.building+0.5);
+    }
     /* All props pre-placed */
     CP.forEach(function(p){var pk='p-'+p.k;if(sc.textures.exists(pk))sc.add.image(p.x,RY+28,pk).setScale(p.s).setOrigin(.5,1).setDepth(D.prop)});
     /* All vehicles driving on road — two-lane system */
@@ -1071,7 +1076,13 @@ function plBld(ck){
   var bk='b-'+CI[ck].b;if(!sc.textures.exists(bk))return;
   if(bldSpr[ck]&&bldSpr[ck].ghost){bldSpr[ck].ghost.destroy();bldSpr[ck].ghost=null}
   var b=sc.add.image(sl.x,-400,bk).setScale(sl.s).setOrigin(.5,1).setDepth(D.building);
-  sc.tweens.add({targets:b,y:RY+28,duration:900,ease:'Bounce.easeOut',onComplete:function(){sc.tweens.add({targets:b,scaleX:sl.s*1.06,scaleY:sl.s*.95,yoyo:true,duration:200})}});
+  sc.tweens.add({targets:b,y:RY+28,duration:900,ease:'Bounce.easeOut',onComplete:function(){
+    sc.tweens.add({targets:b,scaleX:sl.s*1.06,scaleY:sl.s*.95,yoyo:true,duration:200});
+    /* Add wrench sign on mechanic's warehouse */
+    if(ck==='mechanic'&&sc.textures.exists('p-sign_wrench')){
+      sc.add.image(sl.x,RY+28-sl.s*200,'p-sign_wrench').setScale(.12).setOrigin(.5,.5).setDepth(D.building+0.5);
+    }
+  }});
   bldSpr[ck].sprite=b;
   if(VM[ck])sc.time.delayedCall(1000,function(){plVeh(ck)});
 }
