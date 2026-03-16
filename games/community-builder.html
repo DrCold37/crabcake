@@ -1115,12 +1115,12 @@ function phaserCreate(){
 function phaserUpdate(time,delta){
   clouds.forEach(function(cl){cl.x+=cl._sp*(delta/1000);if(cl.x>WW+200)cl.x=-200});
   walkers.forEach(function(w){if(!w.spr||!w.spr.active||w._tw)return;w.spr.x+=w.dir*w.sp*(delta/1000);w.spr.setFlipX(w.dir<0);if(w.spr.x>w.mx)w.dir=-1;if(w.spr.x<w.mn)w.dir=1});
-  /* Patrol intro sprite (bands 2/3) */
+  /* Patrol intro sprite (bands 2/3) — constrained to left area */
   if(G.introSpr&&G.introSpr.active&&!G.entering){
     var s=G.introSpr;
     s.x+=G.patrolDir*G.patrolSpeed*(delta/1000);
     s.setFlipX(G.patrolDir<0);
-    if(s.x>WW-60)G.patrolDir=-1;if(s.x<60)G.patrolDir=1;
+    if(s.x>500)G.patrolDir=-1;if(s.x<60)G.patrolDir=1;
     if(!G.isMatch)G.camTarget.x+=(s.x-G.camTarget.x)*0.08;
   }
   /* Vehicle driving — two-lane natural traffic (all bands) */
@@ -1363,10 +1363,10 @@ function playSound(type){
    ══════════════════════════════════════════════════════════════════════════ */
 function nextQ(){
   console.log('CB: nextQ queue='+G.queue.length);
-  if(!G.queue.length){finish();return}
+  if(!G.queue.length){dismissIntro(function(){finish()});return}
   if(G.lives<=0)return;
   var q=G.queue.shift();
-  if(!q){finish();return}
+  if(!q){dismissIntro(function(){finish()});return}
   var p=G.cp[q.character];
   /* First time seeing this character and not already in city → walk-in intro */
   if(p&&p.cor===0&&!p.bld){
@@ -1374,17 +1374,30 @@ function nextQ(){
     if(G.curChar){dismissIntro(function(){charIntro(q.character,function(){showQ(q)})})}
     else{charIntro(q.character,function(){showQ(q)})}
   }else{
-    /* Returning character — ensure walker exists near building, pan there */
-    var ck=q.character;
-    var sl=SL[ck];
-    if(sl){
-      /* Check if walker exists for this character */
-      var hasWalker=false;
-      for(var wi=0;wi<walkers.length;wi++){if(walkers[wi].spr&&walkers[wi].spr._charKey===ck&&walkers[wi].spr.active){hasWalker=true;break}}
-      if(!hasWalker)spWalk(ck);
-      panTo(sl.x);
+    /* Returning character — dismiss any active intro sprite first */
+    if(G.introSpr||G.curChar){
+      dismissIntro(function(){
+        var ck=q.character;
+        var sl=SL[ck];
+        if(sl){
+          var hasWalker=false;
+          for(var wi=0;wi<walkers.length;wi++){if(walkers[wi].spr&&walkers[wi].spr._charKey===ck&&walkers[wi].spr.active){hasWalker=true;break}}
+          if(!hasWalker)spWalk(ck);
+          panTo(sl.x);
+        }
+        setTimeout(function(){showQ(q)},600);
+      });
+    }else{
+      var ck=q.character;
+      var sl=SL[ck];
+      if(sl){
+        var hasWalker=false;
+        for(var wi=0;wi<walkers.length;wi++){if(walkers[wi].spr&&walkers[wi].spr._charKey===ck&&walkers[wi].spr.active){hasWalker=true;break}}
+        if(!hasWalker)spWalk(ck);
+        panTo(sl.x);
+      }
+      setTimeout(function(){showQ(q)},600);
     }
-    setTimeout(function(){showQ(q)},600);
   }
 }
 
