@@ -341,16 +341,16 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 
 <div id="finishScreen" class="screen hidden">
   <div class="fc">
-    <div style="font-size:3.2rem">&#x1F3D8;&#xFE0F;&#x1F389;</div>
-    <h2>Town Complete!</h2>
+    <div style="font-size:3.2rem" id="fEmoji">&#x1F3D8;&#xFE0F;</div>
+    <h2 id="fTitle">Round Complete!</h2>
     <div class="ftn" id="fTn"></div>
     <div class="fst" id="fSc"></div>
-    <div class="fst" id="fAc"></div>
+    <div class="fst" id="fTown"></div>
     <div class="end-badges-wrap" id="endBadgesWrap" style="display:none">
       <div class="badges-section-title">&#x1F3C6; Badges Earned!</div>
       <div class="badges-earned-row" id="endBadgesRow"></div>
     </div>
-    <button class="frb" onclick="location.reload()">Build Another Town</button>
+    <button class="frb" onclick="location.reload()">Play Again</button>
     <a href="/" class="fhl">&larr; Back to Crabcake Kids</a>
   </div>
 </div>
@@ -616,6 +616,8 @@ function _restoreCity(){
   });
   (state.walkers||[]).forEach(function(ck){
     if(!sc.textures.exists(ck+'-walk')||!sc.anims.exists(ck+'-wa'))return;
+    /* Skip if walker already exists */
+    for(var wj=0;wj<walkers.length;wj++){if(walkers[wj].spr&&walkers[wj].spr._charKey===ck&&walkers[wj].spr.active)return}
     var sl=SL[ck]||{x:600};
     var spr=sc.add.sprite(sl.x,WALKY,ck+'-walk').setScale(.33).setOrigin(.5,1).setDepth(D.walker);spr.play(ck+'-wa');
     spr._charKey=ck;
@@ -1112,7 +1114,7 @@ function phaserCreate(){
 
 function phaserUpdate(time,delta){
   clouds.forEach(function(cl){cl.x+=cl._sp*(delta/1000);if(cl.x>WW+200)cl.x=-200});
-  walkers.forEach(function(w){w.spr.x+=w.dir*w.sp*(delta/1000);w.spr.setFlipX(w.dir<0);if(w.spr.x>w.mx)w.dir=-1;if(w.spr.x<w.mn)w.dir=1});
+  walkers.forEach(function(w){if(!w.spr||!w.spr.active||w._tw)return;w.spr.x+=w.dir*w.sp*(delta/1000);w.spr.setFlipX(w.dir<0);if(w.spr.x>w.mx)w.dir=-1;if(w.spr.x<w.mn)w.dir=1});
   /* Patrol intro sprite (bands 2/3) */
   if(G.introSpr&&G.introSpr.active&&!G.entering){
     var s=G.introSpr;
@@ -1424,17 +1426,20 @@ function ansH(isCorrect,q,btn,opWrap){
         /* Convert intro sprite to permanent walker — walk at natural speed */
         if(G.introSpr&&G.curChar===ck){
           var spr=G.introSpr;
-          spr.setDepth(D.walker);
+          spr.setDepth(D.walker);spr._charKey=ck;
           if(sl){
             var dist=Math.abs(spr.x-sl.x);
             var walkSpeed=30; /* px/s — natural walking pace */
             var walkDur=Math.max((dist/walkSpeed)*1000,800);
             spr.setFlipX(spr.x>sl.x);
+            /* Add to walkers immediately so duplicate checks work during tween */
+            var wE={spr:spr,sp:15+Math.random()*12,dir:1,mn:Math.max(sl.x-80,10),mx:Math.min(sl.x+80,WW-10),_tw:true};
+            walkers.push(wE);
             G.sc.tweens.add({targets:spr,x:sl.x,duration:walkDur,ease:'Linear',onComplete:function(){
-              spr.setFlipX(false);spr._charKey=ck;
-              walkers.push({spr:spr,sp:15+Math.random()*12,dir:1,mn:Math.max(sl.x-80,10),mx:Math.min(sl.x+80,WW-10)});
+              spr.setFlipX(false);wE._tw=false;
             }});
           }else{
+            spr._charKey=ck;
             var cx=spr.x;
             walkers.push({spr:spr,sp:15+Math.random()*12,dir:G.patrolDir,mn:Math.max(cx-150,10),mx:Math.min(cx+150,WW-10)});
           }
@@ -1563,6 +1568,8 @@ function plProp(idx){
 }
 function spWalk(ck){
   var sc=G.sc;if(!sc||!sc.textures.exists(ck+'-walk')||!sc.anims.exists(ck+'-wa'))return;
+  /* Prevent duplicates */
+  for(var wi=0;wi<walkers.length;wi++){if(walkers[wi].spr&&walkers[wi].spr._charKey===ck&&walkers[wi].spr.active)return}
   var sl=SL[ck]||{x:600};
   var spr=sc.add.sprite(sl.x,WALKY,ck+'-walk').setScale(.33).setOrigin(.5,1).setDepth(D.walker);spr.play(ck+'-wa');
   spr._charKey=ck;
@@ -1586,13 +1593,19 @@ function dismissIntro(cb){
   if(G.introSpr){
     var spr=G.introSpr;
     var p=ck?G.cp[ck]:null;
-    if(p&&p.bld&&SL[ck]){
-      /* Character has a building — move walker to patrol near it */
+    /* Check if walker already exists for this character */
+    var hasW=false;
+    if(ck){for(var wi=0;wi<walkers.length;wi++){if(walkers[wi].spr&&walkers[wi].spr._charKey===ck&&walkers[wi].spr.active){hasW=true;break}}}
+    if(hasW){
+      /* Walker already exists — just destroy intro sprite */
+      spr.destroy();
+    }else if(p&&p.bld&&SL[ck]){
+      /* Character has a building — place walker at it */
       var sl=SL[ck];
       spr.setDepth(D.walker);spr.x=sl.x;spr._charKey=ck;
       walkers.push({spr:spr,sp:15+Math.random()*12,dir:1,mn:Math.max(sl.x-80,10),mx:Math.min(sl.x+80,WW-10)});
     }else{
-      /* No building yet — remove sprite, they haven't earned their spot */
+      /* No building yet — remove sprite */
       spr.destroy();
     }
     G.introSpr=null;
@@ -1611,9 +1624,31 @@ function doConfetti(){var cs=['#FFD93D','#FF5C5C','#4ECB71','#A66CFF','#4A90D9',
    ══════════════════════════════════════════════════════════════════════════ */
 function finish(){
   $('qOver').classList.remove('active');$('matchOver').classList.remove('active');$('hud').classList.remove('active');
+  /* Score: correct out of answered */
+  var answered=Math.min(G.ans,10);
   var a=G.ans?Math.round(G.corr/G.ans*100):0;
-  $('fSc').textContent='\u2B50 Score: '+G.score;
-  $('fAc').textContent='\u{1F3AF} Accuracy: '+a+'% ('+G.corr+'/'+G.ans+')';
+  $('fSc').textContent='\u{1F3AF} '+G.corr+' out of '+answered+' correct'+(a>0?' ('+a+'%)':'');
+  /* Town completion: count buildings (11 slots + construction), vehicles (12), walkers (12) = 35 total items */
+  var bldCount=0,vehCount=0;
+  for(var k in G.cp){
+    if(G.cp[k].bld)bldCount++;
+    if(G.cp[k].veh)vehCount++;
+  }
+  var townTotal=24; /* 12 buildings + 12 vehicles */
+  var townPlaced=bldCount+vehCount;
+  var townPct=Math.round(townPlaced/townTotal*100);
+  $('fTown').textContent='\u{1F3D9}\u{FE0F} Town: '+townPct+'% complete ('+bldCount+' buildings, '+vehCount+' vehicles)';
+  /* Title and emoji based on performance */
+  if(G.lives<=0){
+    $('fTitle').textContent='Game Over!';$('fEmoji').textContent='\u{1F625}';
+  }else if(a===100){
+    $('fTitle').textContent='Perfect Round!';$('fEmoji').textContent='\u{1F389}\u{1F31F}';
+  }else if(a>=80){
+    $('fTitle').textContent='Great Round!';$('fEmoji').textContent='\u{1F389}';
+  }else{
+    $('fTitle').textContent='Round Complete!';$('fEmoji').textContent='\u{1F3D8}\u{FE0F}';
+  }
+  /* Town name */
   var adj=['Amazing','Wonderful','Friendly','Happy','Sunny','Cozy','Busy','Peaceful'];
   var noun=['Town','Village','Neighbourhood','Community','Haven'];
   $('fTn').textContent=adj[Math.floor(Math.random()*adj.length)]+' '+noun[Math.floor(Math.random()*noun.length)];
