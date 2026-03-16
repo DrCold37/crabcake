@@ -80,6 +80,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 .hs{font-family:'Boogaloo',cursive;font-size:1.1rem;color:var(--yellow)}
 .hp{font-size:.7rem;color:rgba(255,255,255,.6);font-weight:700}
 .hud-right{display:flex;align-items:center;gap:.6rem}
+.hud-center{display:flex;align-items:center;justify-content:center;pointer-events:none}
+#cb-avatar-hud{pointer-events:none}
+@media(max-width:600px){#cb-avatar-hud svg{width:36px!important;height:36px!important}}
 
 /* Mastery ring — exact match maths-dive */
 .mastery-wrap{display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0}
@@ -108,8 +111,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 #navR{right:8px}
 .nav-btn.vis{display:flex}
 
-/* ═══ QUESTION — TOP OF SCREEN (bands 2/3) ═══ */
-#qOver{position:fixed;top:0;left:0;right:0;z-index:30;display:none;flex-direction:column;align-items:center;padding:.6rem .8rem;background:linear-gradient(180deg,rgba(15,37,64,.92) 0%,rgba(15,37,64,.85) 85%,transparent 100%)}
+/* ═══ QUESTION — centered box (bands 2/3) ═══ */
+#qOver{position:fixed;top:50px;left:50%;transform:translateX(-50%);z-index:30;display:none;flex-direction:column;align-items:center;padding:.8rem 1.2rem;background:rgba(15,37,64,.94);border:2px solid rgba(255,255,255,.15);border-radius:20px;backdrop-filter:blur(8px);box-shadow:0 8px 32px rgba(0,0,0,.4);max-width:480px;width:90%}
 #qOver.active{display:flex}
 .qc{display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem;margin-top:.3rem}
 .qc img{width:44px;height:44px;border-radius:50%;border:2px solid var(--yellow);background:rgba(255,255,255,.1);object-fit:cover}
@@ -122,8 +125,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 .qh{padding:.4rem .7rem;border-radius:8px;background:rgba(255,217,61,.1);border:1px solid rgba(255,217,61,.25);color:var(--yellow);font-size:.75rem;display:none;text-align:center;max-width:400px}
 .qh.vis{display:block}
 
-/* ═══ MATCH PROMPT — band 1 ═══ */
-#matchOver{position:fixed;top:0;left:0;right:0;z-index:30;display:none;flex-direction:column;align-items:center;padding:.6rem .8rem;background:linear-gradient(180deg,rgba(15,37,64,.92) 0%,rgba(15,37,64,.85) 85%,transparent 100%)}
+/* ═══ MATCH PROMPT — centered box (band 1) ═══ */
+#matchOver{position:fixed;top:50px;left:50%;transform:translateX(-50%);z-index:30;display:none;flex-direction:column;align-items:center;padding:.8rem 1.2rem;background:rgba(15,37,64,.94);border:2px solid rgba(255,255,255,.15);border-radius:20px;backdrop-filter:blur(8px);box-shadow:0 8px 32px rgba(0,0,0,.4);max-width:420px;width:90%}
 #matchOver.active{display:flex}
 .mc{display:flex;align-items:center;gap:.6rem;margin-bottom:.2rem;margin-top:.3rem}
 .mc img{width:52px;height:52px;border-radius:50%;border:2px solid var(--yellow);background:rgba(255,255,255,.1);object-fit:cover}
@@ -214,6 +217,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 <div id="hud">
   <button class="hb" id="homeBtn">&#x1F3E0;</button>
   <div class="hs">&#x2B50; <span id="scD">0</span></div>
+  <div class="hud-center"><div id="cb-avatar-hud" data-hud-size="42"></div></div>
   <div class="hud-right">
     <div class="qbar-grade" id="qbarGrade"></div>
     <div class="mastery-wrap" id="masteryWrap" style="display:none">
@@ -325,7 +329,7 @@ var SL={
 };
 var VM={firefighter:'firetruck',doctor:'ambulance',police:'policecar',chef:'foodtruck',farmer:'tractor',teacher:'teachercar',librarian:'libraryvan',construction:'dumptruck',mailcarrier:'mailvan',busdriver:'bus',mechanic:'towtruck',vet:'animalvan'};
 var CP=[{k:'sign_stop',x:375,s:.45},{k:'sign_warning',x:725,s:.4},{k:'sign_construction_1',x:1075,s:.4},{k:'light_pole_1',x:1425,s:.35},{k:'fence_wood',x:1775,s:.45},{k:'water_hydrant',x:2125,s:.45},{k:'sign_st_name',x:2475,s:.4},{k:'light_pole_2',x:2825,s:.35},{k:'light_pole_3',x:3175,s:.35},{k:'sign_info',x:3525,s:.4}];
-var D={sky:0,bgBuild2:1,bgTree2:2,bgBuild1:3,bgTree1:4,ground:5,tree:6,ghost:7,prop:8,building:10,vehicle:11,walker:12,charIntro:50,highlight:55};
+var D={sky:0,bgBuild2:1,bgTree2:2,bgBuild1:3,bgTree1:4,ground:5,tree:6,ghost:7,prop:8,building:10,walker:10.5,vehicle:11,charIntro:50,highlight:55};
 
 /* Per-vehicle config: sx=scaleX, sy=scaleY, by=bottomLane Y offset, ty=topLane Y offset */
 var VEH_CFG={
@@ -431,9 +435,11 @@ function _saveProgress(band,grade,mastered){
   }catch(e){}
 }
 function _saveHistories(){
-  if(!G.band)return;
+  if(!G.band||!G.currentGrade)return;
   try{
-    var p=_loadProgress();if(!p[G.band])return;
+    var p=_loadProgress();
+    if(!p[G.band])p[G.band]={current_grade:G.currentGrade,mastered_grades:[],band_mastered:false,answer_history:[],band_answer_history:[]};
+    p[G.band].current_grade=G.currentGrade;
     p[G.band].answer_history=G.answerHistory;
     p[G.band].band_answer_history=G.bandAnswerHistory;
     localStorage.setItem(PROGRESS_KEY,JSON.stringify(p));
@@ -1013,18 +1019,18 @@ function nextMatch(){
   }
   $('matchOver').classList.add('active');
 
-  /* Make buildings tappable */
+  /* Make buildings tappable — pixelPerfect to avoid overlapping hitboxes */
   var sc=G.sc;
   Object.keys(bldSpr).forEach(function(k){
     var bs=bldSpr[k];if(!bs||!bs.sprite)return;
-    bs.sprite.setInteractive({useHandCursor:true});
+    bs.sprite.setInteractive({useHandCursor:true,pixelPerfect:true,alphaTolerance:100});
     bs.sprite.off('pointerdown');
     bs.sprite.on('pointerdown',function(ptr,lx,ly,ev){ev.stopPropagation();handleBldTap(k,ck)});
   });
-  /* Make vehicles tappable */
+  /* Make vehicles tappable — pixelPerfect */
   Object.keys(vehSpr).forEach(function(k){
     var vs=vehSpr[k];if(!vs||!vs.active)return;
-    vs.setInteractive({useHandCursor:true});
+    vs.setInteractive({useHandCursor:true,pixelPerfect:true,alphaTolerance:100});
     vs.off('pointerdown');
     vs.on('pointerdown',function(ptr,lx,ly,ev){ev.stopPropagation();handleVehTap(k,ck)});
   });
@@ -1322,5 +1328,6 @@ showScr=function(id){
 showScr('startScreen');
 })();
 </script>
+<script src="/crabcake-avatar.js?v=8" defer></script>
 </body>
 </html>
