@@ -90,7 +90,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 .hud-grade.promoted{color:var(--yellow)}
 
 /* Nav scroll buttons */
-.nav-btn{position:fixed;top:50%;z-index:16;width:36px;height:36px;border-radius:50%;border:2px solid rgba(255,255,255,.3);background:rgba(15,37,64,.6);color:#fff;font-size:1.2rem;display:none;align-items:center;justify-content:center;cursor:pointer;transform:translateY(-50%);backdrop-filter:blur(4px);transition:background .2s}
+.nav-btn{position:fixed;top:20%;z-index:32;width:36px;height:36px;border-radius:50%;border:2px solid rgba(255,255,255,.3);background:rgba(15,37,64,.6);color:#fff;font-size:1.2rem;display:none;align-items:center;justify-content:center;cursor:pointer;transform:translateY(-50%);backdrop-filter:blur(4px);transition:background .2s}
 .nav-btn:hover,.nav-btn:active{background:rgba(74,144,217,.5);border-color:var(--sky)}
 #navL{left:8px}
 #navR{right:8px}
@@ -789,7 +789,7 @@ function phaserCreate(){
     /* Wrench sign on mechanic's warehouse */
     if(sc.textures.exists('p-sign_wrench')){
       var msl=SL.mechanic;
-      sc.add.image(msl.x,RY+28-msl.s*200,  'p-sign_wrench').setScale(.12).setOrigin(.5,.5).setDepth(D.building+0.5);
+      sc.add.image(msl.x,RY+28-msl.s*200-40,  'p-sign_wrench').setScale(.12).setOrigin(.5,.5).setDepth(D.building+0.5);
     }
     /* All props pre-placed */
     CP.forEach(function(p){var pk='p-'+p.k;if(sc.textures.exists(pk))sc.add.image(p.x,RY+28,pk).setScale(p.s).setOrigin(.5,1).setDepth(D.prop)});
@@ -1108,7 +1108,7 @@ function plBld(ck){
     sc.tweens.add({targets:b,scaleX:sl.s*1.06,scaleY:sl.s*.95,yoyo:true,duration:200});
     /* Add wrench sign on mechanic's warehouse */
     if(ck==='mechanic'&&sc.textures.exists('p-sign_wrench')){
-      sc.add.image(sl.x,RY+28-sl.s*200,'p-sign_wrench').setScale(.12).setOrigin(.5,.5).setDepth(D.building+0.5);
+      sc.add.image(sl.x,RY+28-sl.s*200-40,'p-sign_wrench').setScale(.12).setOrigin(.5,.5).setDepth(D.building+0.5);
     }
   }});
   bldSpr[ck].sprite=b;
@@ -1246,12 +1246,12 @@ function navHoldStop(){
   _navHold=null;
 }
 /* Wire up buttons */
-$('navL').addEventListener('click',function(){navScroll(-1)});
-$('navR').addEventListener('click',function(){navScroll(1)});
-$('navL').addEventListener('mousedown',function(){navHoldStart(-1)});
-$('navR').addEventListener('mousedown',function(){navHoldStart(1)});
-$('navL').addEventListener('touchstart',function(e){e.preventDefault();navHoldStart(-1)},{passive:false});
-$('navR').addEventListener('touchstart',function(e){e.preventDefault();navHoldStart(1)},{passive:false});
+$('navL').addEventListener('click',function(e){e.stopPropagation();navScroll(-1)});
+$('navR').addEventListener('click',function(e){e.stopPropagation();navScroll(1)});
+$('navL').addEventListener('mousedown',function(e){e.stopPropagation();navHoldStart(-1)});
+$('navR').addEventListener('mousedown',function(e){e.stopPropagation();navHoldStart(1)});
+$('navL').addEventListener('touchstart',function(e){e.preventDefault();e.stopPropagation();navHoldStart(-1)},{passive:false});
+$('navR').addEventListener('touchstart',function(e){e.preventDefault();e.stopPropagation();navHoldStart(1)},{passive:false});
 document.addEventListener('mouseup',navHoldStop);
 document.addEventListener('touchend',navHoldStop);
 
