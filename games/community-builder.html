@@ -534,8 +534,8 @@ function _saveCityState(){
   if(!G.band||G.isMatch)return;
   var state={buildings:[],vehicles:[],walkers:[]};
   for(var k in G.cp){
-    if(G.cp[k].bld)state.buildings.push(k);
-    if(G.cp[k].veh){state.vehicles.push(k);state.walkers.push(k)}
+    if(G.cp[k].bld){state.buildings.push(k);state.walkers.push(k)}
+    if(G.cp[k].veh)state.vehicles.push(k);
   }
   _saveCity(state);
 }
@@ -551,9 +551,12 @@ function _clearCity(){
   G.ul=0;updHUD();
 }
 function _isCityFull(){
-  var total=0,placed=0;
-  for(var k in CI){if(CI[k].b){total++;if(G.cp[k]&&G.cp[k].bld)placed++}}
-  return placed>=total;
+  /* All 12 characters must have building + vehicle + walker */
+  for(var k in CI){
+    var p=G.cp[k];
+    if(!p||!p.bld||!p.veh)return false;
+  }
+  return true;
 }
 function _checkCityFull(){
   if(_isCityFull())$('cityFullModal').classList.add('show');
@@ -1369,9 +1372,16 @@ function nextQ(){
     if(G.curChar){dismissIntro(function(){charIntro(q.character,function(){showQ(q)})})}
     else{charIntro(q.character,function(){showQ(q)})}
   }else{
-    /* Returning character — pan to their building then show question */
-    var sl=SL[q.character];
-    if(sl)panTo(sl.x);
+    /* Returning character — ensure walker exists near building, pan there */
+    var ck=q.character;
+    var sl=SL[ck];
+    if(sl){
+      /* Check if walker exists for this character */
+      var hasWalker=false;
+      for(var wi=0;wi<walkers.length;wi++){if(walkers[wi].spr&&walkers[wi].spr._charKey===ck&&walkers[wi].spr.active){hasWalker=true;break}}
+      if(!hasWalker)spWalk(ck);
+      panTo(sl.x);
+    }
     setTimeout(function(){showQ(q)},600);
   }
 }
@@ -1451,7 +1461,7 @@ function ansH(isCorrect,q,btn,opWrap){
         if(SL[ck])panTo(SL[ck].x);
         setTimeout(function(){
           spDriveVeh(ck);
-          doConfetti();playSound('matchComplete');_saveCityState();
+          doConfetti();playSound('matchComplete');_saveCityState();_checkCityFull();
           var ci=CI[ck];
           showMatchCeleb(ci?ci.e:'\u2B50',ci?ci.n+'\'s vehicle is on the road!':'Vehicle added!');
         },1200);
