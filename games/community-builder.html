@@ -369,6 +369,8 @@ var $=function(id){return document.getElementById(id)};
 var GW=1200,GH=800,WW=4200,RY=700,AP='/assets/community-builder';
 var WALKY=RY+65;
 var ROADY=RY+55;
+var LANE_BOTTOM_Y=ROADY-12;
+var LANE_TOP_Y=ROADY-46;
 var CHARS=['firefighter','doctor','police','chef','farmer','teacher','librarian','construction','mailcarrier','busdriver','mechanic','vet'];
 var MATCHABLE=['firefighter','doctor','police','chef','farmer','teacher','librarian','mailcarrier','busdriver','mechanic','vet'];
 var CI={
@@ -585,23 +587,30 @@ function _restoreCity(){
   (state.vehicles||[]).forEach(function(ck){
     var vn=VM[ck];if(!vn)return;
     var sl=SL[ck];if(!sl)return;
+    var vk='v-'+vn;
     var hasAnim=sc.textures.exists('va-'+vn)&&sc.anims.exists(vn+'-da');
-    if(!hasAnim&&!sc.textures.exists('v-'+vn))return;
-    var cfg=VEH_CFG[vn]||{sx:0.22,sy:0.18};
-    var sx=cfg.sx*1.18,sy=cfg.sy*1.18;
-    if(hasAnim){
-      var staticTex=sc.textures.exists('v-'+vn)?sc.textures.get('v-'+vn).getSourceImage():null;
-      var mul=staticTex?(staticTex.width/384*2):2;
-      sx*=mul;sy*=mul;
-    }
-    var vy=(ck==='teacher')?WALKY+10:WALKY-2;
+    if(!hasAnim&&!sc.textures.exists(vk))return;
+    var cfg=VEH_CFG[vn]||{sx:0.22,sy:0.18,by:0,ty:0};
+    var bottomY=LANE_BOTTOM_Y+cfg.by;
+    var topY=LANE_TOP_Y+cfg.ty;
     var v;
     if(hasAnim){
-      v=sc.add.sprite(sl.x+20,vy,'va-'+vn).setScale(sx,sy).setDepth(D.vehicle);
+      var staticTex=sc.textures.exists(vk)?sc.textures.get(vk).getSourceImage():null;
+      var animMul=staticTex?(staticTex.width/384*2):2;
+      v=sc.add.sprite(sl.x+20,bottomY,'va-'+vn).setScale(cfg.sx*animMul,cfg.sy*animMul).setDepth(D.vehicle);
       v.play(vn+'-da');
+      v._animMul=animMul;
+      v._baseSX=cfg.sx*animMul;v._baseSY=cfg.sy*animMul;
     }else{
-      v=sc.add.image(sl.x+20,vy,'v-'+vn).setScale(sx,sy).setDepth(D.vehicle);
+      v=sc.add.image(sl.x+20,bottomY,vk).setScale(cfg.sx,cfg.sy).setDepth(D.vehicle);
+      v._animMul=1;
+      v._baseSX=cfg.sx;v._baseSY=cfg.sy;
     }
+    v._charKey=ck;v._dir=1;v._sp=40+Math.random()*50;v._baseSp=v._sp;
+    v._stopTimer=8000+Math.random()*10000;v._stopped=false;v._stopDur=1000+Math.random()*1500;v._elapsed=0;
+    v._laneBottomY=bottomY;v._laneTopY=topY;
+    v.setFlipX(false);
+    vehSpr[ck]=v;
   });
   (state.walkers||[]).forEach(function(ck){
     if(!sc.textures.exists(ck+'-walk')||!sc.anims.exists(ck+'-wa'))return;
@@ -1034,8 +1043,6 @@ function phaserCreate(){
     /* All props pre-placed */
     CP.forEach(function(p){var pk='p-'+p.k;if(sc.textures.exists(pk))sc.add.image(p.x,RY+28,pk).setScale(p.s).setOrigin(.5,1).setDepth(D.prop)});
     /* All vehicles driving on road — two-lane system */
-    var LANE_BOTTOM_Y=ROADY-12;
-    var LANE_TOP_Y=ROADY-46;
     Object.keys(VM).forEach(function(ck){
       var vn=VM[ck];
       var vk='v-'+vn;
@@ -1111,9 +1118,9 @@ function phaserUpdate(time,delta){
     if(s.x>WW-60)G.patrolDir=-1;if(s.x<60)G.patrolDir=1;
     if(!G.isMatch)G.camTarget.x+=(s.x-G.camTarget.x)*0.08;
   }
-  /* Vehicle driving (band 1) — two-lane natural traffic */
-  if(G.isMatch){
-    var vKeys=Object.keys(vehSpr);
+  /* Vehicle driving — two-lane natural traffic (all bands) */
+  var vKeys=Object.keys(vehSpr);
+  if(vKeys.length>0){
     /* Reset all speeds toward base each frame (gradual restore) */
     vKeys.forEach(function(ck){
       var v=vehSpr[ck];if(!v||!v.active)return;
@@ -1355,7 +1362,15 @@ function nextQ(){
   if(G.lives<=0)return;
   var q=G.queue.shift();
   if(!q){finish();return}
-  showQ(q);
+  var p=G.cp[q.character];
+  /* First time seeing this character and not already in city → walk-in intro */
+  if(p&&p.cor===0&&!p.bld){
+    if(q.character===G.curChar){showQ(q);return}
+    if(G.curChar){dismissIntro(function(){charIntro(q.character,function(){showQ(q)})})}
+    else{charIntro(q.character,function(){showQ(q)})}
+  }else{
+    showQ(q);
+  }
 }
 
 function showQ(q){
@@ -1368,10 +1383,6 @@ function showQ(q){
   /* Randomize answer positions */
   var indices=[];for(var i=0;i<q.options.length;i++)indices.push(i);
   shuf(indices);
-  var newCorrect=-1;
-  indices.forEach(function(origIdx,newIdx){
-    if(origIdx===q.correct)newCorrect=newIdx;
-  });
   indices.forEach(function(origIdx){
     var b=document.createElement('button');b.className='qb';b.textContent=q.options[origIdx];
     var isCorrect=(origIdx===q.correct);
@@ -1389,11 +1400,29 @@ function ansH(isCorrect,q,btn,opWrap){
     recordAnswer(true);
     var p=G.cp[q.character];p.cor++;updHUD();
     if(p.cor===1&&!p.bld){
-      /* First correct → drop building */
+      /* First correct → drop building + convert intro sprite to walker at building */
       p.bld=true;G.ul++;
       setTimeout(function(){
         $('qOver').classList.remove('active');
         var ck=q.character;
+        /* Convert intro sprite to permanent walker near building */
+        if(G.introSpr&&G.curChar===ck){
+          var spr=G.introSpr;
+          var sl=SL[ck];
+          if(sl){
+            spr.setDepth(D.walker);
+            G.sc.tweens.add({targets:spr,x:sl.x,duration:1500,ease:'Linear',onComplete:function(){
+              walkers.push({spr:spr,sp:15+Math.random()*12,dir:1,mn:Math.max(sl.x-120,10),mx:Math.min(sl.x+120,WW-10)});
+            }});
+          }else{
+            var cx=spr.x;
+            walkers.push({spr:spr,sp:15+Math.random()*12,dir:G.patrolDir,mn:Math.max(cx-150,10),mx:Math.min(cx+150,WW-10)});
+          }
+          G.introSpr=null;G.curChar=null;G.entering=false;
+        }else{
+          /* No intro sprite (already in city) — just spawn walker */
+          spWalk(ck);
+        }
         if(ck==='construction'){
           for(var i=0;i<2&&G.pi<CP.length;i++,G.pi++)plProp(G.pi);
           doConfetti();playSound('matchComplete');_saveCityState();
@@ -1405,18 +1434,17 @@ function ansH(isCorrect,q,btn,opWrap){
         setTimeout(nextQ,3500);
       },700);
     }else if(p.cor===2&&!p.veh){
-      /* Second correct → spawn vehicle + walker */
+      /* Second correct → spawn driving vehicle on the road */
       p.veh=true;
       setTimeout(function(){
         $('qOver').classList.remove('active');
         var ck=q.character;
         if(SL[ck])panTo(SL[ck].x);
         setTimeout(function(){
-          if(VM[ck])plVeh(ck);
-          spWalk(ck);
+          spDriveVeh(ck);
           doConfetti();playSound('matchComplete');_saveCityState();
           var ci=CI[ck];
-          showMatchCeleb(ci?ci.e:'\u2B50',ci?ci.n+' joined!':'Welcome!');
+          showMatchCeleb(ci?ci.e:'\u2B50',ci?ci.n+'\'s vehicle is on the road!':'Vehicle added!');
         },1200);
         updHUD();
         setTimeout(nextQ,3500);
@@ -1454,7 +1482,6 @@ function plBld(ck){
     }
   }});
   bldSpr[ck].sprite=b;
-  if(VM[ck])sc.time.delayedCall(1000,function(){plVeh(ck)});
 }
 function plVeh(ck){
   var sc=G.sc;if(!sc)return;var vn=VM[ck];
@@ -1477,6 +1504,36 @@ function plVeh(ck){
     v=sc.add.image(sl.x+60,vy,'v-'+vn).setScale(sx,sy).setAlpha(0).setDepth(D.vehicle);
   }
   sc.tweens.add({targets:v,alpha:1,x:sl.x+20,duration:600,ease:'Power2'});
+}
+/* Spawn a driving vehicle (bands 2/3) — same config as band 1 road vehicles */
+function spDriveVeh(ck){
+  var sc=G.sc;if(!sc)return;var vn=VM[ck];if(!vn)return;
+  var vk='v-'+vn;
+  var hasAnim=sc.textures.exists('va-'+vn)&&sc.anims.exists(vn+'-da');
+  if(!hasAnim&&!sc.textures.exists(vk))return;
+  var sl=SL[ck]||{x:600};
+  var cfg=VEH_CFG[vn]||{sx:0.22,sy:0.18,by:0,ty:0};
+  var bottomY=LANE_BOTTOM_Y+cfg.by;
+  var topY=LANE_TOP_Y+cfg.ty;
+  var v;
+  if(hasAnim){
+    var staticTex=sc.textures.exists(vk)?sc.textures.get(vk).getSourceImage():null;
+    var animMul=staticTex?(staticTex.width/384*2):2;
+    v=sc.add.sprite(sl.x+20,bottomY,'va-'+vn).setScale(cfg.sx*animMul,cfg.sy*animMul).setDepth(D.vehicle).setAlpha(0);
+    v.play(vn+'-da');
+    v._animMul=animMul;
+    v._baseSX=cfg.sx*animMul;v._baseSY=cfg.sy*animMul;
+  }else{
+    v=sc.add.image(sl.x+20,bottomY,vk).setScale(cfg.sx,cfg.sy).setDepth(D.vehicle).setAlpha(0);
+    v._animMul=1;
+    v._baseSX=cfg.sx;v._baseSY=cfg.sy;
+  }
+  v._charKey=ck;v._dir=1;v._sp=40+Math.random()*50;v._baseSp=v._sp;
+  v._stopTimer=8000+Math.random()*10000;v._stopped=false;v._stopDur=1000+Math.random()*1500;v._elapsed=0;
+  v._laneBottomY=bottomY;v._laneTopY=topY;
+  v.setFlipX(false);
+  sc.tweens.add({targets:v,alpha:1,duration:600,ease:'Power2'});
+  vehSpr[ck]=v;
 }
 function plProp(idx){
   if(idx>=CP.length)return;var sc=G.sc;if(!sc)return;
