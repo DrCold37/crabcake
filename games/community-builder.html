@@ -117,6 +117,22 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 #navR{right:6px}
 .nav-btn.vis{display:flex}
 
+/* Clear city button */
+.hb-clear{background:rgba(255,92,92,.15);border:1px solid rgba(255,92,92,.3);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#ff5c5c;font-size:.75rem;transition:background .2s}
+.hb-clear:hover{background:rgba(255,92,92,.3)}
+
+/* City full modal */
+#cityFullModal{position:fixed;inset:0;z-index:62;display:none;align-items:center;justify-content:center;background:rgba(10,22,40,.7);backdrop-filter:blur(6px)}
+#cityFullModal.show{display:flex}
+.cfm-inner{background:linear-gradient(135deg,#0a1628,#1a2a4a);border:3px solid var(--yellow);border-radius:24px;padding:1.5rem 2rem;text-align:center;max-width:380px;width:90%;box-shadow:0 0 50px rgba(255,217,61,.3)}
+.cfm-emoji{font-size:3.5rem}
+.cfm-title{font-family:'Boogaloo',cursive;font-size:1.6rem;color:var(--yellow);margin:.4rem 0}
+.cfm-text{color:rgba(255,255,255,.7);font-size:.85rem;margin-bottom:1rem}
+.cfm-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.cfm-btn{padding:.5rem 1.2rem;border-radius:30px;border:none;font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer}
+.cfm-btn-clear{background:linear-gradient(135deg,var(--coral),#ff4040);color:#fff}
+.cfm-btn-keep{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2)}
+
 /* ═══ QUESTION — centered box (bands 2/3) ═══ */
 #qOver{position:fixed;top:50px;left:50%;transform:translateX(-50%);z-index:30;display:none;flex-direction:column;align-items:center;padding:.8rem 1.2rem;background:rgba(15,37,64,.94);border:2px solid rgba(255,255,255,.15);border-radius:20px;backdrop-filter:blur(8px);box-shadow:0 8px 32px rgba(0,0,0,.4);max-width:480px;width:90%}
 #qOver.active{display:flex}
@@ -234,6 +250,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
   <div class="hud-left">
     <button class="hb" id="homeBtn">&#x1F3E0;</button>
     <button class="hb-sound" id="soundBtn" title="Toggle Sound">&#x1F50A;</button>
+    <button class="hb-clear" id="clearCityBtn" title="Clear City" style="display:none">&#x1F5D1;</button>
     <div class="hs">&#x2B50; <span id="scD">0</span></div>
     <div class="lives-display" id="livesDisplay">
       <span class="life-heart" id="h1">&#x2764;&#xFE0F;</span>
@@ -278,6 +295,19 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
     <div class="mc-name" id="mNm"></div>
     <div class="mt" id="mTx">Tap their building!</div>
     <div class="match-status" id="mSt"></div>
+  </div>
+</div>
+
+<!-- City full modal -->
+<div id="cityFullModal">
+  <div class="cfm-inner">
+    <div class="cfm-emoji">&#x1F3D9;&#xFE0F;</div>
+    <div class="cfm-title">City Complete!</div>
+    <div class="cfm-text">Your town is full! Clear the city to build it again from scratch?</div>
+    <div class="cfm-btns">
+      <button class="cfm-btn cfm-btn-clear" id="cfmClear">&#x1F5D1; Clear City</button>
+      <button class="cfm-btn cfm-btn-keep" id="cfmKeep">Keep Playing</button>
+    </div>
   </div>
 </div>
 
@@ -492,7 +522,95 @@ function _saveHistories(){
   }catch(e){}
 }
 
-/* ── Record every answer into the progression engine ── */
+/* ══════════════════════════════════════════════════════════════════════════
+   CITY PERSISTENCE — separate per band (band_2, band_3)
+   ══════════════════════════════════════════════════════════════════════════ */
+var CITY_KEY_PREFIX='ck_city_';
+function _cityKey(){return CITY_KEY_PREFIX+(G.band||'band_2')}
+function _loadCity(){try{return JSON.parse(localStorage.getItem(_cityKey())||'{}')}catch(e){return{}}}
+function _saveCity(data){try{localStorage.setItem(_cityKey(),JSON.stringify(data))}catch(e){}}
+function _saveCityState(){
+  if(!G.band||G.isMatch)return;
+  var state={buildings:[],vehicles:[],walkers:[]};
+  for(var k in G.cp){
+    if(G.cp[k].bld)state.buildings.push(k);
+    if(G.cp[k].veh){state.vehicles.push(k);state.walkers.push(k)}
+  }
+  _saveCity(state);
+}
+function _clearCity(){
+  try{localStorage.removeItem(_cityKey())}catch(e){}
+  /* Remove sprites from scene */
+  if(G.sc){
+    Object.keys(bldSpr).forEach(function(k){var bs=bldSpr[k];if(bs&&bs.sprite){bs.sprite.destroy();bs.sprite=null}});
+    walkers.forEach(function(w){if(w.spr)w.spr.destroy()});walkers=[];
+  }
+  /* Reset cp state */
+  for(var k in G.cp){G.cp[k]={cor:0,bld:false,veh:false}}
+  G.ul=0;updHUD();
+}
+function _isCityFull(){
+  var total=0,placed=0;
+  for(var k in CI){if(CI[k].b){total++;if(G.cp[k]&&G.cp[k].bld)placed++}}
+  return placed>=total;
+}
+function _checkCityFull(){
+  if(_isCityFull())$('cityFullModal').classList.add('show');
+}
+function _restoreCity(){
+  if(!G.band||G.isMatch)return;
+  var state=_loadCity();
+  if(!state.buildings)return;
+  /* Restore cp state */
+  (state.buildings||[]).forEach(function(ck){
+    if(!G.cp[ck])G.cp[ck]={cor:0,bld:false,veh:false};
+    G.cp[ck].bld=true;G.cp[ck].cor=Math.max(G.cp[ck].cor,1);
+  });
+  (state.vehicles||[]).forEach(function(ck){
+    if(!G.cp[ck])G.cp[ck]={cor:0,bld:false,veh:false};
+    G.cp[ck].veh=true;G.cp[ck].cor=Math.max(G.cp[ck].cor,2);
+  });
+  /* Place sprites silently (no animation) */
+  var sc=G.sc;if(!sc)return;
+  (state.buildings||[]).forEach(function(ck){
+    var sl=SL[ck];if(!sl)return;
+    var bk='b-'+CI[ck].b;if(!bk||bk==='b-null'||!sc.textures.exists(bk))return;
+    var b=sc.add.image(sl.x,RY+28,bk).setScale(sl.s).setOrigin(.5,1).setDepth(D.building);
+    bldSpr[ck].sprite=b;
+    if(ck==='mechanic'&&sc.textures.exists('p-sign_wrench')){
+      sc.add.image(sl.x,RY+28-sl.s*200-40,'p-sign_wrench').setScale(.12).setOrigin(.5,.5).setDepth(D.building+0.5);
+    }
+    G.ul++;
+  });
+  (state.vehicles||[]).forEach(function(ck){
+    var vn=VM[ck];if(!vn)return;
+    var sl=SL[ck];if(!sl)return;
+    var hasAnim=sc.textures.exists('va-'+vn)&&sc.anims.exists(vn+'-da');
+    if(!hasAnim&&!sc.textures.exists('v-'+vn))return;
+    var cfg=VEH_CFG[vn]||{sx:0.22,sy:0.18};
+    var sx=cfg.sx*1.18,sy=cfg.sy*1.18;
+    if(hasAnim){
+      var staticTex=sc.textures.exists('v-'+vn)?sc.textures.get('v-'+vn).getSourceImage():null;
+      var mul=staticTex?(staticTex.width/384*2):2;
+      sx*=mul;sy*=mul;
+    }
+    var vy=(ck==='teacher')?WALKY+10:WALKY-2;
+    var v;
+    if(hasAnim){
+      v=sc.add.sprite(sl.x+20,vy,'va-'+vn).setScale(sx,sy).setDepth(D.vehicle);
+      v.play(vn+'-da');
+    }else{
+      v=sc.add.image(sl.x+20,vy,'v-'+vn).setScale(sx,sy).setDepth(D.vehicle);
+    }
+  });
+  (state.walkers||[]).forEach(function(ck){
+    if(!sc.textures.exists(ck+'-walk')||!sc.anims.exists(ck+'-wa'))return;
+    var sl=SL[ck]||{x:600};
+    var spr=sc.add.sprite(sl.x,WALKY,ck+'-walk').setScale(.33).setOrigin(.5,1).setDepth(D.walker);spr.play(ck+'-wa');
+    walkers.push({spr:spr,sp:15+Math.random()*12,dir:Math.random()>.5?1:-1,mn:Math.max(sl.x-120,10),mx:Math.min(sl.x+120,WW-10)});
+  });
+  updHUD();
+}
 function recordAnswer(correct){
   if(!G.band||!G.currentGrade)return;
   G.answerHistory.push(correct);
@@ -664,6 +782,16 @@ $('soundBtn').addEventListener('click',function(){
   _soundOn=!_soundOn;
   $('soundBtn').textContent=_soundOn?'\u{1F50A}':'\u{1F507}';
 });
+$('clearCityBtn').addEventListener('click',function(){
+  if(confirm('Clear all buildings, vehicles and characters from your city?')){_clearCity()}
+});
+$('cfmClear').addEventListener('click',function(){
+  $('cityFullModal').classList.remove('show');
+  _clearCity();
+});
+$('cfmKeep').addEventListener('click',function(){
+  $('cityFullModal').classList.remove('show');
+});
 
 /* ── Pre-render grade pills on start screen from saved progress ── */
 if(G.band){
@@ -788,8 +916,8 @@ function startGame(){
       /* Build fully randomized queue */
       CHARS.forEach(function(c){G.cp[c]={cor:0,bld:false,veh:false}});
       var gradeQs=G.poolsByGrade[G.currentGrade]||[];
-      G.queue=shuf(gradeQs.slice());
-      $('prT').textContent='12';
+      G.queue=shuf(gradeQs.slice()).slice(0,10);
+      $('prT').textContent='10';
       renderGradeSelector();
       console.log('CB: band'+G.bn+' ready, grade='+G.currentGrade+' playGrades='+G.playGrades+' queue='+G.queue.length);
     }
@@ -937,8 +1065,9 @@ function phaserCreate(){
       vehSpr[ck]=v;
     });
   }else{
-    /* Bands 2/3: empty slots */
+    /* Bands 2/3: empty slots — then restore saved city */
     CP.forEach(function(){propSpr.push({ghost:null,sprite:null})});
+    _restoreCity();
   }
 
   /* Camera target */
@@ -963,6 +1092,7 @@ function phaserCreate(){
   $('lBar').style.width='100%';$('lTxt').textContent='Ready!';
   setTimeout(function(){
     showScr(null);$('gameWrap').classList.add('active');$('hud').classList.add('active');
+    if(!G.isMatch)$('clearCityBtn').style.display='';
     if(typeof CrabcakeAvatar!=='undefined')CrabcakeAvatar.refreshHUD();
     updateMasteryVisual();
     setTimeout(G.isMatch?nextMatch:nextQ,800);
@@ -1266,10 +1396,10 @@ function ansH(isCorrect,q,btn,opWrap){
         var ck=q.character;
         if(ck==='construction'){
           for(var i=0;i<2&&G.pi<CP.length;i++,G.pi++)plProp(G.pi);
-          doConfetti();playSound('matchComplete');
+          doConfetti();playSound('matchComplete');_saveCityState();
         }else if(SL[ck]){
           panTo(SL[ck].x);
-          setTimeout(function(){plBld(ck);doConfetti();playSound('matchComplete')},1200);
+          setTimeout(function(){plBld(ck);doConfetti();playSound('matchComplete');_saveCityState();_checkCityFull()},1200);
         }
         updHUD();
         setTimeout(nextQ,3500);
@@ -1284,7 +1414,7 @@ function ansH(isCorrect,q,btn,opWrap){
         setTimeout(function(){
           if(VM[ck])plVeh(ck);
           spWalk(ck);
-          doConfetti();playSound('matchComplete');
+          doConfetti();playSound('matchComplete');_saveCityState();
           var ci=CI[ck];
           showMatchCeleb(ci?ci.e:'\u2B50',ci?ci.n+' joined!':'Welcome!');
         },1200);
