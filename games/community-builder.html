@@ -596,10 +596,13 @@ function _restoreCity(){
     var b=sc.add.image(sl.x,RY+28,bk).setScale(sl.s).setOrigin(.5,1).setDepth(D.building);
     bldSpr[ck].sprite=b;
     if(ck==='mechanic'&&sc.textures.exists('p-sign_wrench')){
-      sc.add.image(sl.x,RY+28-sl.s*200-40,'p-sign_wrench').setScale(.12).setOrigin(.5,.5).setDepth(D.building+0.5);
+      sc.add.image(sl.x,RY+28-sl.s*200-15,'p-sign_wrench').setScale(.12).setOrigin(.5,.5).setDepth(D.building+0.5);
     }
     if(ck==='mailcarrier'&&sc.textures.exists('p-mail-sign')){
-      sc.add.image(sl.x,RY+28-sl.s*200-40,'p-mail-sign').setScale(.12).setOrigin(.5,.5).setDepth(D.building+0.5);
+      sc.add.image(sl.x,RY+28-sl.s*200+50,'p-mail-sign').setScale(.084,.06).setOrigin(.5,.5).setDepth(D.building+0.5);
+    }
+    if(ck==='mailcarrier'&&sc.textures.exists('p-mail-box')){
+      sc.add.image(sl.x+60,RY+28,'p-mail-box').setScale(.08).setOrigin(.5,1).setDepth(D.prop+1);
     }
     G.ul++;
   });
@@ -987,7 +990,7 @@ function phaserPreload(){
   /* Animated vehicle spritesheets (384x384 frames, 3x3 grid = 9 frames) */
   var ANIM_VEH=['ambulance','policecar','firetruck'];
   ANIM_VEH.forEach(function(v){self.load.spritesheet('va-'+v,AP+'/town/Vehicles/'+v+'-animate.png',{frameWidth:384,frameHeight:384})});
-  ['sign_stop','sign_warning','sign_construction_1','sign_st_name','sign_info','light_pole_1','light_pole_2','light_pole_3','fence_wood','fence_garden_brown','water_hydrant','light_post','sign_wrench','mail-sign'].forEach(function(p){self.load.image('p-'+p,AP+'/town/Props/'+p+'.png')});
+  ['sign_stop','sign_warning','sign_construction_1','sign_st_name','sign_info','light_pole_1','light_pole_2','light_pole_3','fence_wood','fence_garden_brown','water_hydrant','light_post','sign_wrench','mail-sign','mail-box'].forEach(function(p){self.load.image('p-'+p,AP+'/town/Props/'+p+'.png')});
   ['tree_01','tree_02','tree_03','bush_01','bush_02','weeds_01','weeds_02','weeds_03'].forEach(function(v){self.load.image('t-'+v,AP+'/town/Vegetation/'+v+'.png')});
   ['tree_01_background_1','tree_01_background_2','tree_02_background_1','tree_02_background_2'].forEach(function(v){self.load.image('tbg-'+v,AP+'/town/Vegetation/'+v+'.png')});
   for(var i=1;i<=6;i++)self.load.image('cl-'+i,AP+'/town/Props/cloud_0'+i+'.png');
@@ -1061,12 +1064,17 @@ function phaserCreate(){
     /* Wrench sign on mechanic's warehouse */
     if(sc.textures.exists('p-sign_wrench')){
       var msl=SL.mechanic;
-      sc.add.image(msl.x,RY+28-msl.s*200-40,  'p-sign_wrench').setScale(.12).setOrigin(.5,.5).setDepth(D.building+0.5);
+      sc.add.image(msl.x,RY+28-msl.s*200-15,  'p-sign_wrench').setScale(.12).setOrigin(.5,.5).setDepth(D.building+0.5);
     }
     /* Mail sign on mail office */
     if(sc.textures.exists('p-mail-sign')){
       var mcsl=SL.mailcarrier;
-      sc.add.image(mcsl.x,RY+28-mcsl.s*200-40,'p-mail-sign').setScale(.12).setOrigin(.5,.5).setDepth(D.building+0.5);
+      sc.add.image(mcsl.x,RY+28-mcsl.s*200+50,'p-mail-sign').setScale(.084,.06).setOrigin(.5,.5).setDepth(D.building+0.5);
+    }
+    /* Mailbox in front of mail office */
+    if(sc.textures.exists('p-mail-box')){
+      var mcsl2=SL.mailcarrier;
+      sc.add.image(mcsl2.x+60,RY+28,'p-mail-box').setScale(.08).setOrigin(.5,1).setDepth(D.prop+1);
     }
     /* All props pre-placed */
     CP.forEach(function(p){var pk='p-'+p.k;if(sc.textures.exists(pk))sc.add.image(p.x,RY+28,pk).setScale(p.s).setOrigin(.5,1).setDepth(D.prop)});
@@ -1538,11 +1546,15 @@ function plBld(ck){
     sc.tweens.add({targets:b,scaleX:sl.s*1.06,scaleY:sl.s*.95,yoyo:true,duration:200});
     /* Add wrench sign on mechanic's warehouse */
     if(ck==='mechanic'&&sc.textures.exists('p-sign_wrench')){
-      sc.add.image(sl.x,RY+28-sl.s*200-40,'p-sign_wrench').setScale(.12).setOrigin(.5,.5).setDepth(D.building+0.5);
+      sc.add.image(sl.x,RY+28-sl.s*200-15,'p-sign_wrench').setScale(.12).setOrigin(.5,.5).setDepth(D.building+0.5);
     }
     /* Add mail sign on mail office */
     if(ck==='mailcarrier'&&sc.textures.exists('p-mail-sign')){
-      sc.add.image(sl.x,RY+28-sl.s*200-40,'p-mail-sign').setScale(.12).setOrigin(.5,.5).setDepth(D.building+0.5);
+      sc.add.image(sl.x,RY+28-sl.s*200+50,'p-mail-sign').setScale(.084,.06).setOrigin(.5,.5).setDepth(D.building+0.5);
+    }
+    /* Add mailbox in front of mail office */
+    if(ck==='mailcarrier'&&sc.textures.exists('p-mail-box')){
+      sc.add.image(sl.x+60,RY+28,'p-mail-box').setScale(.08).setOrigin(.5,1).setDepth(D.prop+1);
     }
   }});
   bldSpr[ck].sprite=b;
