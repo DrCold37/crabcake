@@ -307,13 +307,6 @@ const CrabcakeAvatar = (function(){
       <path d="M 47.5 36 Q 52 31.5 56.5 36" stroke="#8B6000" stroke-width="1.8" fill="none" stroke-linecap="round"/>
     `;
 
-    // LAYER ORDER:
-    // 1. hair.bg  (behind face — base hair mass)
-    // 2. face circle (skin, r=18 cy=44 — smaller than full avatar to reveal hair above)
-    // 3. ear circles
-    // 4. hair.fg  (in front of face — overlay hair, fringe, cap)
-    // 5. eyes, mouth, cheeks
-    // translate(0,5) shifts everything slightly down so hair sits in upper portion of icon
     return `<svg width="${size}" height="${size}" viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <clipPath id="${id}_cl"><circle cx="44" cy="44" r="42"/></clipPath>
@@ -346,13 +339,11 @@ const CrabcakeAvatar = (function(){
   function buildPetSVG(state, size=40) {
     const svg = PET_SVG[state.petId];
     if(!svg) return '';
-    // Background colour — use user-chosen petBg or fall back to per-pet default
     const petDefaultBg = {
       golden:'#c88030', husky:'#3a4a5a', beagle:'#b07840',
       tabby:'#c05010',  greyfold:'#607080', blackcat:'#111120'
     }[state.petId] || '#333';
     const bgCol = (state.petBg && state.petBg !== 'auto') ? state.petBg : petDefaultBg;
-    // Wrap in circle clipPath so artwork is clipped to circle, with bg fill
     return `<svg width="${size}" height="${size}" viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">
       <defs><clipPath id="pc"><circle cx="65" cy="65" r="63"/></clipPath></defs>
       <circle cx="65" cy="65" r="63" fill="${bgCol}"/>
@@ -362,18 +353,59 @@ const CrabcakeAvatar = (function(){
   }
 
   function svgToImg(svgStr, size) {
-    // Convert SVG string to data URL img — Safari-safe rendering in any DOM context
     const encoded = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgStr);
     return `<img src="${encoded}" width="${size}" height="${size}" style="display:block;" alt="">`;
+  }
+
+  // ── Inject CSS for placeholder (once per page) ──
+  function _ensurePlaceholderCSS() {
+    if (document.getElementById('ck-hud-ph-style')) return;
+    const s = document.createElement('style');
+    s.id = 'ck-hud-ph-style';
+    s.textContent = `
+      .ck-hud-ph {
+        border-radius: 50%;
+        background: rgba(255,255,255,0.08);
+        border: 2px dashed rgba(255,255,255,0.28);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        text-decoration: none;
+        flex-shrink: 0;
+        animation: ckHudPulse 2.5s ease-in-out infinite;
+        transition: transform 0.15s;
+      }
+      .ck-hud-ph:hover { transform: scale(1.08); }
+      @keyframes ckHudPulse {
+        0%,100% { border-color: rgba(255,255,255,0.2); box-shadow: none; }
+        50%      { border-color: rgba(0,201,177,0.65); box-shadow: 0 0 10px rgba(0,201,177,0.25); }
+      }
+    `;
+    document.head.appendChild(s);
   }
 
   function injectHUD(targetEl, options) {
     if(!targetEl) return;
     options = options || {};
-    const state   = load();
     const size    = options.size || 52;
-    const petSize = Math.round(size * .75);
+    const hudLink = targetEl.dataset.hudLink || 'avatar.html';
 
+    // Show palette placeholder if user hasn't customized yet
+    const hasCustomized = !!localStorage.getItem(STORAGE_KEY);
+    if (!hasCustomized) {
+      _ensurePlaceholderCSS();
+      targetEl.innerHTML =
+        `<a href="${hudLink}"
+            title="Create your Avatar &amp; Pet"
+            class="ck-hud-ph"
+            style="width:${size}px;height:${size}px;font-size:${Math.round(size * 0.44)}px;">🎨</a>`;
+      targetEl.style.display = 'inline-flex';
+      return;
+    }
+
+    const state   = load();
+    const petSize = Math.round(size * .75);
     const headSVG = buildHeadSVG(state, size);
     const headImg = svgToImg(headSVG, size);
 
@@ -383,7 +415,6 @@ const CrabcakeAvatar = (function(){
       petImg = svgToImg(petSVG, petSize);
     }
 
-    const hudLink = targetEl.dataset.hudLink;
     targetEl.innerHTML = hudLink
       ? `<a href="${hudLink}" title="Customise your avatar"
            style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;cursor:pointer;">
