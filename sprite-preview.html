@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="UTF-8">
+<title>Sprite Preview</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#1a1a2e;color:#fff;font-family:'Segoe UI',sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:20px}
+canvas{border:2px solid #333;border-radius:12px;background:#0f0f1f}
+.controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center}
+label{font-size:13px;color:rgba(255,255,255,.6)}
+input[type=range]{accent-color:#00C9B1;width:100px}
+select,input[type=file]{font-size:13px;padding:4px 8px;border-radius:8px;border:1px solid #333;background:#0f0f1f;color:#fff}
+.val{font-size:13px;font-weight:700;color:#00C9B1;min-width:30px}
+h2{font-size:1.2rem;color:#00C9B1}
+.drop-zone{border:2px dashed rgba(255,255,255,.2);border-radius:16px;padding:40px;text-align:center;cursor:pointer;transition:border-color .2s}
+.drop-zone:hover,.drop-zone.over{border-color:#00C9B1}
+</style>
+</head><body>
+
+<h2>🦀 Sprite Animation Preview</h2>
+
+<div class="drop-zone" id="dropZone" onclick="document.getElementById('fileIn').click()">
+  Drop a spritesheet PNG here or click to browse
+  <input type="file" id="fileIn" accept="image/png" style="display:none">
+</div>
+
+<canvas id="cv" width="384" height="384"></canvas>
+
+<div class="controls">
+  <label>FPS: <input type="range" id="fps" min="1" max="24" value="6"><span class="val" id="fpsVal">6</span></label>
+  <label>Cols: <input type="range" id="cols" min="1" max="8" value="3"><span class="val" id="colsVal">3</span></label>
+  <label>Rows: <input type="range" id="rows" min="1" max="8" value="3"><span class="val" id="rowsVal">3</span></label>
+  <label>Scale: <input type="range" id="scale" min="0.5" max="3" step="0.1" value="1"><span class="val" id="scaleVal">1</span></label>
+  <label><input type="checkbox" id="loop" checked> Loop</label>
+</div>
+
+<script>
+var img=null, frame=0, cols=3, rows=3, fps=6, scale=1, loop=true;
+var cv=document.getElementById('cv'), ctx=cv.getContext('2d');
+var lastTime=0, interval=1000/6;
+
+function loadImage(src){
+  var i=new Image();
+  i.onload=function(){
+    img=i;
+    frame=0;
+    document.getElementById('dropZone').style.display='none';
+    draw();
+  };
+  i.src=src;
+}
+
+// File input
+document.getElementById('fileIn').addEventListener('change',function(e){
+  var f=e.target.files[0]; if(!f)return;
+  var r=new FileReader();
+  r.onload=function(ev){loadImage(ev.target.result)};
+  r.readAsDataURL(f);
+});
+
+// Drag and drop
+var dz=document.getElementById('dropZone');
+dz.addEventListener('dragover',function(e){e.preventDefault();dz.classList.add('over')});
+dz.addEventListener('dragleave',function(){dz.classList.remove('over')});
+dz.addEventListener('drop',function(e){
+  e.preventDefault();dz.classList.remove('over');
+  var f=e.dataTransfer.files[0]; if(!f)return;
+  var r=new FileReader();
+  r.onload=function(ev){loadImage(ev.target.result)};
+  r.readAsDataURL(f);
+});
+
+// Controls
+document.getElementById('fps').addEventListener('input',function(){
+  fps=parseInt(this.value);
+  document.getElementById('fpsVal').textContent=fps;
+  interval=1000/fps;
+});
+document.getElementById('cols').addEventListener('input',function(){
+  cols=parseInt(this.value);
+  document.getElementById('colsVal').textContent=cols;
+  frame=0;
+});
+document.getElementById('rows').addEventListener('input',function(){
+  rows=parseInt(this.value);
+  document.getElementById('rowsVal').textContent=rows;
+  frame=0;
+});
+document.getElementById('scale').addEventListener('input',function(){
+  scale=parseFloat(this.value);
+  document.getElementById('scaleVal').textContent=scale.toFixed(1);
+  if(img){
+    var fw=img.naturalWidth/cols;
+    var fh=img.naturalHeight/rows;
+    cv.width=fw*scale;
+    cv.height=fh*scale;
+  }
+});
+document.getElementById('loop').addEventListener('change',function(){
+  loop=this.checked;
+  frame=0;
+});
+
+function draw(){
+  if(!img)return;
+  var totalFrames=cols*rows;
+  var fw=img.naturalWidth/cols;
+  var fh=img.naturalHeight/rows;
+  cv.width=fw*scale;
+  cv.height=fh*scale;
+
+  var col=frame%cols;
+  var row=Math.floor(frame/cols);
+
+  ctx.clearRect(0,0,cv.width,cv.height);
+  ctx.drawImage(img, col*fw, row*fh, fw, fh, 0, 0, fw*scale, fh*scale);
+}
+
+function animate(time){
+  requestAnimationFrame(animate);
+  if(!img)return;
+  if(time-lastTime<interval)return;
+  lastTime=time;
+
+  var totalFrames=cols*rows;
+  frame++;
+  if(frame>=totalFrames){
+    if(loop)frame=0;
+    else frame=totalFrames-1;
+  }
+  draw();
+}
+
+requestAnimationFrame(animate);
+</script>
+</body></html>
