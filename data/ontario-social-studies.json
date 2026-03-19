@@ -21,10 +21,17 @@
   "valid_until": null,
   "is_current": true,
   "applies_to": {
-    "system": ["public", "catholic"],
+    "system": [
+      "public",
+      "catholic"
+    ],
     "note": "Catholic boards use the same Social Studies curriculum with additional Catholic Social Teaching integration."
   },
-  "games": ["community-builder"],
+  "games": [
+    "community-helpers",
+    "town-rescue",
+    "town-mysteries"
+  ],
   "strands": [
     {
       "strand_id": "heritage_identity",
@@ -46,28 +53,51 @@
   "bands": [
     {
       "band_id": "band_1",
-      "display_name": { "en": "Kindergarten", "fr": "Maternelle" },
+      "display_name": {
+        "en": "Kindergarten",
+        "fr": "Maternelle"
+      },
       "grades": [
         {
           "grade_id": "jk",
           "grade_number": 0,
           "sub_grade": "jk",
-          "display_label": { "en": "Junior Kindergarten", "fr": "Petite enfance (JK)" },
-          "typical_age_range": { "min": 4, "max": 5 },
-          "games_recommended": ["community-builder"],
+          "display_label": {
+            "en": "Junior Kindergarten",
+            "fr": "Petite enfance (JK)"
+          },
+          "typical_age_range": {
+            "min": 4,
+            "max": 5
+          },
+          "games_recommended": [
+            "community-helpers"
+          ],
           "document_note": "Kindergarten social learning is embedded in The Kindergarten Program 2016, Frame 4: Belonging and Contributing.",
           "expectations": [
             {
               "overall_code": "OE29",
-              "display_text": { "en": "Demonstrate an awareness of their surroundings" },
+              "display_text": {
+                "en": "Demonstrate an awareness of their surroundings"
+              },
               "strand": "people_environments",
-              "question_ids": ["cb085", "cb086", "cb088"]
+              "question_ids": [
+                "cb085",
+                "cb086",
+                "cb088"
+              ]
             },
             {
               "overall_code": "OE26",
-              "display_text": { "en": "Demonstrate an understanding of the natural world and the need to care for and respect the environment" },
+              "display_text": {
+                "en": "Demonstrate an understanding of the natural world and the need to care for and respect the environment"
+              },
               "strand": "people_environments",
-              "question_ids": ["cb049", "cb050", "cb051"]
+              "question_ids": [
+                "cb049",
+                "cb050",
+                "cb051"
+              ]
             }
           ]
         },
@@ -75,21 +105,43 @@
           "grade_id": "sk",
           "grade_number": 0,
           "sub_grade": "sk",
-          "display_label": { "en": "Senior Kindergarten", "fr": "Maternelle (SK)" },
-          "typical_age_range": { "min": 5, "max": 6 },
-          "games_recommended": ["community-builder"],
+          "display_label": {
+            "en": "Senior Kindergarten",
+            "fr": "Maternelle (SK)"
+          },
+          "typical_age_range": {
+            "min": 5,
+            "max": 6
+          },
+          "games_recommended": [
+            "community-helpers"
+          ],
           "expectations": [
             {
               "overall_code": "OE18",
-              "display_text": { "en": "Demonstrate an ability to use problem-solving skills in social contexts" },
+              "display_text": {
+                "en": "Demonstrate an ability to use problem-solving skills in social contexts"
+              },
               "strand": "heritage_identity",
-              "question_ids": ["cb025", "cb027", "cb028"]
+              "question_ids": [
+                "cb025",
+                "cb027",
+                "cb028"
+              ]
             },
             {
               "overall_code": "OE15",
-              "display_text": { "en": "Demonstrate an understanding of the diversity of individuals, families, and communities" },
+              "display_text": {
+                "en": "Demonstrate an understanding of the diversity of individuals, families, and communities"
+              },
               "strand": "heritage_identity",
-              "question_ids": ["cb037", "cb061", "cb073", "cb097", "cb109"]
+              "question_ids": [
+                "cb037",
+                "cb061",
+                "cb073",
+                "cb097",
+                "cb109"
+              ]
             }
           ]
         }
@@ -97,14 +149,25 @@
     },
     {
       "band_id": "band_2",
-      "display_name": { "en": "Grades 1–2", "fr": "1re et 2e année" },
+      "display_name": {
+        "en": "Grades 1–2",
+        "fr": "1re et 2e année"
+      },
       "grades": [
         {
           "grade_id": "gr1",
           "grade_number": 1,
-          "display_label": { "en": "Grade 1", "fr": "1re année" },
-          "typical_age_range": { "min": 6, "max": 7 },
-          "games_recommended": ["community-builder"],
+          "display_label": {
+            "en": "Grade 1",
+            "fr": "1re année"
+          },
+          "typical_age_range": {
+            "min": 6,
+            "max": 7
+          },
+          "games_recommended": [
+            "town-rescue"
+          ],
           "strand_topics": {
             "heritage_identity": "Our Changing Roles and Responsibilities",
             "people_environments": "The Local Community"
@@ -112,24 +175,55 @@
           "expectations": [
             {
               "overall_code": "A1",
-              "display_text": { "en": "Application: describe how people relate to each other and the responsibilities different people have in their families and communities" },
+              "display_text": {
+                "en": "Application: describe how people relate to each other and the responsibilities different people have in their families and communities"
+              },
               "strand": "heritage_identity",
-              "question_ids": ["cb005", "cb006", "cb029", "cb030", "cb032", "cb065", "cb066", "cb067"]
+              "question_ids": [
+                "cb005",
+                "cb006",
+                "cb029",
+                "cb030",
+                "cb032",
+                "cb065",
+                "cb066",
+                "cb067"
+              ]
             },
             {
               "overall_code": "B1",
-              "display_text": { "en": "Application: describe some of the ways in which people in the local community interact with each other and the local environment" },
+              "display_text": {
+                "en": "Application: describe some of the ways in which people in the local community interact with each other and the local environment"
+              },
               "strand": "people_environments",
-              "question_ids": ["cb041", "cb042", "cb053", "cb054", "cb077", "cb078", "cb089", "cb101", "cb113"]
+              "question_ids": [
+                "cb041",
+                "cb042",
+                "cb053",
+                "cb054",
+                "cb077",
+                "cb078",
+                "cb089",
+                "cb101",
+                "cb113"
+              ]
             }
           ]
         },
         {
           "grade_id": "gr2",
           "grade_number": 2,
-          "display_label": { "en": "Grade 2", "fr": "2e année" },
-          "typical_age_range": { "min": 7, "max": 8 },
-          "games_recommended": ["community-builder"],
+          "display_label": {
+            "en": "Grade 2",
+            "fr": "2e année"
+          },
+          "typical_age_range": {
+            "min": 7,
+            "max": 8
+          },
+          "games_recommended": [
+            "town-rescue"
+          ],
           "strand_topics": {
             "heritage_identity": "Changing Family and Community Traditions",
             "people_environments": "Global Communities"
@@ -137,15 +231,35 @@
           "expectations": [
             {
               "overall_code": "A1",
-              "display_text": { "en": "Application: compare ways in which some traditions have been celebrated over time and explore how diverse traditions contribute to community" },
+              "display_text": {
+                "en": "Application: compare ways in which some traditions have been celebrated over time and explore how diverse traditions contribute to community"
+              },
               "strand": "heritage_identity",
-              "question_ids": ["cb043", "cb044", "cb068", "cb079", "cb080"]
+              "question_ids": [
+                "cb043",
+                "cb044",
+                "cb068",
+                "cb079",
+                "cb080"
+              ]
             },
             {
               "overall_code": "B1",
-              "display_text": { "en": "Application: describe some significant features of their local community; compare them with features of a different community" },
+              "display_text": {
+                "en": "Application: describe some significant features of their local community; compare them with features of a different community"
+              },
               "strand": "people_environments",
-              "question_ids": ["cb056", "cb055", "cb091", "cb092", "cb103", "cb104", "cb114", "cb115", "cb116"]
+              "question_ids": [
+                "cb056",
+                "cb055",
+                "cb091",
+                "cb092",
+                "cb103",
+                "cb104",
+                "cb114",
+                "cb115",
+                "cb116"
+              ]
             }
           ]
         }
@@ -153,14 +267,25 @@
     },
     {
       "band_id": "band_3",
-      "display_name": { "en": "Grades 3–4", "fr": "3e et 4e année" },
+      "display_name": {
+        "en": "Grades 3–4",
+        "fr": "3e et 4e année"
+      },
       "grades": [
         {
           "grade_id": "gr3",
           "grade_number": 3,
-          "display_label": { "en": "Grade 3", "fr": "3e année" },
-          "typical_age_range": { "min": 8, "max": 9 },
-          "games_recommended": ["community-builder"],
+          "display_label": {
+            "en": "Grade 3",
+            "fr": "3e année"
+          },
+          "typical_age_range": {
+            "min": 8,
+            "max": 9
+          },
+          "games_recommended": [
+            "town-mysteries"
+          ],
           "strand_topics": {
             "heritage_identity": "Communities in Canada, 1780–1850",
             "people_environments": "Living and Working in Ontario"
@@ -168,24 +293,52 @@
           "expectations": [
             {
               "overall_code": "A1",
-              "display_text": { "en": "Application: describe the communities of some of the people who lived in Canada between 1780 and 1850, and compare aspects of their lives" },
+              "display_text": {
+                "en": "Application: describe the communities of some of the people who lived in Canada between 1780 and 1850, and compare aspects of their lives"
+              },
               "strand": "heritage_identity",
-              "question_ids": ["cb058", "cb071", "cb084", "cb095", "cb106"]
+              "question_ids": [
+                "cb058",
+                "cb071",
+                "cb084",
+                "cb095",
+                "cb106"
+              ]
             },
             {
               "overall_code": "B1",
-              "display_text": { "en": "Application: describe the communities across Ontario, including their features, and explain how municipalities meet community needs" },
+              "display_text": {
+                "en": "Application: describe the communities across Ontario, including their features, and explain how municipalities meet community needs"
+              },
               "strand": "people_environments",
-              "question_ids": ["cb045", "cb057", "cb059", "cb069", "cb081", "cb093", "cb094", "cb105", "cb117"]
+              "question_ids": [
+                "cb045",
+                "cb057",
+                "cb059",
+                "cb069",
+                "cb081",
+                "cb093",
+                "cb094",
+                "cb105",
+                "cb117"
+              ]
             }
           ]
         },
         {
           "grade_id": "gr4",
           "grade_number": 4,
-          "display_label": { "en": "Grade 4", "fr": "4e année" },
-          "typical_age_range": { "min": 9, "max": 10 },
-          "games_recommended": ["community-builder"],
+          "display_label": {
+            "en": "Grade 4",
+            "fr": "4e année"
+          },
+          "typical_age_range": {
+            "min": 9,
+            "max": 10
+          },
+          "games_recommended": [
+            "town-mysteries"
+          ],
           "strand_topics": {
             "heritage_identity": "Early Societies, 3000 BCE – 1500 CE",
             "people_environments": "Political and Physical Regions of Canada"
@@ -193,9 +346,29 @@
           "expectations": [
             {
               "overall_code": "B1",
-              "display_text": { "en": "Application: describe the political and physical regions of Canada and some of the ways in which they are interconnected" },
+              "display_text": {
+                "en": "Application: describe the political and physical regions of Canada and some of the ways in which they are interconnected"
+              },
               "strand": "people_environments",
-              "question_ids": ["cb021", "cb033", "cb034", "cb035", "cb046", "cb047", "cb048", "cb060", "cb070", "cb072", "cb083", "cb096", "cb107", "cb108", "cb118", "cb119", "cb120"]
+              "question_ids": [
+                "cb021",
+                "cb033",
+                "cb034",
+                "cb035",
+                "cb046",
+                "cb047",
+                "cb048",
+                "cb060",
+                "cb070",
+                "cb072",
+                "cb083",
+                "cb096",
+                "cb107",
+                "cb108",
+                "cb118",
+                "cb119",
+                "cb120"
+              ]
             }
           ]
         }

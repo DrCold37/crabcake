@@ -1140,8 +1140,8 @@
         {
           "@type": "ListItem",
           "position": 6,
-          "name": "Community Builder",
-          "url": "https://crabcake.kids/games/community-builder.html"
+          "name": "Community Helpers",
+          "url": "https://crabcake.kids/games/community-helpers.html"
         }
       ]
     }
@@ -1330,22 +1330,22 @@
 
     <div class="games-grid" style="max-width:1200px;">
 
-      <a class="game-card" id="card-community-builder"
-         data-bands='["band_1","band_2","band_3"]'
+      <a class="game-card" id="card-community-helpers"
+         data-bands='["band_1"]'
          data-subject="social_studies"
-         data-grades='{"band_1":"JK / SK","band_2":"Grade 1 &amp; 2","band_3":"Grade 3 &amp; 4"}'
-         data-file="/games/community-builder.html"
-         href="/games/community-builder.html">
+         data-grades='{"band_1":"JK / SK"}'
+         data-file="/games/community-helpers.html"
+         href="/games/community-helpers.html">
         <div class="game-thumb" style="background:linear-gradient(135deg,#1a3a5c,#0f2540)"><canvas id="canvas-community"></canvas><img class="card-ca-badge" src="/images/ca-logo.webp" width="24" height="24" alt="" /></div>
         <div class="game-info">
-          <h3>Community Builder</h3>
-          <p>Answer questions about community helpers, rules and maps to build your very own town!</p>
+          <h3>Community Helpers</h3>
+          <p>Find the right helpers and buildings to help your town! Tap the helper or building when the crab asks!</p>
           <div class="game-tags">
-            <span class="tag tag-age">Ages 4–10</span>
+            <span class="tag tag-age">Ages 4–6</span>
             <span class="tag tag-cat">Social Studies</span>
             <span class="tag tag-new">🆕 New</span>
           </div>
-          <div class="grade-links" id="links-community-builder"></div>
+          <div class="grade-links" id="links-community-helpers"></div>
         </div>
       </a>
 
@@ -1681,16 +1681,16 @@
   kl_band_1:{game:'kitchenlab',em:'🥉',name:'Ages 4–6 Champion',desc:'Achieved band mastery for Ages 4–6 in Kitchen Lab',hint:'Master all grades in band 1'},
   kl_band_2:{game:'kitchenlab',em:'🥈',name:'Ages 6–8 Champion',desc:'Achieved band mastery for Ages 6–8 in Kitchen Lab',hint:'Master all grades in band 2'},
   kl_band_3:{game:'kitchenlab',em:'🥇',name:'Ages 8–10 Champion',desc:'Achieved band mastery for Ages 8–10 in Kitchen Lab',hint:'Master all grades in band 3'},
-  cb_first:{game:'communitybuilder',em:'🏘️',name:'First Building',desc:'Unlock your first building in Community Builder',hint:'Answer 3 questions correctly for one helper'},
-  cb_five:{game:'communitybuilder',em:'⭐',name:'Growing Town',desc:'Unlock 5 buildings in one game',hint:'Unlock 5 buildings'},
-  cb_complete:{game:'communitybuilder',em:'🏆',name:'Town Complete',desc:'Unlock all 10 community helpers in one game',hint:'Unlock all 10 helpers'},
-  cb_perfect:{game:'communitybuilder',em:'💎',name:'Perfect Mayor',desc:'Complete a game without any wrong answers',hint:'No wrong answers'},
-  cb_helpers:{game:'communitybuilder',em:'🤝',name:'Community Hero',desc:'Learn about all 10 community helpers',hint:'Play all helper questions'},
-  cb_band_1:{game:'communitybuilder',em:'🥉',name:'Ages 4–6 Builder',desc:'Complete Community Builder on Ages 4–6',hint:'Finish the Ages 4–6 level'},
-  cb_band_2:{game:'communitybuilder',em:'🥈',name:'Ages 6–8 Builder',desc:'Complete Community Builder on Ages 6–8',hint:'Finish the Ages 6–8 level'},
-  cb_band_3:{game:'communitybuilder',em:'🥇',name:'Ages 8–10 Builder',desc:'Complete Community Builder on Ages 8–10',hint:'Finish the Ages 8–10 level'},
+  cb_first:{game:'communityhelpers',em:'🏘️',name:'First Helper',desc:'Answer your first question correctly in Community Helpers',hint:'Get your first question right'},
+  cb_five:{game:'communityhelpers',em:'⭐',name:'Growing Town',desc:'Get 5 correct answers in one game',hint:'Answer 5 questions correctly'},
+  cb_complete:{game:'communityhelpers',em:'🏆',name:'Town Complete',desc:'Answer all questions correctly in one game',hint:'Get every question right'},
+  cb_perfect:{game:'communityhelpers',em:'💎',name:'Perfect Mayor',desc:'Complete a game without any wrong answers',hint:'No wrong answers'},
+  cb_helpers:{game:'communityhelpers',em:'🤝',name:'Community Hero',desc:'Learn about all 12 community helpers',hint:'Play all helper questions'},
+  cb_band_1:{game:'communityhelpers',em:'🥉',name:'Ages 4–6 Helper',desc:'Complete Community Helpers on Ages 4–6',hint:'Finish the Ages 4–6 level'},
+  cb_band_2:{game:'communityhelpers',em:'🥈',name:'Ages 6–8 Helper',desc:'Complete Community Helpers on Ages 6–8',hint:'Finish the Ages 6–8 level'},
+  cb_band_3:{game:'communityhelpers',em:'🥇',name:'Ages 8–10 Helper',desc:'Complete Community Helpers on Ages 8–10',hint:'Finish the Ages 8–10 level'},
     };
-    const GAME_LABELS={mathdive:'🤿 Math Dive',junglewords:'🦁 Jungle Words',witchbrew:'🧙‍♀️ Witch\'s Brew',tubesort:'🧪 Tube Sort',kitchenlab:'👨‍🔬 Kitchen Lab',communitybuilder:'🏘️ Community Builder',avatar:'🎨 Avatar & Pet',crabcake:'🦀 Crabcake'};
+    const GAME_LABELS={mathdive:'🤿 Math Dive',junglewords:'🦁 Jungle Words',witchbrew:'🧙‍♀️ Witch\'s Brew',tubesort:'🧪 Tube Sort',kitchenlab:'👨‍🔬 Kitchen Lab',communityhelpers:'🏘️ Community Helpers',avatar:'🎨 Avatar & Pet',crabcake:'🦀 Crabcake'};
     const BADGE_KEY='crabcake_badges_v1';
 
     function renderHomeBadges(){
@@ -1710,7 +1710,7 @@
         groups[b.game].push(id);
       });
       // Build in fixed game order
-      const order=['mathdive','junglewords','witchbrew','tubesort','kitchenlab','communitybuilder','avatar','crabcake'];
+      const order=['mathdive','junglewords','witchbrew','tubesort','kitchenlab','communityhelpers','avatar','crabcake'];
       let html='';
       order.forEach(game=>{
         const ids=Object.keys(BADGE_DEF).filter(id=>BADGE_DEF[id].game===game);
