@@ -1,9 +1,9 @@
 {
-  "schema_version": "2.0",
+  "schema_version": "3.0",
   "game_id": "community-builder",
-  "version": "2.0",
-  "last_updated": "2026-03-14",
-  "description": "Question sets for Community Builder v2. Band 1 is visual matching (no text questions). Bands 2-3 use text questions with grade-tiered progression matching the maths-dive system. Each question set has a grade_id for the progression engine.",
+  "version": "3.0",
+  "last_updated": "2026-03-17",
+  "description": "Community Builder v3 question data. JK/SK = find-and-click in world. Grade 1-2 = town crisis mode. Grade 3-4 = mystery investigation mode.",
   "progression_rules": {
     "play_chain": {
       "band_1": [
@@ -45,43 +45,933 @@
     "mastery_threshold": 0.85,
     "band_mastery_window": 20,
     "band_mastery_required": 19,
-    "unlock_threshold": 3,
-    "note": "Band 1 uses visual matching (tap building/vehicle). Bands 2-3 use text questions. Grade mastery = 85% of last 10. Band mastery = 19/20 at top grade. Cross-band warmup loads previous band's top grade."
+    "note": "JK/SK use find-and-click. Grade 1-2 use crisis mode. Grade 3-4 use mystery mode."
   },
-  "band_1_matching": {
-    "note": "Band 1 visual matching config. All buildings pre-placed. Player taps matching building + vehicle.",
-    "jk_rule": "Match 1 of 2 (building OR vehicle)",
-    "sk_rule": "Match BOTH building AND vehicle",
-    "characters_per_round": 6,
-    "excluded_characters": [
-      "construction"
-    ],
-    "vehicle_map": {
-      "firefighter": "firetruck",
-      "doctor": "ambulance",
-      "police": "policecar",
-      "chef": "foodtruck",
-      "farmer": "tractor",
-      "teacher": "teachercar",
-      "librarian": "libraryvan",
-      "construction": "dumptruck",
-      "mailcarrier": "mailvan",
-      "busdriver": "bus",
-      "mechanic": "towtruck",
-      "vet": "animalvan"
+  "find_and_click": {
+    "note": "Crab reads scenario aloud. Kid taps correct building or character in the town world.",
+    "jk": {
+      "rules": {
+        "questions_per_session": 8,
+        "max_tries": 3,
+        "lives": false,
+        "on_max_wrong": "show_answer",
+        "crab_audio": "auto_read"
+      },
+      "questions": [
+        {
+          "id": "fc_jk_01",
+          "question": "The kids in town need a ride to school! Who should we ask for help?",
+          "hint": "Look for the bus stop!",
+          "target_type": "building",
+          "target": "busdriver"
+        },
+        {
+          "id": "fc_jk_02",
+          "question": "A little boy fell and hurt his knee! Where should he go?",
+          "hint": "Look for the building with a cross on it!",
+          "target_type": "building",
+          "target": "doctor"
+        },
+        {
+          "id": "fc_jk_03",
+          "question": "Oh no! There's a fire! Who should we call?",
+          "hint": "Look for the big red building!",
+          "target_type": "building",
+          "target": "firefighter"
+        },
+        {
+          "id": "fc_jk_04",
+          "question": "The family is hungry! Where can they get something yummy to eat?",
+          "hint": "Look for the building that makes food!",
+          "target_type": "building",
+          "target": "chef"
+        },
+        {
+          "id": "fc_jk_05",
+          "question": "Someone found a lost puppy! Where should they take it?",
+          "hint": "Look for the building that helps animals!",
+          "target_type": "building",
+          "target": "vet"
+        },
+        {
+          "id": "fc_jk_06",
+          "question": "It's story time! Where do kids go to find books?",
+          "hint": "Look for the building full of books!",
+          "target_type": "building",
+          "target": "librarian"
+        },
+        {
+          "id": "fc_jk_07",
+          "question": "There's a letter that needs to go to grandma! Where should we bring it?",
+          "hint": "Look for the building where mail goes!",
+          "target_type": "building",
+          "target": "mailcarrier"
+        },
+        {
+          "id": "fc_jk_08",
+          "question": "Someone is being really loud and making trouble! Who keeps everyone safe?",
+          "hint": "Look for the building where police work!",
+          "target_type": "building",
+          "target": "police"
+        },
+        {
+          "id": "fc_jk_09",
+          "question": "The family needs fresh fruits and vegetables! Where should they go?",
+          "hint": "Look for the building with food from the farm!",
+          "target_type": "building",
+          "target": "farmer"
+        },
+        {
+          "id": "fc_jk_10",
+          "question": "The road has a big hole in it! Who can fix it?",
+          "hint": "Look for the building where things get built!",
+          "target_type": "building",
+          "target": "construction"
+        },
+        {
+          "id": "fc_jk_11",
+          "question": "It's the first day of school! Who is waiting in the classroom?",
+          "hint": "Look for the school building!",
+          "target_type": "building",
+          "target": "teacher"
+        },
+        {
+          "id": "fc_jk_12",
+          "question": "The family car is making a funny noise! Who can help fix it?",
+          "hint": "Look for the building with tools!",
+          "target_type": "building",
+          "target": "mechanic"
+        }
+      ]
     },
-    "environmental_hints": {
-      "firefighter": "fire_hydrant nearby, red/orange accents",
-      "doctor": "cross/heart symbols, white building",
-      "police": "badge symbol, blue accents",
-      "chef": "food items nearby, kitchen window",
-      "farmer": "plants/crops nearby, green accents",
-      "teacher": "books/apple nearby, pencil accents",
-      "librarian": "books visible, quiet symbol",
-      "mailcarrier": "mailbox nearby, envelope symbols",
-      "busdriver": "bus stop sign, road markings",
-      "mechanic": "tools nearby, tire/wrench",
-      "vet": "animal prints, paw symbols"
+    "sk": {
+      "rules": {
+        "questions_per_session": 10,
+        "max_consecutive_wrong": 2,
+        "lives": 3,
+        "on_double_wrong": "lose_life_show_answer",
+        "crab_audio": "auto_read"
+      },
+      "questions": [
+        {
+          "id": "fc_sk_01",
+          "question": "Uh oh! A kitten is stuck in a tree! Who should we call to help?",
+          "hint": "They rescue people AND animals!",
+          "target_type": "building",
+          "target": "firefighter"
+        },
+        {
+          "id": "fc_sk_02",
+          "question": "The traffic light stopped working and cars are confused! Who should come help?",
+          "hint": "They keep the roads safe!",
+          "target_type": "building",
+          "target": "police"
+        },
+        {
+          "id": "fc_sk_03",
+          "question": "A grandma has a really bad cough and needs medicine! Where should she go?",
+          "hint": "Doctors work here!",
+          "target_type": "building",
+          "target": "doctor"
+        },
+        {
+          "id": "fc_sk_04",
+          "question": "The town needs a new playground! Who can build it?",
+          "hint": "They build things for the town!",
+          "target_type": "building",
+          "target": "construction"
+        },
+        {
+          "id": "fc_sk_05",
+          "question": "It's pizza day! Where is the pizza being made?",
+          "hint": "Look for the place that cooks food!",
+          "target_type": "building",
+          "target": "chef"
+        },
+        {
+          "id": "fc_sk_06",
+          "question": "Mom ordered a special birthday present online! Who will bring it to her door?",
+          "hint": "They deliver letters and packages!",
+          "target_type": "building",
+          "target": "mailcarrier"
+        },
+        {
+          "id": "fc_sk_07",
+          "question": "The farmer grew way too many apples! Where should he sell them?",
+          "hint": "Fresh food is sold here!",
+          "target_type": "building",
+          "target": "farmer"
+        },
+        {
+          "id": "fc_sk_08",
+          "question": "The class hamster is not eating and looks sad. Where should the teacher take it?",
+          "hint": "Animals get help here!",
+          "target_type": "building",
+          "target": "vet"
+        },
+        {
+          "id": "fc_sk_09",
+          "question": "The school bus is making a weird noise! Who should look at it?",
+          "hint": "They fix cars and trucks!",
+          "target_type": "building",
+          "target": "mechanic"
+        },
+        {
+          "id": "fc_sk_10",
+          "question": "It's reading week! The kids want to borrow some new books! Where should they go?",
+          "hint": "You can borrow books here for free!",
+          "target_type": "building",
+          "target": "librarian"
+        },
+        {
+          "id": "fc_sk_11",
+          "question": "The school bell just rang! Where do the kids go to learn?",
+          "hint": "The teacher works here!",
+          "target_type": "building",
+          "target": "teacher"
+        },
+        {
+          "id": "fc_sk_12",
+          "question": "It's field trip day! The kids need a ride to the museum! Who drives them?",
+          "hint": "They drive a big vehicle with lots of seats!",
+          "target_type": "building",
+          "target": "busdriver"
+        }
+      ]
+    }
+  },
+  "crisis_mode": {
+    "note": "Crab presents a crisis. Kid taps building or character to solve. Grade 2 has multi-step crises.",
+    "grade_1": {
+      "rules": {
+        "crises_per_session": 10,
+        "lives": 3,
+        "steps": 1,
+        "crab_audio": "tap_to_hear"
+      },
+      "crises": [
+        {
+          "id": "cr_g1_01",
+          "crisis": "A kid fell off their bike and scraped their knee! Who can help?",
+          "target": "doctor"
+        },
+        {
+          "id": "cr_g1_02",
+          "crisis": "There's a kitten stuck on a roof! Who should we call?",
+          "target": "firefighter"
+        },
+        {
+          "id": "cr_g1_03",
+          "crisis": "The classroom lights stopped working! Who can fix them?",
+          "target": "construction"
+        },
+        {
+          "id": "cr_g1_04",
+          "crisis": "Someone's dog is limping and looks hurt. Where should they go?",
+          "target": "vet"
+        },
+        {
+          "id": "cr_g1_05",
+          "crisis": "The family needs groceries for dinner tonight! Where should they go?",
+          "target": "farmer"
+        },
+        {
+          "id": "cr_g1_06",
+          "crisis": "There's a letter that needs to get to grandma's house! Who delivers it?",
+          "target": "mailcarrier"
+        },
+        {
+          "id": "cr_g1_07",
+          "crisis": "The kids need a ride home from school! Who drives them?",
+          "target": "busdriver"
+        },
+        {
+          "id": "cr_g1_08",
+          "crisis": "The family wants to eat out tonight but doesn't want to cook! Where can they go?",
+          "target": "chef"
+        },
+        {
+          "id": "cr_g1_09",
+          "crisis": "Someone found a wallet on the sidewalk! Who should they give it to?",
+          "target": "police"
+        },
+        {
+          "id": "cr_g1_10",
+          "crisis": "The kids want to hear a story but they don't have any books! Where should they go?",
+          "target": "librarian"
+        },
+        {
+          "id": "cr_g1_11",
+          "crisis": "The school bell is about to ring! Who is waiting to teach the class?",
+          "target": "teacher"
+        },
+        {
+          "id": "cr_g1_12",
+          "crisis": "The car won't start and the family needs to get to work! Who can fix it?",
+          "target": "mechanic"
+        },
+        {
+          "id": "cr_g1_13",
+          "crisis": "There's smoke coming from the bakery! Who should we call right away?",
+          "target": "firefighter"
+        },
+        {
+          "id": "cr_g1_14",
+          "crisis": "A new family just moved in and needs to find a doctor! Where should they go?",
+          "target": "doctor"
+        },
+        {
+          "id": "cr_g1_15",
+          "crisis": "The sidewalk is cracked and someone might trip! Who can fix it?",
+          "target": "construction"
+        }
+      ]
+    },
+    "grade_2": {
+      "rules": {
+        "crises_per_session": 10,
+        "lives": 3,
+        "crab_audio": "tap_to_hear"
+      },
+      "crises": [
+        {
+          "id": "cr_g2_01",
+          "crisis": "There's been a car accident on Main Street! Nobody is hurt but the road is blocked.",
+          "steps": [
+            {
+              "prompt": "Who should we call to check on everyone and direct traffic?",
+              "target": "police"
+            },
+            {
+              "prompt": "The car won't start now. Who can help tow it away?",
+              "target": "mechanic"
+            }
+          ]
+        },
+        {
+          "id": "cr_g2_02",
+          "crisis": "A big storm knocked a tree onto the road! Buses can't get through.",
+          "steps": [
+            {
+              "prompt": "Who can come clear the tree from the road?",
+              "target": "construction"
+            },
+            {
+              "prompt": "The buses are running late now. Who should let the families know?",
+              "target": "busdriver"
+            }
+          ]
+        },
+        {
+          "id": "cr_g2_03",
+          "crisis": "The pizza shop's oven broke and there's a birthday party order due!",
+          "steps": [
+            {
+              "prompt": "Who can come fix the oven?",
+              "target": "mechanic"
+            },
+            {
+              "prompt": "While it's being fixed, who should call the birthday family to let them know?",
+              "target": "chef"
+            }
+          ]
+        },
+        {
+          "id": "cr_g2_04",
+          "crisis": "A dog ran away from home and was found near the school!",
+          "steps": [
+            {
+              "prompt": "Where should the dog go to get checked and make sure it's healthy?",
+              "target": "vet"
+            },
+            {
+              "prompt": "Who can help find the dog's owner?",
+              "target": "police"
+            }
+          ]
+        },
+        {
+          "id": "cr_g2_05",
+          "crisis": "There's a small kitchen fire at the pizza shop!",
+          "steps": [
+            {
+              "prompt": "Who should we call first to put out the fire?",
+              "target": "firefighter"
+            },
+            {
+              "prompt": "The cook got a small burn on their hand. Where should they go?",
+              "target": "doctor"
+            }
+          ]
+        },
+        {
+          "id": "cr_g2_06",
+          "crisis": "The school roof is leaking after heavy rain!",
+          "steps": [
+            {
+              "prompt": "Who can come fix the leaking roof?",
+              "target": "construction"
+            },
+            {
+              "prompt": "Where should the kids go while it's being repaired?",
+              "target": "librarian"
+            }
+          ]
+        },
+        {
+          "id": "cr_g2_07",
+          "crisis": "The town festival is tomorrow but the park is full of litter and needs food!",
+          "steps": [
+            {
+              "prompt": "Who can organise the cleanup and set up the stage?",
+              "target": "construction"
+            },
+            {
+              "prompt": "Who should prepare the food for the festival?",
+              "target": "chef"
+            }
+          ]
+        },
+        {
+          "id": "cr_g2_08",
+          "crisis": "An ambulance is stuck in traffic trying to get to the hospital!",
+          "steps": [
+            {
+              "prompt": "Who should direct traffic to clear the way?",
+              "target": "police"
+            },
+            {
+              "prompt": "Where does the ambulance need to get to?",
+              "target": "doctor"
+            }
+          ]
+        },
+        {
+          "id": "cr_g2_09",
+          "crisis": "A big shipment of books arrived but the library door is jammed!",
+          "steps": [
+            {
+              "prompt": "Who can come fix the jammed door?",
+              "target": "mechanic"
+            },
+            {
+              "prompt": "Who is excited to put the new books on the shelves?",
+              "target": "librarian"
+            }
+          ]
+        },
+        {
+          "id": "cr_g2_10",
+          "crisis": "It's the first day of school but the bus broke down!",
+          "steps": [
+            {
+              "prompt": "Who can come fix the bus?",
+              "target": "mechanic"
+            },
+            {
+              "prompt": "Who needs to know the bus will be late?",
+              "target": "teacher"
+            }
+          ]
+        },
+        {
+          "id": "cr_g2_11",
+          "crisis": "A farmer's truck full of fresh vegetables tipped over on the road!",
+          "target": "farmer"
+        },
+        {
+          "id": "cr_g2_12",
+          "crisis": "A package got delivered to the wrong house! Who should sort it out?",
+          "target": "mailcarrier"
+        },
+        {
+          "id": "cr_g2_13",
+          "crisis": "The school crossing guard is sick today! Who should help kids cross the road safely?",
+          "target": "police"
+        }
+      ]
+    }
+  },
+  "mystery_mode": {
+    "note": "Crab announces mystery. Kid taps buildings/characters to collect clues. After 3+ clues, solve button appears. Pick from 4 solutions.",
+    "grade_3": {
+      "rules": {
+        "mysteries_per_session": 4,
+        "lives": 3,
+        "min_clues_to_solve": 3,
+        "crab_audio": "text_only"
+      },
+      "mysteries": [
+        {
+          "id": "my_g3_01",
+          "title": "The Missing Mail",
+          "problem": "Nobody in town got their mail today! Can you figure out why?",
+          "characters_connected": [
+            "mailcarrier",
+            "mechanic"
+          ],
+          "clues": [
+            {
+              "target": "mailcarrier",
+              "clue": "I loaded the van this morning but it won't start! Something is wrong with it."
+            },
+            {
+              "target": "mechanic",
+              "clue": "I haven't seen Mo today. But I did notice oil on the road near the post office..."
+            },
+            {
+              "target": "busdriver",
+              "clue": "I saw Mo's van had a flat tire when I drove past this morning."
+            },
+            {
+              "target": "police",
+              "clue": "No accidents reported today. Everything seems normal on the roads."
+            },
+            {
+              "target": "doctor",
+              "clue": "I haven't seen Mail Carrier Mo at the hospital. I don't think anyone is sick."
+            },
+            {
+              "target": "construction",
+              "clue": "We didn't do any work near the post office this week."
+            }
+          ],
+          "solutions": [
+            {
+              "text": "Mo's van has a flat tire \u2014 Mechanic Max needs to fix it!",
+              "correct": true
+            },
+            {
+              "text": "Mo is on vacation and forgot to tell everyone",
+              "correct": false
+            },
+            {
+              "text": "The post office is closed for the day",
+              "correct": false
+            },
+            {
+              "text": "The letters were stolen overnight",
+              "correct": false
+            }
+          ],
+          "resolution": "Mechanic Max rushes over and fixes the flat tire! Mail Carrier Mo delivers all the letters and the town is happy again!"
+        },
+        {
+          "id": "my_g3_02",
+          "title": "The Lights Went Out",
+          "problem": "The school and library suddenly have no power! The kids are in the dark!",
+          "characters_connected": [
+            "teacher",
+            "librarian",
+            "construction"
+          ],
+          "clues": [
+            {
+              "target": "teacher",
+              "clue": "The lights went out during math class! The kids are a little scared."
+            },
+            {
+              "target": "librarian",
+              "clue": "Our computers shut down too \u2014 it's not just the lights! Everything stopped."
+            },
+            {
+              "target": "construction",
+              "clue": "My crew was digging near the school this morning to fix a water pipe..."
+            },
+            {
+              "target": "mechanic",
+              "clue": "All my tools still work \u2014 I have power at the auto shop. It's not the whole town."
+            },
+            {
+              "target": "firefighter",
+              "clue": "No fire reported \u2014 this isn't a fire alarm. The building is safe."
+            },
+            {
+              "target": "police",
+              "clue": "No one reported any problems. It seems to be just that part of town."
+            }
+          ],
+          "solutions": [
+            {
+              "text": "Builder Blake's crew accidentally cut a power line while digging!",
+              "correct": true
+            },
+            {
+              "text": "A big storm knocked out the power",
+              "correct": false
+            },
+            {
+              "text": "Someone forgot to pay the electric bill",
+              "correct": false
+            },
+            {
+              "text": "The school's generator is broken",
+              "correct": false
+            }
+          ],
+          "resolution": "Builder Blake's crew finds the cut power line and repairs it carefully. The lights come back on and the kids cheer!"
+        },
+        {
+          "id": "my_g3_03",
+          "title": "The Missing Ingredients",
+          "problem": "Chef Charlie can't make pizza today \u2014 the fresh ingredients never arrived!",
+          "characters_connected": [
+            "chef",
+            "farmer",
+            "construction"
+          ],
+          "clues": [
+            {
+              "target": "chef",
+              "clue": "I came in this morning and the tomatoes and cheese delivery never showed up!"
+            },
+            {
+              "target": "farmer",
+              "clue": "I sent the delivery truck out early this morning like I always do!"
+            },
+            {
+              "target": "busdriver",
+              "clue": "There's a road closed on Highway 5 \u2014 I had to take a big detour today."
+            },
+            {
+              "target": "construction",
+              "clue": "We closed Highway 5 for construction this week. Sorry about the trouble!"
+            },
+            {
+              "target": "mechanic",
+              "clue": "No truck breakdowns reported today. The truck is running fine."
+            },
+            {
+              "target": "mailcarrier",
+              "clue": "I had to take a different route today too because of the road work."
+            }
+          ],
+          "solutions": [
+            {
+              "text": "The delivery truck can't get through because of road construction \u2014 it needs a detour!",
+              "correct": true
+            },
+            {
+              "text": "Farmer Felix forgot to send the delivery",
+              "correct": false
+            },
+            {
+              "text": "Chef Charlie already used all the ingredients yesterday",
+              "correct": false
+            },
+            {
+              "text": "Someone took the ingredients from the truck",
+              "correct": false
+            }
+          ],
+          "resolution": "Farmer Felix takes the detour route and the ingredients arrive! Chef Charlie makes the best pizza ever!"
+        },
+        {
+          "id": "my_g3_04",
+          "title": "The Sick Pets",
+          "problem": "Three dogs in town all got sick today! Something strange is going on...",
+          "characters_connected": [
+            "vet",
+            "police",
+            "farmer"
+          ],
+          "clues": [
+            {
+              "target": "vet",
+              "clue": "Three dogs came in today with upset stomachs. That's very unusual \u2014 they all got sick at the same time!"
+            },
+            {
+              "target": "farmer",
+              "clue": "I noticed some of my produce looked strange this morning. Some berries fell off the cart near the park."
+            },
+            {
+              "target": "doctor",
+              "clue": "No people are sick \u2014 just the animals. Whatever it is, it only affects dogs."
+            },
+            {
+              "target": "police",
+              "clue": "A neighbour told me they saw the dogs eating something in the park yesterday evening."
+            },
+            {
+              "target": "librarian",
+              "clue": "I read that certain wild berries can be dangerous for dogs but not for people!"
+            },
+            {
+              "target": "teacher",
+              "clue": "My students mentioned seeing colourful berries on the ground near the park yesterday."
+            }
+          ],
+          "solutions": [
+            {
+              "text": "The dogs ate fallen berries from the farmer's cart in the park that are toxic to animals!",
+              "correct": true
+            },
+            {
+              "text": "The pet food store sold some bad food",
+              "correct": false
+            },
+            {
+              "text": "The dogs all caught a cold from each other",
+              "correct": false
+            },
+            {
+              "text": "Vet Vivian accidentally gave the wrong medicine",
+              "correct": false
+            }
+          ],
+          "resolution": "Officer Oakley cleans up the berries from the park. Vet Vivian treats the dogs and they all feel better. Farmer Felix is more careful with the cart!"
+        }
+      ]
+    },
+    "grade_4": {
+      "rules": {
+        "mysteries_per_session": 4,
+        "lives": 3,
+        "min_clues_to_solve": 3,
+        "crab_audio": "text_only"
+      },
+      "mysteries": [
+        {
+          "id": "my_g4_01",
+          "title": "The Town Festival Disaster",
+          "problem": "The annual town festival is tomorrow but everything is falling apart! Can you figure out what's going wrong?",
+          "characters_connected": [
+            "chef",
+            "construction",
+            "busdriver",
+            "mechanic"
+          ],
+          "clues": [
+            {
+              "target": "chef",
+              "clue": "I can't cook \u2014 the gas line to my shop was shut off! I have all this food ready but no way to cook it."
+            },
+            {
+              "target": "construction",
+              "clue": "We had to shut off gas on that whole block to fix a dangerous leak. Safety first!"
+            },
+            {
+              "target": "busdriver",
+              "clue": "I can't park the shuttle bus for the festival \u2014 the parking lot is full of construction equipment!"
+            },
+            {
+              "target": "mechanic",
+              "clue": "I can move the construction equipment if someone tells me where to put it temporarily."
+            },
+            {
+              "target": "teacher",
+              "clue": "The school choir is supposed to perform but the stage in the park isn't set up yet because of all the equipment."
+            },
+            {
+              "target": "farmer",
+              "clue": "My produce tent blew away in last night's wind. I'll need help setting up a new one."
+            },
+            {
+              "target": "police",
+              "clue": "Everything seems safe. I think it's just a big coordination problem."
+            }
+          ],
+          "solutions": [
+            {
+              "text": "The gas leak repair is causing a chain reaction \u2014 Blake needs to finish the fix, Max moves equipment, then the festival can be set up!",
+              "correct": true
+            },
+            {
+              "text": "Cancel the festival and try again next year",
+              "correct": false
+            },
+            {
+              "text": "Move the festival to another town",
+              "correct": false
+            },
+            {
+              "text": "It's the construction crew's fault \u2014 they should be blamed",
+              "correct": false
+            }
+          ],
+          "resolution": "Everyone works together! Blake finishes the gas repair, Max moves the equipment, Ben parks the shuttle bus, and Charlie fires up the ovens. The festival is saved!"
+        },
+        {
+          "id": "my_g4_02",
+          "title": "The Stranded Students",
+          "problem": "Thirty kids are stuck at school \u2014 the bus never came for pickup! Parents are calling and worried!",
+          "characters_connected": [
+            "busdriver",
+            "police",
+            "construction",
+            "firefighter"
+          ],
+          "clues": [
+            {
+              "target": "busdriver",
+              "clue": "I left on time but Maple Street is completely flooded! I can't drive through it safely!"
+            },
+            {
+              "target": "police",
+              "clue": "I've blocked off Maple Street. It's dangerous \u2014 the water is too deep for regular vehicles."
+            },
+            {
+              "target": "construction",
+              "clue": "The storm drain on Maple Street has been clogged for weeks. I submitted a work order but it hasn't been fixed yet."
+            },
+            {
+              "target": "teacher",
+              "clue": "The kids are safe inside. But some students have after-school activities and medicine they need at home."
+            },
+            {
+              "target": "firefighter",
+              "clue": "We have a rescue vehicle that can drive through shallow water. Just say the word!"
+            },
+            {
+              "target": "doctor",
+              "clue": "No injuries reported. But we should get those kids home before it gets dark."
+            },
+            {
+              "target": "mechanic",
+              "clue": "The bus is fine mechanically. It's the road that's the problem."
+            }
+          ],
+          "solutions": [
+            {
+              "text": "Firefighter Frank's rescue vehicle gets the kids home while Builder Blake unclogs the drain to prevent this happening again!",
+              "correct": true
+            },
+            {
+              "text": "Make the kids walk through the flood",
+              "correct": false
+            },
+            {
+              "text": "Wait until the water goes away on its own",
+              "correct": false
+            },
+            {
+              "text": "Call taxis for all 30 kids",
+              "correct": false
+            }
+          ],
+          "resolution": "Firefighter Frank's rescue vehicle safely picks up all the kids! Builder Blake's crew unclogs the storm drain so Maple Street won't flood again. Everyone gets home safe!"
+        },
+        {
+          "id": "my_g4_03",
+          "title": "The Library Alarm",
+          "problem": "The library's alarm went off overnight! The door was open when Lily arrived this morning. Was there a break-in?",
+          "characters_connected": [
+            "librarian",
+            "police",
+            "construction",
+            "mechanic"
+          ],
+          "clues": [
+            {
+              "target": "librarian",
+              "clue": "The front door was open when I arrived, but I've checked everywhere and nothing seems to be missing!"
+            },
+            {
+              "target": "police",
+              "clue": "No signs of forced entry. The lock isn't broken. Whoever opened the door had a way in."
+            },
+            {
+              "target": "mechanic",
+              "clue": "I fixed the library's automatic door last week. Hmm, maybe I should check my work again..."
+            },
+            {
+              "target": "construction",
+              "clue": "We installed a new ventilation system yesterday. My crew was the last ones in the building before it closed."
+            },
+            {
+              "target": "vet",
+              "clue": "I saw a raccoon family near the library dumpster last night. They're sneaky little guys!"
+            },
+            {
+              "target": "farmer",
+              "clue": "Raccoons got into my storage last month. They're surprisingly good at opening simple latches!"
+            },
+            {
+              "target": "firefighter",
+              "clue": "The alarm system is working correctly. Something definitely triggered the motion sensor inside."
+            }
+          ],
+          "solutions": [
+            {
+              "text": "The construction crew didn't fully close the door after installing the ventilation, and raccoons got in and triggered the alarm!",
+              "correct": true
+            },
+            {
+              "text": "Someone broke in and stole books during the night",
+              "correct": false
+            },
+            {
+              "text": "The alarm just malfunctioned on its own",
+              "correct": false
+            },
+            {
+              "text": "Librarian Lily forgot to lock up when she left",
+              "correct": false
+            }
+          ],
+          "resolution": "Mystery solved! Mechanic Max fixes the latch so it closes properly. Builder Blake's crew double-checks their work. The raccoons are safely relocated to the woods!"
+        },
+        {
+          "id": "my_g4_04",
+          "title": "The Funny Water",
+          "problem": "The water at the school and hospital tastes funny and looks cloudy! People are worried \u2014 is it safe to drink?",
+          "characters_connected": [
+            "doctor",
+            "teacher",
+            "construction",
+            "mailcarrier"
+          ],
+          "clues": [
+            {
+              "target": "doctor",
+              "clue": "The water looks cloudy and has a metallic taste. I've told everyone to use bottled water until we figure this out."
+            },
+            {
+              "target": "teacher",
+              "clue": "The water fountains taste like metal! I've turned them all off. The kids are using water bottles for now."
+            },
+            {
+              "target": "construction",
+              "clue": "We were doing underground pipe work two blocks away last week. We were very careful though!"
+            },
+            {
+              "target": "farmer",
+              "clue": "My irrigation water from the same source seems fine at the market. It's only affecting that part of town."
+            },
+            {
+              "target": "mailcarrier",
+              "clue": "I noticed the construction crew hit something underground last Tuesday. There was a lot of water spraying up!"
+            },
+            {
+              "target": "firefighter",
+              "clue": "We have an emergency water tank on the truck. We can provide clean water if people need it."
+            },
+            {
+              "target": "police",
+              "clue": "I've contacted the town water department. They're sending an inspector."
+            }
+          ],
+          "solutions": [
+            {
+              "text": "Construction work accidentally damaged a water pipe, letting rust and dirt into the water supply!",
+              "correct": true
+            },
+            {
+              "text": "The water treatment plant broke down",
+              "correct": false
+            },
+            {
+              "text": "Someone put something bad in the water",
+              "correct": false
+            },
+            {
+              "text": "All the pipes in town are just too old",
+              "correct": false
+            }
+          ],
+          "resolution": "Builder Blake's crew finds and repairs the damaged pipe. Firefighter Frank provides clean water while it's being fixed. The water is tested and cleared \u2014 safe to drink again!"
+        }
+      ]
     }
   },
   "question_sets": [
@@ -399,7 +1289,7 @@
           "id": "cb090",
           "question": "What does a warning sign with an orange diamond shape mean?",
           "options": [
-            "Construction ahead — be careful!",
+            "Construction ahead \u2014 be careful!",
             "Free ice cream ahead",
             "The road is closed forever",
             "Turn off your car"
@@ -1033,7 +1923,7 @@
             "The name of your street"
           ],
           "correct": 0,
-          "hint": "In Canada it looks like A1A 1A1 — letters and numbers mixed together."
+          "hint": "In Canada it looks like A1A 1A1 \u2014 letters and numbers mixed together."
         }
       ],
       "grade_id": "grade_2"
@@ -1380,7 +2270,7 @@
             "To punish students"
           ],
           "correct": 0,
-          "hint": "Fire drills, no running in halls — these all keep people safe."
+          "hint": "Fire drills, no running in halls \u2014 these all keep people safe."
         },
         {
           "id": "cb068",
@@ -1434,7 +2324,7 @@
             "A paintbrush"
           ],
           "correct": 0,
-          "hint": "Doctors use this too — it has two earpieces and a round end."
+          "hint": "Doctors use this too \u2014 it has two earpieces and a round end."
         },
         {
           "id": "cb216",
@@ -1941,7 +2831,7 @@
             "A tree"
           ],
           "correct": 0,
-          "hint": "The symbol relates to what you do there — read!"
+          "hint": "The symbol relates to what you do there \u2014 read!"
         }
       ],
       "grade_id": "grade_3"
