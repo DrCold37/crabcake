@@ -124,11 +124,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 @media(max-width:600px){.qbar-grade{font-size:.48rem;padding:.15rem .45rem}.mastery-ring{width:32px;height:32px}.mastery-label{font-size:.38rem}}
 
 /* Nav scroll buttons */
-.nav-btn{position:fixed;top:20%;z-index:42;width:52px;height:52px;border-radius:50%;border:2px solid rgba(255,255,255,.3);background:rgba(15,37,64,.7);color:#fff;font-size:1.6rem;display:none;align-items:center;justify-content:center;cursor:pointer;transform:translateY(-50%);backdrop-filter:blur(4px);transition:background .2s}
+.nav-btn{position:fixed;top:50%;z-index:42;width:52px;height:52px;border-radius:50%;border:2px solid rgba(255,255,255,.3);background:rgba(15,37,64,.7);color:#fff;font-size:1.6rem;display:none;align-items:center;justify-content:center;cursor:pointer;transform:translateY(-50%);backdrop-filter:blur(4px);transition:background .2s}
 .nav-btn:hover,.nav-btn:active{background:rgba(74,144,217,.5);border-color:var(--sky)}
 #navL{left:6px}
 #navR{right:6px}
 .nav-btn.vis{display:flex}
+@media(min-width:601px){.nav-btn{top:20%}}
 
 /* Clear city button */
 .hb-clear{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:.85rem}
@@ -1520,6 +1521,30 @@ function _preloadCrabAudio(){
 /* Preload on DOM ready */
 document.addEventListener('DOMContentLoaded',_preloadCrabAudio);
 
+/* ── Mobile audio unlock — browsers block audio.play() until user gesture ── */
+var _audioUnlocked=false;
+var _pendingCrabSpeak=null;
+function _unlockAudio(){
+  if(_audioUnlocked)return;
+  _audioUnlocked=true;
+  /* Touch all cached audio objects to unlock them */
+  for(var k in _crabAudioCache){
+    var a=_crabAudioCache[k];
+    try{a.play();a.pause();a.currentTime=0}catch(e){}
+  }
+  /* If there was a pending speak that failed, replay it */
+  if(_pendingCrabSpeak){
+    var ps=_pendingCrabSpeak;
+    _pendingCrabSpeak=null;
+    crabSpeak(ps.text,ps.cb);
+  }
+  document.removeEventListener('touchstart',_unlockAudio,true);
+  document.removeEventListener('click',_unlockAudio,true);
+  console.log('CB: audio unlocked');
+}
+document.addEventListener('touchstart',_unlockAudio,true);
+document.addEventListener('click',_unlockAudio,true);
+
 function setCrabExpr(expr){
   var spr=$('cbSprite');if(!spr)return;
   /* Force animation restart by removing class, triggering reflow, then adding new class */
@@ -1612,7 +1637,11 @@ function crabSpeak(text,cb){
     audio.volume=0.8;
     audio.onended=function(){_crabCurrentAudio=null;if(btn)btn.classList.remove('speaking');if(cb)cb()};
     audio.onerror=function(){_crabCurrentAudio=null;if(btn)btn.classList.remove('speaking');if(cb)cb()};
-    audio.play().catch(function(){if(btn)btn.classList.remove('speaking');if(cb)cb()});
+    audio.play().catch(function(){
+      /* Autoplay blocked — store for replay after user gesture unlocks audio */
+      if(!_audioUnlocked)_pendingCrabSpeak={text:text,cb:cb};
+      else{if(btn)btn.classList.remove('speaking');if(cb)cb()}
+    });
     return;
   }
 
@@ -2370,10 +2399,16 @@ $('navL').addEventListener('click',function(e){e.stopPropagation();navScroll(-1)
 $('navR').addEventListener('click',function(e){e.stopPropagation();navScroll(1)});
 $('navL').addEventListener('mousedown',function(e){e.stopPropagation();navHoldStart(-1)});
 $('navR').addEventListener('mousedown',function(e){e.stopPropagation();navHoldStart(1)});
-$('navL').addEventListener('touchstart',function(e){e.preventDefault();e.stopPropagation();navHoldStart(-1)},{passive:false});
-$('navR').addEventListener('touchstart',function(e){e.preventDefault();e.stopPropagation();navHoldStart(1)},{passive:false});
+/* Touch: fire navScroll immediately on tap, plus start hold for continuous scroll */
+var _navTouchStart=0;
+$('navL').addEventListener('touchstart',function(e){e.preventDefault();e.stopPropagation();_navTouchStart=Date.now();navHoldStart(-1)},{passive:false});
+$('navR').addEventListener('touchstart',function(e){e.preventDefault();e.stopPropagation();_navTouchStart=Date.now();navHoldStart(1)},{passive:false});
 document.addEventListener('mouseup',navHoldStop);
-document.addEventListener('touchend',navHoldStop);
+document.addEventListener('touchend',function(){
+  /* If quick tap (<300ms), fire a single scroll */
+  if(_navHold&&(Date.now()-_navTouchStart)<300)navScroll(_navHold);
+  navHoldStop();
+});
 
 /* Show nav buttons when game is active */
 var _origShowScr=showScr;
