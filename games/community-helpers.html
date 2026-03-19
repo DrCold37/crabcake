@@ -1136,23 +1136,24 @@ function bootPhaser(){
 
 function phaserPreload(){
   var self=this;
+  var AV='?v=2'; /* Asset version — bump to bust Safari cache */
   self.load.on('progress',function(v){$('lBar').style.width=Math.round(20+v*75)+'%';$('lTxt').textContent='Loading assets... '+Math.round(v*100)+'%'});
   self.load.on('loaderror',function(f){console.warn('Skipped:',f.key)});
   CHARS.forEach(function(c){
-    self.load.spritesheet(c+'-idle',AP+'/sprites/idle/'+c+'-idle.png',{frameWidth:384,frameHeight:384});
-    self.load.spritesheet(c+'-walk',AP+'/sprites/walk/'+c+'-walk.png',{frameWidth:384,frameHeight:384});
-    self.load.image(c+'-st',AP+'/sprites/static/'+c+'.png');
+    self.load.spritesheet(c+'-idle',AP+'/sprites/idle/'+c+'-idle.png'+AV,{frameWidth:384,frameHeight:384});
+    self.load.spritesheet(c+'-walk',AP+'/sprites/walk/'+c+'-walk.png'+AV,{frameWidth:384,frameHeight:384});
+    self.load.image(c+'-st',AP+'/sprites/static/'+c+'.png'+AV);
   });
-  ['fire-station','hospital','police-station','pizza-shop','farmers-market','school','library','construction-site','post-office','bus-stop','auto-shop','vet-clinic','bank','barber_shop','donut_shop'].forEach(function(b){self.load.image('b-'+b,AP+'/town/Buildings/'+b+'.png')});
-  ['building_large_background_1','building_large_background_2','building_medium_background_1','building_medium_background_2','building_small_background_1','building_small_background_2','house_large_background_1','house_large_background_2','house_medium_background_1','house_medium_background_2','warehouse_background_1','warehouse_background_2'].forEach(function(b){self.load.image('bg-'+b,AP+'/town/Buildings/'+b+'.png')});
-  ['ambulance','policecar','bus','firetruck','foodtruck','tractor','teachercar','libraryvan','mailvan','dumptruck','towtruck','animalvan'].forEach(function(v){self.load.image('v-'+v,AP+'/town/Vehicles/'+v+'.png')});
+  ['fire-station','hospital','police-station','pizza-shop','farmers-market','school','library','construction-site','post-office','bus-stop','auto-shop','vet-clinic','bank','barber_shop','donut_shop'].forEach(function(b){self.load.image('b-'+b,AP+'/town/Buildings/'+b+'.png'+AV)});
+  ['building_large_background_1','building_large_background_2','building_medium_background_1','building_medium_background_2','building_small_background_1','building_small_background_2','house_large_background_1','house_large_background_2','house_medium_background_1','house_medium_background_2','warehouse_background_1','warehouse_background_2'].forEach(function(b){self.load.image('bg-'+b,AP+'/town/Buildings/'+b+'.png'+AV)});
+  ['ambulance','policecar','bus','firetruck','foodtruck','tractor','teachercar','libraryvan','mailvan','dumptruck','towtruck','animalvan'].forEach(function(v){self.load.image('v-'+v,AP+'/town/Vehicles/'+v+'.png'+AV)});
   /* Animated vehicle spritesheets (384x384 frames, 3x3 grid = 9 frames) */
   var ANIM_VEH=['ambulance','policecar','firetruck'];
-  ANIM_VEH.forEach(function(v){self.load.spritesheet('va-'+v,AP+'/town/Vehicles/'+v+'-animate.png',{frameWidth:384,frameHeight:384})});
-  ['sign_stop','sign_warning','sign_construction_1','sign_st_name','sign_info','light_pole_1','light_pole_2','light_pole_3','fence_wood','fence_garden_brown','water_hydrant','light_post'].forEach(function(p){self.load.image('p-'+p,AP+'/town/Props/'+p+'.png')});
-  ['tree_01','tree_02','tree_03','bush_01','bush_02','weeds_01','weeds_02','weeds_03'].forEach(function(v){self.load.image('t-'+v,AP+'/town/Vegetation/'+v+'.png')});
-  ['tree_01_background_1','tree_01_background_2','tree_02_background_1','tree_02_background_2'].forEach(function(v){self.load.image('tbg-'+v,AP+'/town/Vegetation/'+v+'.png')});
-  for(var i=1;i<=6;i++)self.load.image('cl-'+i,AP+'/town/Props/cloud_0'+i+'.png');
+  ANIM_VEH.forEach(function(v){self.load.spritesheet('va-'+v,AP+'/town/Vehicles/'+v+'-animate.png'+AV,{frameWidth:384,frameHeight:384})});
+  ['sign_stop','sign_warning','sign_construction_1','sign_st_name','sign_info','light_pole_1','light_pole_2','light_pole_3','fence_wood','fence_garden_brown','water_hydrant','light_post'].forEach(function(p){self.load.image('p-'+p,AP+'/town/Props/'+p+'.png'+AV)});
+  ['tree_01','tree_02','tree_03','bush_01','bush_02','weeds_01','weeds_02','weeds_03'].forEach(function(v){self.load.image('t-'+v,AP+'/town/Vegetation/'+v+'.png'+AV)});
+  ['tree_01_background_1','tree_01_background_2','tree_02_background_1','tree_02_background_2'].forEach(function(v){self.load.image('tbg-'+v,AP+'/town/Vegetation/'+v+'.png'+AV)});
+  for(var i=1;i<=6;i++)self.load.image('cl-'+i,AP+'/town/Props/cloud_0'+i+'.png'+AV);
 }
 
 function phaserCreate(){
