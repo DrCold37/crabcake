@@ -1422,6 +1422,7 @@ function nextMatch(){
 
 function handleBldTap(tapped,target){
   if(G.matchBldDone)return;
+  if(Date.now()-_navTapBlock<300)return;
   G.ans++;
   if(tapped===target){
     G.matchBldDone=true;G.corr++;
@@ -1433,6 +1434,7 @@ function handleBldTap(tapped,target){
 }
 function handleVehTap(tapped,target){
   if(G.matchVehDone)return;
+  if(Date.now()-_navTapBlock<300)return;
   G.ans++;
   if(tapped===target){
     G.matchVehDone=true;G.corr++;
@@ -1831,6 +1833,7 @@ function disableFCTaps(){
 
 function handleFCTap(tapped){
   if(G.fcAnswered)return;
+  if(Date.now()-_navTapBlock<300)return; /* Suppress nav button bleed-through */
   var q=G.fcCurrent;
   if(!q)return;
 
@@ -2451,6 +2454,7 @@ function _renderEndBadges(){
    ══════════════════════════════════════════════════════════════════════════ */
 var _navHold=null;
 var _navSpeed=400; /* px/s when held */
+var _navTapBlock=0;
 function navScroll(dir){
   if(!G.sc||!G.camTarget)return;
   var zoom=G.sc.cameras.main.zoom;
@@ -2464,18 +2468,18 @@ function navHoldStop(){
   _navHold=null;
 }
 /* Wire up buttons */
-$('navL').addEventListener('click',function(e){e.stopPropagation();navScroll(-1)});
-$('navR').addEventListener('click',function(e){e.stopPropagation();navScroll(1)});
-$('navL').addEventListener('mousedown',function(e){e.stopPropagation();navHoldStart(-1)});
-$('navR').addEventListener('mousedown',function(e){e.stopPropagation();navHoldStart(1)});
+$('navL').addEventListener('click',function(e){e.stopPropagation();_navTapBlock=Date.now();navScroll(-1)});
+$('navR').addEventListener('click',function(e){e.stopPropagation();_navTapBlock=Date.now();navScroll(1)});
+$('navL').addEventListener('mousedown',function(e){e.stopPropagation();_navTapBlock=Date.now();navHoldStart(-1)});
+$('navR').addEventListener('mousedown',function(e){e.stopPropagation();_navTapBlock=Date.now();navHoldStart(1)});
 /* Touch: fire navScroll immediately on tap, plus start hold for continuous scroll */
 var _navTouchStart=0;
-$('navL').addEventListener('touchstart',function(e){e.preventDefault();e.stopPropagation();_navTouchStart=Date.now();navHoldStart(-1)},{passive:false});
-$('navR').addEventListener('touchstart',function(e){e.preventDefault();e.stopPropagation();_navTouchStart=Date.now();navHoldStart(1)},{passive:false});
+$('navL').addEventListener('touchstart',function(e){e.preventDefault();e.stopPropagation();_navTouchStart=Date.now();_navTapBlock=Date.now();navHoldStart(-1)},{passive:false});
+$('navR').addEventListener('touchstart',function(e){e.preventDefault();e.stopPropagation();_navTouchStart=Date.now();_navTapBlock=Date.now();navHoldStart(1)},{passive:false});
 document.addEventListener('mouseup',navHoldStop);
 document.addEventListener('touchend',function(){
   /* If quick tap (<300ms), fire a single scroll */
-  if(_navHold&&(Date.now()-_navTouchStart)<300)navScroll(_navHold);
+  if(_navHold){_navTapBlock=Date.now();if((Date.now()-_navTouchStart)<300)navScroll(_navHold)}
   navHoldStop();
 });
 

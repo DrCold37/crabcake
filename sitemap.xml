@@ -25,6 +25,14 @@
     <priority>0.4</priority>
   </url>
 
+  <!-- Blog -->
+  <url>
+    <loc>https://crabcake.kids/blog/community-helpers-activities-for-kindergarten.html</loc>
+    <lastmod>2026-03-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
   <!-- Community Helpers -->
   <url>
     <loc>https://crabcake.kids/games/community-helpers.html</loc>
