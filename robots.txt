@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /games/cb-diag.html
 
 Sitemap: https://crabcake.kids/sitemap.xml
