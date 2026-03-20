@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- PWA -->
+  <link rel="preload" href="/fonts/Fredoka-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/Nunito-Bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/Nunito-ExtraBold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#00C9B1">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Crabcake">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png"/>
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/favicon-96.png"/>
+  <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192.png"/>
+  <title>About Crabcake – The Fun Way to Learn</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Crabcake was built by a parent who wanted better educational games for kids. Learn about our story, what makes us different, and why every game is 100% kid safe."/>
+  <meta name="robots" content="index, follow"/>
+  <link rel="canonical" href="https://crabcake.kids/about"/>
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://crabcake.kids/about"/>
+  <meta property="og:title" content="About Crabcake – The Fun Way to Learn"/>
+  <meta property="og:description" content="Crabcake was built by a parent who wanted better educational games for kids. Learn our story."/>
+  <meta property="og:image" content="https://crabcake.kids/images/og-image.png"/>
+  <meta property="og:site_name" content="Crabcake"/>
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="About Crabcake – The Fun Way to Learn"/>
+  <meta name="twitter:description" content="Crabcake was built by a parent who wanted better educational games for kids. Learn our story."/>
+  <meta name="twitter:image" content="https://crabcake.kids/images/og-image.png"/>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" media="print" onload="this.media='all'"/>
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap"/></noscript>
+
+  <style>
+    :root {
+      --coral:    #FF5C5C;
+      --yellow:   #FFD93D;
+      --teal:     #00C9B1;
+      --navy:     #1A2B4A;
+      --sky:      #6ECBF5;
+      --sand:     #FFF4D6;
+      --purple:   #A66CFF;
+      --green:    #4ECB71;
+      --orange:   #FF9040;
+      --white:    #FFFFFF;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Nunito', 'Arial Rounded MT Bold', Arial, sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      overflow-x: hidden;
+      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E🦀%3C/text%3E%3C/svg%3E") 8 8, auto;
+    }
+
+    /* ── BUBBLES ── */
+    .bubbles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .bubble { position: absolute; bottom: -80px; border-radius: 50%; opacity: 0.15; animation: rise linear infinite; }
+    .bubble:nth-child(1)  { width:40px;height:40px; left:5%;  background:var(--yellow); animation-duration:9s;  animation-delay:0s;  }
+    .bubble:nth-child(2)  { width:20px;height:20px; left:12%; background:var(--teal);   animation-duration:7s;  animation-delay:1s;  }
+    .bubble:nth-child(3)  { width:55px;height:55px; left:22%; background:var(--coral);  animation-duration:11s; animation-delay:2s;  }
+    .bubble:nth-child(4)  { width:30px;height:30px; left:35%; background:var(--sky);    animation-duration:8s;  animation-delay:0.5s;}
+    .bubble:nth-child(5)  { width:45px;height:45px; left:48%; background:var(--purple); animation-duration:10s; animation-delay:3s;  }
+    .bubble:nth-child(6)  { width:25px;height:25px; left:58%; background:var(--green);  animation-duration:6s;  animation-delay:1.5s;}
+    .bubble:nth-child(7)  { width:60px;height:60px; left:68%; background:var(--yellow); animation-duration:12s; animation-delay:2.5s;}
+    .bubble:nth-child(8)  { width:35px;height:35px; left:78%; background:var(--coral);  animation-duration:9s;  animation-delay:4s;  }
+    .bubble:nth-child(9)  { width:20px;height:20px; left:88%; background:var(--teal);   animation-duration:7s;  animation-delay:0.8s;}
+    .bubble:nth-child(10) { width:50px;height:50px; left:95%; background:var(--sky);    animation-duration:10s; animation-delay:3.5s;}
+
+    @keyframes rise {
+      0%   { transform: translateY(0) scale(1);   opacity: 0.15; }
+      50%  { transform: translateY(-50vh) scale(1.1); opacity: 0.2; }
+      100% { transform: translateY(-110vh) scale(0.8); opacity: 0; }
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 1000;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: rgba(15,29,54,0.97);
+      backdrop-filter: blur(8px);
+      border-bottom: 3px solid var(--teal);
+    }
+    .logo { display:flex; align-items:center; gap:.75rem; text-decoration:none; }
+    .logo-crab { line-height:1; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+    .logo-text { display:flex; flex-direction:column; line-height:1; }
+    .logo-name { font-family:'Nunito','Arial Rounded MT Bold',sans-serif; font-size:2rem; font-weight:800; letter-spacing:-0.5px; }
+    .logo-name .base { color:#ffffff; }
+    .logo-name .la   { color:#FF6B6B; text-shadow:2px 2px 4px rgba(255,255,255,0.5); }
+    .logo-name .lb   { color:#FFD93D; text-shadow:2px 2px 4px rgba(255,255,255,0.5); }
+    .logo-name .lc   { color:#4ECB71; text-shadow:2px 2px 4px rgba(255,255,255,0.5); }
+    .logo-sub { font-size:0.62rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:rgba(255,255,255,0.5); margin-top:3px; }
+    .logo-footer .logo-crab { font-size:2rem; }
+    .logo-footer .logo-name { font-size:1.6rem; }
+    nav ul { list-style: none; }
+    nav ul li a {
+      color: var(--white); text-decoration: none;
+      font-weight: 800; font-size: 1rem; transition: color 0.2s;
+    }
+    nav ul li a:hover { color: var(--yellow); }
+    .nav-cta {
+      background: var(--coral); color: var(--white) !important;
+      padding: 0.5rem 1.4rem; border-radius: 50px;
+      transition: background 0.2s, transform 0.2s !important;
+    }
+    .nav-cta:hover { background: var(--orange) !important; transform: scale(1.05); }
+
+    /* ── HAMBURGER ── */
+    .hamburger {
+      display: flex; flex-direction: column; gap: 5px; cursor: pointer;
+      padding: 0.5rem; background: none; border: none; z-index: 1001; flex-shrink: 0;
+    }
+    .hamburger span {
+      display: block; width: 26px; height: 3px;
+      background: var(--white); border-radius: 3px; transition: all 0.3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+    nav ul {
+      display: none; position: absolute; top: 100%; right: 0;
+      flex-direction: column; width: auto; min-width: 180px; gap: 0;
+      background: #0F1D36; border: 2px solid var(--teal);
+      border-radius: 0 0 12px 12px; z-index: 999;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+    nav ul.open { display: flex; }
+    nav ul li a {
+      display: block; padding: 1rem 1.4rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-size: 1rem; color: var(--white); text-decoration: none; font-weight: 700;
+    }
+    nav ul li a:hover { background: rgba(0,201,177,0.1); color: var(--teal); }
+    nav ul li:last-child a { border-bottom: none; }
+
+    /* ── ABOUT CONTENT ── */
+    .about-page {
+      position: relative; z-index: 1;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 3rem 2rem 4rem;
+    }
+
+    .about-hero {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .about-hero-crab {
+      width: 120px; height: 120px; object-fit: contain;
+      margin-bottom: 1rem;
+      animation: crabBob 3s ease-in-out infinite alternate;
+    }
+    @keyframes crabBob {
+      from { transform: translateY(0) rotate(-2deg); }
+      to   { transform: translateY(-8px) rotate(2deg); }
+    }
+    .about-hero h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 0.5rem;
+    }
+    .about-hero h1 em {
+      font-style: normal;
+      background: linear-gradient(90deg, var(--coral), var(--yellow), var(--teal));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .about-hero-sub {
+      color: rgba(255,255,255,0.5);
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .about-section {
+      margin-bottom: 2.5rem;
+    }
+    .about-section h2 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      color: var(--teal);
+    }
+    .about-section p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 1rem;
+    }
+    .about-section p strong {
+      color: var(--white);
+      font-weight: 700;
+    }
+
+    .about-highlight {
+      background: rgba(0,201,177,0.08);
+      border: 1px solid rgba(0,201,177,0.2);
+      border-radius: 16px;
+      padding: 1.5rem 1.8rem;
+      margin-bottom: 2.5rem;
+    }
+    .about-highlight p {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--yellow);
+      text-align: center;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    .about-features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .about-feature {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 1.2rem 1rem;
+      text-align: center;
+      transition: transform 0.3s cubic-bezier(.34,1.56,.64,1), box-shadow 0.3s;
+    }
+    .about-feature:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+    .about-feature-emoji {
+      font-size: 2rem;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .about-feature-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 0.3rem;
+    }
+    .about-feature-desc {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.5;
+    }
+
+    .about-safe {
+      background: linear-gradient(135deg, rgba(78,203,113,0.1), rgba(0,201,177,0.08));
+      border: 1px solid rgba(78,203,113,0.2);
+      border-radius: 16px;
+      padding: 1.5rem 1.8rem;
+      margin-bottom: 2.5rem;
+    }
+    .about-safe h2 {
+      color: var(--green);
+    }
+    .about-safe-badges {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+    .about-safe-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(78,203,113,0.12);
+      border: 1px solid rgba(78,203,113,0.25);
+      padding: 0.4rem 0.9rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--green);
+    }
+
+    .about-cta {
+      text-align: center;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .about-cta p {
+      color: rgba(255,255,255,0.5);
+      font-size: 0.95rem;
+      margin-bottom: 1.2rem;
+    }
+    .about-cta a {
+      display: inline-block;
+      background: var(--coral);
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 1.1rem;
+      padding: 0.8rem 2rem;
+      border-radius: 50px;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .about-cta a:hover {
+      background: var(--orange);
+      transform: scale(1.05);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 2rem 3rem;
+      border-top: 2px solid rgba(255,255,255,0.06);
+      position: relative; z-index: 1;
+    }
+    footer .logo { font-size: 1.8rem; }
+    footer p { color: rgba(255,255,255,0.4); font-size: 0.85rem; }
+    .footer-links { display:flex; gap:1.5rem; }
+    .footer-links a { color: rgba(255,255,255,0.5); text-decoration:none; font-size:0.85rem; font-weight:700; }
+    .footer-links a:hover { color: var(--teal); }
+
+    @media(max-width: 1020px) {
+      nav { padding: 1rem 1.2rem; flex-wrap: nowrap; position: sticky; }
+      footer { flex-direction:column; text-align:center; gap: 1rem; }
+    }
+    @media(max-width: 600px) {
+      .about-page { padding: 2rem 1.2rem 3rem; }
+      .about-features { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BUBBLES -->
+  <div class="bubbles">
+    <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+    <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+    <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+    <div class="bubble"></div>
+  </div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="/" class="logo" style="text-decoration:none;">
+      <div class="logo-crab"><img src="/images/crab-logo.webp" width="64" height="64" style="object-fit:contain;display:block;" alt="Crabcake"/></div>
+      <div class="logo-text">
+        <div class="logo-name"><span class="base">Cr</span><span class="la">a</span><span class="lb">b</span><span class="lc">c</span><span class="base">ake</span></div>
+        <div class="logo-sub">The Fun Way to Learn</div>
+      </div>
+    </a>
+    <ul id="nav-menu">
+      <li><a href="/">Home</a></li>
+      <li><a href="/#games">Games</a></li>
+      <li><a href="avatar.html">My Avatar</a></li>
+      <li><a href="privacy.html">Privacy</a></li>
+      <li><a href="about.html" style="color:var(--teal);">About</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </nav>
+
+  <!-- ABOUT CONTENT -->
+  <main class="about-page">
+
+    <div class="about-hero">
+      <img class="about-hero-crab" src="/images/crab-logo.webp" alt="Crabcake crab mascot" width="120" height="120" />
+      <h1>Born at the <em>Kitchen Table</em></h1>
+      <p class="about-hero-sub">A parent's answer to educational games that kids actually want to play.</p>
+    </div>
+
+    <div class="about-section">
+      <p>As a parent of two young kids in Ontario, I did what most parents do — I tried the popular educational apps. They all looked great on paper. Curriculum-aligned, millions of users, glowing reviews.</p>
+      <p>But my kids didn't come back for a second try.</p>
+      <p>The games felt like homework dressed up in bright colours. The questions felt like quizzes, not adventures. My kids weren't learning because they weren't playing — and they weren't playing because nobody built these platforms with kids in the room.</p>
+    </div>
+
+    <div class="about-highlight">
+      <p>So I started building the platform I wished existed. One where my own kids would actually ask to play.</p>
+    </div>
+
+    <div class="about-section">
+      <p>Where learning feels like a game because it <strong>is</strong> a game — not a worksheet with a cartoon slapped on top. Where a fire truck rolls in when you help the right community helper, and a crab mascot cheers you on when you get it right.</p>
+      <p>Every game on Crabcake is tested by the toughest critics I know: my kids. If they don't want to play it again, it doesn't ship.</p>
+    </div>
+
+    <div class="about-section">
+      <h2>What makes Crabcake different</h2>
+      <p>Crabcake is built by a parent, for kids. Every game is aligned to the <strong>Ontario, Canada Ministry of Education curriculum</strong> — covering Mathematics, Language, Science & Technology, and Social Studies from Kindergarten through Grade 4. But curriculum alignment is just the starting point. The real goal is making kids <strong>want</strong> to learn without being told to.</p>
+    </div>
+
+    <div class="about-features">
+      <div class="about-feature">
+        <span class="about-feature-emoji">🎨</span>
+        <div class="about-feature-title">Your Avatar & Pet</div>
+        <div class="about-feature-desc">Create a character and pet that travel with you across every game.</div>
+      </div>
+      <div class="about-feature">
+        <span class="about-feature-emoji">🏅</span>
+        <div class="about-feature-title">Achievement Badges</div>
+        <div class="about-feature-desc">Earn badges as you play — collect them all and show off your progress.</div>
+      </div>
+      <div class="about-feature">
+        <span class="about-feature-emoji">📈</span>
+        <div class="about-feature-title">Mastery Progression</div>
+        <div class="about-feature-desc">Age-appropriate difficulty that moves up when you're ready — not before.</div>
+      </div>
+      <div class="about-feature">
+        <span class="about-feature-emoji">📚</span>
+        <div class="about-feature-title">Curriculum Aligned</div>
+        <div class="about-feature-desc">Every game maps to Ontario Ministry of Education standards, K through Grade 4.</div>
+      </div>
+    </div>
+
+    <div class="about-safe">
+      <h2>100% Kid Safe</h2>
+      <p>Crabcake is completely free to play. There are no accounts to create, no personal information collected, and no external tracking. Everything is stored locally on your device and never leaves it. Your child's safety isn't a feature — it's the foundation.</p>
+      <div class="about-safe-badges">
+        <span class="about-safe-badge">🛡️ PIPEDA</span>
+        <span class="about-safe-badge">🛡️ COPPA</span>
+        <span class="about-safe-badge">🛡️ GDPR-K</span>
+      </div>
+    </div>
+
+    <div class="about-section">
+      <h2>Built in Ontario</h2>
+      <p>Crabcake is proudly designed and built in Ontario, Canada. It's a one-person project driven by the belief that kids deserve better than what's out there — and that a parent who knows what's missing might be the right person to build it.</p>
+    </div>
+
+    <div class="about-cta">
+      <p>Ready to see what learning can feel like when kids actually want to play?</p>
+      <a href="/">Explore Our Games</a>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="logo logo-footer">
+      <div class="logo-crab"><img src="/images/crab-logo.webp" width="64" height="64" style="object-fit:contain;display:block;" alt="Crabcake"/></div>
+      <div class="logo-text">
+        <div class="logo-name"><span class="base">Cr</span><span class="la">a</span><span class="lb">b</span><span class="lc">c</span><span class="base">ake</span></div>
+        <div class="logo-sub">The Fun Way to Learn</div>
+      </div>
+    </div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy</a>
+    </div>
+    <p>© 2026 Crabcake · Safe & fun learning for kids ages 4–10</p>
+  </footer>
+
+  <!-- HAMBURGER JS -->
+  <script>
+    var hamburger = document.getElementById('hamburger');
+    var navMenu = document.getElementById('nav-menu');
+    var menuOpen = false;
+
+    hamburger.addEventListener('click', function() {
+      menuOpen = !menuOpen;
+      hamburger.classList.toggle('open', menuOpen);
+      navMenu.classList.toggle('open', menuOpen);
+    });
+
+    navMenu.querySelectorAll('a').forEach(function(link) {
+      link.addEventListener('click', function() {
+        menuOpen = false;
+        hamburger.classList.remove('open');
+        navMenu.classList.remove('open');
+      });
+    });
+  </script>
+
+</body>
+</html>
