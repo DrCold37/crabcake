@@ -212,31 +212,8 @@ h1{font-family:'Creepster',cursive;font-size:clamp(2rem,6vw,3.5rem);color:var(--
 .go-stat{background:rgba(0,0,0,.3);border:1px solid rgba(180,79,255,.3);border-radius:12px;padding:8px;}
 .go-lbl{font-size:.62rem;color:#888;text-transform:uppercase;letter-spacing:.5px;}
 .go-val{font-family:'Creepster',cursive;font-size:1.3rem;color:var(--yellow);}
-.name-in{background:rgba(0,0,0,.4);border:2px solid var(--purple);border-radius:12px;padding:9px 14px;font-family:'Bubblegum Sans',cursive;font-size:1rem;color:#fff;width:100%;outline:none;margin-top:8px;}
-.name-in:focus{border-color:var(--bright);}
-.save-btn{background:linear-gradient(135deg,var(--yellow),var(--orange));color:#1a0a2e;border:none;border-radius:18px;padding:10px 28px;font-family:'Creepster',cursive;font-size:1.15rem;cursor:pointer;width:100%;margin-top:8px;}
-.save-btn:hover{opacity:.9;}
 .again-btn{background:linear-gradient(135deg,#6a0dad,#b44fff);color:#fff;border:none;border-radius:18px;padding:9px 26px;font-family:'Creepster',cursive;font-size:1.1rem;cursor:pointer;width:100%;margin-top:8px;}
 .again-btn:hover{opacity:.9;}
-
-/* LEADERBOARD */
-.lb-wrap{margin-top:20px;}
-.lb-title{font-family:'Creepster',cursive;font-size:1.6rem;color:var(--yellow);text-align:center;margin-bottom:12px;}
-.lb-tabs{display:flex;gap:8px;margin-bottom:10px;}
-.lb-tab{background:transparent;border:1px solid #444;border-radius:10px;padding:4px 12px;font-family:'Bubblegum Sans',cursive;color:#888;cursor:pointer;font-size:.75rem;transition:all .2s;}
-.lb-tab.on{border-color:var(--yellow);color:var(--yellow);background:rgba(255,215,0,.08);}
-table{width:100%;border-collapse:collapse;}
-th{font-size:.7rem;color:#888;text-transform:uppercase;letter-spacing:.5px;padding:5px 8px;text-align:left;border-bottom:1px solid rgba(180,79,255,.2);}
-td{padding:7px 8px;font-size:.88rem;border-bottom:1px solid rgba(255,255,255,.05);}
-.lb-rank{font-family:'Creepster',cursive;font-size:1.1rem;color:var(--yellow);}
-.lb-name{color:var(--text);}
-.lb-score{font-family:'Creepster',cursive;font-size:1rem;color:var(--bright);}
-.lb-sub{color:#888;font-size:.8rem;}
-tr:nth-child(1) td{background:rgba(255,215,0,.06);}
-tr:nth-child(2) td{background:rgba(200,200,200,.04);}
-tr:nth-child(3) td{background:rgba(205,127,50,.04);}
-tr.me td{background:rgba(180,79,255,.1);border-left:2px solid var(--bright);}
-.lb-empty{text-align:center;color:#555;padding:20px;}
 
 /* VISUAL EFFECTS (all fixed, all pointer-events:none) */
 .cf-piece{position:fixed;top:-20px;font-size:1.4rem;animation:cf-fall linear forwards;pointer-events:none;z-index:150;}
@@ -616,16 +593,6 @@ tr.me td{background:rgba(180,79,255,.1);border-left:2px solid var(--bright);}
     </div>
   </div>
 
-  <!-- Leaderboard -->
-  <div class="lb-wrap">
-    <div class="panel">
-      <div class="lb-title">🏆 Hall of Witches</div>
-      <div class="lb-tabs">
-        <button class="lb-tab on" id="lbt-score" onclick="lbTab('score')">Top Score</button>
-        <button class="lb-tab" id="lbt-found" onclick="lbTab('found')">Most Found</button>
-      </div>
-      <div id="lb-body"></div>
-    </div>
   </div>
 </div>
 
@@ -658,9 +625,6 @@ tr.me td{background:rgba(180,79,255,.1);border-left:2px solid var(--bright);}
       <div class="go-stat"><div class="go-lbl">Epic</div><div class="go-val" id="go-epic">0</div></div>
       <div class="go-stat"><div class="go-lbl">Legendary</div><div class="go-val" id="go-legendary">0</div></div>
     </div>
-    <label style="font-size:.85rem;color:#aaa;">Enter your witch name:</label>
-    <input class="name-in" type="text" id="player-name" maxlength="20" placeholder="SpookyWitch42">
-    <button class="save-btn" id="save-btn">🏆 Save to Leaderboard!</button>
     <div class="go-badges-wrap" id="goBadgesWrap" style="display:none">
       <div class="badges-section-title">🏆 Badges Earned!</div>
       <div class="badges-earned-row" id="goBadgesRow"></div>
@@ -833,7 +797,7 @@ let sel=[];           // current selected ingredients
 let brewedInGame=new Set(); // potions brewed in this game session (no re-brewing)
 let discovered=new Set(JSON.parse(store.getItem('disc3')||'[]'));
 let score=0, streak=0, bestStreak=0, triesLeft=10, triesOnPotion=0;
-let gameActive=true, curFilter='all', lbTabName='score', lastLbIdx=-1;
+let gameActive=true, curFilter='all';
 
 function hexToRgb(h){
   const c=(h||'#808080').replace('#','');
@@ -841,41 +805,6 @@ function hexToRgb(h){
 }
 
 // ═══════════════════════════════════════════════
-// LEADERBOARD
-// ═══════════════════════════════════════════════
-function getLB(){try{return JSON.parse(store.getItem('lb3')||'[]');}catch{return[];}}
-function saveLB(lb){store.setItem('lb3',JSON.stringify(lb));}
-function addLBEntry(name,sc,found,bs){
-  const lb=getLB();
-  lb.push({name:name||'Anonymous Witch',score:sc,found,streak:bs,date:new Date().toLocaleDateString()});
-  lb.sort((a,b)=>b.score-a.score);
-  if(lb.length>20)lb.length=20;
-  saveLB(lb);
-  lastLbIdx=lb.findIndex(e=>e.name===name&&e.score===sc);
-  renderLB();
-}
-function lbTab(t){
-  lbTabName=t;
-  document.getElementById('lbt-score').classList.toggle('on',t==='score');
-  document.getElementById('lbt-found').classList.toggle('on',t==='found');
-  renderLB();
-}
-function renderLB(){
-  const lb=getLB();
-  const body=document.getElementById('lb-body');
-  if(!lb.length){body.innerHTML='<div class="lb-empty">No scores yet — finish a game!</div>';return;}
-  const sorted=lbTabName==='found'?[...lb].sort((a,b)=>b.found-a.found||b.score-a.score):lb;
-  const medals=['🥇','🥈','🥉'];
-  body.innerHTML='<table><thead><tr><th>#</th><th>Witch</th><th>Score</th><th>Found</th><th>Streak</th><th>Date</th></tr></thead><tbody>'+
-    sorted.slice(0,10).map((e,i)=>`<tr${i===lastLbIdx&&lbTabName==='score'?' class="me"':''}>`+
-      `<td class="lb-rank">${medals[i]||(('#'+(i+1)))}</td>`+
-      `<td class="lb-name">${esc(e.name)}</td>`+
-      `<td class="lb-score">${(e.score||0).toLocaleString()}</td>`+
-      `<td class="lb-sub">${e.found||0}/55</td>`+
-      `<td class="lb-sub">${e.streak||0}🔥</td>`+
-      `<td class="lb-sub">${e.date||''}</td></tr>`).join('')+
-  '</tbody></table>';
-}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
 // ═══════════════════════════════════════════════
@@ -1377,15 +1306,12 @@ function endGame(){
 
 function resetGame(){
   sel=[];score=0;streak=0;bestStreak=0;triesLeft=10;triesOnPotion=0;
-  gameActive=true;lastLbIdx=-1;brewedInGame=new Set();
+  gameActive=true;brewedInGame=new Set();
   // Discovered recipes persist across games — saved in localStorage
   GAME_RCP=buildGameRecipes();
   document.getElementById('confirm-ovl').classList.remove('show');
-  document.getElementById('save-btn').disabled=false;
-  document.getElementById('save-btn').textContent='🏆 Save to Leaderboard!';
   document.getElementById('gameover-ovl').classList.remove('show');
   document.getElementById('res-ovl').classList.remove('show');
-  document.getElementById('player-name').value='';
   cancelResAutoClose();
   clearCauldron();updateHud();renderBook();
 }
@@ -1783,7 +1709,6 @@ function claimFeedbackBadge(type) {
 function init(){
   renderIng();
   renderBook();
-  renderLB();
   updateHud();
 
   // Book filter
@@ -1817,14 +1742,6 @@ function init(){
     document.getElementById('res-ovl').classList.remove('show');
     clearCauldron();
     if(triesLeft<=0) endGame();
-  });
-
-  // Save score
-  document.getElementById('save-btn').addEventListener('click',()=>{
-    const name=(document.getElementById('player-name').value.trim()||'Anonymous Witch');
-    addLBEntry(name,score,discovered.size,bestStreak);
-    document.getElementById('save-btn').textContent='✅ Saved!';
-    document.getElementById('save-btn').disabled=true;
   });
 
   // Play again (from game over modal)
