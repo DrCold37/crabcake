@@ -4,6 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="description" content="Community Helpers is a free social studies game for kids ages 4-6. Find the right helpers and buildings to help your town! Play free on Crabcake Kids!"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="preload" href="/fonts/Nunito-Bold.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/Nunito-ExtraBold.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="canonical" href="https://crabcake.kids/games/community-helpers.html">
@@ -258,6 +259,14 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 #crabWelcome.intro .cw-sprite{transform:scale(0);animation:crabGrowIn 1s cubic-bezier(.34,1.56,.64,1) forwards,spritePlay 1.5s steps(1) infinite}
 #crabWelcome.intro .cw-bubble{display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:.5rem}
 #crabWelcome.intro .cw-bubble.pop{display:block;animation:bubblePopIn .5s cubic-bezier(.34,1.56,.64,1) both}
+
+/* ── Outro mode: crab pops in full size, bubble pops in after ── */
+#crabWelcome.outro .cw-inner{background:none;border:none;box-shadow:none;padding:1rem;animation:none;position:relative;overflow:visible}
+#crabWelcome.outro .cw-title{display:none}
+#crabWelcome.outro .cw-text{display:none}
+#crabWelcome.outro .cw-sprite{animation:celebPop .6s cubic-bezier(.34,1.56,.64,1) both,spritePlay 1.5s steps(1) infinite}
+#crabWelcome.outro .cw-bubble{display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:.5rem}
+#crabWelcome.outro .cw-bubble.pop{display:block;animation:bubblePopIn .5s cubic-bezier(.34,1.56,.64,1) both}
 @keyframes crabGrowIn{0%{transform:scale(0)}100%{transform:scale(1)}}
 @keyframes bubblePopIn{0%{transform:translateX(-50%) scale(0);opacity:0}60%{transform:translateX(-50%) scale(1.08);opacity:1}100%{transform:translateX(-50%) scale(1);opacity:1}}
 @media(max-width:400px){.cw-bubble{max-width:220px;padding:1rem 1.4rem}.cw-bubble-text{font-size:1rem}}
@@ -482,7 +491,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
     <h2 id="fTitle">Round Complete!</h2>
     <div class="ftn" id="fTn"></div>
     <div class="fst" id="fSc"></div>
-    <div class="fst" id="fTown"></div>
     <div class="end-badges-wrap" id="endBadgesWrap" style="display:none">
       <div class="badges-section-title">&#x1F3C6; Badges Earned!</div>
       <div class="badges-earned-row" id="endBadgesRow"></div>
@@ -492,7 +500,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
 <script>
 /* Community Builder v19 — visual matching + progression engine + badges */
 (function(){
@@ -1250,13 +1258,18 @@ function phaserCreate(){
   /* Band 1: drag-to-pan (only when match overlay not showing a tap target) */
   if(G.isMatch){
     var dragSt=null;
-    sc.input.on('pointerdown',function(p){dragSt={x:p.x,camX:G.camTarget.x}});
+    var _dragDist=0; /* Track drag distance to distinguish taps from swipes */
+    sc.input.on('pointerdown',function(p){dragSt={x:p.x,y:p.y,camX:G.camTarget.x};_dragDist=0});
     sc.input.on('pointermove',function(p){
       if(!dragSt||!p.isDown)return;
       var dx=p.x-dragSt.x;
+      var dy=p.y-dragSt.y;
+      _dragDist=Math.sqrt(dx*dx+dy*dy);
       G.camTarget.x=Phaser.Math.Clamp(dragSt.camX-dx/sc.cameras.main.zoom,0,WW);
     });
     sc.input.on('pointerup',function(){dragSt=null});
+    /* Expose drag distance for tap handlers */
+    G._getDragDist=function(){return _dragDist};
   }
 
   /* Ready */
@@ -1508,18 +1521,34 @@ function _buildCrabAudioMap(){
   _crabAudioMap=m;
 }
 
+/* Eagerly preload only essential audio (welcome, praise, wrong, end — ~12 files).
+   Question/hint/reveal audio loads lazily on first use via crabSpeak. */
 function _preloadCrabAudio(){
   _buildCrabAudioMap();
-  var files={};
-  for(var k in _crabAudioMap)files[_crabAudioMap[k]]=true;
-  var fnames=Object.keys(files);
-  for(var i=0;i<fnames.length;i++){
+  var essential=[
+    'crab-welcome-jk.mp3','crab-welcome-sk.mp3',
+    'crab-praise-1.mp3','crab-praise-2.mp3','crab-praise-3.mp3',
+    'crab-praise-4.mp3','crab-praise-5.mp3','crab-praise-6.mp3',
+    'crab-wrong-base.mp3','crab-wrong-lastchance.mp3',
+    'crab-end-great.mp3','crab-end-good.mp3','crab-end-ok.mp3'
+  ];
+  for(var i=0;i<essential.length;i++){
     var a=new Audio();
     a.preload='auto';
-    a.src=CRAB_AUDIO_PATH+fnames[i];
-    _crabAudioCache[fnames[i]]=a;
+    a.src=CRAB_AUDIO_PATH+essential[i];
+    _crabAudioCache[essential[i]]=a;
   }
-  console.log('CB: preloaded '+fnames.length+' crab audio files');
+  console.log('CB: preloaded '+essential.length+' essential crab audio files (rest lazy)');
+}
+
+/* Lazy-load a single audio file into cache and return it */
+function _lazyCrabAudio(fname){
+  if(_crabAudioCache[fname])return _crabAudioCache[fname];
+  var a=new Audio();
+  a.preload='auto';
+  a.src=CRAB_AUDIO_PATH+fname;
+  _crabAudioCache[fname]=a;
+  return a;
 }
 
 /* Preload on DOM ready */
@@ -1629,9 +1658,9 @@ function crabSpeak(text,cb){
   if(_crabCurrentAudio){try{_crabCurrentAudio.pause();_crabCurrentAudio.currentTime=0}catch(e){}}
   try{window.speechSynthesis.cancel()}catch(e){}
 
-  /* Check for preloaded audio file */
+  /* Check for audio file — load lazily if not cached */
   var fname=_crabAudioMap[text];
-  var audio=fname?_crabAudioCache[fname]:null;
+  var audio=fname?_lazyCrabAudio(fname):null;
 
   if(audio&&audio.src){
     var btn=$('cbAudio');
@@ -1751,20 +1780,29 @@ function nextFC(){
 
 function enableFCTaps(){
   var sc=G.sc;if(!sc)return;
+  var TAP_THRESHOLD=15; /* px — ignore taps if finger moved more than this */
   /* Buildings are tappable */
   Object.keys(bldSpr).forEach(function(k){
     var bs=bldSpr[k];if(!bs||!bs.sprite)return;
     bs.sprite.setInteractive({useHandCursor:true,pixelPerfect:true,alphaTolerance:100});
-    bs.sprite.off('pointerdown');
-    bs.sprite.on('pointerdown',function(ptr,lx,ly,ev){ev.stopPropagation();handleFCTap(k)});
+    bs.sprite.off('pointerup');
+    bs.sprite.on('pointerup',function(ptr,lx,ly,ev){
+      ev.stopPropagation();
+      if(G._getDragDist&&G._getDragDist()>TAP_THRESHOLD)return;
+      handleFCTap(k);
+    });
   });
   /* Walker characters are also tappable */
   walkers.forEach(function(w){
     if(!w.spr||!w.spr.active||!w.spr._charKey)return;
     w.spr.setInteractive({useHandCursor:true,pixelPerfect:true,alphaTolerance:100});
-    w.spr.off('pointerdown');
+    w.spr.off('pointerup');
     var ck=w.spr._charKey;
-    w.spr.on('pointerdown',function(ptr,lx,ly,ev){ev.stopPropagation();handleFCTap(ck)});
+    w.spr.on('pointerup',function(ptr,lx,ly,ev){
+      ev.stopPropagation();
+      if(G._getDragDist&&G._getDragDist()>TAP_THRESHOLD)return;
+      handleFCTap(ck);
+    });
   });
 }
 
@@ -1905,7 +1943,7 @@ function showFCAnswer(targetCK){
   },4000);
 }
 
-/* Crab end-of-game sequence */
+/* Crab end-of-game sequence — large crab + speech bubble (matches start) */
 function showCrabEnd(){
   disableFCTaps();
   hideCrab();
@@ -1915,21 +1953,44 @@ function showCrabEnd(){
   var pct=G.fcQuestions.length?Math.round(G.corr/G.fcQuestions.length*100):0;
   var msg=pct>=80?'Amazing work! You really know your community helpers!':pct>=50?'Good job! You\'re learning about your community!':'Nice try! Let\'s play again to learn more!';
 
-  $('cwTitle').textContent=pct>=80?'Awesome! \u{1F389}':'Great effort! \u{2B50}';
-  $('cwText').textContent=msg;
-  /* Swap to happy crab for good scores, wave for others */
+  var overlay=$('crabWelcome');
+  var bubble=$('cwBubble');
+
+  /* Set outro mode */
+  overlay.classList.add('outro');
+  bubble.classList.remove('pop');
+
+  /* Swap sprite to happy or wave based on score */
   var cwSpr=document.querySelector('.cw-sprite');
   if(cwSpr){
     if(pct>=80)cwSpr.style.backgroundImage="url('/assets/crab-mascot/crab-animate-happy.png')";
     else cwSpr.style.backgroundImage="url('/assets/crab-mascot/crab-animate-wave.png')";
   }
-  $('crabWelcome').classList.add('show');
-  crabSpeak(msg);
 
+  /* Set bubble text */
+  $('cwBubbleTx').textContent=msg;
+
+  /* Show overlay — crab pops in */
+  overlay.classList.add('show');
+
+  /* After crab appears, pop in speech bubble + speak */
   setTimeout(function(){
-    $('crabWelcome').classList.remove('show');
-    finish();
-  },4000);
+    bubble.classList.add('pop');
+    crabSpeak(msg);
+  },700);
+
+  /* Hold on screen, then dissolve out and go to finish */
+  setTimeout(function(){
+    overlay.classList.add('dissolve');
+    setTimeout(function(){
+      overlay.classList.remove('show','outro','dissolve');
+      bubble.classList.remove('pop');
+      overlay.style.opacity='';
+      /* Reset sprite back to wave for next game */
+      if(cwSpr)cwSpr.style.backgroundImage="url('/assets/crab-mascot/crab-animate-wave.png')";
+      finish();
+    },850);
+  },5500);
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -2336,16 +2397,6 @@ function finish(){
   var totalQs=G.isFC?G.fcQuestions.length:Math.min(G.ans,10);
   var a=totalQs?Math.round(G.corr/totalQs*100):0;
   $('fSc').textContent='\u{1F3AF} '+G.corr+' out of '+totalQs+' correct'+(a>0?' ('+a+'%)':'');
-  /* Town completion: count buildings (11 slots + construction), vehicles (12), walkers (12) = 35 total items */
-  var bldCount=0,vehCount=0;
-  for(var k in G.cp){
-    if(G.cp[k].bld)bldCount++;
-    if(G.cp[k].veh)vehCount++;
-  }
-  var townTotal=24; /* 12 buildings + 12 vehicles */
-  var townPlaced=bldCount+vehCount;
-  var townPct=Math.round(townPlaced/townTotal*100);
-  $('fTown').textContent='\u{1F3D9}\u{FE0F} Town: '+townPct+'% complete ('+bldCount+' buildings, '+vehCount+' vehicles)';
   /* Title and emoji based on performance */
   if(G.lives<=0){
     $('fTitle').textContent='Game Over!';$('fEmoji').textContent='\u{1F625}';
